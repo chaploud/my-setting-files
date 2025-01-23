@@ -71,3 +71,5 @@ Plug 'preservim/nerdtree', { 'on': 'NERDTreeToggle' }
 Plug 'tpope/vim-surround'
 Plug 'vim-airline/vim-airline'
 call plug#end()
+
+xnoremap p "_dP
