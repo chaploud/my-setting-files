@@ -19,8 +19,8 @@
   "buffer_font_size": 15,
   "buffer_font_family": "JetBrains Mono NL",
   "theme": {
-    "mode": "system",
-    "light": "GitHub Light",
+    "mode": "dark",
+    "light": "Github Light",
     "dark": "Github Dark"
   },
   "vim": {
