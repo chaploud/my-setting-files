@@ -131,7 +131,6 @@ source ~/gitstatus/gitstatus.prompt.sh
 # pyenv
 export PYENV_ROOT="$HOME/.pyenv"
 export PATH="$PYENV_ROOT/bin:$PATH"
-eval "$(pyenv init - bash)"
 
 # volta
 export VOLTA_HOME="$HOME/.volta"
