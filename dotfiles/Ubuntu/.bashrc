@@ -148,4 +148,4 @@ alias gpull="git pull"
 # Homebrew
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 
-export CDPATH="${HOME}/Documents/"
+# export CDPATH="${HOME}/Documents/"
