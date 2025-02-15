@@ -7,15 +7,18 @@
 echo "無効化[y] / 有効化[n]"
 read -r -p "選択してください: " REPLY
 if [ "$REPLY" = "y" ]; then
-  SETTING='KERNEL=="event*", ATTRS{name}=="AT Translated Set 2 keyboard", ENV{LIBINPUT_IGNORE_DEVICE}="1"'
+  NUM=1
 elif [ "$REPLY" = "n" ]; then
-  SETTING='KERNEL=="event*", ATTRS{name}=="AT Translated Set 2 keyboard", ENV{LIBINPUT_IGNORE_DEVICE}="0"'
+  NUM=0
 else
   echo "何もしません"
   exit 1
 fi
 
-sudo tee /etc/udev/rules.d/99-ignore-keyboard.rules <<< "$SETTING"
+SETTING=("KERNEL==\"event*\"" "ATTRS{name}==\"AT Translated Set 2 keyboard\"" "ENV{LIBINPUT_IGNORE_DEVICE}=\"${NUM}\"")
+SETTING_STRING=$(IFS=,; echo "${SETTING[*]}")
+
+sudo tee /etc/udev/rules.d/99-ignore-keyboard.rules <<< "$SETTING_STRING"
 sudo udevadm control --reload-rules
 sudo udevadm trigger
 

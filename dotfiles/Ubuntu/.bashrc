@@ -130,7 +130,7 @@ source ~/gitstatus/gitstatus.prompt.sh
 
 # pyenv
 export PYENV_ROOT="$HOME/.pyenv"
-[[ -d $PYENV_ROOT/bin ]] && export PATH="PYENV_ROOT/bin:$PATH"
+[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
 
 # volta
 export VOLTA_HOME="$HOME/.volta"
@@ -149,3 +149,4 @@ alias gpull="git pull"
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 
 # export CDPATH="${HOME}/Documents/"
+export PATH="${HOME}/Desktop/bin:${PATH}"
