@@ -26,15 +26,7 @@ export NODE_OPTIONS="--max-old-space-size=31448"
 alias ls='ls -F --color=auto'
 alias sl='ls'
 
-function githubkey() {
-    eval `ssh-agent`
-    ssh-add ~/.ssh/id_ecdsa
-}
-
 export PATH=${HOME}/.local/bin:${PATH}
-
-export DENO_INSTALL="/home/ec2-user/.deno"
-export PATH="$DENO_INSTALL/bin:$PATH"
 
 # bun
 export BUN_INSTALL="$HOME/.bun"
@@ -53,25 +45,8 @@ alias ry="/usr/bin/python3 ~/rapid-yarn/rapid_yarn.py"
 
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 
-# nushell
-export XDG_CONFIG_HOME="$HOME/.config"
-#if [[ $- == *i* ]]; then
-#  exec nu
-#fi
-
 # gitstatus
 source ~/gitstatus/gitstatus.prompt.sh
-
-# git-prompt
-# source ~/.bash-git-prompt/gitprompt.sh
-
-# Powerline configuration
-# if [ -f /usr/share/powerline/bash/powerline.sh ]; then
-#   powerline-daemon -q
-#   POWERLINE_BASH_CONTINUATION=1
-#   POWERLINE_BASH_SELECT=1
-#   source /usr/share/powerline/bash/powerline.sh
-# fi
 
 # Enable bash completion
 if [ -f /etc/bash_completion ]; then
@@ -81,9 +56,6 @@ fi
 alias log="git log --decorate --format=format:'%C(bold cyan)%as%C(reset) %C(bold blue)%h%C(reset) %C(white bold)%<(14,trunc)%an%C(reset) %C(green)%<(50,trunc)%s%C(reset) '"
 
 export CDPATH="/var/www:${HOME}/Documents/Rust:/var/www/html/generator"
-
-# Helix Editor
-export PATH="${HOME}/Install/helix-24.07-x86_64-linux:${PATH}"
 
 export NPM_TOKEN="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"
 
