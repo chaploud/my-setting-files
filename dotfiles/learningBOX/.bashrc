@@ -55,7 +55,7 @@ fi
 
 alias log="git log --decorate --format=format:'%C(bold cyan)%as%C(reset) %C(bold blue)%h%C(reset) %C(white bold)%<(14,trunc)%an%C(reset) %C(green)%<(50,trunc)%s%C(reset) '"
 
-export CDPATH="/var/www:${HOME}/Documents/Rust:/var/www/html/generator"
+export CDPATH="/var/www:/var/www/html/generator:${HOME}/Documents"
 
 export NPM_TOKEN="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"
 

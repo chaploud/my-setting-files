@@ -10,6 +10,10 @@ inoremap <silent> fd <ESC>
 nnoremap <C-s> :w<CR>
 inoremap <C-s> <ESC>:w<CR>
 
+" Undo
+nnoremap <C-z> :undo<CR>
+inoremap <C-z> <ESC>:undo<CR>
+
 " Basic cursor movement and deletion keybindings from emacs, for vim.
 
 " insert mode
