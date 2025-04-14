@@ -150,3 +150,13 @@ eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 
 # export CDPATH="${HOME}/Documents/"
 export PATH="${HOME}/Desktop/bin:${PATH}"
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
+
+# Flutter
+export PATH="${HOME}/Install/flutter/bin:${PATH}"
+
+# Android Studio
+export PATH="${HOME}/Install/android-studio/bin:${PATH}"
