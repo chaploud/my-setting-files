@@ -47,3 +47,12 @@ alias gp="git push"
 alias gl="git log"
 alias gd="git diff"
 alias gpull="git pull"
+
+## [Completion]
+## Completion scripts setup. Remove the following line to uninstall
+[[ -f /Users/shota/.dart-cli-completion/zsh-config.zsh ]] && . /Users/shota/.dart-cli-completion/zsh-config.zsh || true
+## [/Completion]
+
+# fvm (flutter version manager)
+alias flutter="fvm flutter"
+alias dart="fvm dart"
