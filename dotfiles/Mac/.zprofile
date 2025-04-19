@@ -1,4 +1,4 @@
 eval "$(/opt/homebrew/bin/brew shellenv)"
-# fvm (flutter version manager)
-alias flutter="fvm flutter"
-alias dart="fvm dart"
+
+# Added by `rbenv init` on 水  4 16 19:42:27 JST 2025
+eval "$(rbenv init - --no-rehash zsh)"

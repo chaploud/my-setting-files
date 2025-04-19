@@ -9,6 +9,8 @@ alias ls='ls -F --color=auto'
 alias la='ls -Fa --color=auto'
 alias ll='ls -lFh --color=auto'
 alias sl=ls
+alias s=ls
+alias l=ls
 
 # 補完色
 if [ -n "$LS_COLORS" ]; then
@@ -56,3 +58,28 @@ alias gpull="git pull"
 # fvm (flutter version manager)
 alias flutter="fvm flutter"
 alias dart="fvm dart"
+
+# Java
+export JAVA_HOME=/opt/homebrew/opt/java
+
+# flutterfire_cli
+export PATH="$PATH":"$HOME/.pub-cache/bin"
+
+# Added by `rbenv init` on 水  4 16 19:42:27 JST 2025
+eval "$(rbenv init - --no-rehash zsh)"
+
+# psql (Postgres)
+export PATH="/opt/homebrew/opt/postgresql@16/bin:$PATH"
+
+# All in Survey 開発用
+setopt allexport ; . ${HOME}/Documents/all_in_survey/backend/.env ; unsetopt allexport
+
+# bun completions
+[ -s "/Users/shota/.bun/_bun" ] && source "/Users/shota/.bun/_bun"
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
+
+# volta
+export PATH="$HOME/.volta/bin:$PATH"
