@@ -34,6 +34,7 @@ vim.cmd([[
   imap <C-h> <BS>
   imap <C-k> <C-r>=<SID>kill_line()<CR>
   imap <C-y> <C-r>+
+  imap <C-g> <ESC>
   
   " command line mode
   cmap <C-p> <Up>
@@ -45,6 +46,7 @@ vim.cmd([[
   cnoremap <C-d> <Del>
   cnoremap <C-h> <BS>
   cnoremap <C-k> <C-f>D<C-c><C-c>:<Up>
+  cnoremap <C-g> <ESC>
   
   " command-T window
   let g:CommandTCursorLeftMap  = ['<Left>',  '<C-b>']
