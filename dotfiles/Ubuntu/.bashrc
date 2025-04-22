@@ -160,3 +160,6 @@ export PATH="${HOME}/Install/flutter/bin:${PATH}"
 
 # Android Studio
 export PATH="${HOME}/Install/android-studio/bin:${PATH}"
+
+# NeoVim
+export PATH="$PATH:/opt/nvim-linux-x86_64/bin"
