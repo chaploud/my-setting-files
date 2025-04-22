@@ -1,44 +1,48 @@
--- lazy.nvim bootstrap
+-- Bootstrap lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
-if not vim.loop.fs_stat(lazypath) then
-  print("Installing lazy.nvim...")
-  vim.fn.system({
-    "git",
-    "clone",
-    "--filter=blob:none",
-    "https://github.com/folke/lazy.nvim.git",
-    "--branch=stable", -- latest stable release
-    lazypath,
-  })
+if not (vim.uv or vim.loop).fs_stat(lazypath) then
+    local lazyrepo = "https://github.com/folke/lazy.nvim.git"
+    local out = vim.fn.system({"git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath})
+    if vim.v.shell_error ~= 0 then
+        vim.api.nvim_echo({{"Failed to clone lazy.nvim:\n", "ErrorMsg"}, {out, "WarningMsg"},
+                           {"\nPress any key to exit..."}}, true, {})
+        vim.fn.getchar()
+        os.exit(1)
+    end
 end
 vim.opt.rtp:prepend(lazypath)
 
--- lazy.nvim setup
-require("lazy").setup({
-  -- ここにプラグインを追加していきます
-  -- 例:
-  -- 'nvim-lua/plenary.nvim', -- 多くのプラグインが依存する便利関数ライブラリ
-  -- 'nvim-treesitter/nvim-treesitter', -- より高度なシンタックスハイライトなど
+-- Make sure to setup `mapleader` and `maplocalleader` before
+-- loading lazy.nvim so that mappings are correct.
+-- This is also a good place to setup other settings (vim.opt)
+vim.g.mapleader = " "
 
-  -- カラースキームの例
-  -- 'folke/tokyonight.nvim',
-
-}, {
-  -- lazy.nvim 自体の設定 (オプション)
-  install = {
-    -- missing = true, -- 起動時に足りないプラグインを自動インストール (デフォルトtrue)
-    colorscheme_pre_setup = true, -- カラースキームを先に読み込む
-  },
-  checker = {
-    enabled = true, -- 起動時にプラグインの更新をチェック
-    notify = false, -- 更新があっても通知しない (お好みでtrueに)
-  },
-  change_detection = {
-    enabled = true,
-    notify = false, -- 設定変更時の自動再読み込み通知 (お好みでtrueに)
-  },
-})
-
-print("init.lua loaded!") -- 読み込み確認用 (任意)
+-- Indenting
+vim.opt.expandtab = true
+vim.opt.shiftwidth = 2
+vim.opt.smartindent = true
+vim.opt.tabstop = 2
+vim.opt.softtabstop = 2
+-- Smart Case Search
 vim.opt.ignorecase = true
 vim.opt.smartcase = true
+-- Line Number
+vim.opt.number = true
+vim.opt.cursorline = true
+
+-- Setup lazy.nvim
+require("lazy").setup({
+    spec = {
+        -- add your plugins here
+    },
+    -- Configure any other settings here. See the documentation for more details.
+    -- colorscheme that will be used when installing plugins.
+    install = {
+        colorscheme = {"habamax"}
+    },
+    -- automatically check for plugin updates
+    checker = {
+        enabled = true
+    }
+})
+print("init.lua loaded!") -- 読み込み確認用 (任意)
