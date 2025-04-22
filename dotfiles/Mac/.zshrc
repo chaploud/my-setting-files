@@ -83,3 +83,8 @@ export PATH="$BUN_INSTALL/bin:$PATH"
 
 # volta
 export PATH="$HOME/.volta/bin:$PATH"
+
+# pyenv
+export PYENV_ROOT="$HOME/.pyenv"
+[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
+eval "$(pyenv init - zsh)"
