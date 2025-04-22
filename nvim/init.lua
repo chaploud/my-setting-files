@@ -13,15 +13,15 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 vim.cmd([[
   " Escape with fd
   " inoremap <silent> fd <ESC>
-  
+
   " Save
   nnoremap <C-s> :w<CR>
   inoremap <C-s> <ESC>:w<CR>
-  
+
   " Undo
   nnoremap <C-z> :undo<CR>
   inoremap <C-z> <ESC>:undo<CR>
-  
+
   " Basic cursor movement and deletion keybindings from emacs, for vim.
   " insert mode
   imap <C-p> <Up>
@@ -35,7 +35,7 @@ vim.cmd([[
   imap <C-k> <C-r>=<SID>kill_line()<CR>
   imap <C-y> <C-r>+
   imap <C-g> <ESC>
-  
+
   " command line mode
   cmap <C-p> <Up>
   cmap <C-n> <Down>
@@ -47,15 +47,15 @@ vim.cmd([[
   cnoremap <C-h> <BS>
   cnoremap <C-k> <C-f>D<C-c><C-c>:<Up>
   cnoremap <C-g> <ESC>
-  
+
   " command-T window
   let g:CommandTCursorLeftMap  = ['<Left>',  '<C-b>']
   let g:CommandTCursorRightMap = ['<Right>', '<C-f>']
   let g:CommandTBackspaceMap   = ['<BS>',    '<C-h>']
   let g:CommandTDeleteMap      = ['<Del>',   '<C-d>']
-  
+
   xnoremap p "_dP
-  
+
   function! s:kill_line()
     let current_line = getline('.')
     let current_col = col('.')

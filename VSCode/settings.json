@@ -1,4 +1,5 @@
 {
+    // エディタ基本設定
     "editor.fontFamily": "'Source Han Code JP','Droid Sans Mono', 'monospace', monospace",
     "editor.fontSize": 14,
     "editor.cursorBlinking": "phase",
@@ -12,23 +13,29 @@
     "editor.tokenColorCustomizations": {
         "comments": "#2aa1ae"
     },
+    // 空のフォルダを一列にしてしまわない
     "explorer.compactFolders": false,
+    // Emacsキーバインドをターミナルでも有効に使いたい
     "terminal.integrated.allowChords": false,
     "terminal.integrated.commandsToSkipShell": [
         "-workbench.action.toggleSidebarVisibility",
         "-workbench.action.terminal.focusFind",
         "-workbench.action.quickOpen",
         "-workbench.action.quickOpenNavigateNextInFilePicker",
-        "-editor.action.toggleTabFocusMode",
+        "-editor.action.toggleTabFocusMode"
     ],
     "terminal.integrated.scrollback": 10000,
+    // Git関連の設定
     "git.autofetch": true,
     "git.enableSmartCommit": true,
     "git.confirmSync": false,
     "git.openRepositoryInParentFolders": "never",
+    // 文字検索時に大文字小文字を都合よく検索する
     "search.smartCase": true,
+    // プラットフォームごとにキーバインドを分けない
     "settingsSync.keybindingsPerPlatform": false,
     "security.workspace.trust.untrustedFiles": "open",
+    // ===== 以下は拡張機能の設定 =====
     // Color Theme (GitHub Dark Default)
     "workbench.colorTheme": "GitHub Dark Default",
     // vscode-icons
@@ -84,45 +91,137 @@
         }
     },
     "vscode-neovim.ctrlKeysForInsertMode": [
-        "p",
-        "n",
-        "b",
-        "f",
-        "a",
-        "e",
-        "d",
-        "h",
-        "k",
-        "y",
-        "m",
-        "w",
-        "g",
+        "a", // 行頭に移動
+        "b", // 1文字戻る
+        "d", // delete
+        "e", // 行末に移動
+        "f", // 1文字進む
+        "g", // ESC
+        "p", // カーソルを上に移動
+        "h", // backspace
+        "k", // カーソルから行末まで削除
+        "m", // Enter
+        "n", // カーソルを下に移動
+        "w", // 1単語削除
+        "y"  // 貼り付け
     ],
     "vscode-neovim.ctrlKeysForNormalMode": [
-        "a",
-        "d",
-        "e",
-        "f",
-        "g",
-        "h",
-        "i",
-        "l",
-        "m",
-        "o",
-        "r",
-        "t",
-        "u",
-        "v",
-        "w",
-        "x",
-        "y",
-        "/",
-        "]",
-        "right",
-        "left",
-        "up",
-        "down",
-        "backspace",
-        "delete"
+        "a", // 数字を1増やす
+        "d", // 画面半分下にスクロール
+        "e", // カーソルを移動せず画面を下にスクロール
+        "g", // ESC
+        "h", // backspace
+        "l", // Recenter Top Bottom
+        "m", // Enter
+        "o", // 前の場所に戻る
+        "r", // Redo
+        "t", // 元の場所に戻る
+        "u", // 画面半分上にスクロール
+        "v", // 矩形選択
+        "w", // ウィンドウ操作
+        "x", // decrement
+        "y", // カーソルを移動せず画面を上にスクロール
+        "/", // コメントアウト
+        "]"  // 定義ジャンプ
     ],
+    // Calva
+    "calva.useLegacyReplWindowPath": false,
+    "calva.outputDestinations": {
+        "evalResults": "repl-window",
+        "evalOutput": "repl-window",
+        "otherOutput": "repl-window"
+    },
+    // Code Runner
+    "code-runner.runInTerminal": true,
+    "code-runner.saveFileBeforeRun": true,
+    "code-runner.clearPreviousOutput": true,
+    "code-runner.showExecutionMessage": false,
+    "code-runner.showRunCommandInEditorContextMenu": false,
+    "code-runner.showRunCommandInExplorerContextMenu": false,
+    "code-runner.executorMap": {
+        "javascript": "bun",
+        "typescript": "bun"
+    },
+    // Which Key
+    "whichkey.delay": 500,
+    "whichkey.bindings": [
+        {
+            "key": "n",
+            "name": "Next Marker",
+            "type": "command",
+            "command": "editor.action.marker.nextInFiles"
+        },
+        {
+            "key": "p",
+            "name": "Previous Marker",
+            "type": "command",
+            "command": "editor.action.marker.prevInFiles"
+        },
+        {
+            "key": "N",
+            "name": "Next Diff",
+            "type": "command",
+            "command": "editor.action.dirtydiff.next"
+        },
+        {
+            "key": "P",
+            "name": "Previous Diff",
+            "type": "command",
+            "command": "editor.action.dirtydiff.previous"
+        },
+        {
+            "key": "d",
+            "name": "Debug Start",
+            "type": "command",
+            "command": "workbench.action.debug.start"
+        },
+        {
+            "key": "D",
+            "name": "Debug Run",
+            "type": "command",
+            "command": "workbench.action.debug.run"
+        },
+        {
+            "key": "i",
+            "name": "Inspect TM Scopes",
+            "type": "command",
+            "command": "editor.action.inspectTMScopes"
+        },
+        {
+            "key": "e",
+            "name": "Execute Current File",
+            "type": "command",
+            "command": "code-runner.run"
+        },
+        {
+            "key": "s",
+            "name": "Clojure",
+            "type": "bindings",
+            "bindings": [
+                {
+                    "key": "i",
+                    "name": "(Re)Start a Project REPL and Connect (Jack-In)",
+                    "type": "command",
+                    "command": "calva.jackIn"
+                },
+                {
+                    "key": "e",
+                    "name": "Evaluate Entire File",
+                    "type": "command",
+                    "command": "calva.loadFile"
+                },
+                {
+                    "key": "r",
+                    "name": "Show REPL Window",
+                    "type": "command",
+                    "command": "calva.showReplWindow"
+                },
+                {
+                    "key": "k",
+                    "name": "Stop/Kill the Project REPL started by Calva (Jack-Out)",
+                    "command": "calva.jackOut"
+                }
+            ]
+        }
+    ]
 }
