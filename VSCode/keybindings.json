@@ -1,0 +1,14 @@
+// Place your key bindings in this file to override the defaults
+[
+  // VSCode NeoVim
+  {
+    "key": "ctrl+m",
+    "command": "-editor.action.toggleTabFocusMode"
+  },
+  // Which Key
+  {
+    "key": "space",
+    "command": "whichkey.show",
+    "when": "editorTextFocus && neovim.mode == normal || neovim.mode == visual"
+  }
+]

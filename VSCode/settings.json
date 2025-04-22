@@ -1,0 +1,128 @@
+{
+    "editor.fontFamily": "'Source Han Code JP','Droid Sans Mono', 'monospace', monospace",
+    "editor.fontSize": 14,
+    "editor.cursorBlinking": "phase",
+    "editor.formatOnPaste": true,
+    "editor.formatOnSave": true,
+    "editor.minimap.enabled": false,
+    "editor.occurrencesHighlight": "off",
+    "editor.renderWhitespace": "all",
+    "editor.selectionHighlight": false,
+    "editor.tabSize": 2,
+    "editor.tokenColorCustomizations": {
+        "comments": "#2aa1ae"
+    },
+    "explorer.compactFolders": false,
+    "terminal.integrated.allowChords": false,
+    "terminal.integrated.commandsToSkipShell": [
+        "-workbench.action.toggleSidebarVisibility",
+        "-workbench.action.terminal.focusFind",
+        "-workbench.action.quickOpen",
+        "-workbench.action.quickOpenNavigateNextInFilePicker",
+        "-editor.action.toggleTabFocusMode",
+    ],
+    "terminal.integrated.scrollback": 10000,
+    "git.autofetch": true,
+    "git.enableSmartCommit": true,
+    "git.confirmSync": false,
+    "git.openRepositoryInParentFolders": "never",
+    "search.smartCase": true,
+    "settingsSync.keybindingsPerPlatform": false,
+    "security.workspace.trust.untrustedFiles": "open",
+    // Color Theme (GitHub Dark Default)
+    "workbench.colorTheme": "GitHub Dark Default",
+    // vscode-icons
+    "workbench.iconTheme": "vscode-icons",
+    // Path Intellisense
+    "path-intellisense.autoTriggerNextSuggestion": true,
+    // Remote SSH
+    "remote.SSH.remotePlatform": {
+        "dev-almalinux": "linux",
+        "gpu-ubuntu": "linux",
+        "mac-mini": "macOS"
+    },
+    "remote.SSH.enableAgentForwarding": true,
+    // GitHub Copilot
+    "github.copilot.enable": {
+        "scminput": true,
+        "markdown": true,
+        "plaintext": true
+    },
+    // GitHub Copilot Chat
+    "github.copilot.chat.localeOverride": "ja",
+    // Todo Tree
+    "todo-tree.tree.showCountsInTree": true,
+    "todo-tree.tree.expanded": true,
+    "todo-tree.tree.scanMode": "workspace only",
+    "todo-tree.highlights.highlightDelay": 100,
+    "todo-tree.general.tags": [
+        "TODO",
+        "NOTE",
+        "FIXME",
+        "XXX"
+    ],
+    "todo-tree.highlights.useColourScheme": true,
+    "todo-tree.highlights.backgroundColourScheme": [
+        "F2CC60",
+        "79C0FF",
+        "DB61A2",
+        "F85149"
+    ],
+    "todo-tree.highlights.foregroundColourScheme": [
+        "black",
+        "black",
+        "white",
+        "white"
+    ],
+    // VSCode NeoVim
+    "extensions.experimental.affinity": {
+        "asvetliakov.vscode-neovim": 1
+    },
+    "vscode-neovim.compositeKeys": {
+        "fd": {
+            "command": "vscode-neovim.escape"
+        }
+    },
+    "vscode-neovim.ctrlKeysForInsertMode": [
+        "p",
+        "n",
+        "b",
+        "f",
+        "a",
+        "e",
+        "d",
+        "h",
+        "k",
+        "y",
+        "m",
+        "w",
+        "g",
+    ],
+    "vscode-neovim.ctrlKeysForNormalMode": [
+        "a",
+        "d",
+        "e",
+        "f",
+        "g",
+        "h",
+        "i",
+        "l",
+        "m",
+        "o",
+        "r",
+        "t",
+        "u",
+        "v",
+        "w",
+        "x",
+        "y",
+        "/",
+        "]",
+        "right",
+        "left",
+        "up",
+        "down",
+        "backspace",
+        "delete"
+    ],
+}
