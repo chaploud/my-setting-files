@@ -9,6 +9,34 @@ vim.api.nvim_create_autocmd("TextYankPost", {
   end,
 })
 
+-- Recenter Top Bottom
+local recenter_state = 0
+local last_recenter_time = 0
+local CONSECUTIVE_THRESHOLD = 3.0
+local function recenter_cycle()
+  local current_time = vim.fn.localtime()
+  local time_diff = current_time - last_recenter_time
+  if time_diff > CONSECUTIVE_THRESHOLD then
+    recenter_state = 0
+  end
+
+  if recenter_state == 0 then
+    vim.cmd("normal! zz")
+    recenter_state = 1
+  elseif recenter_state == 1 then
+    vim.cmd("normal! zt")
+    recenter_state = 2
+  elseif recenter_state == 2 then
+    vim.cmd("normal! zb")
+    recenter_state = 0
+  end
+
+  last_recenter_time = current_time
+end
+
+vim.keymap.set({'n', 'v'}, '<C-l>', recenter_cycle, { noremap = true, silent = true })
+vim.keymap.set('i', '<C-l>', recenter_cycle, { noremap = true, silent = true })
+
 -- Emacsキーバインド
 vim.cmd([[
   " Escape with fd
