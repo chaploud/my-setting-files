@@ -15,6 +15,7 @@
     },
     // 空のフォルダを一列にしてしまわない
     "explorer.compactFolders": false,
+    "files.trimTrailingWhitespace": true,
     // Emacsキーバインドをターミナルでも有効に使いたい
     "terminal.integrated.allowChords": false,
     "terminal.integrated.commandsToSkipShell": [

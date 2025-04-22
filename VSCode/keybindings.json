@@ -10,5 +10,18 @@
     "key": "space",
     "command": "whichkey.show",
     "when": "editorTextFocus && neovim.mode == normal || neovim.mode == visual"
+  },
+  // Markdown All in One
+  // ,,でチェックボックスをトグル
+  {
+    "key": "oem_comma oem_comma",
+    "command": "markdown.extension.checkTaskList",
+    "when": "editorTextFocus && editorLangId =~ /^markdown$|^rmd$|^quarto$/ && vim.mode == 'Normal'"
+  },
+  // ctrl + m をEnterとして振舞わせたい
+  {
+    "key": "ctrl+m",
+    "command": "calva.evaluateReplWindowForm",
+    "when": "calva:keybindingsEnabled && calva:outputWindowActive && calva:replWindowSubmitOnEnter && editorTextFocus && !suggestWidgetVisible"
   }
 ]
