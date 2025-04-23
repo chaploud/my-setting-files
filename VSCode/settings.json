@@ -36,9 +36,22 @@
     // プラットフォームごとにキーバインドを分けない
     "settingsSync.keybindingsPerPlatform": false,
     "security.workspace.trust.untrustedFiles": "open",
+    //  ===== デフォルトフォーマッタ =====
+    "[jsonc]": {
+        "editor.defaultFormatter": "vscode.json-language-features"
+    },
     // ===== 以下は拡張機能の設定 =====
     // Color Theme (GitHub Dark Default)
     "workbench.colorTheme": "GitHub Dark Default",
+    "workbench.colorCustomizations": {
+        "[GitHub Dark Default]": {
+            "panel.background": "#0d1117", // 下部パネルの背景色
+            "sideBar.background": "#0a0c10", // サイドバーの背景色
+            "sideBarSectionHeader.background": "#07080a", // サイドバーのセクションヘッダーの背景色
+            "textPreformat.background": "#6e768144", // コードの背景色
+            "textPreformat.foreground": "#f0883e", // コードの文字色
+        }
+    },
     // vscode-icons
     "workbench.iconTheme": "vscode-icons",
     // Path Intellisense
@@ -225,5 +238,5 @@
             ]
         }
     ],
-    "database-client.autoSync": true
+    "database-client.autoSync": true,
 }
