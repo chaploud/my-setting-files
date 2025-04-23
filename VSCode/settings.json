@@ -104,7 +104,7 @@
         "m", // Enter
         "n", // カーソルを下に移動
         "w", // 1単語削除
-        "y"  // 貼り付け
+        "y" // 貼り付け
     ],
     "vscode-neovim.ctrlKeysForNormalMode": [
         "a", // 数字を1増やす
@@ -123,7 +123,7 @@
         "x", // decrement
         "y", // カーソルを移動せず画面を上にスクロール
         "/", // コメントアウト
-        "]"  // 定義ジャンプ
+        "]" // 定義ジャンプ
     ],
     // Calva
     "calva.useLegacyReplWindowPath": false,
@@ -224,5 +224,6 @@
                 }
             ]
         }
-    ]
+    ],
+    "database-client.autoSync": true
 }

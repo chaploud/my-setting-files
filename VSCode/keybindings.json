@@ -1,10 +1,5 @@
 // Place your key bindings in this file to override the defaults
 [
-  // VSCode NeoVim
-  {
-    "key": "ctrl+m",
-    "command": "-editor.action.toggleTabFocusMode"
-  },
   // Which Key
   {
     "key": "space",
@@ -18,7 +13,12 @@
     "command": "markdown.extension.checkTaskList",
     "when": "editorTextFocus && editorLangId =~ /^markdown$|^rmd$|^quarto$/ && vim.mode == 'Normal'"
   },
+  // ===== VSCode NeoVim =====
   // ctrl + m をEnterとして振舞わせたい
+  {
+    "key": "ctrl+m",
+    "command": "-editor.action.toggleTabFocusMode"
+  },
   {
     "key": "ctrl+m",
     "command": "calva.evaluateReplWindowForm",
