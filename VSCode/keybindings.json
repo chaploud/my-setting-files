@@ -33,6 +33,13 @@
     "args": "<C-u>",
     "when": "editorTextFocus && neovim.init"
   },
+  // Normal Modeでのctrl+zによるUndoの挙動
+  {
+    "key": "ctrl+z",
+    "command": "vscode-neovim.send",
+    "args": "u",
+    "when": "editorTextFocus && neovim.init && neovim.mode == 'normal'"
+  },
   // "ctrl+m" を "enter" として振舞わせたい
   // [A] 余計な"ctrl+m"を解除
   {
