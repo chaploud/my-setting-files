@@ -1,0 +1,10 @@
+{
+  "calva.replConnectSequences": [
+    {
+      "name": "Connect Server nREPL",
+      "projectType": "generic",
+      "autoSelectForJackIn": true,
+      "autoSelectForConnect": true,
+    }
+  ]
+}
