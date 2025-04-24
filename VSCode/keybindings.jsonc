@@ -230,5 +230,5 @@
     "key": "ctrl+m",
     "command": "workbench.action.terminal.acceptSelectedSuggestionEnter",
     "when": "terminalFocus && terminalHasBeenCreated && terminalIsOpen && terminalSuggestWidgetVisible && config.terminal.integrated.suggest.runOnEnter != 'ignore' || terminalFocus && terminalIsOpen && terminalProcessSupported && terminalSuggestWidgetVisible && config.terminal.integrated.suggest.runOnEnter != 'ignore'"
-  }
+  },
 ]

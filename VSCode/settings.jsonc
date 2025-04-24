@@ -232,6 +232,18 @@
           "command": "calva.jackIn"
         },
         {
+          "key": "c",
+          "name": "Connect to a running REPL (non-project)",
+          "type": "command",
+          "command": "calva.connectNonProjectREPL"
+        },
+        {
+          "key": "d",
+          "name": "Disconnect from a running REPL",
+          "type": "command",
+          "command": "calva.disconnect"
+        },
+        {
           "key": "e",
           "name": "Evaluate entire file",
           "type": "command",
