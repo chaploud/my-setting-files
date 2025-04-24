@@ -1,11 +1,5 @@
 // Place your key bindings in this file to override the defaults
 [
-  // Recenter Top Bottom
-  {
-    "key": "ctrl+l",
-    "command": "recenterTopBottom",
-    "when": "textInputFocus"
-  },
   // Markdown All in One
   // ,,でチェックボックスをトグル
   {

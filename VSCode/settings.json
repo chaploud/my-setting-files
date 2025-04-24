@@ -10,6 +10,8 @@
   "editor.renderWhitespace": "all",
   "editor.selectionHighlight": false,
   "editor.tabSize": 2,
+  "editor.smoothScrolling": true,
+  "editor.cursorSmoothCaretAnimation": "on",
   "editor.tokenColorCustomizations": {
     "comments": "#2aa1ae"
   },
@@ -120,6 +122,7 @@
     "p", // カーソルを上に移動
     "h", // backspace
     "k", // カーソルから行末まで削除
+    "l", // Recenter Top Bottom
     "m", // Enter
     "n", // カーソルを下に移動
     "w", // 1単語削除
@@ -131,6 +134,7 @@
     "e", // カーソルを移動せず画面を下にスクロール
     "g", // ESC
     "h", // backspace
+    "l", // Recenter Top Bottom
     "m", // Enter
     "o", // 前の場所に戻る
     "r", // Redo
