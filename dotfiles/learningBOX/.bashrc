@@ -1,3 +1,4 @@
+#!/bin/bash
 # CYAN="0;36"
 # START_COLOR="\[\e[${CYAN}m\]"
 # END_COLOR="\[\e[0m\]"
@@ -67,3 +68,8 @@ alias ga='git add'
 alias gc='git commit'
 alias gp='git push'
 alias gpl='gpull'
+
+# flutter SDK (for dev-lbox-syo-kudo)
+if [ "$(hostname)" = "dev-lbox-syo-kudo" ]; then
+    export PATH="$HOME/flutter/bin:$PATH"
+fi
