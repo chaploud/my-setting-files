@@ -14,12 +14,7 @@
     "when": "editorTextFocus && editorLangId =~ /^markdown$|^rmd$|^quarto$/"
   },
   // ===== VSCode NeoVim =====
-  // Which Key
-  {
-    "key": "space",
-    "command": "whichkey.show",
-    "when": "editorTextFocus && neovim.init && (neovim.mode == normal || neovim.mode == visual)"
-  },
+  // Which Key(init.lua側から呼ぶため省略)
   // ctrl+d, ctrl+uの挙動修正
   {
     "key": "ctrl+d",

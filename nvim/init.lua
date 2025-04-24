@@ -9,46 +9,9 @@ vim.api.nvim_create_autocmd("TextYankPost", {
   end,
 })
 
--- Recenter Top Bottom
-local recenter_state = 0
-local last_recenter_time = 0
-local CONSECUTIVE_THRESHOLD = 3.0
-local function recenter_cycle()
-  local current_time = vim.fn.localtime()
-  local time_diff = current_time - last_recenter_time
-  if time_diff > CONSECUTIVE_THRESHOLD then
-    recenter_state = 0
-  end
-
-  if recenter_state == 0 then
-    vim.cmd("normal! zz")
-    recenter_state = 1
-  elseif recenter_state == 1 then
-    vim.cmd("normal! zt")
-    recenter_state = 2
-  elseif recenter_state == 2 then
-    vim.cmd("normal! zb")
-    recenter_state = 0
-  end
-
-  last_recenter_time = current_time
-end
-
-vim.keymap.set({'n', 'v'}, '<C-l>', recenter_cycle, { noremap = true, silent = true })
-vim.keymap.set('i', '<C-l>', recenter_cycle, { noremap = true, silent = true })
 
 -- Emacsキーバインド
 vim.cmd([[
-  " Escape with fd
-  " inoremap <silent> fd <ESC>
-
-  " Save
-  nnoremap <C-s> :w<CR>
-  inoremap <C-s> <ESC>:w<CR>
-
-  " Undo
-  nnoremap <C-z> :undo<CR>
-  inoremap <C-z> <ESC>:undo<CR>
 
   " hlsearch
   nnoremap * *``
@@ -129,6 +92,61 @@ vim.opt.rtp:prepend(lazypath)
 
 vim.opt.ignorecase = true
 vim.opt.smartcase = true
+vim.g.mapleader = ' '
+vim.g.maplocalleader = ' '
+
+if vim.g.vscode then
+  -- <leader>のディレイをなくす
+  vim.o.timeout = false
+  local vscode = require('vscode')
+  vim.keymap.set({'n', 'v'}, '<leader>', function()
+    vscode.call('whichkey.show')
+  end, {noremap = true, silent = true})
+else
+  vim.cmd([[
+    "Escape with fd
+    inoremap <silent> fd <ESC>
+
+    " Save
+    nnoremap <C-s> :w<CR>
+    inoremap <C-s> <ESC>:w<CR>
+
+    " Undo
+    nnoremap <C-z> :undo<CR>
+    inoremap <C-z> <ESC>:undo<CR>
+  ]])
+
+  -- <leader>のディレイあり
+  vim.keymap.set({'n', 'v'}, '<leader>h', ':nohl<CR>', { noremap = true, silent = true })
+
+  -- Recenter Top Bottom
+  local recenter_state = 0
+  local last_recenter_time = 0
+  local CONSECUTIVE_THRESHOLD = 3.0
+  local function recenter_cycle()
+    local current_time = vim.fn.localtime()
+    local time_diff = current_time - last_recenter_time
+    if time_diff > CONSECUTIVE_THRESHOLD then
+      recenter_state = 0
+    end
+
+    if recenter_state == 0 then
+      vim.cmd("normal! zz")
+      recenter_state = 1
+    elseif recenter_state == 1 then
+      vim.cmd("normal! zt")
+      recenter_state = 2
+    elseif recenter_state == 2 then
+      vim.cmd("normal! zb")
+      recenter_state = 0
+    end
+
+    last_recenter_time = current_time
+end
+
+vim.keymap.set({'n', 'v'}, '<C-l>', recenter_cycle, { noremap = true, silent = true })
+vim.keymap.set('i', '<C-l>', recenter_cycle, { noremap = true, silent = true })
+end
 
 -- Setup lazy.nvim
 require("lazy").setup({

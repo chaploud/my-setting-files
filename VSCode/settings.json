@@ -165,11 +165,11 @@
     "typescript": "bun"
   },
   // Which Key
-  "whichkey.delay": 300,
+  "whichkey.delay": 0,
   "whichkey.bindings": [
     {
       "key": "h",
-      "name": "Highlight Off (:nohl)",
+      "name": "Turn off Highlight (:nohl)",
       "type": "command",
       "command": "vscode-neovim.send",
       "args": ":nohl<CR>"
