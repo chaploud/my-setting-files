@@ -31,6 +31,7 @@
     "git.enableSmartCommit": true,
     "git.confirmSync": false,
     "git.openRepositoryInParentFolders": "never",
+    "git.blame.editorDecoration.enabled": true,
     // 文字検索時に大文字小文字を都合よく検索する
     "search.smartCase": true,
     // プラットフォームごとにキーバインドを分けない
