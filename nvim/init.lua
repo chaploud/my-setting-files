@@ -50,6 +50,9 @@ vim.cmd([[
   nnoremap <C-z> :undo<CR>
   inoremap <C-z> <ESC>:undo<CR>
 
+  " hlsearch
+  nnoremap * *``
+
   " Basic cursor movement and deletion keybindings from emacs, for vim.
   " insert mode
   imap <C-p> <Up>
