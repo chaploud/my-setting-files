@@ -152,6 +152,7 @@
     "otherOutput": "repl-window"
   },
   "calva.paredit.killAlsoCutsToClipboard": true,
+  "calva.autoConnectRepl": true,
   // Code Runner
   "code-runner.runInTerminal": true,
   "code-runner.saveFileBeforeRun": true,

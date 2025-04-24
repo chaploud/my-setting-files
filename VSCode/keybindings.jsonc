@@ -231,4 +231,32 @@
     "command": "workbench.action.terminal.acceptSelectedSuggestionEnter",
     "when": "terminalFocus && terminalHasBeenCreated && terminalIsOpen && terminalSuggestWidgetVisible && config.terminal.integrated.suggest.runOnEnter != 'ignore' || terminalFocus && terminalIsOpen && terminalProcessSupported && terminalSuggestWidgetVisible && config.terminal.integrated.suggest.runOnEnter != 'ignore'"
   },
+  // [C] 元々"enter"にも割り当てられていないもの
+  // quick open
+  { // 確定
+    "key": "ctrl+m",
+    "command": "workbench.action.acceptSelectedQuickOpenItem",
+    "when": "inQuickOpen"
+  },
+  { // ESC
+    "key": "ctrl+g",
+    "command": "workbench.action.closeQuickOpen",
+    "when": "inQuickOpen"
+  },
+  // 検索
+  { // 次の候補へ
+    "key": "ctrl+m",
+    "command": "editor.action.nextMatchFindAction",
+    "when": "findInputFocussed"
+  },
+  { // 次の置換へ
+    "key": "ctrl+m",
+    "command": "editor.action.replaceOne",
+    "when": "replaceInputFocussed"
+  },
+  { // ESC
+    "key": "ctrl+g",
+    "command": "closeFindWidget",
+    "when": "findInputFocussed || replaceInputFocussed"
+  }
 ]
