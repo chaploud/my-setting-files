@@ -26,7 +26,6 @@ local function recenter_cycle()
   if time_diff > CONSECUTIVE_THRESHOLD then
     recenter_state = 0
   end
-  print("diff: " .. time_diff .. " state: " .. recenter_state)
 
   if recenter_state == 0 then
     if vim.g.vscode then
@@ -75,7 +74,6 @@ vim.cmd([[
   imap <C-h> <BS>
   imap <C-k> <C-r>=<SID>kill_line()<CR>
   imap <C-y> <C-r>+
-  imap <C-g> <ESC>
 
   " command line mode
   cmap <C-p> <Up>
@@ -87,7 +85,6 @@ vim.cmd([[
   cnoremap <C-d> <Del>
   cnoremap <C-h> <BS>
   cnoremap <C-k> <C-f>D<C-c><C-c>:<Up>
-  cnoremap <C-g> <ESC>
 
   " command-T window
   let g:CommandTCursorLeftMap  = ['<Left>',  '<C-b>']
@@ -161,6 +158,9 @@ else
     " Undo
     nnoremap <C-z> :undo<CR>
     inoremap <C-z> <ESC>:undo<CR>
+
+    imap <C-g> <ESC>
+    cnoremap <C-g> <ESC>
   ]])
 
   -- <leader>のディレイあり
