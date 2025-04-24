@@ -25,13 +25,13 @@
     "key": "ctrl+d",
     "command": "vscode-neovim.send",
     "args": "<C-d>",
-    "when": "editorTextFocus && neovim.init",
+    "when": "editorTextFocus && neovim.init"
   },
   {
     "key": "ctrl+u",
     "command": "vscode-neovim.send",
     "args": "<C-u>",
-    "when": "editorTextFocus && neovim.init",
+    "when": "editorTextFocus && neovim.init"
   },
   // "ctrl+m" を "enter" として振舞わせたい
   // [A] 余計な"ctrl+m"を解除

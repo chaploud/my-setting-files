@@ -34,14 +34,14 @@
   "git.openRepositoryInParentFolders": "never",
   // 文字検索時に大文字小文字を都合よく検索する
   "search.smartCase": true,
+  "search.useGlobalIgnoreFiles": true,
+  "search.useParentIgnoreFiles": true,
   // プラットフォームごとにキーバインドを分けない
   "settingsSync.keybindingsPerPlatform": false,
   "security.workspace.trust.untrustedFiles": "open",
   //  ===== デフォルトフォーマッタ =====
   "[jsonc]": {
-    "editor.defaultFormatter": "vscode.json-language-features",
-    // 空白2文字でインデント
-    "editor.tabSize": 2
+    "editor.defaultFormatter": "vscode.json-language-features"
   },
   // ===== 以下は拡張機能の設定 =====
   // Color Theme (GitHub Dark Default)
@@ -82,7 +82,12 @@
   "todo-tree.tree.expanded": true,
   "todo-tree.tree.scanMode": "workspace only",
   "todo-tree.highlights.highlightDelay": 100,
-  "todo-tree.general.tags": ["TODO", "NOTE", "FIXME", "XXX"],
+  "todo-tree.general.tags": [
+    "TODO",
+    "NOTE",
+    "FIXME",
+    "XXX"
+  ],
   "todo-tree.highlights.useColourScheme": true,
   "todo-tree.highlights.backgroundColourScheme": [
     "F2CC60",
