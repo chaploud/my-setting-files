@@ -4,7 +4,8 @@
       "name": "Connect Server nREPL",
       "projectType": "generic",
       "autoSelectForJackIn": true,
-      "autoSelectForConnect": true,
+      "autoSelectForConnect": true
     }
-  ]
+  ],
+  "calva.autoConnectRepl": true
 }
