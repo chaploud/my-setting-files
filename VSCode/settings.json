@@ -26,12 +26,12 @@
         "-editor.action.toggleTabFocusMode"
     ],
     "terminal.integrated.scrollback": 10000,
+    "terminal.integrated.persistentSessionReviveProcess": "never",
     // Git関連の設定
     "git.autofetch": true,
     "git.enableSmartCommit": true,
     "git.confirmSync": false,
     "git.openRepositoryInParentFolders": "never",
-    "git.blame.editorDecoration.enabled": true,
     // 文字検索時に大文字小文字を都合よく検索する
     "search.smartCase": true,
     // プラットフォームごとにキーバインドを分けない
@@ -51,12 +51,15 @@
             "sideBarSectionHeader.background": "#07080a", // サイドバーのセクションヘッダーの背景色
             "textPreformat.background": "#6e768144", // コードの背景色
             "textPreformat.foreground": "#f0883e", // コードの文字色
+            "peekViewEditorStickyScroll.background": "#0d1117"
         }
     },
     // vscode-icons
     "workbench.iconTheme": "vscode-icons",
     // Path Intellisense
     "path-intellisense.autoTriggerNextSuggestion": true,
+    // Database Client
+    "database-client.autoSync": true,
     // Remote SSH
     "remote.SSH.remotePlatform": {
         "dev-almalinux": "linux",
@@ -126,7 +129,6 @@
         "e", // カーソルを移動せず画面を下にスクロール
         "g", // ESC
         "h", // backspace
-        "l", // Recenter Top Bottom
         "m", // Enter
         "o", // 前の場所に戻る
         "r", // Redo
@@ -140,12 +142,14 @@
         "]" // 定義ジャンプ
     ],
     // Calva
+    "calva.enableInspectorRainbow": true,
     "calva.useLegacyReplWindowPath": false,
     "calva.outputDestinations": {
         "evalResults": "repl-window",
         "evalOutput": "repl-window",
         "otherOutput": "repl-window"
     },
+    "calva.paredit.killAlsoCutsToClipboard": true,
     // Code Runner
     "code-runner.runInTerminal": true,
     "code-runner.saveFileBeforeRun": true,
@@ -158,53 +162,53 @@
         "typescript": "bun"
     },
     // Which Key
-    "whichkey.delay": 500,
+    "whichkey.delay": 300,
     "whichkey.bindings": [
         {
             "key": "n",
-            "name": "Next Marker",
+            "name": "Next marker",
             "type": "command",
             "command": "editor.action.marker.nextInFiles"
         },
         {
             "key": "p",
-            "name": "Previous Marker",
+            "name": "Previous marker",
             "type": "command",
             "command": "editor.action.marker.prevInFiles"
         },
         {
             "key": "N",
-            "name": "Next Diff",
+            "name": "Next diff",
             "type": "command",
             "command": "editor.action.dirtydiff.next"
         },
         {
             "key": "P",
-            "name": "Previous Diff",
+            "name": "Previous diff",
             "type": "command",
             "command": "editor.action.dirtydiff.previous"
         },
         {
             "key": "d",
-            "name": "Debug Start",
+            "name": "Debug start",
             "type": "command",
             "command": "workbench.action.debug.start"
         },
         {
             "key": "D",
-            "name": "Debug Run",
+            "name": "Debug run",
             "type": "command",
             "command": "workbench.action.debug.run"
         },
         {
             "key": "i",
-            "name": "Inspect TM Scopes",
+            "name": "Inspect TM scopes",
             "type": "command",
             "command": "editor.action.inspectTMScopes"
         },
         {
             "key": "e",
-            "name": "Execute Current File",
+            "name": "Execute current file",
             "type": "command",
             "command": "code-runner.run"
         },
@@ -214,30 +218,115 @@
             "type": "bindings",
             "bindings": [
                 {
+                    "key": "l",
+                    "name": "Move cursor to list end",
+                    "type": "command",
+                    "command": "paredit.closeList"
+                },
+                {
                     "key": "i",
-                    "name": "(Re)Start a Project REPL and Connect (Jack-In)",
+                    "name": "(Re)Start a project REPL and connect (Jack-In)",
                     "type": "command",
                     "command": "calva.jackIn"
                 },
                 {
                     "key": "e",
-                    "name": "Evaluate Entire File",
+                    "name": "Evaluate entire file",
                     "type": "command",
                     "command": "calva.loadFile"
                 },
                 {
                     "key": "r",
-                    "name": "Show REPL Window",
+                    "name": "Show REPL window",
                     "type": "command",
                     "command": "calva.showReplWindow"
                 },
                 {
                     "key": "k",
-                    "name": "Stop/Kill the Project REPL started by Calva (Jack-Out)",
+                    "name": "Stop/Kill the project REPL started by Calva (Jack-Out)",
                     "command": "calva.jackOut"
-                }
-            ]
+                },
+                {
+                    "key": "b",
+                    "name": "Barf forwards",
+                    "type": "command",
+                    "command": "paredit.barfSexpForward"
+                },
+                {
+                    "key": "B",
+                    "name": "Barf backwards",
+                    "type": "command",
+                    "command": "paredit.barfSexpBackward"
+                },
+                {
+                    "key": "s",
+                    "name": "Slurp forwards",
+                    "type": "command",
+                    "command": "paredit.slurpSexpForward"
+                },
+                {
+                    "key": "S",
+                    "name": "Slurp backwards",
+                    "type": "command",
+                    "command": "paredit.slurpSexpBackward"
+                },
+                {
+                    "key": "d",
+                    "name": "Delete",
+                    "type": "bindings",
+                    "bindings": [
+                        {
+                            "key": "h",
+                            "name": "Delete to start of list",
+                            "type": "command",
+                            "command": "paredit.killListBackward"
+                        },
+                        {
+                            "key": "l",
+                            "name": "Delete to end of list",
+                            "type": "command",
+                            "command": "paredit.killListForward"
+                        },
+                        {
+                            "key": "k",
+                            "name": "Delete parent and raise children",
+                            "type": "command",
+                            "command": "paredit.raiseSexp"
+                        }
+                    ]
+                },
+                {
+                    "key": "w",
+                    "name": "Wrap",
+                    "type": "bindings",
+                    "bindings": [
+                        {
+                            "key": "(",
+                            "name": "Wrap with ()",
+                            "type": "command",
+                            "command": "paredit.wrapAroundParens"
+                        },
+                        {
+                            "key": "[",
+                            "name": "Wrap with []",
+                            "type": "command",
+                            "command": "paredit.wrapAroundSquare"
+                        },
+                        {
+                            "key": "{",
+                            "name": "Wrap with {}",
+                            "type": "command",
+                            "command": "paredit.wrapAroundCurly"
+                        },
+                        {
+                            "key": "\"",
+                            "name": "Wrap with \"\"",
+                            "type": "command",
+                            "command": "paredit.wrapAroundQuote"
+                        },
+                    ]
+                },
+            ],
         }
     ],
-    "database-client.autoSync": true,
 }

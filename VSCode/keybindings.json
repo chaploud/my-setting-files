@@ -6,12 +6,6 @@
     "command": "recenterTopBottom",
     "when": "textInputFocus"
   },
-  // Which Key
-  {
-    "key": "space",
-    "command": "whichkey.show",
-    "when": "editorTextFocus && neovim.mode == normal || neovim.mode == visual"
-  },
   // Markdown All in One
   // ,,でチェックボックスをトグル
   {
@@ -20,6 +14,25 @@
     "when": "editorTextFocus && editorLangId =~ /^markdown$|^rmd$|^quarto$/"
   },
   // ===== VSCode NeoVim =====
+  // Which Key
+  {
+    "key": "space",
+    "command": "whichkey.show",
+    "when": "editorTextFocus && neovim.init && (neovim.mode == normal || neovim.mode == visual)"
+  },
+  // ctrl+d, ctrl+uの挙動修正
+  {
+    "key": "ctrl+d",
+    "command": "vscode-neovim.send",
+    "args": "<C-d>",
+    "when": "editorTextFocus && neovim.init",
+  },
+  {
+    "key": "ctrl+u",
+    "command": "vscode-neovim.send",
+    "args": "<C-u>",
+    "when": "editorTextFocus && neovim.init",
+  },
   // "ctrl+m" を "enter" として振舞わせたい
   // [A] 余計な"ctrl+m"を解除
   {
