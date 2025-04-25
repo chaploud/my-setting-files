@@ -58,6 +58,10 @@ vim.keymap.set('i', '<C-l>', recenter_cycle, { noremap = true, silent = true })
 
 -- Emacsキーバインド
 vim.cmd([[
+  "Escape with fd
+  " qキーによるレコーディング時に有効にするため、VSCode内でもfdを有効にする
+  inoremap <silent> fd <ESC>
+
 
   " hlsearch
   nnoremap * *``
@@ -148,9 +152,6 @@ if vim.g.vscode then
   end, {noremap = true, silent = true})
 else
   vim.cmd([[
-    "Escape with fd
-    inoremap <silent> fd <ESC>
-
     " Save
     nnoremap <C-s> :w<CR>
     inoremap <C-s> <ESC>:w<CR>
