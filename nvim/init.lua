@@ -62,10 +62,6 @@ vim.cmd([[
   " qキーによるレコーディング時に有効にするため、VSCode内でもfdを有効にする
   inoremap <silent> fd <ESC>
 
-
-  " hlsearch
-  nnoremap * *``
-
   " Basic cursor movement and deletion keybindings from emacs, for vim.
   " insert mode
   imap <C-p> <Up>

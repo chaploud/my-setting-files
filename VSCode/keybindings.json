@@ -7,6 +7,11 @@
     "command": "markdown.extension.checkTaskList",
     "when": "editorTextFocus && editorLangId =~ /^markdown$|^rmd$|^quarto$/"
   },
+  // Calculator
+  {
+    "key": "ctrl+k c",
+    "command": "calculator.showInput"
+  },
   // ===== VSCode NeoVim =====
   // Which Key(init.lua側から呼ぶため省略)
   // ctrl+d, ctrl+uの挙動修正
