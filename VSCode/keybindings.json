@@ -27,13 +27,6 @@
     "args": "<C-u>",
     "when": "editorTextFocus && neovim.init"
   },
-  // ctrl+mはenterとしてNeoVimに伝える
-  {
-    "key": "ctrl+m",
-    "command": "vscode-neovim.send",
-    "args": "<CR>",
-    "when": "editorTextFocus && neovim.init"
-  },
   {
     // NeoVim側にはESCで伝わる
     "key": "ctrl+g",
@@ -54,7 +47,14 @@
     "key": "ctrl+m",
     "command": "-editor.action.toggleTabFocusMode"
   },
-  // [B] "enter" でkeybindingsを検索して出てきたものに、"ctrl+m"も割り当てる
+  // [B] 元々"enter"にも割り当てられていないもの
+  // quick open
+  { // 確定
+    "key": "ctrl+m",
+    "command": "workbench.action.acceptSelectedQuickOpenItem",
+    "when": "inQuickOpen"
+  },
+  // [C] "enter" でkeybindingsを検索して出てきたものに、"ctrl+m"も割り当てる
   // デフォルトのABC順(大文字→小文字)でその都度過不足があれば修正していく
   {
     "key": "ctrl+m",
@@ -245,24 +245,6 @@
     "key": "ctrl+m",
     "command": "workbench.action.terminal.acceptSelectedSuggestionEnter",
     "when": "terminalFocus && terminalHasBeenCreated && terminalIsOpen && terminalSuggestWidgetVisible && config.terminal.integrated.suggest.runOnEnter != 'ignore' || terminalFocus && terminalIsOpen && terminalProcessSupported && terminalSuggestWidgetVisible && config.terminal.integrated.suggest.runOnEnter != 'ignore'"
-  },
-  // [C] 元々"enter"にも割り当てられていないもの
-  // quick open
-  { // 確定
-    "key": "ctrl+m",
-    "command": "workbench.action.acceptSelectedQuickOpenItem",
-    "when": "inQuickOpen"
-  },
-  // 検索
-  { // 次の候補へ
-    "key": "ctrl+m",
-    "command": "editor.action.nextMatchFindAction",
-    "when": "findInputFocussed"
-  },
-  { // 次の置換へ
-    "key": "ctrl+m",
-    "command": "editor.action.replaceOne",
-    "when": "replaceInputFocussed"
   },
   // [D] "ctrl+g"を軒並み"ESC"と同じ動作にする
   {

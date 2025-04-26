@@ -127,6 +127,7 @@
     "h", // backspace
     "k", // カーソルから行末まで削除
     "l", // Recenter Top Bottom
+    "m", // enter
     "n", // カーソルを下に移動
     "w", // 1単語削除
     "y" // 貼り付け
@@ -138,6 +139,7 @@
     "g", // ESC
     "h", // backspace
     "l", // Recenter Top Bottom
+    "m", // enter
     "o", // 前の場所に戻る
     "r", // Redo
     "t", // 元の場所に戻る
