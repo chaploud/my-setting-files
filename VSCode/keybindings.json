@@ -634,5 +634,58 @@
     "key": "ctrl+g",
     "command": "workbench.statusBar.clearFocus",
     "when": "statusBarFocused"
+  },
+  // Git (SCM: Source Control Management)
+  // space => フォーカスはそのまま、差分を開く
+  // enter/ctrl+m => 差分を開いてフォーカスを移す
+  {
+    "key": "shift+s",
+    "command": "git.stageAll",
+    "when": "listFocus && !inputFocus && neovim.init"
+  },
+  {
+    "key": "shift+u",
+    "command": "git.unstageAll",
+    "when": "listFocus && !inputFocus && neovim.init"
+  },
+  {
+    "key": "c",
+    "command": "git.commit",
+    "when": "listFocus && !inputFocus && neovim.init"
+  },
+  {
+    "key": "s",
+    "command": "git.stage",
+    "when": "listFocus && !inputFocus && neovim.init"
+  },
+  {
+    "key": "u",
+    "command": "git.unstage",
+    "when": "listFocus && !inputFocus && neovim.init"
+  },
+  {
+    "key": "x",
+    "command": "git.clean",
+    "when": "listFocus && !inputFocus && neovim.init"
+  },
+  {
+    "key": "X",
+    "command": "git.cleanAll",
+    "when": "listFocus && !inputFocus && neovim.init"
+  },
+  {
+    "key": "o",
+    "command": "git.openFile",
+    "when": "listFocus && !inputFocus && neovim.init"
+  },
+  {
+    "key": "z",
+    "command": "git.stash",
+    "when": "listFocus && !inputFocus && neovim.init"
+  },
+  {
+    "key": "q",
+    "command": "workbench.action.focusFirstEditorGroup",
+    "when": "listFocus && !inputFocus && neovim.init"
   }
 ]
