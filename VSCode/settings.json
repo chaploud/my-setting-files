@@ -83,6 +83,8 @@
   // GitHub Copilot Chat
   "github.copilot.chat.localeOverride": "ja",
   "emulator.emulatorPathLinux": "~/Android/Sdk/emulator",
+  "prettify-ts.hidePrivateProperties": false,
+  "prettify-ts.typeIndentation": 2,
   // Todo Tree
   "todo-tree.tree.showCountsInTree": true,
   "todo-tree.tree.expanded": true,
