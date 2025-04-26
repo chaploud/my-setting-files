@@ -185,6 +185,18 @@
       "args": ":nohl<CR>"
     },
     {
+      "key": "f",
+      "name": "File explorer",
+      "type": "command",
+      "command": "workbench.view.explorer"
+    },
+    {
+      "key": "s",
+      "name": "Search in files",
+      "type": "command",
+      "command": "workbench.view.search"
+    },
+    {
       "key": "n",
       "name": "Next marker",
       "type": "command",
@@ -231,6 +243,43 @@
       "name": "Execute current file",
       "type": "command",
       "command": "code-runner.run"
+    },
+    {
+      "key": "g",
+      "name": "Git",
+      "type": "bindings",
+      "bindings": [
+        {
+          "key": "s",
+          "name": "Git status",
+          "type": "command",
+          "command": "workbench.view.scm"
+        },
+        {
+          "key": "l",
+          "name": "Git log",
+          "type": "command",
+          "command": "workbench.scm.history.focus"
+        },
+        {
+          "key": "b",
+          "name": "Git checkout",
+          "type": "command",
+          "command": "git.checkout"
+        },
+        {
+          "key": "f",
+          "name": "Git pull",
+          "type": "command",
+          "command": "git.pull"
+        },
+        {
+          "key": "p",
+          "name": "Git push",
+          "type": "command",
+          "command": "git.push"
+        }
+      ]
     },
     {
       "key": "s",
