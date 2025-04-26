@@ -127,7 +127,7 @@
     "h", // backspace
     "k", // カーソルから行末まで削除
     "l", // Recenter Top Bottom
-    "m", // enter
+    // ctrl+m は enterとして認識させる(keybinding.jsonで設定)
     "n", // カーソルを下に移動
     "w", // 1単語削除
     "y" // 貼り付け

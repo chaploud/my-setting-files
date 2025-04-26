@@ -27,6 +27,14 @@
     "args": "<C-u>",
     "when": "editorTextFocus && neovim.init"
   },
+  { // enterのタイプにも対応(厳密に挙動を一致させる)
+    "key": "ctrl+m",
+    "command": "type",
+    "args": {
+      "text": "\n"
+    },
+    "when": "editorTextFocus && neovim.init && neovim.mode == 'insert' && !suggestWidgetVisible"
+  },
   {
     // NeoVim側にはESCで伝わる
     "key": "ctrl+g",
