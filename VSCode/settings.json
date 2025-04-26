@@ -82,6 +82,7 @@
   },
   // GitHub Copilot Chat
   "github.copilot.chat.localeOverride": "ja",
+  "emulator.emulatorPathLinux": "~/Android/Sdk/emulator",
   // Todo Tree
   "todo-tree.tree.showCountsInTree": true,
   "todo-tree.tree.expanded": true,
@@ -126,7 +127,6 @@
     "h", // backspace
     "k", // カーソルから行末まで削除
     "l", // Recenter Top Bottom
-    "m", // Enter
     "n", // カーソルを下に移動
     "w", // 1単語削除
     "y" // 貼り付け
@@ -138,7 +138,6 @@
     "g", // ESC
     "h", // backspace
     "l", // Recenter Top Bottom
-    "m", // Enter
     "o", // 前の場所に戻る
     "r", // Redo
     "t", // 元の場所に戻る

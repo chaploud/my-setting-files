@@ -27,6 +27,13 @@
     "args": "<C-u>",
     "when": "editorTextFocus && neovim.init"
   },
+  // ctrl+mはenterとしてNeoVimに伝える
+  {
+    "key": "ctrl+m",
+    "command": "vscode-neovim.send",
+    "args": "<CR>",
+    "when": "editorTextFocus && neovim.init"
+  },
   {
     // NeoVim側にはESCで伝わる
     "key": "ctrl+g",
