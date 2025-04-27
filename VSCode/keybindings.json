@@ -133,6 +133,7 @@
     "command": "git.pull",
     "when": "sideBarFocus && focusedView == 'workbench.scm' && listFocus && !inputFocus"
   },
+  // push
   {
     "key": "p",
     "command": "git.push",
