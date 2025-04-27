@@ -115,12 +115,6 @@
     "command": "git.stash",
     "when": "sideBarFocus && focusedView == 'workbench.scm' && listFocus && !inputFocus"
   },
-  // フォーカスを第1タブに移す
-  {
-    "key": "q",
-    "command": "workbench.action.focusFirstEditorGroup",
-    "when": "sideBarFocus && focusedView == 'workbench.scm' && listFocus && !inputFocus"
-  },
   // ===== 今の所、spaceで開いた後しか効果がない =====
   {
     "key": "o",
