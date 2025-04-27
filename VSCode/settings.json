@@ -253,7 +253,7 @@
           "key": "s",
           "name": "Git status",
           "type": "command",
-          "command": "workbench.view.scm"
+          "command": "workbench.scm.focus"
         },
         {
           "key": "l",
