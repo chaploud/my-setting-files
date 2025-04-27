@@ -53,6 +53,17 @@
     "args": "u",
     "when": "editorTextFocus && neovim.init && neovim.mode == 'normal'"
   },
+  // Search
+  {
+    "key": "ctrl+j",
+    "command": "search.focus.nextInputBox",
+    "when": "sideBarFocus && focusedView == 'workbench.view.search'"
+  },
+  {
+    "key": "ctrl+k",
+    "command": "search.focus.previousInputBox",
+    "when": "sideBarFocus && focusedView == 'workbench.view.search'"
+  },
   // Git (SCM: Source Control Management)
   // space => フォーカスはそのまま、差分を開く
   // enter/ctrl+m => 差分を開いてフォーカスを移す
@@ -60,76 +71,76 @@
   {
     "key": "i",
     "command": "workbench.scm.action.focusPreviousInput",
-    "when": "focusedView == 'workbench.scm' && listFocus && !inputFocus && neovim.init"
+    "when": "sideBarFocus && focusedView == 'workbench.scm' && listFocus && !inputFocus"
   },
   // 上のリソースグループにフォーカス移動
   {
     "key": "ctrl+k",
     "command": "workbench.scm.action.focusPreviousResourceGroup",
-    "when": "focusedView == 'workbench.scm'"
+    "when": "sideBarFocus && focusedView == 'workbench.scm'"
   },
   // 下のリソースグループにフォーカス移動
   {
     "key": "ctrl+j",
     "command": "workbench.scm.action.focusNextResourceGroup",
-    "when": "focusedView == 'workbench.scm'"
+    "when": "sideBarFocus && focusedView == 'workbench.scm'"
   },
   // すべてステージ
   {
     "key": "shift+s",
     "command": "git.stageAll",
-    "when": "focusedView == 'workbench.scm' && listFocus && !inputFocus && neovim.init"
+    "when": "sideBarFocus && focusedView == 'workbench.scm' && listFocus && !inputFocus"
   },
   // すべてアンステージ
   {
     "key": "shift+u",
     "command": "git.unstageAll",
-    "when": "focusedView == 'workbench.scm' && listFocus && !inputFocus && neovim.init"
+    "when": "sideBarFocus && focusedView == 'workbench.scm' && listFocus && !inputFocus"
   },
   // すべての変更を破棄
   {
     "key": "shift+x",
     "command": "git.cleanAll",
-    "when": "focusedView == 'workbench.scm' && listFocus && !inputFocus && neovim.init"
+    "when": "sideBarFocus && focusedView == 'workbench.scm' && listFocus && !inputFocus"
   },
   // コミット
   {
     "key": "c",
     "command": "git.commit",
-    "when": "focusedView == 'workbench.scm' && listFocus && !inputFocus && neovim.init"
+    "when": "sideBarFocus && focusedView == 'workbench.scm' && listFocus && !inputFocus"
   },
   // スタッシュ
   {
     "key": "z",
     "command": "git.stash",
-    "when": "focusedView == 'workbench.scm' && listFocus && !inputFocus && neovim.init"
+    "when": "sideBarFocus && focusedView == 'workbench.scm' && listFocus && !inputFocus"
   },
   // フォーカスを第1タブに移す
   {
     "key": "q",
     "command": "workbench.action.focusFirstEditorGroup",
-    "when": "focusedView == 'workbench.scm' && listFocus && !inputFocus && neovim.init"
+    "when": "sideBarFocus && focusedView == 'workbench.scm' && listFocus && !inputFocus"
   },
   // ===== 今の所、spaceで開いた後しか効果がない =====
   {
     "key": "o",
     "command": "git.openFile",
-    "when": "focusedView == 'workbench.scm' && listFocus && !inputFocus && neovim.init"
+    "when": "sideBarFocus && focusedView == 'workbench.scm' && listFocus && !inputFocus"
   },
   {
     "key": "s",
     "command": "git.stage",
-    "when": "focusedView == 'workbench.scm' && listFocus && !inputFocus && neovim.init"
+    "when": "sideBarFocus && focusedView == 'workbench.scm' && listFocus && !inputFocus"
   },
   {
     "key": "u",
     "command": "git.unstage",
-    "when": "focusedView == 'workbench.scm' && listFocus && !inputFocus && neovim.init"
+    "when": "sideBarFocus && focusedView == 'workbench.scm' && listFocus && !inputFocus"
   },
   {
     "key": "x",
     "command": "git.clean",
-    "when": "focusedView == 'workbench.scm' && listFocus && !inputFocus && neovim.init"
+    "when": "sideBarFocus && focusedView == 'workbench.scm' && listFocus && !inputFocus"
   },
   // ===== ここまで、spaceで開いた後しか効果がない =====
   // "ctrl+m" を "enter" として振舞わせたい
