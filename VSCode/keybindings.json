@@ -36,6 +36,30 @@
     "when": "editorTextFocus && neovim.init && neovim.mode == 'insert' && !suggestWidgetVisible"
   },
   {
+    "key": "ctrl+g",
+    "command": "-workbench.action.gotoLine"
+  },
+  {
+    "key": "ctrl+j",
+    "command": "search.focus.nextInputBox",
+    "when": "workbench.view.search.active && sideBarFocus && searchInputBoxFocus"
+  },
+  {
+    "key": "ctrl+k",
+    "command": "search.focus.previousInputBox",
+    "when": "workbench.view.search.active && sideBarFocus && !searchInputBoxFocus"
+  },
+  {
+    "key": "ctrl+j",
+    "command": "workbench.scm.action.focusNextInput",
+    "when": "workbench.scm.active && sideBarFocus && searchInputBoxFocus"
+  },
+  {
+    "key": "ctrl+k",
+    "command": "search.focus.previousInputBox",
+    "when": "workbench.view.search.active && sideBarFocus && !searchInputBoxFocus"
+  },
+  {
     // NeoVim側にはESCで伝わる
     "key": "ctrl+g",
     "command": "vscode-neovim.send",
