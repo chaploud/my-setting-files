@@ -121,6 +121,23 @@
     "command": "workbench.action.focusFirstEditorGroup",
     "when": "sideBarFocus && focusedView == 'workbench.scm' && listFocus && !inputFocus"
   },
+  // チェックアウト
+  {
+    "key": "b",
+    "command": "git.checkout",
+    "when": "sideBarFocus && focusedView == 'workbench.scm' && listFocus && !inputFocus"
+  },
+  // pull
+  {
+    "key": "f",
+    "command": "git.pull",
+    "when": "sideBarFocus && focusedView == 'workbench.scm' && listFocus && !inputFocus"
+  },
+  {
+    "key": "p",
+    "command": "git.push",
+    "when": "sideBarFocus && focusedView == 'workbench.scm' && listFocus && !inputFocus"
+  },
   // ===== 今の所、spaceで開いた後しか効果がない =====
   {
     "key": "o",
