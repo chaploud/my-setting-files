@@ -13,6 +13,13 @@
     "command": "calculator.showInput"
   },
   // ===== VSCode NeoVim =====
+  // insertモード時はctrl+kによるコマンド待ち受けをしない
+  {
+    "key": "ctrl+k",
+    "command": "vscode-neovim.send",
+    "args": "<C-k>",
+    "when": "editorTextFocus && neovim.init && neovim.mode == 'insert'"
+  },
   // Which Key(init.lua側から呼ぶため省略)
   // ctrl+d, ctrl+uの挙動修正
   {
