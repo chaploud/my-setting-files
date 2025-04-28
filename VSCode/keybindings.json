@@ -34,6 +34,22 @@
     "args": "<C-u>",
     "when": "editorTextFocus && neovim.init"
   },
+  // Go back/forwardはVSCode側の機能を使う
+  {
+    "key": "ctrl+o",
+    "command": "workbench.action.navigateBack",
+    "when": "editorTextFocus"
+  },
+  {
+    "key": "ctrl+t",
+    "command": "workbench.action.navigateForward",
+    "args": "<C-t>",
+    "when": "editorTextFocus"
+  },
+  {
+    "key": "ctrl+shift+t",
+    "command": "workbench.action.navigateToLastEditLocation"
+  },
   { // insert時にenterキーを押した挙動に対応
     "key": "ctrl+m",
     "command": "type",

@@ -85,6 +85,9 @@
   "emulator.emulatorPathLinux": "~/Android/Sdk/emulator",
   "prettify-ts.hidePrivateProperties": false,
   "prettify-ts.typeIndentation": 2,
+  "prettify-ts.maxDepth": 3,
+  "prettify-ts.maxSubProperties": 20,
+  "prettify-ts.maxUnionMembers": 30,
   // Todo Tree
   "todo-tree.tree.showCountsInTree": true,
   "todo-tree.tree.expanded": true,
@@ -142,9 +145,9 @@
     "h", // backspace
     "l", // Recenter Top Bottom
     "m", // enter
-    "o", // 前の場所に戻る
+    // "o", // 前の場所に戻る
     "r", // Redo
-    "t", // 元の場所に戻る
+    // "t", // 元の場所に戻る
     "u", // 画面半分上にスクロール
     "v", // 矩形選択
     "w", // ウィンドウ操作
