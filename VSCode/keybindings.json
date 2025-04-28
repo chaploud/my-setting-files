@@ -20,7 +20,12 @@
     "args": "<C-k>",
     "when": "editorTextFocus && neovim.init && neovim.mode == 'insert'"
   },
-  // Which Key(init.lua側から呼ぶため省略)
+  // Which Key(neovimと通信している際は、init.luaから呼ぶ)
+  {
+    "key": "space",
+    "command": "whichkey.show",
+    "when": "!activeEditor && focusedView == ''"
+  },
   // ctrl+d, ctrl+uの挙動修正
   {
     "key": "ctrl+d",
