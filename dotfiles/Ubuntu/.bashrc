@@ -102,7 +102,7 @@ alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo
 # See /usr/share/doc/bash-doc/examples in the bash-doc package.
 
 if [ -f ~/.bash_aliases ]; then
-    . ~/.bash_aliases
+    . "$HOME/.bash_aliases"
 fi
 
 # enable programmable completion features (you don't need to enable
@@ -121,21 +121,6 @@ fi
 # Aliases
 alias sl="ls"
 
-# Rust
-export PATH=$HOME/.local/bin:$PATH
-. "$HOME/.cargo/env"
-
-# gitstatus
-source ~/gitstatus/gitstatus.prompt.sh
-
-# pyenv
-export PYENV_ROOT="$HOME/.pyenv"
-[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
-
-# volta
-export VOLTA_HOME="$HOME/.volta"
-export PATH="$VOLTA_HOME/bin:$PATH"
-
 # Git Aliases
 alias gs="git status"
 alias ga="git add"
@@ -145,21 +130,24 @@ alias gl="git log"
 alias gd="git diff"
 alias gpull="git pull"
 
-# Homebrew
-eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+# gitstatus
+source "$HOME/Install/gitstatus/gitstatus.prompt.sh"
 
-# export CDPATH="${HOME}/Documents/"
-export PATH="${HOME}/Desktop/bin:${PATH}"
+# pyenv
+export PYENV_ROOT="$HOME/.pyenv"
+[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
+eval "$(pyenv init - bash)"
+
+# Cargo (Rust)
+. "$HOME/.cargo/env"
+
+# volta (Node.js)
+export VOLTA_HOME="$HOME/.volta"
+export PATH="$VOLTA_HOME/bin:$PATH"
 
 # bun
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
-
-# Flutter
-export PATH="${HOME}/Install/flutter/bin:${PATH}"
-
-# Android Studio
-export PATH="${HOME}/Install/android-studio/bin:${PATH}"
 
 # NeoVim
 export PATH="$PATH:/opt/nvim-linux-x86_64/bin"
