@@ -151,3 +151,9 @@ export PATH="$BUN_INSTALL/bin:$PATH"
 
 # NeoVim
 export PATH="$PATH:/opt/nvim-linux-x86_64/bin"
+
+# Flutter
+export PATH="$PATH:/home/chaploud/Install/flutter/bin"
+
+# Android Studio
+export PATH="$PATH:/home/chaploud/Install/android-studio/bin"
