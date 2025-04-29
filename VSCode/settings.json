@@ -285,7 +285,7 @@
       ]
     },
     {
-      "key": "s",
+      "key": "m",
       "name": "Clojure",
       "type": "bindings",
       "bindings": [
@@ -308,16 +308,10 @@
           "command": "calva.connectNonProjectREPL"
         },
         {
-          "key": "d",
+          "key": "D",
           "name": "Disconnect from a running REPL",
           "type": "command",
           "command": "calva.disconnect"
-        },
-        {
-          "key": "e",
-          "name": "Evaluate entire file",
-          "type": "command",
-          "command": "calva.loadFile"
         },
         {
           "key": "r",
@@ -329,6 +323,18 @@
           "key": "k",
           "name": "Stop/Kill the project REPL started by Calva (Jack-Out)",
           "command": "calva.jackOut"
+        },
+        {
+          "key": "e",
+          "name": "Evaluate entire file",
+          "type": "command",
+          "command": "calva.loadFile"
+        },
+        {
+          "key": "g",
+          "name": "Instrument current form for debugging",
+          "type": "command",
+          "command": "calva.debug.instrument"
         },
         {
           "key": "b",

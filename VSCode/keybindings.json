@@ -5,7 +5,7 @@
   {
     "key": ", ,",
     "command": "markdown.extension.checkTaskList",
-    "when": "editorTextFocus && editorLangId =~ /^markdown$|^rmd$|^quarto$/"
+    "when": "editorTextFocus && editorLangId =~ /^markdown$|^rmd$|^quarto$/ && neovim.mode == 'normal'"
   },
   // Calculator
   {
@@ -24,7 +24,7 @@
   {
     "key": "space",
     "command": "whichkey.show",
-    "when": "!activeEditor && focusedView == ''"
+    "when": "(!activeEditor || activeEditor == 'gettingStartedPage' || activeEditor == 'workbench.editors.errorEditor') && focusedView == ''"
   },
   // ctrl+d, ctrl+uの挙動修正
   {
