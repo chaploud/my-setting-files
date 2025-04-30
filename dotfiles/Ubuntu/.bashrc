@@ -152,8 +152,8 @@ export PATH="$BUN_INSTALL/bin:$PATH"
 # NeoVim
 export PATH="/opt/nvim-linux-x86_64/bin:$PATH"
 
+# アプリ開発は常にMacに接続して行うので削除
 # Flutter
-export PATH="/home/chaploud/Install/flutter/bin:$PATH"
-
+# export PATH="/home/chaploud/Install/flutter/bin:$PATH"
 # Android Studio
-export PATH="/home/chaploud/Install/android-studio/bin:$PATH"
+# export PATH="/home/chaploud/Install/android-studio/bin:$PATH"
