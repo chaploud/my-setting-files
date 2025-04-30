@@ -150,10 +150,12 @@ export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
 
 # NeoVim
-export PATH="$PATH:/opt/nvim-linux-x86_64/bin"
+export PATH="/opt/nvim-linux-x86_64/bin:$PATH"
 
 # Flutter
-export PATH="$PATH:/home/chaploud/Install/flutter/bin"
+export PATH="/home/chaploud/Install/flutter/bin:$PATH"
 
 # Android Studio
-export PATH="$PATH:/home/chaploud/Install/android-studio/bin"
+export PATH="/home/chaploud/Install/android-studio/bin:$PATH"
+# emulator
+export PATH="/home/chaploud/Android/Sdk/emulator:$PATH"
