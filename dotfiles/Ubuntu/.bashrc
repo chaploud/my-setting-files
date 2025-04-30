@@ -157,5 +157,3 @@ export PATH="/home/chaploud/Install/flutter/bin:$PATH"
 
 # Android Studio
 export PATH="/home/chaploud/Install/android-studio/bin:$PATH"
-# emulator
-export PATH="/home/chaploud/Android/Sdk/emulator:$PATH"
