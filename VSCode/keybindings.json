@@ -1,5 +1,10 @@
 // Place your key bindings in this file to override the defaults
 [
+  {
+    "key": "shift+enter",
+    "command": "workbench.action.terminal.runSelectedText",
+    "when": "editorTextFocus && editorLangId == 'powershell' || editorLangId == 'shellscript",
+  },
   // Markdown All in One
   // ,,でチェックボックスをトグル
   {
@@ -163,6 +168,62 @@
     "key": "x",
     "command": "git.clean",
     "when": "sideBarFocus && focusedView == 'workbench.scm' && listFocus && !inputFocus"
+  },
+  // Calva
+  {
+    "key": "alt+n",
+    "command": "calva.showNextReplHistoryEntry",
+    "when": "calva:connected && calva:keybindingsEnabled && calva:outputWindowActive && calva:replHistoryCommandsActive && editorLangId == 'clojure'"
+  },
+  {
+    "key": "alt+p",
+    "command": "calva.showPreviousReplHistoryEntry",
+    "when": "calva:connected && calva:keybindingsEnabled && calva:outputWindowActive && calva:replHistoryCommandsActive && editorLangId == 'clojure'"
+  },
+  {
+    "key": "ctrl+h",
+    "command": "paredit.deleteBackward",
+    "when": "calva:keybindingsEnabled && editorTextFocus && !calva:cursorInComment && !editorHasMultipleSelections && !editorReadOnly && editorLangId == 'clojure' && paredit:keyMap == 'strict' && neovim.mode == 'insert'"
+  },
+  {
+    "key": "ctrl+d",
+    "command": "paredit.deleteForward",
+    "when": "calva:keybindingsEnabled && editorTextFocus && !calva:cursorInComment && !editorHasMultipleSelections && !editorReadOnly && editorLangId == 'clojure' && paredit:keyMap == 'strict' && neovim.mode == 'insert'"
+  },
+  {
+    "command": "paredit.insertSemiColon",
+    "key": ";",
+    "when": "calva:keybindingsEnabled && editorLangId == clojure && editorTextFocus && paredit:keyMap == strict && !editorReadOnly && !editorHasMultipleSelections && !calva:cursorInComment && neovim.mode == 'insert'"
+  },
+  {
+    "key": "ctrl+w",
+    "command": "paredit.killSexpBackward",
+    "when": "calva:keybindingsEnabled && editorTextFocus && editorLangId == 'clojure' && paredit:keyMap =~ /original|strict/ && neovim.mode == 'insert'"
+  },
+  {
+    "key": "ctrl+k",
+    "command": "paredit.killSexpForward",
+    "when": "calva:keybindingsEnabled && editorTextFocus && editorLangId == 'clojure' && paredit:keyMap =~ /original|strict/ && neovim.mode == 'insert'"
+  },
+  // コメントアウトはctrl+;に変更
+  {
+    "key": "ctrl+oem_1",
+    "command": "editor.action.commentLine",
+    "when": "editorTextFocus && !editorReadonly"
+  },
+  {
+    "key": "ctrl+oem_2",
+    "command": "-editor.action.commentLine",
+    "when": "editorTextFocus && !editorReadonly"
+  },
+  { // Undoをctrl+/にもマップ
+    "key": "ctrl+oem_2",
+    "command": "undo"
+  },
+  { // インサートモード時にRedo
+    "key": "ctrl+r",
+    "command": "redo",
+    "when": "editorTextFocus && neovim.init && neovim.mode == 'insert'"
   },
   // ===== ここまで、spaceで開いた後しか効果がない =====
   // "ctrl+m" を "enter" として振舞わせたい

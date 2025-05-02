@@ -15,6 +15,7 @@
   "editor.tokenColorCustomizations": {
     "comments": "#2aa1ae"
   },
+  "workbench.startupEditor": "none",
   // 空のフォルダを一列にしてしまわない
   "explorer.compactFolders": false,
   "files.trimTrailingWhitespace": true,
@@ -82,7 +83,6 @@
   },
   // GitHub Copilot Chat
   "github.copilot.chat.localeOverride": "ja",
-  "emulator.emulatorPathLinux": "~/Android/Sdk/emulator",
   "prettify-ts.hidePrivateProperties": false,
   "prettify-ts.typeIndentation": 2,
   "prettify-ts.maxDepth": 3,
@@ -378,7 +378,7 @@
               "command": "paredit.killListForward"
             },
             {
-              "key": "k",
+              "key": "u",
               "name": "Delete parent and raise children",
               "type": "command",
               "command": "paredit.raiseSexp"
@@ -418,5 +418,46 @@
         }
       ]
     }
-  ]
+  ],
+  // MQL-Tools
+  "mql_tools.Metaeditor.Metaeditor5Dir": "\"C:\\Program Files\\MetaTrader 5\\MetaEditor64.exe\"",
+  "vsicons.customIconFolderPath": "c:\\Users\\in-th\\.vscode\\extensions\\mql-tools-icons",
+  "vsicons.associations.files": [
+    {
+      "icon": "mq4",
+      "extensions": [
+        "mq4"
+      ],
+      "format": "svg"
+    },
+    {
+      "icon": "mq5",
+      "extensions": [
+        "mq5"
+      ],
+      "format": "svg"
+    },
+    {
+      "icon": "mqh",
+      "extensions": [
+        "mqh"
+      ],
+      "format": "svg"
+    },
+    {
+      "icon": "ex4",
+      "extensions": [
+        "ex4"
+      ],
+      "format": "svg"
+    },
+    {
+      "icon": "ex5",
+      "extensions": [
+        "ex5"
+      ],
+      "format": "svg"
+    }
+  ],
+  "calva.legacyPrintBareReplWindowOutput": true,
 }
