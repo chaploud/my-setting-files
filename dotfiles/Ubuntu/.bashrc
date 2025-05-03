@@ -160,3 +160,7 @@ export PATH="/opt/nvim-linux-x86_64/bin:$PATH"
 
 # evcxr (Rust)
 alias rust=evcxr
+
+# GraalVM
+export JAVA_HOME="$HOME/Install/graalvm-jdk-21.0.7+8.1"
+export PATH="$JAVA_HOME/bin:$PATH"

@@ -50,6 +50,7 @@
     "editor.defaultFormatter": "DavidAnson.vscode-markdownlint"
   },
   // ===== 以下は拡張機能の設定 =====
+  "redhat.telemetry.enabled": true,
   // Color Theme (GitHub Dark Default)
   "workbench.colorTheme": "GitHub Dark Default",
   "workbench.colorCustomizations": {
@@ -166,6 +167,7 @@
   },
   "calva.paredit.killAlsoCutsToClipboard": true,
   "calva.autoConnectRepl": true,
+  "calva.legacyPrintBareReplWindowOutput": true,
   // Code Runner
   "code-runner.runInTerminal": true,
   "code-runner.saveFileBeforeRun": true,
@@ -458,6 +460,5 @@
       ],
       "format": "svg"
     }
-  ],
-  "calva.legacyPrintBareReplWindowOutput": true,
+  ]
 }

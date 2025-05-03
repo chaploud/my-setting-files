@@ -3,12 +3,12 @@
   {
     "key": "shift+enter",
     "command": "workbench.action.terminal.runSelectedText",
-    "when": "editorTextFocus && editorLangId == 'powershell' || editorLangId == 'shellscript",
+    "when": "editorTextFocus && editorLangId == 'powershell' || editorLangId == 'shellscript"
   },
   // Markdown All in One
-  // ,,でチェックボックスをトグル
+  // alt+,でチェックボックスをトグル
   {
-    "key": ", ,",
+    "key": "alt+oem_comma",
     "command": "markdown.extension.checkTaskList",
     "when": "editorTextFocus && editorLangId =~ /^markdown$|^rmd$|^quarto$/ && neovim.mode == 'normal'"
   },
