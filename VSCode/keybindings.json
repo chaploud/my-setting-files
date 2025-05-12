@@ -1,5 +1,16 @@
 // Place your key bindings in this file to override the defaults
 [
+  // JSONの方の設定ファイルを開くことが多い
+  {
+    "key": "ctrl+oem_comma",
+    "command": "workbench.action.openSettingsJson"
+  },
+  // JSONの方のキーバインディング設定ファイルを開くことが多い
+  {
+    "key": "ctrl+k ctrl+s",
+    "command": "workbench.action.openGlobalKeybindingsFile"
+  },
+  // 選択範囲/現在行をターミナルに送る
   {
     "key": "shift+enter",
     "command": "workbench.action.terminal.runSelectedText",
