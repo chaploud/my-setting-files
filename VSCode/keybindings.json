@@ -3,7 +3,7 @@
   {
     "key": "shift+enter",
     "command": "workbench.action.terminal.runSelectedText",
-    "when": "editorTextFocus && editorLangId == 'powershell' || editorLangId == 'shellscript"
+    "when": "editorTextFocus && !sideBarFocus && editorLangId != 'clojure'"
   },
   // Markdown All in One
   // alt+,でチェックボックスをトグル
@@ -224,6 +224,26 @@
     "key": "ctrl+r",
     "command": "redo",
     "when": "editorTextFocus && neovim.init && neovim.mode == 'insert'"
+  },
+  {
+    "key": "ctrl+i",
+    "command": "-markdown.extension.editing.toggleItalic",
+    "when": "editorTextFocus && !editorReadonly && editorLangId =~ /^markdown$|^rmd$|^quarto$/"
+  },
+  {
+    "key": "ctrl+b",
+    "command": "-markdown.extension.editing.toggleBold",
+    "when": "editorTextFocus && !editorReadonly && editorLangId =~ /^markdown$|^rmd$|^quarto$/"
+  },
+  {
+    "key": "alt+f",
+    "command": "cursorWordEndRight",
+    "when": "textInputFocus && !accessibilityModeEnabled && neovim.mode == 'insert'"
+  },
+  {
+    "key": "alt+b",
+    "command": "cursorWordStartLeft",
+    "when": "textInputFocus && !accessibilityModeEnabled && neovim.mode == 'insert'"
   },
   // ===== ここまで、spaceで開いた後しか効果がない =====
   // "ctrl+m" を "enter" として振舞わせたい

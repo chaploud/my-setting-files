@@ -1,7 +1,6 @@
 {
   // エディタ基本設定
   "editor.fontFamily": "'Source Han Code JP','Droid Sans Mono', 'monospace', monospace",
-  "editor.fontSize": 14,
   "editor.cursorBlinking": "phase",
   "editor.formatOnPaste": true,
   "editor.formatOnSave": true,
@@ -35,6 +34,7 @@
   "git.enableSmartCommit": true,
   "git.confirmSync": false,
   "git.openRepositoryInParentFolders": "never",
+  "github.gitProtocol": "ssh",
   // 文字検索時に大文字小文字を都合よく検索する
   "search.smartCase": true,
   "search.useGlobalIgnoreFiles": true,
@@ -65,6 +65,7 @@
   },
   // vscode-icons
   "workbench.iconTheme": "vscode-icons",
+  "vsicons.dontShowNewVersionMessage": true,
   // Path Intellisense
   "path-intellisense.autoTriggerNextSuggestion": true,
   // Database Client
@@ -76,6 +77,7 @@
     "mac-mini": "macOS"
   },
   "remote.SSH.enableAgentForwarding": true,
+  "remote.autoForwardPortsSource": "hybrid",
   // GitHub Copilot
   "github.copilot.enable": {
     "scminput": true,
@@ -84,6 +86,14 @@
   },
   // GitHub Copilot Chat
   "github.copilot.chat.localeOverride": "ja",
+  "github.copilot.chat.commitMessageGeneration.instructions": [
+    {
+      "text": "Use a maximum of 120 characters."
+    },
+    {
+      "text": "Messages should be in English."
+    }
+  ],
   "prettify-ts.hidePrivateProperties": false,
   "prettify-ts.typeIndentation": 2,
   "prettify-ts.maxDepth": 3,
@@ -168,6 +178,7 @@
   "calva.paredit.killAlsoCutsToClipboard": true,
   "calva.autoConnectRepl": true,
   "calva.legacyPrintBareReplWindowOutput": true,
+  "calva.autoOpenInspector": false,
   // Code Runner
   "code-runner.runInTerminal": true,
   "code-runner.saveFileBeforeRun": true,
@@ -248,6 +259,19 @@
       "name": "Execute current file",
       "type": "command",
       "command": "code-runner.run"
+    },
+    {
+      "key": "w",
+      "name": "Window",
+      "type": "bindings",
+      "bindings": [
+        {
+          "key": "o",
+          "name": "Close other windows",
+          "type": "command",
+          "command": "workbench.action.closeOtherEditors"
+        }
+      ]
     },
     {
       "key": "g",
@@ -460,5 +484,11 @@
       ],
       "format": "svg"
     }
-  ]
+  ],
+  // Rust Analyzer
+  "rust-analyzer.inlayHints.parameterHints.enable": false,
+  "rust-analyzer.inlayHints.typeHints.enable": false,
+  "rust-analyzer.inlayHints.chainingHints.enable": false,
+  // Python
+  "python.analysis.typeCheckingMode": "strict",
 }
