@@ -37,37 +37,6 @@ local function recenter_cycle()
   last_recenter_time = current_time
 end
 
--- カーソルから行末までを削除し、レジスタに保存する関数 (コマンドラインモード用)
-local function kill_line_cmd_expr()
-  local cmdline_content = vim.fn.getcmdline()
-  local cursor_pos = vim.fn.getcmdpos() -- 1-indexed byte position
-
-  -- cmdline_content が nil または空、または cursor_pos が不正な場合のガード
-  if not cmdline_content or #cmdline_content == 0 then
-    return ""
-  end
-  if cursor_pos <= 0 then -- カーソル位置が先頭より前なら、先頭扱い
-    cursor_pos = 1
-  end
-  if cursor_pos > #cmdline_content + 1 then -- カーソル位置が末尾より後ろなら、末尾+1扱い
-     cursor_pos = #cmdline_content + 1
-  end
-
-  local text_before_cursor = string.sub(cmdline_content, 1, cursor_pos - 1)
-  local text_after_cursor = string.sub(cmdline_content, cursor_pos)
-
-  if text_after_cursor and #text_after_cursor > 0 then
-    vim.fn.setreg('"', text_after_cursor) -- 無名レジスタに保存
-    if vim.fn.has('clipboard') == 1 and vim.api.nvim_get_option_value('clipboard', {}):match('unnamedplus') then
-      vim.fn.setreg('+', text_after_cursor) -- クリップボードにも保存
-    end
-    return text_before_cursor -- カーソル前のテキストを返す (コマンドラインがこれに置き換わる)
-  else
-    -- カーソルが行末にある場合は何も削除しない
-    return cmdline_content -- 元のコマンドライン内容を返す
-  end
-end
-
 -- クリップボードをOS側と共有
 vim.opt.clipboard:append("unnamedplus")
 -- 検索時に都合良く大文字小文字を区別／区別しない
@@ -81,30 +50,28 @@ vim.api.nvim_create_autocmd("TextYankPost", {
     vim.highlight.on_yank({ timeout = 200 })
   end,
 })
+
+-- keymap: 'i': insert, 'n': normal, 'v': visual, 'c': command
 -- Recenter Top Bottomをctrl+lにバインド
-vim.keymap.set({'n', 'v', 'i'}, '<C-l>', recenter_cycle, { noremap = true, silent = false })
+vim.keymap.set({'n', 'v', 'i'}, '<C-l>', recenter_cycle)
 
 -- insertモードでのescapeを'fd'を素早く連続で押すことでも実行
-vim.keymap.set('i', 'fd', '<ESC>', { noremap = true, silent = false })
+vim.keymap.set('i', 'fd', '<ESC>')
 
--- insert/command lineモード時のEmacsキーバインド(移動・編集のみ)のエミュレート
-vim.keymap.set('i', '<C-p>', '<Up>', { noremap = true, silent = false }) -- ↑
-vim.keymap.set('i', '<C-n>', '<Down>', { noremap = true, silent = false }) -- ↓
-vim.keymap.set({'i', 'c'}, '<C-b>', '<Left>', { noremap = true, silent = false }) -- ←
-vim.keymap.set({'i', 'c'}, '<C-f>', '<Right>', { noremap = true, silent = false }) -- →
-vim.keymap.set('i', '<C-a>', '<C-o>^', { noremap = true, silent = false }) -- 挿入モード: 行頭へ
-vim.keymap.set('c', '<C-a>', '<C-b>', { noremap = true, silent = false }) -- コマンドモード: 行頭へ
-vim.keymap.set('i', '<C-e>', '<End>', { noremap = true, silent = false }) -- 行末へ
-vim.keymap.set({'i', 'c'}, '<C-d>', '<Del>', { noremap = true, silent = false }) -- Del
-vim.keymap.set({'i', 'c'}, '<C-h>', '<BS>', { noremap = true, silent = false }) -- BackSpace
--- コマンドラインモードの <C-k>: カーソルから行末まで削除
-vim.keymap.set('c', '<C-k>', '<C-f>D<C-c><C-c>:<Up>', { expr = true, noremap = true, silent = false })
--- 挿入モードの <C-k>: カーソルから行末まで削除
-vim.keymap.set('i', '<C-k>', '<C-o>d$', { noremap = true, silent = false })
-vim.keymap.set({'i', 'c'}, '<C-y>', '<C-r>+', { noremap = true, silent = false }) -- 直前のヤンクをペースト
+-- insertモード時のEmacsキーバインド(移動・編集のみ)のエミュレート
+vim.keymap.set('i', '<C-p>', '<Up>') -- ↑
+vim.keymap.set('i', '<C-n>', '<Down>') -- ↓
+vim.keymap.set('i', '<C-b>', '<Left>') -- ←
+vim.keymap.set('i', '<C-f>', '<Right>') -- →
+vim.keymap.set('i', '<C-a>', '<C-o>^') -- 行頭へ
+vim.keymap.set('i', '<C-e>', '<End>') -- 行末へ
+vim.keymap.set('i', '<C-d>', '<Del>') -- Del
+vim.keymap.set('i', '<C-k>', '<C-o>d$') -- 行末まで削除
+vim.keymap.set('i', '<C-y>', '<C-r>+') -- 直前のヤンクをペースト
+vim.keymap.set({'i', 'c'}, '<C-h>', '<BS>') -- BackSpace
 
 -- 選択状態でのペースト時にレジスタを上書きしない
-vim.keymap.set('v', 'p', '"_dP', { noremap = true, silent = false })
+vim.keymap.set('v', 'p', '"_dP')
 
 -- <leader>キーをspaceに設定
 vim.g.mapleader = ' '
@@ -117,15 +84,14 @@ if vim.g.vscode then -- VSCode NeoVimから呼び出された時に有効
   -- <leader>キーがVSCode側で押された時、VSCode側のwhich-keyを起動
   vim.keymap.set({'n', 'v'}, '<leader>', function()
     vscode.call('whichkey.show')
-  end, {noremap = true, silent = false})
+  end)
 else -- 通常のNeoVim利用時に有効
-  vim.o.timeoutlen = 1000
   -- ctrl+sでも保存
-  vim.keymap.set({'n', 'i'}, '<C-s>', vim.cmd.write, { noremap = true, silent = false })
+  vim.keymap.set({'n', 'i'}, '<C-s>', vim.cmd.write)
   -- ctrl+zでもundo
-  vim.keymap.set({'n', 'i'}, '<C-z>', vim.cmd.undo, { noremap = true, silent = false })
+  vim.keymap.set({'n', 'i'}, '<C-z>', vim.cmd.undo)
   -- <leader> h でハイライトをオフ
-  vim.keymap.set({'n', 'v'}, '<leader>h', ':nohl<CR>', { noremap = true, silent = false })
+  vim.keymap.set({'n', 'v'}, '<leader>h', vim.cmd.nohlsearch)
 end
 
 -- lazy.nvimのインストール(初回のみ)
@@ -149,7 +115,7 @@ vim.opt.rtp:prepend(lazypath)
 require("lazy").setup({
   spec = {
     {
-      -- カッコなどの包む系の操作を追加(nvim-surround)
+      -- (), [], {}, ""などの囲む系のテキストオブジェクトを追加
       "kylechui/nvim-surround",
       version = "^3.0.0",
       event = "VeryLazy",

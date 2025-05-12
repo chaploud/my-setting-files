@@ -490,5 +490,5 @@
   "rust-analyzer.inlayHints.typeHints.enable": false,
   "rust-analyzer.inlayHints.chainingHints.enable": false,
   // Python
-  "python.analysis.typeCheckingMode": "strict",
+  "python.analysis.typeCheckingMode": "strict"
 }

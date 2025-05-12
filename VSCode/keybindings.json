@@ -44,6 +44,13 @@
     "args": "<C-u>",
     "when": "editorTextFocus && neovim.init"
   },
+  // Ex Commandインプットにフォーカス時
+  {
+    "key": "ctrl+h",
+    "command": "vscode-neovim.send-cmdline",
+    "args": "<C-h>",
+    "when": "neovim.mode == 'cmdline'"
+  },
   // Go back/forwardはVSCode側の機能を使う
   {
     "key": "ctrl+o",
