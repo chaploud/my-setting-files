@@ -167,3 +167,4 @@ export PATH="$JAVA_HOME/bin:$PATH"
 export WASMTIME_HOME="$HOME/.wasmtime"
 
 export PATH="$WASMTIME_HOME/bin:$PATH"
+. /home/chaploud/Documents/Zig/_zig.bash
