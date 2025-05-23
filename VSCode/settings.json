@@ -63,6 +63,11 @@
   "git.confirmSync": false,
   "git.openRepositoryInParentFolders": "never",
   "github.gitProtocol": "ssh",
+  // 変更点の強調
+  "scm.diffDecorationsGutterPattern": {
+    "added": false,
+    "modified": false
+  },
   // 文字検索時に大文字小文字を都合よく検索する
   "search.smartCase": true,
   "search.useGlobalIgnoreFiles": true,
@@ -90,7 +95,16 @@
       "sideBarSectionHeader.background": "#07080a", // サイドバーのセクションヘッダーの背景色
       "textPreformat.background": "#6e768144", // コードの背景色
       "textPreformat.foreground": "#f0883e", // コードの文字色
-      "peekViewEditorStickyScroll.background": "#0d1117"
+      "peekViewEditorStickyScroll.background": "#0d1117",
+      // 差分のGutterアイコン
+      "editorGutter.addedBackground": "#28a745cc", // 追加
+      "editorGutter.deletedBackground": "#ff6f7acc", // 削除
+      "editorGutter.modifiedBackground": "#e6c200cc", // 変更
+      // 差分エディタ
+      "diffEditor.insertedLineBackground": "#2ea04344",
+      "diffEditor.insertedTextBackground": "#2ea04366",
+      "diffEditor.removedLineBackground": "#ff5a6a44",
+      "diffEditor.removedTextBackground": "#ff5a6a66"
     }
   },
   // vscode-icons
