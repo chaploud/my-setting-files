@@ -1,22 +1,48 @@
 {
   // エディタ基本設定
+  // フォント
   "editor.fontFamily": "'Source Han Code JP','Droid Sans Mono', 'monospace', monospace",
+  // カーソルがいい感じに点滅する
   "editor.cursorBlinking": "phase",
-  "editor.formatOnPaste": true,
-  "editor.formatOnSave": true,
-  "editor.minimap.enabled": false,
-  "editor.occurrencesHighlight": "off",
-  "editor.renderWhitespace": "all",
-  "editor.selectionHighlight": false,
-  "editor.tabSize": 2,
+  // スクロールがなめらかになる
   "editor.smoothScrolling": true,
+  // カーソルの移動がアニメーション風になる
   "editor.cursorSmoothCaretAnimation": "on",
+  // 貼り付け時にフォーマット指定があれば適用する
+  "editor.formatOnPaste": true,
+  // 保存時にフォーマット指定があれば適用する
+  "editor.formatOnSave": true,
+  // ミニマップは領域を圧迫するので消す
+  "editor.minimap.enabled": false,
+  // スペースを可視化する
+  "editor.renderWhitespace": "all",
+  // 選択した語と一致する他の箇所のハイライトは不要
+  "editor.selectionHighlight": false,
+  // カーソル下の語と一致する他の箇所のハイライトは不要
+  "editor.occurrencesHighlight": "off",
+  // コメントの色が薄すぎるので主張しすぎず見えやすい色にする
   "editor.tokenColorCustomizations": {
     "comments": "#2aa1ae"
   },
+  // 言語によるタブサイズの設定
+  "editor.tabSize": 2,
+  "[zig]": {
+    "editor.tabSize": 4
+  },
+  "[cpp]": {
+    "editor.tabSize": 4
+  },
+  "[c]": {
+    "editor.tabSize": 4
+  },
+  "[php]": {
+    "editor.tabSize": 4
+  },
+  // 初回のスタートアップ画面は表示しない
   "workbench.startupEditor": "none",
-  // 空のフォルダを一列にしてしまわない
+  // 空のフォルダを省略して一列にしてしまわない(必ずツリー表示にする)
   "explorer.compactFolders": false,
+  // 保存時に行末の空白など不要な空白を削除する
   "files.trimTrailingWhitespace": true,
   // Emacsキーバインドをターミナルでも有効に使いたい
   "terminal.integrated.allowChords": false,
@@ -27,7 +53,9 @@
     "-workbench.action.quickOpenNavigateNextInFilePicker",
     "-editor.action.toggleTabFocusMode"
   ],
+  // ターミナルのスクロールバックをたくさんできるようにする
   "terminal.integrated.scrollback": 10000,
+  // VSCodeを終了した後、前回のプロセスを復元しない
   "terminal.integrated.persistentSessionReviveProcess": "never",
   // Git関連の設定
   "git.autofetch": true,
@@ -41,6 +69,7 @@
   "search.useParentIgnoreFiles": true,
   // プラットフォームごとにキーバインドを分けない
   "settingsSync.keybindingsPerPlatform": false,
+  // 信頼されたワークスペースを開いているならば、信頼されていないファイルを開くときに警告を出さない
   "security.workspace.trust.untrustedFiles": "open",
   //  ===== デフォルトフォーマッタ =====
   "[jsonc]": {
@@ -53,6 +82,7 @@
   "redhat.telemetry.enabled": true,
   // Color Theme (GitHub Dark Default)
   "workbench.colorTheme": "GitHub Dark Default",
+  // メリハリをつけるため下部パネルとサイドバーの色を調整
   "workbench.colorCustomizations": {
     "[GitHub Dark Default]": {
       "panel.background": "#0d1117", // 下部パネルの背景色
@@ -79,13 +109,16 @@
   "remote.SSH.enableAgentForwarding": true,
   "remote.autoForwardPortsSource": "hybrid",
   // GitHub Copilot
+  // デフォルトでオフになっている言語も補完を効かせるようにする
   "github.copilot.enable": {
     "scminput": true,
-    "markdown": true,
+    "markdown": false,
     "plaintext": true
   },
   // GitHub Copilot Chat
+  // 日本語で応答してもらう
   "github.copilot.chat.localeOverride": "ja",
+  // OSSなどでコミットメッセージを英語で生成するのに便利
   "github.copilot.chat.commitMessageGeneration.instructions": [
     {
       "text": "Use a maximum of 120 characters."
@@ -94,9 +127,10 @@
       "text": "Messages should be in English."
     }
   ],
+  // Prettify TypeScript: Better Type Previews
   "prettify-ts.hidePrivateProperties": false,
   "prettify-ts.typeIndentation": 2,
-  "prettify-ts.maxDepth": 3,
+  "prettify-ts.maxDepth": 2,
   "prettify-ts.maxSubProperties": 20,
   "prettify-ts.maxUnionMembers": 30,
   // Todo Tree
@@ -124,14 +158,17 @@
     "white"
   ],
   // VSCode NeoVim
+  // 公式の推奨設定
   "extensions.experimental.affinity": {
     "asvetliakov.vscode-neovim": 1
   },
+  // `f` `d` を連続で押した時、escape扱いになる
   "vscode-neovim.compositeKeys": {
     "fd": {
       "command": "vscode-neovim.escape"
     }
   },
+  // insertモード時にctrl+<key>をNeoVim側に送信したいものだけを指定
   "vscode-neovim.ctrlKeysForInsertMode": [
     "a", // 行頭に移動
     "b", // 1文字戻る
@@ -143,11 +180,12 @@
     "h", // backspace
     "k", // カーソルから行末まで削除
     "l", // Recenter Top Bottom
-    // ctrl+m は enterとして認識させる(keybinding.jsonで設定)
+    // "m", // enterとして認識させる(keybindings.jsonで設定)
     "n", // カーソルを下に移動
     "w", // 1単語削除
     "y" // 貼り付け
   ],
+  // normalモード時にctrl+<key>をNeoVim側に送信したいものだけを指定
   "vscode-neovim.ctrlKeysForNormalMode": [
     "a", // 数字を1増やす
     "d", // 画面半分下にスクロール
@@ -156,9 +194,9 @@
     "h", // backspace
     "l", // Recenter Top Bottom
     "m", // enter
-    // "o", // 前の場所に戻る
+    // "o", // 前の場所に戻る(keybindings.jsonで設定)
     "r", // Redo
-    // "t", // 元の場所に戻る
+    // "t", // 元の場所に戻る(keybindings.jsonで設定)
     "u", // 画面半分上にスクロール
     "v", // 矩形選択
     "w", // ウィンドウ操作
@@ -193,6 +231,7 @@
   // Which Key
   "whichkey.delay": 0,
   "whichkey.bindings": [
+    // hlsearchによる語のハイライトをオフにする
     {
       "key": "h",
       "name": "Turn off Highlight (:nohl)",
@@ -201,70 +240,88 @@
       "args": ":nohl<CR>"
     },
     {
+      "key": ";",
+      "name": "Toggle Comment",
+      "type": "command",
+      "command": "editor.action.commentLine"
+    },
+    // ファイルエクスプローラーにフォーカス
+    {
       "key": "f",
       "name": "File explorer",
       "type": "command",
       "command": "workbench.view.explorer"
     },
+    // プロジェクトの全文検索にフォーカス
     {
       "key": "s",
       "name": "Search in files",
       "type": "command",
       "command": "workbench.view.search"
     },
+    // 次のエラー報告箇所に移動
     {
       "key": "n",
       "name": "Next marker",
       "type": "command",
       "command": "editor.action.marker.nextInFiles"
     },
+    // 前のエラー報告箇所に移動
     {
       "key": "p",
       "name": "Previous marker",
       "type": "command",
       "command": "editor.action.marker.prevInFiles"
     },
+    // 次の変更箇所に移動
     {
       "key": "N",
       "name": "Next diff",
       "type": "command",
       "command": "editor.action.dirtydiff.next"
     },
+    // 前の変更箇所に移動
     {
       "key": "P",
       "name": "Previous diff",
       "type": "command",
       "command": "editor.action.dirtydiff.previous"
     },
+    // デバッグを開始
     {
       "key": "d",
       "name": "Debug start",
       "type": "command",
       "command": "workbench.action.debug.start"
     },
+    // 実行を開始
     {
       "key": "D",
       "name": "Debug run",
       "type": "command",
       "command": "workbench.action.debug.run"
     },
+    // カーソル下の要素が言語機能のどのスコープとして解釈されているかを調べる
     {
       "key": "i",
       "name": "Inspect TM scopes",
       "type": "command",
       "command": "editor.action.inspectTMScopes"
     },
+    // code-runnerの機能で即座にコードを実行する
     {
       "key": "e",
       "name": "Execute current file",
       "type": "command",
       "command": "code-runner.run"
     },
+    // ウィンドウ操作関連
     {
       "key": "w",
       "name": "Window",
       "type": "bindings",
       "bindings": [
+        // 現在のタブグループの他のタブを全て閉じる
         {
           "key": "o",
           "name": "Close other windows",
@@ -273,35 +330,41 @@
         }
       ]
     },
+    // Git関連
     {
       "key": "g",
       "name": "Git",
       "type": "bindings",
       "bindings": [
+        // ソースコントロールを開く
         {
           "key": "s",
           "name": "Git status",
           "type": "command",
           "command": "workbench.scm.focus"
         },
+        // コミットログを開く
         {
           "key": "l",
           "name": "Git log",
           "type": "command",
           "command": "workbench.scm.history.focus"
         },
+        // ブランチのチェックアウトを行う
         {
           "key": "b",
           "name": "Git checkout",
           "type": "command",
           "command": "git.checkout"
         },
+        // git pullを行う
         {
           "key": "f",
           "name": "Git pull",
           "type": "command",
           "command": "git.pull"
         },
+        // git pushを行う
         {
           "key": "p",
           "name": "Git push",
@@ -310,6 +373,7 @@
         }
       ]
     },
+    // Clojure (Calva) 関連
     {
       "key": "m",
       "name": "Clojure",
@@ -490,5 +554,12 @@
   "rust-analyzer.inlayHints.typeHints.enable": false,
   "rust-analyzer.inlayHints.chainingHints.enable": false,
   // Python
-  "python.analysis.typeCheckingMode": "strict"
+  "python.analysis.typeCheckingMode": "strict",
+  // Zig
+  "zig.zls.enabled": "on",
+  "zig.zls.inlayHintsHideRedundantParamNames": true,
+  "zig.zls.inlayHintsHideRedundantParamNamesLastToken": true,
+  "zig.zls.inlayHintsShowVariableTypeHints": false,
+  "zig.zls.inlayHintsShowParameterName": false,
+  "zig.zls.inlayHintsShowStructLiteralFieldType": false
 }

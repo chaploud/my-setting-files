@@ -34,7 +34,7 @@
     "key": "ctrl+k",
     "command": "vscode-neovim.send",
     "args": "<C-k>",
-    "when": "editorTextFocus && neovim.init && neovim.mode == 'insert'"
+    "when": "editorTextFocus && neovim.mode == 'insert'"
   },
   // Which Key(neovimと通信している際は、init.luaから呼ぶ)
   {
@@ -63,28 +63,32 @@
     "when": "neovim.mode == 'cmdline'"
   },
   // Go back/forwardはVSCode側の機能を使う
+  // 前の位置に戻る
   {
     "key": "ctrl+o",
     "command": "workbench.action.navigateBack",
     "when": "editorTextFocus"
   },
+  // 先の位置に進む
   {
     "key": "ctrl+t",
     "command": "workbench.action.navigateForward",
     "args": "<C-t>",
     "when": "editorTextFocus"
   },
+  // 最終変更点だった位置まで一気に戻る
   {
     "key": "ctrl+shift+t",
     "command": "workbench.action.navigateToLastEditLocation"
   },
-  { // insert時にenterキーを押した挙動に対応
+  // insert時にenterキーを押した挙動に対応
+  {
     "key": "ctrl+m",
     "command": "type",
     "args": {
       "text": "\n"
     },
-    "when": "editorTextFocus && neovim.init && neovim.mode == 'insert' && !suggestWidgetVisible"
+    "when": "editorTextFocus && neovim.mode == 'insert' && !suggestWidgetVisible"
   },
   {
     "key": "ctrl+g",
@@ -102,7 +106,23 @@
     "key": "ctrl+z",
     "command": "vscode-neovim.send",
     "args": "u",
-    "when": "editorTextFocus && neovim.init && neovim.mode == 'normal'"
+    "when": "editorTextFocus && neovim.mode == 'normal'"
+  },
+  // ctrl+6(^)で直前に開いていたバッファに戻る
+  {
+    "key": "ctrl+6",
+    "command": "-workbench.action.focusSixthEditorGroup"
+  },
+  {
+    "key": "ctrl+6",
+    "command": "runCommands",
+    "args": {
+      "commands": [
+        "workbench.action.quickOpenPreviousRecentlyUsedEditorInGroup",
+        "list.select"
+      ]
+    },
+    "when": "editorTextFocus && neovim.mode == 'normal' && editorLangId not in 'neovim.editorLangIdExclusions'"
   },
   // Search
   {
@@ -223,26 +243,18 @@
     "command": "paredit.killSexpForward",
     "when": "calva:keybindingsEnabled && editorTextFocus && editorLangId == 'clojure' && paredit:keyMap =~ /original|strict/ && neovim.mode == 'insert'"
   },
-  // コメントアウトはctrl+;に変更
+  // コメントアウトはctrl+;でも行える(Lisp風)
   {
     "key": "ctrl+oem_1",
     "command": "editor.action.commentLine",
     "when": "editorTextFocus && !editorReadonly"
   },
-  {
-    "key": "ctrl+oem_2",
-    "command": "-editor.action.commentLine",
-    "when": "editorTextFocus && !editorReadonly"
-  },
-  { // Undoをctrl+/にもマップ
-    "key": "ctrl+oem_2",
-    "command": "undo"
-  },
   { // インサートモード時にRedo
     "key": "ctrl+r",
     "command": "redo",
-    "when": "editorTextFocus && neovim.init && neovim.mode == 'insert'"
+    "when": "editorTextFocus && neovim.mode == 'insert'"
   },
+  // Markdown All in OneとコンフリクトするInsert時のキーバインドを解除
   {
     "key": "ctrl+i",
     "command": "-markdown.extension.editing.toggleItalic",
@@ -253,14 +265,22 @@
     "command": "-markdown.extension.editing.toggleBold",
     "when": "editorTextFocus && !editorReadonly && editorLangId =~ /^markdown$|^rmd$|^quarto$/"
   },
+  // Insert時における単語単位での進む
   {
     "key": "alt+f",
     "command": "cursorWordEndRight",
     "when": "textInputFocus && !accessibilityModeEnabled && neovim.mode == 'insert'"
   },
+  // Insert時における単語単位での戻る
   {
     "key": "alt+b",
     "command": "cursorWordStartLeft",
+    "when": "textInputFocus && !accessibilityModeEnabled && neovim.mode == 'insert'"
+  },
+  // Insert時における単語単位でのDelete
+  {
+    "key": "alt+d",
+    "command": "deleteWordRight",
     "when": "textInputFocus && !accessibilityModeEnabled && neovim.mode == 'insert'"
   },
   // ===== ここまで、spaceで開いた後しか効果がない =====

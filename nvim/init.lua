@@ -122,6 +122,14 @@ require("lazy").setup({
       config = function()
         require("nvim-surround").setup({})
       end
+    },
+    {
+      -- * による検索を改善
+      "rapan931/lasterisk.nvim",
+      event = "VeryLazy",
+      config = function()
+        vim.keymap.set('n', '*', function() require("lasterisk").search() end)
+      end
     }
   },
   install = {},
