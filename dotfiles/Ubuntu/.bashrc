@@ -156,7 +156,7 @@ export PATH="/opt/nvim-linux-x86_64/bin:$PATH"
 # Flutter
 # export PATH="/home/chaploud/Install/flutter/bin:$PATH"
 # Android Studio
-# export PATH="/home/chaploud/Install/android-studio/bin:$PATH"
+# export PATH="/usr/local/android-studio/bin:$PATH"
 
 # evcxr (Rust)
 alias rust=evcxr
