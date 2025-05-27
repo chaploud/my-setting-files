@@ -125,9 +125,10 @@
   // GitHub Copilot
   // デフォルトでオフになっている言語も補完を効かせるようにする
   "github.copilot.enable": {
-    "scminput": true,
-    "markdown": false,
-    "plaintext": true
+    "*": true,
+    "plaintext": true,
+    "markdown": true,
+    "scminput": true
   },
   // GitHub Copilot Chat
   // 日本語で応答してもらう
@@ -231,6 +232,19 @@
   "calva.autoConnectRepl": true,
   "calva.legacyPrintBareReplWindowOutput": true,
   "calva.autoOpenInspector": false,
+  "calva.referencesCodeLens.enabled": true,
+  "calva.showDocstringInParameterHelp": true,
+  "commands.commands": {
+    "evalFormToComment": {
+      "sequence": [
+        "calva.evaluateTopLevelFormAsComment",
+        {
+          "command": "editor.action.joinLines",
+          "delay": 200,
+        }
+      ]
+    }
+  },
   // Code Runner
   "code-runner.runInTerminal": true,
   "code-runner.saveFileBeforeRun": true,
@@ -315,12 +329,25 @@
       "type": "command",
       "command": "workbench.action.debug.run"
     },
+    {
+      "key": "r",
+      "name": "Rename symbol",
+      "type": "command",
+      "command": "editor.action.rename",
+    },
     // カーソル下の要素が言語機能のどのスコープとして解釈されているかを調べる
+    // {
+    //   "key": "i",
+    //   "name": "Inspect TM scopes",
+    //   "type": "command",
+    //   "command": "editor.action.inspectTMScopes"
+    // },
+    // 「定義／宣言」ではなく「実装」にジャンプする
     {
       "key": "i",
-      "name": "Inspect TM scopes",
+      "name": "Go to implementation",
       "type": "command",
-      "command": "editor.action.inspectTMScopes"
+      "command": "editor.action.goToImplementation",
     },
     // code-runnerの機能で即座にコードを実行する
     {
@@ -501,13 +528,31 @@
               "command": "paredit.wrapAroundParens"
             },
             {
+              "key": ")",
+              "name": "Wrap with ()",
+              "type": "command",
+              "command": "paredit.wrapAroundParens"
+            },
+            {
               "key": "[",
               "name": "Wrap with []",
               "type": "command",
               "command": "paredit.wrapAroundSquare"
             },
             {
+              "key": "]",
+              "name": "Wrap with []",
+              "type": "command",
+              "command": "paredit.wrapAroundSquare"
+            },
+            {
               "key": "{",
+              "name": "Wrap with {}",
+              "type": "command",
+              "command": "paredit.wrapAroundCurly"
+            },
+            {
+              "key": "}",
               "name": "Wrap with {}",
               "type": "command",
               "command": "paredit.wrapAroundCurly"
@@ -575,5 +620,8 @@
   "zig.zls.inlayHintsHideRedundantParamNamesLastToken": true,
   "zig.zls.inlayHintsShowVariableTypeHints": false,
   "zig.zls.inlayHintsShowParameterName": false,
-  "zig.zls.inlayHintsShowStructLiteralFieldType": false
+  "zig.zls.inlayHintsShowStructLiteralFieldType": false,
+  "lldb.suppressUpdateNotifications": true,
+  // "dart.flutterSdkPath": "C:\\Users\\in-th\\Install\\flutter",
+  // "jdk.jdkhome": "c:\\Users\\in-th\\Install\\Oracle_JDK-21"
 }

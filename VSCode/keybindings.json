@@ -209,6 +209,16 @@
   },
   // Calva
   {
+    "key": "shift+enter",
+    "command": "calva.evaluateCurrentTopLevelForm",
+    "when": "calva:keybindingsEnabled && editorTextFocus && !calva:cursorInComment && !editorHasMultipleSelections && !editorReadOnly && editorLangId == 'clojure' && neovim.mode == 'normal'"
+  },
+  {
+    "key": "ctrl+shift+enter",
+    "command": "evalFormToComment",
+    "when": "calva:keybindingsEnabled && editorTextFocus && !calva:cursorInComment && !editorHasMultipleSelections && !editorReadOnly && editorLangId == 'clojure' && neovim.mode == 'normal'"
+  },
+  {
     "key": "alt+n",
     "command": "calva.showNextReplHistoryEntry",
     "when": "calva:connected && calva:keybindingsEnabled && calva:outputWindowActive && calva:replHistoryCommandsActive && editorLangId == 'clojure'"
