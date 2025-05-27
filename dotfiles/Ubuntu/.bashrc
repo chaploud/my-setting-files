@@ -169,3 +169,15 @@ export WASMTIME_HOME="$HOME/.wasmtime"
 export PATH="$WASMTIME_HOME/bin:$PATH"
 
 . "${HOME}/_zig.bash"
+
+# HomeBrew
+eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+
+# Wasmer
+export WASMER_DIR="/home/chaploud/.wasmer"
+[ -s "$WASMER_DIR/wasmer.sh" ] && source "$WASMER_DIR/wasmer.sh"
+
+if [ ! -f "$HOME/wasmer_completions.sh" ]; then
+    wasmer gen-completions bash > "$HOME/wasmer_completions.sh"
+fi
+source "$HOME/wasmer_completions.sh"
