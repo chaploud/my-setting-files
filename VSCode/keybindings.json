@@ -122,7 +122,7 @@
         "list.select"
       ]
     },
-    "when": "editorTextFocus && neovim.mode == 'normal' && editorLangId not in 'neovim.editorLangIdExclusions'"
+    "when": "editorTextFocus && (neovim.mode == 'normal' || neovim.mode == 'visual' ) && editorLangId not in 'neovim.editorLangIdExclusions'"
   },
   // Search
   {
@@ -246,12 +246,12 @@
   {
     "key": "ctrl+w",
     "command": "paredit.killSexpBackward",
-    "when": "calva:keybindingsEnabled && editorTextFocus && editorLangId == 'clojure' && paredit:keyMap =~ /original|strict/ && neovim.mode == 'insert'"
+    "when": "calva:keybindingsEnabled && editorTextFocus && !calva:cursorInComment && !editorHasMultipleSelections && !editorReadOnly && editorLangId == 'clojure' && paredit:keyMap == 'strict' && neovim.mode == 'insert'"
   },
   {
     "key": "ctrl+k",
     "command": "paredit.killSexpForward",
-    "when": "calva:keybindingsEnabled && editorTextFocus && editorLangId == 'clojure' && paredit:keyMap =~ /original|strict/ && neovim.mode == 'insert'"
+    "when": "calva:keybindingsEnabled && editorTextFocus && !calva:cursorInComment && !editorHasMultipleSelections && !editorReadOnly && editorLangId == 'clojure' && paredit:keyMap == 'strict' && neovim.mode == 'insert'"
   },
   // コメントアウトはctrl+;でも行える(Lisp風)
   {
