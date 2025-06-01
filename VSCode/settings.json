@@ -240,7 +240,7 @@
         "calva.evaluateTopLevelFormAsComment",
         {
           "command": "editor.action.joinLines",
-          "delay": 200,
+          "delay": 200
         }
       ]
     }
@@ -333,7 +333,7 @@
       "key": "r",
       "name": "Rename symbol",
       "type": "command",
-      "command": "editor.action.rename",
+      "command": "editor.action.rename"
     },
     // カーソル下の要素が言語機能のどのスコープとして解釈されているかを調べる
     // {
@@ -347,7 +347,7 @@
       "key": "i",
       "name": "Go to implementation",
       "type": "command",
-      "command": "editor.action.goToImplementation",
+      "command": "editor.action.goToImplementation"
     },
     // code-runnerの機能で即座にコードを実行する
     {
@@ -621,7 +621,7 @@
   "zig.zls.inlayHintsShowVariableTypeHints": false,
   "zig.zls.inlayHintsShowParameterName": false,
   "zig.zls.inlayHintsShowStructLiteralFieldType": false,
-  "lldb.suppressUpdateNotifications": true,
+  "lldb.suppressUpdateNotifications": true
   // "dart.flutterSdkPath": "C:\\Users\\in-th\\Install\\flutter",
   // "jdk.jdkhome": "c:\\Users\\in-th\\Install\\Oracle_JDK-21"
 }
