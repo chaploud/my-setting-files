@@ -1,7 +1,9 @@
 {
   // エディタ基本設定
   // フォント
-  "editor.fontFamily": "'Source Han Code JP','Droid Sans Mono', 'monospace', monospace",
+  "editor.fontFamily": "'Source Han Code JP', 'UDEV Gothic 35NFLG', 'Droid Sans Mono', 'monospace', monospace",
+  "editor.fontSize": 13,
+  "terminal.integrated.fontSize": 13,
   // カーソルがいい感じに点滅する
   "editor.cursorBlinking": "phase",
   // スクロールがなめらかになる
@@ -128,7 +130,8 @@
     "*": true,
     "plaintext": true,
     "markdown": true,
-    "scminput": true
+    "scminput": true,
+    "sql": false
   },
   // GitHub Copilot Chat
   // 日本語で応答してもらう
@@ -190,7 +193,7 @@
     "d", // delete
     "e", // 行末に移動
     "f", // 1文字進む
-    "g", // ESC
+    // "g", // ESC(keybindings.jsonで設定)
     "p", // カーソルを上に移動
     "h", // backspace
     "k", // カーソルから行末まで削除
@@ -221,19 +224,28 @@
     "]" // 定義ジャンプ
   ],
   // Calva
-  "calva.enableInspectorRainbow": true,
+  // サイドバーにおけるREPLのインスペクタの階層的な括弧の色付けを有効にする
+  // "calva.enableInspectorRainbow": true,
+  // REPLの出力ファイルは${projectRootPath}/.calva/repl.calva-replを使う
   "calva.useLegacyReplWindowPath": false,
+  // デフォルトでは、入力や出力やエラーがそれぞれ別の場所に出力される
+  // すべてREPLウィンドウにまとめて表示されてほしい場合は以下を設定
   "calva.outputDestinations": {
-    "evalResults": "repl-window",
-    "evalOutput": "repl-window",
-    "otherOutput": "repl-window"
+    "evalResults": "repl-window", // 評価結果をREPLウィンドウに出力
+    "evalOutput": "repl-window", // 標準出力/エラーをREPLウィンドウに出力
+    "otherOutput": "repl-window" // CalvaのメッセージなどをREPLウィンドウに出力
   },
+  // CalvaでのPareditによる削除操作時、削除したものをクリップボードにコピーする
   "calva.paredit.killAlsoCutsToClipboard": true,
+  // Clojureプロジェクトを開いたとき、自動的にREPLに接続する(プロジェクト設定に従う)
   "calva.autoConnectRepl": true,
+  // 標準出力やエラー出力がコメント(;)でプレフィックスされるのをやめる
+  // ただし、Calva公式によると、予期せぬエラーが発生する可能性があるため、falseが無難ではある
   "calva.legacyPrintBareReplWindowOutput": true,
+  // CalvaのREPL接続時に自動でサイドパネルのインスペクタにフォーカスが当たるのをやめる
   "calva.autoOpenInspector": false,
+  // Clojure/ClojureScriptのコード参照などの機能(CodeLens)を有効にする
   "calva.referencesCodeLens.enabled": true,
-  "calva.showDocstringInParameterHelp": true,
   "commands.commands": {
     "evalFormToComment": {
       "sequence": [
@@ -259,20 +271,6 @@
   // Which Key
   "whichkey.delay": 0,
   "whichkey.bindings": [
-    // hlsearchによる語のハイライトをオフにする
-    {
-      "key": "h",
-      "name": "Turn off Highlight (:nohl)",
-      "type": "command",
-      "command": "vscode-neovim.send",
-      "args": ":nohl<CR>"
-    },
-    {
-      "key": ";",
-      "name": "Toggle Comment",
-      "type": "command",
-      "command": "editor.action.commentLine"
-    },
     // ファイルエクスプローラーにフォーカス
     {
       "key": "f",
@@ -286,6 +284,35 @@
       "name": "Search in files",
       "type": "command",
       "command": "workbench.view.search"
+    },
+    // hlsearchによる語のハイライトをオフにする
+    {
+      "key": "h",
+      "name": "Turn off Highlight (:nohl)",
+      "type": "command",
+      "command": "vscode-neovim.send",
+      "args": ":nohl<CR>"
+    },
+    // シンボル名をリネーム(リファクタリング)
+    {
+      "key": "r",
+      "name": "Rename symbol",
+      "type": "command",
+      "command": "editor.action.rename"
+    },
+    // 実装にジャンプ
+    {
+      "key": "i",
+      "name": "Go to implementation",
+      "type": "command",
+      "command": "editor.action.goToImplementation"
+    },
+    // code-runnerの機能で即座にコードを実行する
+    {
+      "key": "e",
+      "name": "Execute current file",
+      "type": "command",
+      "command": "code-runner.run"
     },
     // 次のエラー報告箇所に移動
     {
@@ -328,33 +355,6 @@
       "name": "Debug run",
       "type": "command",
       "command": "workbench.action.debug.run"
-    },
-    {
-      "key": "r",
-      "name": "Rename symbol",
-      "type": "command",
-      "command": "editor.action.rename"
-    },
-    // カーソル下の要素が言語機能のどのスコープとして解釈されているかを調べる
-    // {
-    //   "key": "i",
-    //   "name": "Inspect TM scopes",
-    //   "type": "command",
-    //   "command": "editor.action.inspectTMScopes"
-    // },
-    // 「定義／宣言」ではなく「実装」にジャンプする
-    {
-      "key": "i",
-      "name": "Go to implementation",
-      "type": "command",
-      "command": "editor.action.goToImplementation"
-    },
-    // code-runnerの機能で即座にコードを実行する
-    {
-      "key": "e",
-      "name": "Execute current file",
-      "type": "command",
-      "command": "code-runner.run"
     },
     // ウィンドウ操作関連
     {
@@ -420,94 +420,117 @@
       "name": "Clojure",
       "type": "bindings",
       "bindings": [
-        {
-          "key": "l",
-          "name": "Move cursor to list end",
-          "type": "command",
-          "command": "paredit.closeList"
-        },
-        {
-          "key": "i",
-          "name": "(Re)Start a project REPL and connect (Jack-In)",
-          "type": "command",
-          "command": "calva.jackIn"
-        },
+        // 実行中のREPLに接続
         {
           "key": "c",
           "name": "Connect to a running REPL (non-project)",
           "type": "command",
           "command": "calva.connectNonProjectREPL"
         },
+        // REPLから切断
         {
           "key": "D",
           "name": "Disconnect from a running REPL",
           "type": "command",
           "command": "calva.disconnect"
         },
+        // プロジェクトの設定に従い、REPLを立ち上げ/再立ち上げして接続
+        {
+          "key": "i",
+          "name": "(Re)Start a project REPL and connect (Jack-In)",
+          "type": "command",
+          "command": "calva.jackIn"
+        },
+        // Calvaによって立ち上げられたREPLを終了する
+        {
+          "key": "k",
+          "name": "Stop/Kill the project REPL started by Calva (Jack-Out)",
+          "command": "calva.jackOut"
+        },
+        // REPLウィンドウを開く
         {
           "key": "r",
           "name": "Show REPL window",
           "type": "command",
           "command": "calva.showReplWindow"
         },
-        {
-          "key": "k",
-          "name": "Stop/Kill the project REPL started by Calva (Jack-Out)",
-          "command": "calva.jackOut"
-        },
+        // 開いているファイル全体をREPLで評価する
         {
           "key": "e",
           "name": "Evaluate entire file",
           "type": "command",
           "command": "calva.loadFile"
         },
+        // カーソル位置のトップレベルフォームをデバッグ用に評価する
         {
           "key": "g",
           "name": "Instrument current form for debugging",
           "type": "command",
           "command": "calva.debug.instrument"
         },
+        // リストの先頭にカーソルを移動
+        {
+          "key": "h",
+          "name": "Move cursor to list start",
+          "type": "command",
+          "command": "paredit.openList"
+        },
+        // リストの末尾にカーソルを移動
+        {
+          "key": "l",
+          "name": "Move cursor to list end",
+          "type": "command",
+          "command": "paredit.closeList"
+        },
+        // リストから末尾要素を後ろに吐きだす(barf)
         {
           "key": "b",
           "name": "Barf forwards",
           "type": "command",
           "command": "paredit.barfSexpForward"
         },
+        // リストから先頭要素を前に吐きだす(barf)
         {
           "key": "B",
           "name": "Barf backwards",
           "type": "command",
           "command": "paredit.barfSexpBackward"
         },
+        // リストの後ろにある要素をリストの末尾に吸い込む(slurp)
         {
           "key": "s",
           "name": "Slurp forwards",
           "type": "command",
           "command": "paredit.slurpSexpForward"
         },
+        // リストの前にある要素をリストの先頭に吸い込む(slurp)
         {
           "key": "S",
           "name": "Slurp backwards",
           "type": "command",
           "command": "paredit.slurpSexpBackward"
         },
+        // 削除系操作
         {
           "key": "d",
           "name": "Delete",
           "type": "bindings",
           "bindings": [
+            // カーソルからリストの開始までを削除
             {
               "key": "h",
               "name": "Delete to start of list",
               "type": "command",
               "command": "paredit.killListBackward"
             },
+            // カーソルからリストの末尾までを削除
             {
               "key": "l",
               "name": "Delete to end of list",
               "type": "command",
               "command": "paredit.killListForward"
             },
+            // 現在カーソルがあるフォーム(A)の親の内容を削除して、(A)の階層を1段階挙げる
             {
               "key": "u",
               "name": "Delete parent and raise children",
@@ -516,47 +539,34 @@
             }
           ]
         },
+        // かっこで包む系の操作
         {
           "key": "w",
           "name": "Wrap",
           "type": "bindings",
           "bindings": [
+            // カーソル下のフォームを()で包む
             {
               "key": "(",
               "name": "Wrap with ()",
               "type": "command",
               "command": "paredit.wrapAroundParens"
             },
-            {
-              "key": ")",
-              "name": "Wrap with ()",
-              "type": "command",
-              "command": "paredit.wrapAroundParens"
-            },
+            // カーソル下のフォームを[]で包む
             {
               "key": "[",
               "name": "Wrap with []",
               "type": "command",
               "command": "paredit.wrapAroundSquare"
             },
-            {
-              "key": "]",
-              "name": "Wrap with []",
-              "type": "command",
-              "command": "paredit.wrapAroundSquare"
-            },
+            // カーソル下のフォームを{}で包む
             {
               "key": "{",
               "name": "Wrap with {}",
               "type": "command",
               "command": "paredit.wrapAroundCurly"
             },
-            {
-              "key": "}",
-              "name": "Wrap with {}",
-              "type": "command",
-              "command": "paredit.wrapAroundCurly"
-            },
+            // カーソル下のフォームを""で包む
             {
               "key": "\"",
               "name": "Wrap with \"\"",
@@ -621,7 +631,43 @@
   "zig.zls.inlayHintsShowVariableTypeHints": false,
   "zig.zls.inlayHintsShowParameterName": false,
   "zig.zls.inlayHintsShowStructLiteralFieldType": false,
-  "lldb.suppressUpdateNotifications": true
+  "lldb.suppressUpdateNotifications": true,
+  "dbcode.connections": [
+    {
+      "connectionId": "iW-GwZ0M0sEu_ovDgUqIB",
+      "name": "syo-kudo-lms",
+      "driver": "mysql",
+      "connectionType": "host",
+      "host": "localhost",
+      "port": 3306,
+      "ssl": false,
+      "username": "root",
+      "password": "",
+      "savePassword": "secretStorage",
+      "readOnly": false,
+      "connectionTimeout": 30,
+      "driverOptions": {
+        "retrievePublickey": true
+      },
+      "filters": {
+        "lms_phpunit/tables": [
+          "lms_link_output_sheet_template_sco",
+          "lms_output_sheet_template",
+          "lms_result",
+          "lms_result_detail",
+          "lms_result_meta",
+          "lms_sco",
+          "lms_user"
+        ]
+      }
+    }
+  ],
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  "pomodoro.breakTime": 10,
+  "pomodoro.soundIntervalNotification": 1,
+  "pomodoro.workColorButton": "orange",
+  "pomodoro.workColorTime": "orange",
+  "pomodoro.workTime": 45
   // "dart.flutterSdkPath": "C:\\Users\\in-th\\Install\\flutter",
   // "jdk.jdkhome": "c:\\Users\\in-th\\Install\\Oracle_JDK-21"
 }

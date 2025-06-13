@@ -10,6 +10,29 @@
     "key": "ctrl+k ctrl+s",
     "command": "workbench.action.openGlobalKeybindingsFile"
   },
+  // ターミナル領域でターミナルにフォーカス
+  {
+    "key": "ctrl+j",
+    "command": "workbench.action.terminal.toggleTerminal",
+    "when": "terminal.active"
+  },
+  // 新しいシェルを開く
+  {
+    "key": "alt+j",
+    "command": "workbench.action.terminal.new",
+    "when": "terminalProcessSupported || terminalWebExtensionContributedProfile"
+  },
+  // ターミナルフォーカス時、最大化/元に戻すをトグル
+  {
+    "key": "ctrl+o",
+    "command": "workbench.action.toggleMaximizedPanel",
+    "when": "terminal.active"
+  },
+  {
+    "key": "ctrl+t",
+    "command": "workbench.action.terminal.focusNext",
+    "when": "terminalFocus && terminalHasBeenCreated && !terminalEditorFocus || terminalFocus && terminalProcessSupported && !terminalEditorFocus"
+  },
   // 選択範囲/現在行をターミナルに送る
   {
     "key": "shift+enter",
@@ -40,7 +63,7 @@
   {
     "key": "space",
     "command": "whichkey.show",
-    "when": "(!activeEditor || activeEditor == 'gettingStartedPage' || activeEditor == 'workbench.editors.errorEditor') && focusedView == ''"
+    "when": "(!activeEditor || activeEditor == 'gettingStartedPage' || activeEditor == 'workbench.editors.errorEditor') && focusedView == '' && !inQuickOpen"
   },
   // ctrl+d, ctrl+uの挙動修正
   {
