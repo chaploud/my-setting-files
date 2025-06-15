@@ -2,8 +2,9 @@
   // エディタ基本設定
   // フォント
   "editor.fontFamily": "'Source Han Code JP', 'UDEV Gothic 35NFLG', 'Droid Sans Mono', 'monospace', monospace",
-  "editor.fontSize": 13,
-  "terminal.integrated.fontSize": 13,
+  "editor.fontSize": 14,
+  "terminal.integrated.fontSize": 14,
+  "editor.lineNumbers": "on",
   // カーソルがいい感じに点滅する
   "editor.cursorBlinking": "phase",
   // スクロールがなめらかになる
@@ -223,6 +224,13 @@
     "/", // コメントアウト
     "]" // 定義ジャンプ
   ],
+  // フォーカス時にノーマルモードであれば、日本語IMEをオフにする
+  "command-runner.terminal.name": "runCommand",
+  "command-runner.terminal.autoClear": false,
+  "command-runner.terminal.autoFocus": false,
+  "command-runner.commands": {
+    "ime off": "powershell.exe -ExecutionPolicy Bypass -NonInteractive -File 'C:\\Scripts\\ime.ps1' off",
+  },
   // Calva
   // サイドバーにおけるREPLのインスペクタの階層的な括弧の色付けを有効にする
   // "calva.enableInspectorRainbow": true,
@@ -667,7 +675,19 @@
   "pomodoro.soundIntervalNotification": 1,
   "pomodoro.workColorButton": "orange",
   "pomodoro.workColorTime": "orange",
-  "pomodoro.workTime": 45
+  "pomodoro.workTime": 45,
+  "chat.mcp.serverSampling": {
+    "GistPad: GistPad": {
+      "allowedModels": [
+        "github.copilot-chat/gpt-4.1"
+      ]
+    }
+  },
+  "zenMode.fullScreen": false,
+  "zenMode.showTabs": "none",
+  "zenMode.centerLayout": false,
+  "window.menuBarVisibility": "compact",
+  "window.commandCenter": false
   // "dart.flutterSdkPath": "C:\\Users\\in-th\\Install\\flutter",
   // "jdk.jdkhome": "c:\\Users\\in-th\\Install\\Oracle_JDK-21"
 }
