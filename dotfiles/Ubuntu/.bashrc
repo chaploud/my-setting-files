@@ -181,3 +181,7 @@ if [ ! -f "$HOME/wasmer_completions.sh" ]; then
     wasmer gen-completions bash > "$HOME/wasmer_completions.sh"
 fi
 source "$HOME/wasmer_completions.sh"
+
+# locale
+export LANG="ja_JP.UTF-8"
+export LC_ALL="ja_JP.UTF-8"
