@@ -89,7 +89,7 @@ if vim.g.vscode then -- VSCode NeoVimから呼び出された時に有効
   -- バッファに入ったとき、ノーマルモードなら日本語IMEをオフにする
   local group = vim.api.nvim_create_augroup("VscodeBufEnter", { clear = true })
   vim.api.nvim_create_autocmd({"BufEnter", "BufWinEnter", "WinEnter", "InsertLeave"}, {
-    group = group
+    group = group,
     callback = function()
       if (vim.fn.mode() == 'n' or vim.fn.mode() == 'v') then
         vscode.action('command-runner.run', { args = { command = 'ime off' } })
