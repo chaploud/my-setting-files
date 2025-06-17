@@ -2,8 +2,8 @@
   // エディタ基本設定
   // フォント
   "editor.fontFamily": "'Source Han Code JP', 'UDEV Gothic 35NFLG', 'Droid Sans Mono', 'monospace', monospace",
-  "editor.fontSize": 14,
-  "terminal.integrated.fontSize": 14,
+  "editor.fontSize": 16,
+  "terminal.integrated.fontSize": 16,
   "editor.lineNumbers": "on",
   // カーソルがいい感じに点滅する
   "editor.cursorBlinking": "phase",
@@ -27,6 +27,8 @@
   "editor.tokenColorCustomizations": {
     "comments": "#2aa1ae"
   },
+  // NeoVimとの相性(日本語入力で上書されてしまう)への対処
+  "editor.experimentalEditContextEnabled": false,
   // 言語によるタブサイズの設定
   "editor.tabSize": 2,
   "[zig]": {
@@ -229,7 +231,7 @@
   "command-runner.terminal.autoClear": false,
   "command-runner.terminal.autoFocus": false,
   "command-runner.commands": {
-    "ime off": "powershell.exe -ExecutionPolicy Bypass -NonInteractive -File 'C:\\Scripts\\ime.ps1' off",
+    "ime off": "powershell.exe -ExecutionPolicy Bypass -NonInteractive -File 'C:\\Scripts\\ime.ps1' off"
   },
   // Calva
   // サイドバーにおけるREPLのインスペクタの階層的な括弧の色付けを有効にする
@@ -254,6 +256,7 @@
   "calva.autoOpenInspector": false,
   // Clojure/ClojureScriptのコード参照などの機能(CodeLens)を有効にする
   "calva.referencesCodeLens.enabled": true,
+  "calva.evaluationSendCodeToOutputWindow": false,
   "commands.commands": {
     "evalFormToComment": {
       "sequence": [
@@ -265,6 +268,8 @@
       ]
     }
   },
+  // VSCodeのテストエクスプローラを使う(Experimental)
+  "calva.useTestExplorer": true,
   // Code Runner
   "code-runner.runInTerminal": true,
   "code-runner.saveFileBeforeRun": true,
@@ -580,6 +585,35 @@
               "name": "Wrap with \"\"",
               "type": "command",
               "command": "paredit.wrapAroundQuote"
+            }
+          ]
+        },
+        // fiddleファイル関連
+        {
+          "key": "f",
+          "name": "Fiddle",
+          "type": "bindings",
+          "bindings": [
+            // 開いているclojureファイルに対応するfiddleファイルを開く
+            {
+              "key": "f",
+              "name": "Open fiddle for source file",
+              "type": "command",
+              "command": "calva.openFiddleForSourceFile"
+            },
+            // 開いているfiddleファイルに対応するclojureファイルを開く
+            {
+              "key": "F",
+              "name": "Open source file for fiddle",
+              "type": "command",
+              "command": "calva.openSourceFileForFiddle"
+            },
+            // 紐づいているfiddleファイルを実行
+            {
+              "key": "e",
+              "name": "Evaluate fiddle for source code",
+              "type": "command",
+              "command": "calva.evaluateFiddleForSourceFile"
             }
           ]
         }
