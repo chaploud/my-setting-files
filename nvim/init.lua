@@ -51,6 +51,15 @@ vim.api.nvim_create_autocmd("TextYankPost", {
   end,
 })
 
+-- ClojureではC-wの際に / . で止まって欲しい
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "clojure",
+  callback = function()
+    -- iskeywordから/と.を除外
+    vim.opt_local.iskeyword:remove({"/", "."})
+  end,
+})
+
 -- keymap: 'i': insert, 'n': normal, 'v': visual, 'c': command
 -- Recenter Top Bottomをctrl+lにバインド
 vim.keymap.set({'n', 'v', 'i'}, '<C-l>', recenter_cycle)
