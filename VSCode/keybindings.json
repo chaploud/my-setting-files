@@ -317,6 +317,42 @@
     "when": "textInputFocus && !accessibilityModeEnabled && neovim.mode == 'insert'"
   },
   // ===== ここまで、spaceで開いた後しか効果がない =====
+  // ctrl+spaceを日本語IME切り替えに使っているため、ctrl+space => ctrl+'に変更
+  {
+    "key": "ctrl+oem_7",
+    "command": "workbench.action.terminal.requestCompletions",
+    "when": "config.terminal.integrated.suggest.enabled && terminalFocus && terminalProcessSupported && !terminalSuggestWidgetVisible"
+  },
+  {
+    "key": "ctrl+oem_7",
+    "command": "editor.action.triggerSuggest",
+    "when": "editorHasCompletionItemProvider && textInputFocus && !editorReadonly && !suggestWidgetVisible"
+  },
+  {
+    "key": "ctrl+oem_7",
+    "command": "focusSuggestion",
+    "when": "suggestWidgetVisible && textInputFocus && !suggestWidgetHasFocusedSuggestion"
+  },
+  {
+    "key": "ctrl+oem_7",
+    "command": "quickInput.toggleHover",
+    "when": "inQuickInput && quickInputType == 'quickPick'"
+  },
+  {
+    "key": "ctrl+oem_7",
+    "command": "toggleSuggestionDetails",
+    "when": "suggestWidgetHasFocusedSuggestion && suggestWidgetVisible && textInputFocus"
+  },
+  {
+    "key": "ctrl+oem_7",
+    "command": "workbench.action.terminal.sendSequence",
+    "when": "terminalFocus && terminalShellIntegrationEnabled && !accessibilityModeEnabled && terminalShellType == 'pwsh'"
+  },
+  {
+    "key": "ctrl+oem_7",
+    "command": "workbench.action.terminal.suggestToggleDetails",
+    "when": "simpleSuggestWidgetHasFocusedSuggestion && terminalFocus && terminalHasBeenCreated && terminalIsOpen && terminalSuggestWidgetVisible || simpleSuggestWidgetHasFocusedSuggestion && terminalFocus && terminalIsOpen && terminalProcessSupported && terminalSuggestWidgetVisible"
+  },
   // "ctrl+m" を "enter" として振舞わせたい
   // [A] 余計な"ctrl+m"を解除
   {
