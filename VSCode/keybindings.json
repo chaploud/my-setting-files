@@ -1,5 +1,6 @@
 // Place your key bindings in this file to override the defaults
 [
+  // ===== 設定ファイル =====
   // JSONの方の設定ファイルを開くことが多い
   {
     "key": "ctrl+oem_comma",
@@ -10,6 +11,7 @@
     "key": "ctrl+k ctrl+s",
     "command": "workbench.action.openGlobalKeybindingsFile"
   },
+  // ===== 統合ターミナル =====
   // ターミナル領域でターミナルにフォーカス
   {
     "key": "ctrl+j",
@@ -39,14 +41,14 @@
     "command": "workbench.action.terminal.runSelectedText",
     "when": "editorTextFocus && !sideBarFocus && editorLangId != 'clojure'"
   },
-  // Markdown All in One
+  // ===== Markdown All in One =====
   // alt+,でチェックボックスをトグル
   {
     "key": "alt+oem_comma",
     "command": "markdown.extension.checkTaskList",
     "when": "editorTextFocus && editorLangId =~ /^markdown$|^rmd$|^quarto$/ && neovim.mode == 'normal'"
   },
-  // Calculator
+  // ===== Calculator =====
   {
     "key": "ctrl+k c",
     "command": "calculator.showInput"
@@ -147,7 +149,7 @@
     },
     "when": "editorTextFocus && (neovim.mode == 'normal' || neovim.mode == 'visual' ) && editorLangId not in 'neovim.editorLangIdExclusions'"
   },
-  // Search
+  // === サイドパネルのSearch + キーボード操作
   {
     "key": "ctrl+j",
     "command": "search.focus.nextInputBox",
@@ -158,7 +160,7 @@
     "command": "search.focus.previousInputBox",
     "when": "sideBarFocus && focusedView == 'workbench.view.search'"
   },
-  // Git (SCM: Source Control Management)
+  // === Git (SCM: Source Control Management) + キーボード操作
   // space => フォーカスはそのまま、差分を開く
   // enter/ctrl+m => 差分を開いてフォーカスを移す
   // コミットメッセージ入力欄にフォーカス
@@ -209,7 +211,7 @@
     "command": "git.stash",
     "when": "sideBarFocus && focusedView == 'workbench.scm' && listFocus && !inputFocus"
   },
-  // ===== 今の所、spaceで開いた後しか効果がない =====
+  // === spaceで開いた直後にそのファイルについて実行する
   {
     "key": "o",
     "command": "git.openFile",
@@ -230,7 +232,7 @@
     "command": "git.clean",
     "when": "sideBarFocus && focusedView == 'workbench.scm' && listFocus && !inputFocus"
   },
-  // Calva
+  // === Calva
   {
     "key": "shift+enter",
     "command": "calva.evaluateCurrentTopLevelForm",
@@ -238,7 +240,7 @@
   },
   {
     "key": "ctrl+shift+enter",
-    "command": "evalFormToComment",
+    "command": "calva.evaluateTopLevelFormAsComment",
     "when": "calva:keybindingsEnabled && editorTextFocus && !calva:cursorInComment && !editorHasMultipleSelections && !editorReadOnly && editorLangId == 'clojure' && neovim.mode == 'normal'"
   },
   {
@@ -282,12 +284,13 @@
     "command": "editor.action.commentLine",
     "when": "editorTextFocus && !editorReadonly"
   },
-  { // インサートモード時にRedo
+  // インサートモード時にRedo
+  {
     "key": "ctrl+r",
     "command": "redo",
     "when": "editorTextFocus && neovim.mode == 'insert'"
   },
-  // Markdown All in OneとコンフリクトするInsert時のキーバインドを解除
+  // === Markdown All in OneとコンフリクトするInsert時のキーバインドを解除
   {
     "key": "ctrl+i",
     "command": "-markdown.extension.editing.toggleItalic",
@@ -316,8 +319,7 @@
     "command": "deleteWordRight",
     "when": "textInputFocus && !accessibilityModeEnabled && neovim.mode == 'insert'"
   },
-  // ===== ここまで、spaceで開いた後しか効果がない =====
-  // ctrl+spaceを日本語IME切り替えに使っているため、ctrl+space => ctrl+'に変更
+  // ===== ctrl+spaceを日本語IME切り替えに使っているため、ctrl+space => ctrl+'に変更 =====
   {
     "key": "ctrl+oem_7",
     "command": "workbench.action.terminal.requestCompletions",
@@ -353,7 +355,7 @@
     "command": "workbench.action.terminal.suggestToggleDetails",
     "when": "simpleSuggestWidgetHasFocusedSuggestion && terminalFocus && terminalHasBeenCreated && terminalIsOpen && terminalSuggestWidgetVisible || simpleSuggestWidgetHasFocusedSuggestion && terminalFocus && terminalIsOpen && terminalProcessSupported && terminalSuggestWidgetVisible"
   },
-  // "ctrl+m" を "enter" として振舞わせたい
+  // ===== "ctrl+m" を "enter" として振舞わせる =====
   // [A] 余計な"ctrl+m"を解除
   {
     "key": "ctrl+m",

@@ -94,17 +94,6 @@ if vim.g.vscode then -- VSCode NeoVimから呼び出された時に有効
   vim.keymap.set({'n', 'v'}, '<leader>', function()
     vscode.call('whichkey.show')
   end)
-
-  -- バッファに入ったとき、ノーマルモードなら日本語IMEをオフにする
-  local group = vim.api.nvim_create_augroup("VscodeBufEnter", { clear = true })
-  vim.api.nvim_create_autocmd({"BufEnter", "BufWinEnter", "WinEnter", "InsertLeave"}, {
-    group = group,
-    callback = function()
-      if (vim.fn.mode() == 'n' or vim.fn.mode() == 'v') then
-        vscode.action('command-runner.run', { args = { command = 'ime off' } })
-      end
-    end,
-  })
 else -- 通常のNeoVim利用時に有効
   -- ctrl+sでも保存
   vim.keymap.set({'n', 'i'}, '<C-s>', vim.cmd.write)

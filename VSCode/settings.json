@@ -1,10 +1,12 @@
 {
-  // エディタ基本設定
+  // ===== エディタ基本設定 =====
   // フォント
   "editor.fontFamily": "'Source Han Code JP', 'UDEV Gothic 35NFLG', 'Droid Sans Mono', 'monospace', monospace",
-  "editor.fontSize": 15,
-  "terminal.integrated.fontSize": 15,
-  "editor.lineNumbers": "off",
+  "editor.fontSize": 14,
+  "terminal.integrated.fontSize": 14,
+  "debug.console.fontSize": 16,
+  // 行番号
+  "editor.lineNumbers": "on",
   // カーソルがいい感じに点滅する
   "editor.cursorBlinking": "phase",
   // スクロールがなめらかになる
@@ -45,6 +47,8 @@
   },
   // 初回のスタートアップ画面は表示しない
   "workbench.startupEditor": "none",
+  // ボトムパネルの説明をアイコンにする
+  "workbench.panel.showLabels": false,
   // 空のフォルダを省略して一列にしてしまわない(必ずツリー表示にする)
   "explorer.compactFolders": false,
   // 保存時に行末の空白など不要な空白を削除する
@@ -97,8 +101,13 @@
   "[markdown]": {
     "editor.defaultFormatter": "DavidAnson.vscode-markdownlint"
   },
-  // ===== 以下は拡張機能の設定 =====
-  "redhat.telemetry.enabled": true,
+  "[typescript]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features"
+  },
+  // === TypeScript
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  // ===== 拡張機能の設定 =====
+  // === 見た目
   // Color Theme (GitHub Dark Default)
   "workbench.colorTheme": "GitHub Dark Default",
   // メリハリをつけるため下部パネルとサイドバーの色を調整
@@ -123,24 +132,23 @@
   },
   // vscode-icons
   "workbench.iconTheme": "vscode-icons",
-  // Remote SSH
+  // === Remote SSH
+  "remote.SSH.enableAgentForwarding": true,
+  "remote.autoForwardPortsSource": "hybrid",
   "remote.SSH.remotePlatform": {
     "dev-almalinux": "linux",
     "gpu-ubuntu": "linux",
     "mac-mini": "macOS"
   },
-  "remote.SSH.enableAgentForwarding": true,
-  "remote.autoForwardPortsSource": "hybrid",
-  // GitHub Copilot
+  // === GitHub Copilot
   // デフォルトでオフになっている言語も補完を効かせるようにする
   "github.copilot.enable": {
     "*": true,
     "plaintext": true,
     "markdown": true,
-    "scminput": true,
-    "sql": false
+    "scminput": true
   },
-  // GitHub Copilot Chat
+  // === GitHub Copilot Chat
   // 日本語で応答してもらう
   "github.copilot.chat.localeOverride": "ja",
   // OSSなどでコミットメッセージを英語で生成するのに便利
@@ -152,13 +160,13 @@
       "text": "Messages should be in English."
     }
   ],
-  // Prettify TypeScript: Better Type Previews
+  // === Prettify TypeScript: Better Type Previews
   "prettify-ts.hidePrivateProperties": false,
   "prettify-ts.typeIndentation": 2,
   "prettify-ts.maxDepth": 2,
   "prettify-ts.maxSubProperties": 20,
   "prettify-ts.maxUnionMembers": 30,
-  // Todo Tree
+  // === Todo Tree
   "todo-tree.tree.showCountsInTree": true,
   "todo-tree.tree.expanded": true,
   "todo-tree.tree.scanMode": "workspace only",
@@ -182,7 +190,7 @@
     "white",
     "white"
   ],
-  // VSCode NeoVim
+  // === VSCode NeoVim
   // 公式の推奨設定
   "extensions.experimental.affinity": {
     "asvetliakov.vscode-neovim": 1
@@ -230,16 +238,9 @@
     "/", // コメントアウト
     "]" // 定義ジャンプ
   ],
-  // フォーカス時にノーマルモードであれば、日本語IMEをオフにする
-  "command-runner.terminal.name": "runCommand",
-  "command-runner.terminal.autoClear": false,
-  "command-runner.terminal.autoFocus": false,
-  "command-runner.commands": {
-    "ime off": "powershell.exe -ExecutionPolicy Bypass -NonInteractive -File 'C:\\Scripts\\ime.ps1' off"
-  },
-  // Calva
+  // === Calva
   // サイドバーにおけるREPLのインスペクタの階層的な括弧の色付けを有効にする
-  // "calva.enableInspectorRainbow": true,
+  "calva.enableInspectorRainbow": true,
   // REPLの出力ファイルは${projectRootPath}/.calva/repl.calva-replを使う
   "calva.useLegacyReplWindowPath": false,
   // デフォルトでは、入力や出力やエラーがそれぞれ別の場所に出力される
@@ -261,20 +262,9 @@
   // Clojure/ClojureScriptのコード参照などの機能(CodeLens)を有効にする
   "calva.referencesCodeLens.enabled": true,
   "calva.evaluationSendCodeToOutputWindow": false,
-  "commands.commands": {
-    "evalFormToComment": {
-      "sequence": [
-        "calva.evaluateTopLevelFormAsComment",
-        {
-          "command": "editor.action.joinLines",
-          "delay": 200
-        }
-      ]
-    }
-  },
   // VSCodeのテストエクスプローラを使う(Experimental)
   "calva.useTestExplorer": true,
-  // Code Runner
+  // === Code Runner
   "code-runner.runInTerminal": true,
   "code-runner.saveFileBeforeRun": true,
   "code-runner.clearPreviousOutput": true,
@@ -285,7 +275,7 @@
     "javascript": "bun",
     "typescript": "bun"
   },
-  // Which Key
+  // === Which Key
   "whichkey.delay": 0,
   "whichkey.bindings": [
     // ファイルエクスプローラーにフォーカス
@@ -336,14 +326,14 @@
       "key": "n",
       "name": "Next marker",
       "type": "command",
-      "command": "editor.action.marker.nextInFiles"
+      "command": "editor.action.marker.next"
     },
     // 前のエラー報告箇所に移動
     {
       "key": "p",
       "name": "Previous marker",
       "type": "command",
-      "command": "editor.action.marker.prevInFiles"
+      "command": "editor.action.marker.prev"
     },
     // 次の変更箇所に移動
     {
@@ -624,103 +614,28 @@
       ]
     }
   ],
-  // MQL-Tools
-  "mql_tools.Metaeditor.Metaeditor5Dir": "\"C:\\Program Files\\MetaTrader 5\\MetaEditor64.exe\"",
-  "vsicons.customIconFolderPath": "c:\\Users\\in-th\\.vscode\\extensions\\mql-tools-icons",
-  "vsicons.associations.files": [
-    {
-      "icon": "mq4",
-      "extensions": [
-        "mq4"
-      ],
-      "format": "svg"
-    },
-    {
-      "icon": "mq5",
-      "extensions": [
-        "mq5"
-      ],
-      "format": "svg"
-    },
-    {
-      "icon": "mqh",
-      "extensions": [
-        "mqh"
-      ],
-      "format": "svg"
-    },
-    {
-      "icon": "ex4",
-      "extensions": [
-        "ex4"
-      ],
-      "format": "svg"
-    },
-    {
-      "icon": "ex5",
-      "extensions": [
-        "ex5"
-      ],
-      "format": "svg"
-    }
-  ],
-  // Rust Analyzer
+  // === Rust Analyzer
   "rust-analyzer.inlayHints.parameterHints.enable": false,
   "rust-analyzer.inlayHints.typeHints.enable": false,
   "rust-analyzer.inlayHints.chainingHints.enable": false,
-  // Python
+  // === Python
   "python.analysis.typeCheckingMode": "strict",
-  // Zig
+  // === Zig
   "zig.zls.enabled": "on",
   "zig.zls.inlayHintsHideRedundantParamNames": true,
   "zig.zls.inlayHintsHideRedundantParamNamesLastToken": true,
   "zig.zls.inlayHintsShowVariableTypeHints": false,
   "zig.zls.inlayHintsShowParameterName": false,
   "zig.zls.inlayHintsShowStructLiteralFieldType": false,
+  // === Code LLDB
   "lldb.suppressUpdateNotifications": true,
-  "dbcode.connections": [
-    {
-      "connectionId": "iW-GwZ0M0sEu_ovDgUqIB",
-      "name": "syo-kudo-lms",
-      "driver": "mysql",
-      "connectionType": "host",
-      "host": "localhost",
-      "port": 3306,
-      "ssl": false,
-      "username": "root",
-      "password": "",
-      "savePassword": "secretStorage",
-      "readOnly": false,
-      "connectionTimeout": 30,
-      "driverOptions": {
-        "retrievePublickey": true
-      },
-      "filters": {
-        "lms_phpunit/tables": [
-          "lms_link_output_sheet_template_sco",
-          "lms_output_sheet_template",
-          "lms_result",
-          "lms_result_detail",
-          "lms_result_meta",
-          "lms_sco",
-          "lms_user"
-        ]
-      }
-    }
-  ],
-  "typescript.updateImportsOnFileMove.enabled": "always",
+  // === Pomodoro Timer
   "pomodoro.breakTime": 10,
   "pomodoro.soundIntervalNotification": 1,
   "pomodoro.workColorButton": "orange",
   "pomodoro.workColorTime": "orange",
   "pomodoro.workTime": 45,
-  "chat.mcp.serverSampling": {
-    "GistPad: GistPad": {
-      "allowedModels": [
-        "github.copilot-chat/gpt-4.1"
-      ]
-    }
-  },
+  // === Path Intellisense
   "path-intellisense.absolutePathToWorkspace": false,
   "path-intellisense.autoSlashAfterDirectory": true,
   "path-intellisense.autoTriggerNextSuggestion": true,
