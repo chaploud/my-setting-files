@@ -547,20 +547,25 @@
   },
   {
     "key": "ctrl+m",
+    "command": "tinymist.onEnter",
+    "when": "editorTextFocus && !editorHasMultipleSelections && !editorReadonly && !suggestWidgetVisible && editorLangId == 'typst' && vim.mode != 'CommandlineInProgress' && vim.mode != 'EasyMotionInputMode' && vim.mode != 'EasyMotionMode' && vim.mode != 'Normal' && vim.mode != 'Replace' && vim.mode != 'SearchInProgressMode' && vim.mode != 'SurroundInputMode' && vim.mode != 'Visual' && vim.mode != 'VisualBlock' && vim.mode != 'VisualLine'"
+  },
+  {
+    "key": "ctrl+m",
     "command": "workbench.action.chat.submit",
-    "when": "chatInputHasText && chatRequestIsPaused && inChatInput && chatMode == 'ask' || chatInputHasText && inChatInput && !chatSessionRequestInProgress && chatMode == 'ask' || chatInstructionsAttached && chatRequestIsPaused && inChatInput && chatMode == 'ask' || chatInstructionsAttached && inChatInput && !chatSessionRequestInProgress && chatMode == 'ask'"
+    "when": "inChatInput && chatMode == 'ask'"
   },
   {
     "key": "ctrl+m",
     "command": "workbench.action.edits.submit",
-    "when": "chatInputHasText && chatRequestIsPaused && inChatInput && chatMode != 'ask' || chatInputHasText && inChatInput && !chatSessionRequestInProgress && chatMode != 'ask' || chatInstructionsAttached && chatRequestIsPaused && inChatInput && chatMode != 'ask' || chatInstructionsAttached && inChatInput && !chatSessionRequestInProgress && chatMode != 'ask'"
+    "when": "inChatInput && chatMode != 'ask'"
   },
   {
     "key": "ctrl+m",
     "command": "workbench.action.terminal.acceptSelectedSuggestionEnter",
     "when": "terminalFocus && terminalHasBeenCreated && terminalIsOpen && terminalSuggestWidgetVisible && config.terminal.integrated.suggest.runOnEnter != 'ignore' || terminalFocus && terminalIsOpen && terminalProcessSupported && terminalSuggestWidgetVisible && config.terminal.integrated.suggest.runOnEnter != 'ignore'"
   },
-  // [D] "ctrl+g"を軒並み"ESC"と同じ動作にする
+  // ===== "ctrl+g" を "escape" として振舞わせる =====
   {
     "key": "ctrl+g",
     "command": "calva.clearInlineResults",
@@ -603,13 +608,13 @@
   },
   {
     "key": "ctrl+g",
-    "command": "workbench.action.terminal.chat.close",
-    "when": "chatIsEnabled && terminalChatFocus && terminalChatVisible || chatIsEnabled && terminalChatVisible && terminalFocus"
+    "command": "inlineChat2.close",
+    "when": "inlineChatHasEditsAgent && inlineChatVisible && !chatEdits.hasEditorModifications && !chatEdits.isRequestInProgress || inlineChatHasEditsAgent && inlineChatVisible && !chatEdits.isRequestInProgress && chatEdits.requestCount == '0'"
   },
   {
     "key": "ctrl+g",
-    "command": "inlineChat2.stop",
-    "when": "inlineChatHasEditsAgent && inlineChatVisible"
+    "command": "workbench.action.terminal.chat.close",
+    "when": "chatIsEnabled && terminalChatFocus && terminalChatVisible || chatIsEnabled && terminalChatVisible && terminalFocus"
   },
   {
     "key": "ctrl+g",

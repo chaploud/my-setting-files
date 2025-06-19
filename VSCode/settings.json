@@ -95,6 +95,9 @@
   // 信頼されたワークスペースを開いているならば、信頼されていないファイルを開くときに警告を出さない
   "security.workspace.trust.untrustedFiles": "open",
   //  ===== デフォルトフォーマッタ =====
+  "[json]": {
+    "editor.defaultFormatter": "vscode.json-language-features"
+  },
   "[jsonc]": {
     "editor.defaultFormatter": "vscode.json-language-features"
   },
