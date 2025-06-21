@@ -11,6 +11,31 @@
     "key": "ctrl+k ctrl+s",
     "command": "workbench.action.openGlobalKeybindingsFile"
   },
+  // ===== 変更点への移動 =====
+  // compare editor内で次の変更点へジャンプ
+  {
+    "key": "alt+n",
+    "command": "workbench.action.compareEditor.nextChange",
+    "when": "textCompareEditorVisible"
+  },
+  // compare editor内で前の変更点へジャンプ
+  {
+    "key": "alt+p",
+    "command": "workbench.action.compareEditor.previousChange",
+    "when": "textCompareEditorVisible"
+  },
+  // 編集中のエディタで次の変更点へジャンプ
+  {
+    "key": "alt+n",
+    "command": "workbench.action.editor.nextChange",
+    "when": "editorTextFocus && !textCompareEditorActive && quickDiffDecorationCount != '0'"
+  },
+  // 編集中のエディタで前の変更点へジャンプ
+  {
+    "key": "alt+p",
+    "command": "workbench.action.editor.previousChange",
+    "when": "editorTextFocus && !textCompareEditorActive && quickDiffDecorationCount != '0'"
+  },
   // ===== 統合ターミナル =====
   // ターミナル領域でターミナルにフォーカス
   {
@@ -54,18 +79,18 @@
     "command": "calculator.showInput"
   },
   // ===== VSCode NeoVim =====
+  // カーソル操作が効かなくなったときは実行
+  {
+    "key": "ctrl+shift+r",
+    "command": "vscode-neovim.restart",
+    "when": "editorTextFocus"
+  },
   // insertモード時はctrl+kによるコマンド待ち受けをしない
   {
     "key": "ctrl+k",
     "command": "vscode-neovim.send",
     "args": "<C-k>",
     "when": "editorTextFocus && neovim.mode == 'insert'"
-  },
-  // Which Key(neovimと通信している際は、init.luaから呼ぶ)
-  {
-    "key": "space",
-    "command": "whichkey.show",
-    "when": "(!activeEditor || activeEditor == 'gettingStartedPage' || activeEditor == 'workbench.editors.errorEditor') && focusedView == '' && !inQuickOpen"
   },
   // ctrl+d, ctrl+uの挙動修正
   {
