@@ -66,6 +66,7 @@
   "terminal.integrated.scrollback": 10000,
   // VSCodeを終了した後、前回のプロセスを復元しない
   "terminal.integrated.persistentSessionReviveProcess": "never",
+  "terminal.integrated.cursorBlinking": true,
   // デバッグ開始時に自動でデバッグコンソールを開かない
   "debug.internalConsoleOptions": "neverOpen",
   // Zen Mode

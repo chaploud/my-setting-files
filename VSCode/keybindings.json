@@ -344,6 +344,21 @@
     "command": "deleteWordRight",
     "when": "textInputFocus && !accessibilityModeEnabled && neovim.mode == 'insert'"
   },
+  // ctrl+w による不意の閉じるを防ぐ
+  {
+    "key": "ctrl+w",
+    "command": "-workbench.action.closeActiveEditor"
+  },
+  {
+    "key": "ctrl+w",
+    "command": "-workbench.action.closeGroup",
+    "when": "activeEditorGroupEmpty && multipleEditorGroups"
+  },
+  {
+    "key": "ctrl+w",
+    "command": "-workbench.action.terminal.killEditor",
+    "when": "terminalEditorFocus && terminalFocus && terminalHasBeenCreated || terminalEditorFocus && terminalFocus && terminalProcessSupported"
+  },
   // ===== ctrl+spaceを日本語IME切り替えに使っているため、ctrl+space => ctrl+'に変更 =====
   {
     "key": "ctrl+oem_7",

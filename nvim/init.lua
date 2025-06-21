@@ -200,6 +200,16 @@ require("lazy").setup({
           desc = "Debug Run"
         },
         {
+          "<leader>'",
+          function() call_vscode('workbench.action.createTerminalEditorSide') end,
+          desc = "Create Terminal in Editor Side"
+        },
+        {
+          "<leader><leader>'",
+          function() call_vscode('workbench.action.createTerminalEditor') end,
+          desc = "Create Terminal in Editor"
+        },
+        {
           "<leader>w",
           group = "Window",
         },
