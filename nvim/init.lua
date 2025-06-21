@@ -143,7 +143,10 @@ require("lazy").setup({
       opts = {
         delay = 0,
         show_help = false,
-        show_keys = false
+        show_keys = false,
+        icons = {
+          mappings = false
+        }
       },
       keys = {
         {
@@ -155,7 +158,216 @@ require("lazy").setup({
           "<leader>f",
           function() call_vscode('workbench.view.explorer') end,
           desc = "File Explorer"
-        }
+        },
+        {
+          "<leader>s",
+          function() call_vscode('workbench.view.search') end,
+          desc = "Search in Project"
+        },
+        {
+          "<leader>r",
+          function() call_vscode('editor.action.rename') end,
+          desc = "Rename Symbol"
+        },
+        {
+          "<leader>i",
+          function() call_vscode('editor.action.goToImplementation') end,
+          desc = "Go to Implementation"
+        },
+        {
+          "<leader>e",
+          function() call_vscode('code-runner.run') end,
+          desc = "Execute File"
+        },
+        {
+          "<leader>n",
+          function() call_vscode('editor.action.marker.next') end,
+          desc = "Next Marker"
+        },
+        {
+          "<leader>p",
+          function() call_vscode('editor.action.marker.prev') end,
+          desc = "Previous Marker"
+        },
+        {
+          "<leader>d",
+          function() call_vscode('workbench.action.debug.start') end,
+          desc = "Debug Start"
+        },
+        {
+          "<leader>D",
+          function() call_vscode('workbench.action.debug.run') end,
+          desc = "Debug Run"
+        },
+        {
+          "<leader>w",
+          group = "Window",
+        },
+        {
+          "<leader>wo",
+          function() call_vscode('workbench.action.closeOtherEditors') end,
+          desc = "Close Other Editors"
+        },
+        {
+          "<leader>g",
+          group = "Git",
+        },
+        {
+          "<leader>gs",
+          function() call_vscode('workbench.scm.focus') end,
+          desc = "Git Status"
+        },
+        {
+          "<leader>gl",
+          function() call_vscode('workbench.scm.history.focus') end,
+          desc = "Git Log"
+        },
+        {
+          "<leader>gb",
+          function() call_vscode('git.checkout') end,
+          desc = "Git Checkout"
+        },
+        {
+          "<leader>gf",
+          function() call_vscode('git.pull') end,
+          desc = "Git Pull"
+        },
+        {
+          "<leader>gp",
+          function() call_vscode('git.push') end,
+          desc = "Git Push"
+        },
+        {
+          "<leader>m",
+          group = "Clojure",
+        },
+        {
+          "<leader>mc",
+          function() call_vscode('calva.connectNonProjectREPL') end,
+          desc = "Connect to a running REPL (non-project)"
+        },
+        {
+          "<leader>mD",
+          function() call_vscode('calva.disconnect') end,
+          desc = "Disconnect from a running REPL"
+        },
+        {
+          "<leader>mi",
+          function() call_vscode('calva.jackIn') end,
+          desc = "(Re)Start a project REPL and connect (Jack-In)"
+        },
+        {
+          "<leader>mk",
+          function() call_vscode('calva.jackOut') end,
+          desc = "Stop/Kill the project REPL started by Calva (Jack-Out)"
+        },
+        {
+          "<leader>mr",
+          function() call_vscode('calva.showReplWindow') end,
+          desc = "Show REPL window"
+        },
+        {
+          "<leader>me",
+          function() call_vscode('calva.loadFile') end,
+          desc = "Evaluate entire file"
+        },
+        {
+          "<leader>mg",
+          function() call_vscode('calva.debug.instrument') end,
+          desc = "Instrument current form for debugging"
+        },
+        {
+          "<leader>mh",
+          function() call_vscode('paredit.openList') end,
+          desc = "Move cursor to list start"
+        },
+        {
+          "<leader>ml",
+          function() call_vscode('paredit.closeList') end,
+          desc = "Move cursor to list end"
+        },
+        {
+          "<leader>mb",
+          function() call_vscode('paredit.barfSexpForward') end,
+          desc = "Barf forwards"
+        },
+        {
+          "<leader>mB",
+          function() call_vscode('paredit.barfSexpBackward') end,
+          desc = "Barf backwards"
+        },
+        {
+          "<leader>ms",
+          function() call_vscode('paredit.slurpSexpForward') end,
+          desc = "Slurp forwards"
+        },
+        {
+          "<leader>mS",
+          function() call_vscode('paredit.slurpSexpBackward') end,
+          desc = "Slurp backwards"
+        },
+        {
+          "<leader>md",
+          group = "Delete",
+        },
+        {
+          "<leader>mdh",
+          function() call_vscode('paredit.killListBackward') end,
+          desc = "Delete to start of list"
+        },
+        {
+          "<leader>mdl",
+          function() call_vscode('paredit.killListForward') end,
+          desc = "Delete to end of list"
+        },
+        {
+          "<leader>mdu",
+          function() call_vscode('paredit.raiseSexp') end,
+          desc = "Delete parent and raise children"
+        },
+        {
+          "<leader>mw",
+          group = "Wrap",
+        },
+        {
+          "<leader>mw(",
+          function() call_vscode('paredit.wrapAroundParens') end,
+          desc = "Wrap with ()"
+        },
+        {
+          "<leader>mw[",
+          function() call_vscode('paredit.wrapAroundSquare') end,
+          desc = "Wrap with []"
+        },
+        {
+          "<leader>mw{",
+          function() call_vscode('paredit.wrapAroundCurly') end,
+          desc = "Wrap with {}"
+        },
+        {
+          "<leader>mw\"",
+          function() call_vscode('paredit.wrapAroundQuote') end,
+          desc = "Wrap with \"\""
+        },
+        {
+          "<leader>mf",
+          group = "Fiddle",
+        },
+        {
+          "<leader>mff",
+          function() call_vscode('calva.openFiddleForSourceFile') end,
+          desc = "Open fiddle for source file"
+        },
+        {
+          "<leader>mfF",
+          function() call_vscode('calva.openSourceFileForFiddle') end,
+          desc = "Open source file for fiddle"
+        },
+        {
+          "<leader>mfe",
+          function() call_vscode('calva.evaluateFiddleForSourceFile') end,
+          desc = "Evaluate fiddle for source code"
+        },
       }
     }
   },
