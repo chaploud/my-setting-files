@@ -1,40 +1,48 @@
 -- Recenter Top Bottom
 -- ctrl+l連打で、カーソル位置を画面の中央、上端、下端にシフトするサイクルを行う関数
+-- 2秒間ctrl+lが押されなかったら、次回実行時は中央シフトからスタート
 local recenter_state = 0
 local last_recenter_time = 0
--- 2秒間ctrl+lが押されなかったら、次回実行時は中央シフトからスタート
 local CONSECUTIVE_THRESHOLD = 2000 -- ミリ秒
+
 local function recenter_cycle()
+  -- 一定時間経過でリセット
   local current_time = vim.uv.now()
-  local time_diff = current_time - last_recenter_time
-  if time_diff > CONSECUTIVE_THRESHOLD then
+  if current_time - last_recenter_time > CONSECUTIVE_THRESHOLD then
     recenter_state = 0
   end
 
-  if recenter_state == 0 then
-    if vim.g.vscode then
-      vim.fn.VSCodeExtensionNotify('reveal', 'center', 0)
-    else
-      vim.cmd("normal! zz")
-    end
-    recenter_state = 1
-  elseif recenter_state == 1 then
-    if vim.g.vscode then
-      vim.fn.VSCodeExtensionNotify('reveal', 'top', 0)
-    else
-      vim.cmd("normal! zt")
-    end
-    recenter_state = 2
-  elseif recenter_state == 2 then
-    if vim.g.vscode then
-      vim.fn.VSCodeExtensionNotify('reveal', 'bottom', 0)
-    else
-      vim.cmd("normal! zb")
-    end
-    recenter_state = 0
+  -- 配列で位置とコマンドを定義
+  local positions = {
+    { pos = "center", cmd = "zz" },
+    { pos = "top", cmd = "zt" },
+    { pos = "bottom", cmd = "zb" }
+  }
+
+  -- 現在の状態に対応する位置を取得
+  local current = positions[recenter_state + 1]
+
+  -- VSCodeかNeovimネイティブかによって適切な方法で実行
+  if vim.g.vscode then
+    vim.fn.VSCodeExtensionNotify('reveal', current.pos, 0)
+  else
+    vim.cmd("normal! " .. current.cmd)
   end
 
+  -- 状態を更新（0→1→2→0→...）
+  recenter_state = (recenter_state + 1) % 3
   last_recenter_time = current_time
+end
+
+-- vscode.call
+local vscode
+local function call_vscode(name, ...)
+  if vim.g.vscode then
+    if not vscode then
+      vscode = require('vscode')
+    end
+    return vscode.call(name, ...)
+  end
 end
 
 -- クリップボードをOS側と共有
@@ -86,22 +94,10 @@ vim.keymap.set('v', 'p', '"_dP')
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
-if vim.g.vscode then -- VSCode NeoVimから呼び出された時に有効
-  -- <leader>のディレイをなくす
-  vim.o.timeout = false
-  local vscode = require('vscode')
-  -- <leader>キーがVSCode側で押された時、VSCode側のwhich-keyを起動
-  vim.keymap.set({'n', 'v'}, '<leader>', function()
-    vscode.call('whichkey.show')
-  end)
-else -- 通常のNeoVim利用時に有効
-  -- ctrl+sでも保存
-  vim.keymap.set({'n', 'i'}, '<C-s>', vim.cmd.write)
-  -- ctrl+zでもundo
-  vim.keymap.set({'n', 'i'}, '<C-z>', vim.cmd.undo)
-  -- <leader> h でハイライトをオフ
-  vim.keymap.set({'n', 'v'}, '<leader>h', vim.cmd.nohlsearch)
-end
+-- ctrl+sでも保存
+vim.keymap.set({'n', 'i'}, '<C-s>', vim.cmd.write)
+-- ctrl+zでもundo
+vim.keymap.set({'n', 'i'}, '<C-z>', vim.cmd.undo)
 
 -- lazy.nvimのインストール(初回のみ)
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
@@ -139,6 +135,28 @@ require("lazy").setup({
       config = function()
         vim.keymap.set('n', '*', function() require("lasterisk").search() end)
       end
+    },
+    {
+      -- which-key
+      "folke/which-key.nvim",
+      event = "VeryLazy",
+      opts = {
+        delay = 0,
+        show_help = false,
+        show_keys = false
+      },
+      keys = {
+        {
+          "<leader>h",
+          vim.cmd.nohlsearch,
+          desc = "Highlights Off"
+        },
+        {
+          "<leader>f",
+          function() call_vscode('workbench.view.explorer') end,
+          desc = "File Explorer"
+        }
+      }
     }
   },
   install = {},
