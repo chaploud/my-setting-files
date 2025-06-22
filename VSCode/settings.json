@@ -2,8 +2,8 @@
   // ===== エディタ基本設定 =====
   // フォント
   "editor.fontFamily": "'Source Han Code JP', 'UDEV Gothic 35NFLG', 'Droid Sans Mono', 'monospace', monospace",
-  "editor.fontSize": 15,
-  "terminal.integrated.fontSize": 15,
+  "editor.fontSize": 16,
+  "terminal.integrated.fontSize": 16,
   "debug.console.fontSize": 16,
   // 行番号
   "editor.lineNumbers": "on",
@@ -303,7 +303,5 @@
   // === Path Intellisense
   "path-intellisense.absolutePathToWorkspace": false,
   "path-intellisense.autoSlashAfterDirectory": true,
-  "path-intellisense.autoTriggerNextSuggestion": true,
-  // "dart.flutterSdkPath": "C:\\Users\\in-th\\Install\\flutter",
-  // "jdk.jdkhome": "c:\\Users\\in-th\\Install\\Oracle_JDK-21"
+  "path-intellisense.autoTriggerNextSuggestion": true
 }
