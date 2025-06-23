@@ -11,3 +11,7 @@ modified = '!${count}'
 staged = '+${count}'
 renamed = '»${count}'
 deleted = '✘${count}'
+
+[directory]
+truncate_to_repo = false
+truncation_symbol = '…/'
