@@ -130,8 +130,8 @@ alias gl="git log"
 alias gd="git diff"
 alias gpull="git pull"
 
-# gitstatus
-source "$HOME/Install/gitstatus/gitstatus.prompt.sh"
+# gitstatus <= starshipを利用するようにした
+# source "$HOME/Install/gitstatus/gitstatus.prompt.sh"
 
 # pyenv
 export PYENV_ROOT="$HOME/.pyenv"
