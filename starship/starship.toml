@@ -1,4 +1,26 @@
+format = """
+$username\
+$hostname\
+$shlvl\
+$directory\
+$git_branch\
+$git_commit\
+$git_state\
+$git_metrics\
+$git_status\
+$cmd_duration\
+$line_break\
+$jobs\
+$status\
+$os\
+$shell\
+$character"""
+
 continuation_prompt = '[❯❯ ](fg:blue)'
+
+[character]
+success_symbol = '[❯](bold green) '
+error_symbol = '[✗](bold red) '
 
 [git_status]
 diverged = '⇕⇡${ahead_count}⇣${behind_count}'
