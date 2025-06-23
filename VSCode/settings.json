@@ -1,10 +1,12 @@
 {
   // ===== エディタ基本設定 =====
   // フォント
-  "editor.fontFamily": "'Source Han Code JP', 'UDEV Gothic 35NFLG', 'Droid Sans Mono', 'monospace', monospace",
-  "editor.fontSize": 16,
-  "terminal.integrated.fontSize": 16,
-  "debug.console.fontSize": 16,
+  "editor.fontFamily": "'Cica', 'Source Han Code JP', 'UDEV Gothic 35NFLG', 'Droid Sans Mono', 'monospace', monospace",
+  "editor.fontSize": 20,
+  "editor.lineHeight": 1.15,
+  "terminal.integrated.fontSize": 20,
+  "terminal.integrated.lineHeight": 1.25,
+  "debug.console.fontSize": 20,
   // 行番号
   "editor.lineNumbers": "on",
   // カーソルがいい感じに点滅する
@@ -148,8 +150,6 @@
   // デフォルトでオフになっている言語も補完を効かせるようにする
   "github.copilot.enable": {
     "*": true,
-    "plaintext": true,
-    "markdown": true,
     "scminput": true
   },
   // === GitHub Copilot Chat
