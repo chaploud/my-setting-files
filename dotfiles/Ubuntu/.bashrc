@@ -188,3 +188,6 @@ export LC_ALL="ja_JP.UTF-8"
 
 # tmux completion
 source "$HOME/Documents/my-setting-files/dotfiles/bash_completion.d/tmux"
+
+# Starship
+eval "$(starship init bash)"
