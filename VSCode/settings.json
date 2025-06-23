@@ -1,12 +1,10 @@
 {
   // ===== エディタ基本設定 =====
   // フォント
-  "editor.fontFamily": "'Cica', 'Source Han Code JP', 'UDEV Gothic 35NFLG', 'Droid Sans Mono', 'monospace', monospace",
-  "editor.fontSize": 20,
-  "editor.lineHeight": 1.15,
-  "terminal.integrated.fontSize": 20,
-  "terminal.integrated.lineHeight": 1.25,
-  "debug.console.fontSize": 20,
+  "editor.fontFamily": "'Source Han Code JP', 'Cica', 'UDEV Gothic 35NFLG', 'Droid Sans Mono', 'monospace', monospace",
+  "editor.fontSize": 16,
+  "terminal.integrated.fontSize": 16,
+  "debug.console.fontSize": 16,
   // 行番号
   "editor.lineNumbers": "on",
   // カーソルがいい感じに点滅する
@@ -257,7 +255,7 @@
   // CalvaでのPareditによる削除操作時、削除したものをクリップボードにコピーする
   "calva.paredit.killAlsoCutsToClipboard": true,
   // Clojureプロジェクトを開いたとき、自動的にREPLに接続する(プロジェクト設定に従う)
-  "calva.autoConnectRepl": true,
+  "calva.autoConnectRepl": false, // しない設定
   // 標準出力やエラー出力がコメント(;)でプレフィックスされるのをやめる
   // ただし、Calva公式によると、予期せぬエラーが発生する可能性があるため、falseが無難ではある
   "calva.legacyPrintBareReplWindowOutput": true,
