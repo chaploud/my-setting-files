@@ -22,7 +22,7 @@ truncation_symbol = "../"
 format = '[$branch(:$remote_branch)](bold purple) '
 
 [cmd_duration]
-format = ' $duration'
+disabled = true
 
 [lua]
 disabled = true
