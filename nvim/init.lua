@@ -190,12 +190,17 @@ require("lazy").setup({
           desc = "Previous Marker"
         },
         {
-          "<leader>d",
+          "<leader>dd",
+          function() call_vscode('editor.action.dirtydiff.next') end,
+          desc = "Show Next Diff"
+        },
+        {
+          "<leader>ds",
           function() call_vscode('workbench.action.debug.start') end,
           desc = "Debug Start"
         },
         {
-          "<leader>D",
+          "<leader>dr",
           function() call_vscode('workbench.action.debug.run') end,
           desc = "Debug Run"
         },
