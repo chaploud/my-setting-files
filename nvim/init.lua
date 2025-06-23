@@ -248,6 +248,20 @@ require("lazy").setup({
           desc = "Git Push"
         },
         {
+          "<leader>gz",
+          group = "Git Stash",
+        },
+        {
+          "<leader>gzz",
+          function() call_vscode('git.stashIncludeUntracked') end,
+          desc = "Git Stash All"
+        },
+        {
+          "<leader>gzp",
+          function() call_vscode('git.stashPopLatest') end,
+          desc = "Git Stash Pop Latest"
+        },
+        {
           "<leader>m",
           group = "Clojure",
         },
