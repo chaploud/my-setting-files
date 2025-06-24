@@ -118,29 +118,58 @@ fi
 
 # ===== My Settings =====
 
-# Aliases
+# === Aliases
+# ls
 alias sl="ls"
+alias s="ls"
+alias l="ls"
 
-# Git Aliases
+alias log="git log --decorate --format=format:'%C(bold cyan)%as%C(reset) %C(bold blue)%h%C(reset) %C(white bold)%<(14,trunc)%an%C(reset) %C(green)%<(50,trunc)%s%C(reset) '"
+
+# Git
 alias gs="git status"
 alias ga="git add"
 alias gc="git commit"
 alias gp="git push"
-alias gl="git log"
+alias gl=log
 alias gd="git diff"
-alias gpull="git pull"
+alias gf="git pull origin $(git branch --show-current)"
 
-# gitstatus <= starshipを利用するようにした
-# source "$HOME/Install/gitstatus/gitstatus.prompt.sh"
+# locale
+export LANG="ja_JP.UTF-8"
+export LC_ALL="ja_JP.UTF-8"
 
+# === Completions
+$COMPLETIONS="${HOME}/Documents/my-setting-files/completions/Ubuntu"
+# Zig
+. "${COMPLETIONS}/_zig.bash"
+# Wasmer
+source "${COMPLETIONS}/wasmer_completions.sh"
+# tmux
+source "${COMPLETIONS}/tmux"
+
+# === HomeBrew
+eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+
+# === Starship
+eval "$(starship init bash)"
+
+# === NeoVim
+export PATH="/opt/nvim-linux-x86_64/bin:$PATH"
+
+# === Python
 # pyenv
 export PYENV_ROOT="$HOME/.pyenv"
 [[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
 eval "$(pyenv init - bash)"
 
-# Cargo (Rust)
+# === Rust
+# cargo
 . "$HOME/.cargo/env"
+# evcxr (Rust REPL)
+alias rust=evcxr
 
+# === JavaScript/TypeScript
 # volta (Node.js)
 export VOLTA_HOME="$HOME/.volta"
 export PATH="$VOLTA_HOME/bin:$PATH"
@@ -149,45 +178,16 @@ export PATH="$VOLTA_HOME/bin:$PATH"
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
 
-# NeoVim
-export PATH="/opt/nvim-linux-x86_64/bin:$PATH"
-
-# アプリ開発は常にMacに接続して行うので削除
-# Flutter
-# export PATH="/home/chaploud/Install/flutter/bin:$PATH"
-# Android Studio
-# export PATH="/usr/local/android-studio/bin:$PATH"
-
-# evcxr (Rust)
-alias rust=evcxr
-
-# GraalVM
-export JAVA_HOME="$HOME/Install/graalvm-jdk-21.0.7+8.1"
-export PATH="$JAVA_HOME/bin:$PATH"
-export WASMTIME_HOME="$HOME/.wasmtime"
-
+# === WebAssembly (Wasm)
+# wasmtime
 export PATH="$WASMTIME_HOME/bin:$PATH"
-
-. "${HOME}/_zig.bash"
-
-# HomeBrew
-eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 
 # Wasmer
 export WASMER_DIR="/home/chaploud/.wasmer"
 [ -s "$WASMER_DIR/wasmer.sh" ] && source "$WASMER_DIR/wasmer.sh"
 
-if [ ! -f "$HOME/wasmer_completions.sh" ]; then
-    wasmer gen-completions bash > "$HOME/wasmer_completions.sh"
-fi
-source "$HOME/wasmer_completions.sh"
-
-# locale
-export LANG="ja_JP.UTF-8"
-export LC_ALL="ja_JP.UTF-8"
-
-# tmux completion
-source "$HOME/Documents/my-setting-files/dotfiles/bash_completion.d/tmux"
-
-# Starship
-eval "$(starship init bash)"
+# === Java
+# GraalVM
+export JAVA_HOME="$HOME/Install/graalvm-jdk-21.0.7+8.1"
+export PATH="$JAVA_HOME/bin:$PATH"
+export WASMTIME_HOME="$HOME/.wasmtime"

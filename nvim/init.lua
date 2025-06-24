@@ -397,6 +397,12 @@ require("lazy").setup({
           function() call_vscode('calva.evaluateFiddleForSourceFile') end,
           desc = "Evaluate fiddle for source code"
         },
+        -- Calva Power Tools
+        {
+          "<leader>mpl",
+          function() call_vscode('cpt.showCommands') end,
+          desc = "Calva Power Tools: Show Commands"
+        }
       }
     }
   },
