@@ -1,0 +1,19 @@
+[Unit]
+Description=Standalone Clojure nREPL Server for Calva
+
+[Service]
+# Specify the project's working directory (important)
+WorkingDirectory=/home/chaploud/.config/systemd/user/clojure-nrepl
+
+# Run the clj command with the -X flag
+ExecStart=/home/linuxbrew/.linuxbrew/bin/clj -X:nrepl
+
+# Specifying the user helps avoid permission issues
+User=chaploud
+
+# Even if the process is terminated during REPL operations, it will restart after 100ms
+Restart=always
+RestartSec=100ms
+
+[Install]
+WantedBy=default.target

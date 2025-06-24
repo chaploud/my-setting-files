@@ -227,15 +227,9 @@ require("lazy").setup({
           function() call_vscode('workbench.action.closeOtherEditors') end,
           desc = "Close Other Editors"
         },
-        -- Restart extension host
-        {
-          "<leader>wr",
-          function() call_vscode('workbench.action.restartExtensionHost') end,
-          desc = "Restart Extension Host"
-        },
         -- Reload Window
         {
-          "<leader>wR",
+          "<leader>wr",
           function() call_vscode('workbench.action.reloadWindow') end,
           desc = "Reload Window"
         },
@@ -388,125 +382,138 @@ require("lazy").setup({
           function() call_vscode('calva.toggleCLJSConnection') end,
           desc = "Toggle the REPL Connection (clj/cljs)"
         },
+        -- Load Snitch (injection debugger) in REPL
+        {
+          "<leader>mrn",
+          function()
+            local snippet_code = "(require '[clojure.repl.deps :refer [add-libs]])\n\n(add-libs '{ org.clojars.abhinav/snitch {:mvn/version \"0.1.16\"}})\n\n(require '[snitch.core :refer [defn* defmethod* *fn *let]])"
+            call_vscode('calva.runCustomREPLCommand', {snippet = snippet_code})
+          end,
+          desc = "Load Snitch in REPL"
+        },
         -- Evaluate currently open file
         {
           "<leader>me",
           function() call_vscode('calva.loadFile') end,
           desc = "Evaluate entire file"
         },
+        -- Instrument current form for debugging
         {
           "<leader>mg",
           function() call_vscode('calva.debug.instrument') end,
           desc = "Instrument current form for debugging"
         },
+        -- (Paredit) Move cursor to list start
         {
           "<leader>mh",
           function() call_vscode('paredit.openList') end,
           desc = "Move cursor to list start"
         },
+        -- (Paredit) Move cursor to list end
         {
           "<leader>ml",
           function() call_vscode('paredit.closeList') end,
           desc = "Move cursor to list end"
         },
+        -- (Paredit) Barf forwards
         {
           "<leader>mb",
           function() call_vscode('paredit.barfSexpForward') end,
           desc = "Barf forwards"
         },
+        -- (Paredit) Barf backwards
         {
           "<leader>mB",
           function() call_vscode('paredit.barfSexpBackward') end,
           desc = "Barf backwards"
         },
+        -- (Paredit) Slurp forwards
         {
           "<leader>ms",
           function() call_vscode('paredit.slurpSexpForward') end,
           desc = "Slurp forwards"
         },
+        -- (Paredit) Slurp backwards
         {
           "<leader>mS",
           function() call_vscode('paredit.slurpSexpBackward') end,
           desc = "Slurp backwards"
         },
+        -- (Paredit) Delete operations
         {
           "<leader>md",
           group = "Delete",
         },
+        -- (Paredit) Delete to start of list
         {
           "<leader>mdh",
           function() call_vscode('paredit.killListBackward') end,
           desc = "Delete to start of list"
         },
+        -- (Paredit) Delete to end of list
         {
           "<leader>mdl",
           function() call_vscode('paredit.killListForward') end,
           desc = "Delete to end of list"
         },
+        -- (Paredit) Delete parent and raise children
         {
-          "<leader>mdu",
+          "<leader>mdk",
           function() call_vscode('paredit.raiseSexp') end,
           desc = "Delete parent and raise children"
         },
+        -- (Paredit) Wrap operations
         {
           "<leader>mw",
           group = "Wrap",
         },
+        -- (Paredit) Wrap with ()
         {
           "<leader>mw(",
           function() call_vscode('paredit.wrapAroundParens') end,
           desc = "Wrap with ()"
         },
+        -- (Paredit) Wrap with []
         {
           "<leader>mw[",
           function() call_vscode('paredit.wrapAroundSquare') end,
           desc = "Wrap with []"
         },
+        -- (Paredit) Wrap with {}
         {
           "<leader>mw{",
           function() call_vscode('paredit.wrapAroundCurly') end,
           desc = "Wrap with {}"
         },
+        -- (Paredit) Wrap with ""
         {
           "<leader>mw\"",
           function() call_vscode('paredit.wrapAroundQuote') end,
           desc = "Wrap with \"\""
         },
+        -- (Paredit) Fiddle operations
         {
           "<leader>mf",
           group = "Fiddle",
         },
+        -- (Paredit) Open fiddle for current source file
         {
           "<leader>mff",
           function() call_vscode('calva.openFiddleForSourceFile') end,
           desc = "Open fiddle for source file"
         },
+        -- (Paredit) Open source file for current fiddle
         {
           "<leader>mfF",
           function() call_vscode('calva.openSourceFileForFiddle') end,
           desc = "Open source file for fiddle"
         },
+        -- (Paredit) Evaluate fiddle for current source file
         {
           "<leader>mfe",
           function() call_vscode('calva.evaluateFiddleForSourceFile') end,
           desc = "Evaluate fiddle for source code"
         },
-        -- Calva Power Tools (CPT)
-        -- show all CPT command list
-        {
-          "<leader>mpl",
-          function() call_vscode('cpt.showCommands') end,
-          desc = "Calva Power Tools: Show Commands"
-        },
-        {
-          "<leader>mpc",
-          group = "[CPT] Clay"
-        },
-        {
-          "<leader>mpcl",
-          function() call_vscode('cpt.showCommands', { args = { "Clay" } }) end,
-          desc = "[CPT] Clay: Show Clay"
-        }
       }
     }
   },
