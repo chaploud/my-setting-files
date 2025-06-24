@@ -379,15 +379,15 @@ require("lazy").setup({
         -- Toggle the REPL Connection (clj/cljs)
         {
           "<leader>mrt",
-          function() call_vscode('calva.toggleCLJSConnection') end,
+          function() call_vscode('calva.toggleCLJCSession') end,
           desc = "Toggle the REPL Connection (clj/cljs)"
         },
         -- Load Snitch (injection debugger) in REPL
         {
           "<leader>mrn",
           function()
-            local snippet_code = "(require '[clojure.repl.deps :refer [add-libs]])\n\n(add-libs '{ org.clojars.abhinav/snitch {:mvn/version \"0.1.16\"}})\n\n(require '[snitch.core :refer [defn* defmethod* *fn *let]])"
-            call_vscode('calva.runCustomREPLCommand', {snippet = snippet_code})
+            local snippet_code = "(require '[clojure.repl.deps :refer [add-libs]])\n\n(add-libs '{ org.glassfish.jaxb/jaxb-runtime {:mvn/version \"2.3.2\"}, org.clojars.abhinav/snitch {:mvn/version \"0.1.16\"}})\n\n(require '[snitch.core :refer [defn* defmethod* *fn *let]])"
+            call_vscode('calva.runCustomREPLCommand', {args = {snippet = snippet_code}})
           end,
           desc = "Load Snitch in REPL"
         },
