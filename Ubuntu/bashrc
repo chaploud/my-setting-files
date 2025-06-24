@@ -124,7 +124,7 @@ alias sl="ls"
 alias s="ls"
 alias l="ls"
 
-alias log="git log --decorate --format=format:'%C(bold cyan)%as%C(reset) %C(bold blue)%h%C(reset) %C(white bold)%<(14,trunc)%an%C(reset) %C(green)%<(50,trunc)%s%C(reset) '"
+alias log="git log --decorate --format=format:'%C(bold cyan)%as%C(reset) %C(bold blue)%h%C(reset) %C(white bold)%<(14,trunc)%an%C(reset) %C(green)%<(38,trunc)%s%C(reset) '"
 
 # Git
 alias gs="git status"
@@ -133,14 +133,17 @@ alias gc="git commit"
 alias gp="git push"
 alias gl=log
 alias gd="git diff"
-alias gf="git pull origin $(git branch --show-current)"
+alias gf='git pull origin $(git branch --show-current)'
+alias gff='git pull'
+alias gz='git stash -u'
+alias gzp='git stash pop'
 
 # locale
 export LANG="ja_JP.UTF-8"
 export LC_ALL="ja_JP.UTF-8"
 
 # === Completions
-$COMPLETIONS="${HOME}/Documents/my-setting-files/completions/Ubuntu"
+COMPLETIONS="${HOME}/Documents/my-setting-files/Ubuntu/completions"
 # Zig
 . "${COMPLETIONS}/_zig.bash"
 # Wasmer

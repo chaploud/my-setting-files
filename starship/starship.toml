@@ -35,3 +35,9 @@ disabled = true
 
 [java]
 disabled = true
+
+[python]
+disabled = true
+
+[rust]
+disabled = true
