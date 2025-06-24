@@ -259,6 +259,11 @@
   },
   // === Calva
   {
+    "key": "ctrl+i",
+    "command": "-calva-fmt.tabIndent",
+    "when": "calva:keybindingsEnabled && editorTextFocus && !editorReadOnly && !hasOtherSuggestions && !suggestWidgetVisible && editorLangId == 'clojure'"
+  },
+  {
     "key": "shift+enter",
     "command": "calva.evaluateCurrentTopLevelForm",
     "when": "calva:keybindingsEnabled && editorTextFocus && !calva:cursorInComment && !editorHasMultipleSelections && !editorReadOnly && editorLangId == 'clojure' && neovim.mode == 'normal'"

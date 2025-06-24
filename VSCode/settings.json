@@ -147,8 +147,11 @@
   // === GitHub Copilot
   // デフォルトでオフになっている言語も補完を効かせるようにする
   "github.copilot.enable": {
-    "*": true,
-    "scminput": true
+    "*": false,
+    "plaintext": false,
+    "markdown": false,
+    "scminput": true,
+    "clojure": true
   },
   // === GitHub Copilot Chat
   // 日本語で応答してもらう
@@ -162,6 +165,13 @@
       "text": "Messages should be in English."
     }
   ],
+  "chat.mcp.serverSampling": {
+    "GistPad: GistPad": {
+      "allowedModels": [
+        "github.copilot-chat/gpt-4.1"
+      ]
+    }
+  },
   // === Prettify TypeScript: Better Type Previews
   "prettify-ts.hidePrivateProperties": false,
   "prettify-ts.typeIndentation": 2,
@@ -252,6 +262,8 @@
     "evalOutput": "repl-window", // 標準出力/エラーをREPLウィンドウに出力
     "otherOutput": "repl-window" // CalvaのメッセージなどをREPLウィンドウに出力
   },
+  // インデントガイドのレインボー化
+  "calva.highlight.rainbowIndentGuides": true,
   // CalvaでのPareditによる削除操作時、削除したものをクリップボードにコピーする
   "calva.paredit.killAlsoCutsToClipboard": true,
   // Clojureプロジェクトを開いたとき、自動的にREPLに接続する(プロジェクト設定に従う)
@@ -266,6 +278,9 @@
   "calva.evaluationSendCodeToOutputWindow": false,
   // VSCodeのテストエクスプローラを使う(Experimental)
   "calva.useTestExplorer": true,
+  // Calva Backseat Driver
+  "calva-backseat-driver.enableMcpReplEvaluation": true,
+  "calva-backseat-driver.autoStartMCPServer": true,
   // === Code Runner
   "code-runner.runInTerminal": true,
   "code-runner.saveFileBeforeRun": true,
@@ -301,5 +316,8 @@
   // === Path Intellisense
   "path-intellisense.absolutePathToWorkspace": false,
   "path-intellisense.autoSlashAfterDirectory": true,
-  "path-intellisense.autoTriggerNextSuggestion": true
+  "path-intellisense.autoTriggerNextSuggestion": true,
+  "security.allowedUNCHosts": [
+    "wsl.localhost"
+  ]
 }
