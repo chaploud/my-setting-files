@@ -1,57 +1,58 @@
 -- Recenter Top Bottom
--- ctrl+l連打で、カーソル位置を画面の中央、上端、下端にシフトするサイクルを行う関数
--- 2秒間ctrl+lが押されなかったら、次回実行時は中央シフトからスタート
+-- A function that cycles the cursor position between center, top, and bottom
+-- of the screen by pressing ctrl+l repeatedly
+-- If ctrl+l is not pressed for 2 seconds, the next execution starts from centering
 local recenter_state = 0
 local last_recenter_time = 0
-local CONSECUTIVE_THRESHOLD = 2000 -- ミリ秒
+local CONSECUTIVE_THRESHOLD = 2000 -- milliseconds
 
 local function recenter_cycle()
-  -- 一定時間経過でリセット
+  -- Reset if a certain amount of time has passed
   local current_time = vim.uv.now()
   if current_time - last_recenter_time > CONSECUTIVE_THRESHOLD then
     recenter_state = 0
   end
 
-  -- 配列で位置とコマンドを定義
+  -- Define positions and commands in an array
   local positions = {
     { pos = "center", cmd = "zz" },
     { pos = "top", cmd = "zt" },
     { pos = "bottom", cmd = "zb" }
   }
 
-  -- 現在の状態に対応する位置を取得
+  -- Get the position corresponding to the current state
   local current = positions[recenter_state + 1]
 
-  -- VSCodeかNeovimネイティブかによって適切な方法で実行
+  -- Execute appropriately depending on whether it's VSCode or native Neovim
   if vim.g.vscode then
     vim.fn.VSCodeExtensionNotify('reveal', current.pos, 0)
   else
     vim.cmd("normal! " .. current.cmd)
   end
 
-  -- 状態を更新（0→1→2→0→...）
+  -- Update state (0→1→2→0→...)
   recenter_state = (recenter_state + 1) % 3
   last_recenter_time = current_time
 end
 
 -- vscode.call
 local vscode
-local function call_vscode(name, ...)
+local function call_vscode(name, opts, timeout)
   if vim.g.vscode then
     if not vscode then
       vscode = require('vscode')
     end
-    return vscode.call(name, ...)
+    return vscode.call(name, opts, timeout)
   end
 end
 
--- クリップボードをOS側と共有
+-- Share clipboard with OS
 vim.opt.clipboard:append("unnamedplus")
--- 検索時に都合良く大文字小文字を区別／区別しない
+-- Ignore case or not in search as convenient
 vim.opt.ignorecase = true
 vim.opt.smartcase = true
 
--- ヤンク(コピー)でハイライト
+-- Highlight on yank (copy)
 vim.api.nvim_create_autocmd("TextYankPost", {
   group = vim.api.nvim_create_augroup("YankHighlight", { clear = true }),
   callback = function()
@@ -59,47 +60,47 @@ vim.api.nvim_create_autocmd("TextYankPost", {
   end,
 })
 
--- ClojureではC-wの際に / . で止まって欲しい
+-- In Clojure, want <C-w> to stop at / and .
 vim.api.nvim_create_autocmd("FileType", {
   pattern = "clojure",
   callback = function()
-    -- iskeywordから/と.を除外
+    -- Remove / and . from iskeyword
     vim.opt_local.iskeyword:remove({"/", "."})
   end,
 })
 
 -- keymap: 'i': insert, 'n': normal, 'v': visual, 'c': command
--- Recenter Top Bottomをctrl+lにバインド
+-- Bind Recenter Top Bottom to ctrl+l
 vim.keymap.set({'n', 'v', 'i'}, '<C-l>', recenter_cycle)
 
--- insertモードでのescapeを'fd'を素早く連続で押すことでも実行
+-- In insert mode, pressing 'fd' quickly also acts as escape
 vim.keymap.set('i', 'fd', '<ESC>')
 
--- insertモード時のEmacsキーバインド(移動・編集のみ)のエミュレート
-vim.keymap.set('i', '<C-p>', '<Up>') -- ↑
-vim.keymap.set('i', '<C-n>', '<Down>') -- ↓
-vim.keymap.set('i', '<C-b>', '<Left>') -- ←
-vim.keymap.set('i', '<C-f>', '<Right>') -- →
-vim.keymap.set('i', '<C-a>', '<C-o>^') -- 行頭へ
-vim.keymap.set('i', '<C-e>', '<End>') -- 行末へ
+-- Emulate Emacs keybindings (move/edit only) in insert mode
+vim.keymap.set('i', '<C-p>', '<Up>') -- up
+vim.keymap.set('i', '<C-n>', '<Down>') -- down
+vim.keymap.set('i', '<C-b>', '<Left>') -- left
+vim.keymap.set('i', '<C-f>', '<Right>') -- right
+vim.keymap.set('i', '<C-a>', '<C-o>^') -- move to line start
+vim.keymap.set('i', '<C-e>', '<End>') -- move to line end
 vim.keymap.set('i', '<C-d>', '<Del>') -- Del
-vim.keymap.set('i', '<C-k>', '<C-o>d$') -- 行末まで削除
-vim.keymap.set('i', '<C-y>', '<C-r>+') -- 直前のヤンクをペースト
+vim.keymap.set('i', '<C-k>', '<C-o>d$') -- delete to end of line
+vim.keymap.set('i', '<C-y>', '<C-r>+') -- paste last yank
 vim.keymap.set({'i', 'c'}, '<C-h>', '<BS>') -- BackSpace
 
--- 選択状態でのペースト時にレジスタを上書きしない
+-- Do not overwrite register when pasting in visual mode
 vim.keymap.set('v', 'p', '"_dP')
 
--- <leader>キーをspaceに設定
+-- Set <leader> key to space
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
--- ctrl+sでも保存
+-- Save with ctrl+s
 vim.keymap.set({'n', 'i'}, '<C-s>', vim.cmd.write)
--- ctrl+zでもundo
+-- Undo with ctrl+z
 vim.keymap.set({'n', 'i'}, '<C-z>', vim.cmd.undo)
 
--- lazy.nvimのインストール(初回のみ)
+-- Install lazy.nvim (only on first run)
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
   local lazyrepo = "https://github.com/folke/lazy.nvim.git"
@@ -116,11 +117,11 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
--- lazy.nvimの設定・プラグインの読み込み
+-- lazy.nvim settings and plugin loading
 require("lazy").setup({
   spec = {
     {
-      -- (), [], {}, ""などの囲む系のテキストオブジェクトを追加
+      -- Add surrounding text objects like (), [], {}, ""
       "kylechui/nvim-surround",
       version = "^3.0.0",
       event = "VeryLazy",
@@ -129,7 +130,7 @@ require("lazy").setup({
       end
     },
     {
-      -- * による検索を改善
+      -- Improve search with *
       "rapan931/lasterisk.nvim",
       event = "VeryLazy",
       config = function()
@@ -149,152 +150,245 @@ require("lazy").setup({
         }
       },
       keys = {
+        -- Hlsearch highlights off
         {
           "<leader>h",
           vim.cmd.nohlsearch,
           desc = "Highlights Off"
         },
+        -- Focus Explorer in side bar
         {
           "<leader>f",
           function() call_vscode('workbench.view.explorer') end,
           desc = "File Explorer"
         },
+        -- Focus Search in side bar
         {
           "<leader>s",
           function() call_vscode('workbench.view.search') end,
           desc = "Search in Project"
         },
+        -- Rename symbol under cursor (and all its references)
         {
           "<leader>r",
           function() call_vscode('editor.action.rename') end,
           desc = "Rename Symbol"
         },
+        -- Go to next marker (error, warning, etc.)
         {
-          "<leader>i",
-          function() call_vscode('editor.action.goToImplementation') end,
-          desc = "Go to Implementation"
+          "<leader>n",
+          function() call_vscode('editor.action.marker.next') end,
+          desc = "Next Marker"
         },
+        -- Go to previous marker (error, warning, etc.)
+        {
+          "<leader>p",
+          function() call_vscode('editor.action.marker.prev') end,
+          desc = "Previous Marker"
+        },
+        -- Go to next change and show diff
+        {
+          "<leader>dd",
+          function() call_vscode('editor.action.dirtydiff.next') end,
+          desc = "Show Next Diff"
+        },
+        -- Start debugging
+        {
+          "<leader>ds",
+          function() call_vscode('workbench.action.debug.start') end,
+          desc = "Debug Start"
+        },
+        -- Run without debugging
+        {
+          "<leader>dr",
+          function() call_vscode('workbench.action.debug.run') end,
+          desc = "Debug Run"
+        },
+        -- Open terminal in editor side
+        {
+          "<leader>'",
+          function() call_vscode('workbench.action.createTerminalEditorSide') end,
+          desc = "Create Terminal in Editor Side"
+        },
+        -- Open terminal in editor
+        {
+          "<leader><leader>'",
+          function() call_vscode('workbench.action.createTerminalEditor') end,
+          desc = "Create Terminal in Editor"
+        },
+        -- Window (tab) Operations
+        {
+          "<leader>w",
+          group = "Window",
+        },
+        -- Close other tabs
+        {
+          "<leader>wo",
+          function() call_vscode('workbench.action.closeOtherEditors') end,
+          desc = "Close Other Editors"
+        },
+        -- Restart extension host
+        {
+          "<leader>wr",
+          function() call_vscode('workbench.action.restartExtensionHost') end,
+          desc = "Restart Extension Host"
+        },
+        -- Reload Window
+        {
+          "<leader>wR",
+          function() call_vscode('workbench.action.reloadWindow') end,
+          desc = "Reload Window"
+        },
+        -- Git Operations
+        {
+          "<leader>g",
+          group = "Git",
+        },
+        -- Focus SCM in side bar
+        {
+          "<leader>gs",
+          function() call_vscode('workbench.scm.focus') end,
+          desc = "Git Status"
+        },
+        -- Focus SCM history in side bar
+        {
+          "<leader>gl",
+          function() call_vscode('workbench.scm.history.focus') end,
+          desc = "Git Log"
+        },
+        -- Git checkout (branch operation)
+        {
+          "<leader>gb",
+          function() call_vscode('git.checkout') end,
+          desc = "Git Checkout"
+        },
+        -- Git pull
+        {
+          "<leader>gf",
+          function() call_vscode('git.pull') end,
+          desc = "Git Pull"
+        },
+        -- Git push
+        {
+          "<leader>gp",
+          function() call_vscode('git.push') end,
+          desc = "Git Push"
+        },
+        -- Git stash operations
+        {
+          "<leader>gz",
+          group = "Git Stash",
+        },
+        -- Git stash all
+        {
+          "<leader>gzz",
+          function() call_vscode('git.stashIncludeUntracked') end,
+          desc = "Git Stash All"
+        },
+        -- Git stash pop latest
+        {
+          "<leader>gzp",
+          function() call_vscode('git.stashPopLatest') end,
+          desc = "Git Stash Pop Latest"
+        },
+        -- Execute the currently open file
+        -- NOTE: need `formulahendry.code-runner`
         {
           "<leader>e",
           function() call_vscode('code-runner.run') end,
           desc = "Execute File"
         },
         {
-          "<leader>n",
-          function() call_vscode('editor.action.marker.next') end,
-          desc = "Next Marker"
+          "<leader>t",
+          group = "Toggle"
         },
+        -- Toggle Word Wrap
         {
-          "<leader>p",
-          function() call_vscode('editor.action.marker.prev') end,
-          desc = "Previous Marker"
+          "<leader>tl",
+          function() call_vscode('editor.action.toggleWordWrap') end,
+          desc = "Toggle Word Wrap"
         },
+        -- Bookmarks operations
+        -- NOTE: need `alefragnani.Bookmarks`
+        -- Toggle unlabeled bookmark on current line
         {
-          "<leader>dd",
-          function() call_vscode('editor.action.dirtydiff.next') end,
-          desc = "Show Next Diff"
+          "<leader>tb",
+          function() call_vscode('bookmarks.toggle') end,
+          desc = "Bookmarks Toggle"
         },
+        -- Toggle labeled bookmark on current line
         {
-          "<leader>ds",
-          function() call_vscode('workbench.action.debug.start') end,
-          desc = "Debug Start"
+          "<leader>tB",
+          function() call_vscode('bookmarks.toggleLabeled') end,
+          desc = "Bookmarks Toggle Labeled"
         },
+        -- Toggle Copilot completion
         {
-          "<leader>dr",
-          function() call_vscode('workbench.action.debug.run') end,
-          desc = "Debug Run"
+          "<leader>tc",
+          function() call_vscode('github.copilot.completions.toggle') end,
+          desc = "Toggle Copilot Completion"
         },
-        {
-          "<leader>'",
-          function() call_vscode('workbench.action.createTerminalEditorSide') end,
-          desc = "Create Terminal in Editor Side"
-        },
-        {
-          "<leader><leader>'",
-          function() call_vscode('workbench.action.createTerminalEditor') end,
-          desc = "Create Terminal in Editor"
-        },
-        {
-          "<leader>w",
-          group = "Window",
-        },
-        {
-          "<leader>wo",
-          function() call_vscode('workbench.action.closeOtherEditors') end,
-          desc = "Close Other Editors"
-        },
-        {
-          "<leader>g",
-          group = "Git",
-        },
-        {
-          "<leader>gs",
-          function() call_vscode('workbench.scm.focus') end,
-          desc = "Git Status"
-        },
-        {
-          "<leader>gl",
-          function() call_vscode('workbench.scm.history.focus') end,
-          desc = "Git Log"
-        },
-        {
-          "<leader>gb",
-          function() call_vscode('git.checkout') end,
-          desc = "Git Checkout"
-        },
-        {
-          "<leader>gf",
-          function() call_vscode('git.pull') end,
-          desc = "Git Pull"
-        },
-        {
-          "<leader>gp",
-          function() call_vscode('git.push') end,
-          desc = "Git Push"
-        },
-        {
-          "<leader>gz",
-          group = "Git Stash",
-        },
-        {
-          "<leader>gzz",
-          function() call_vscode('git.stashIncludeUntracked') end,
-          desc = "Git Stash All"
-        },
-        {
-          "<leader>gzp",
-          function() call_vscode('git.stashPopLatest') end,
-          desc = "Git Stash Pop Latest"
-        },
+        -- Clojure operations
+        -- NOTE: need `betterthantomorrow.calva`
+        -- NOTE: need `betterthantomorrow.calva-power-tools`
         {
           "<leader>m",
           group = "Clojure",
         },
+        -- REPL operations
         {
-          "<leader>mc",
+          "<leader>mr",
+          group = "REPL",
+        },
+        -- Connect to a running REPL (project)
+        {
+          "<leader>mrc",
           function() call_vscode('calva.connectNonProjectREPL') end,
           desc = "Connect to a running REPL (non-project)"
         },
+        -- Disconnect from a running REPL
         {
-          "<leader>mD",
+          "<leader>mrd",
           function() call_vscode('calva.disconnect') end,
           desc = "Disconnect from a running REPL"
         },
+        -- (Re)Start a project REPL and connect (Jack-In)
         {
-          "<leader>mi",
+          "<leader>mri",
           function() call_vscode('calva.jackIn') end,
           desc = "(Re)Start a project REPL and connect (Jack-In)"
         },
+        -- Stop/Kill the project REPL started by Calva (Jack-Out)
         {
-          "<leader>mk",
+          "<leader>mrk",
           function() call_vscode('calva.jackOut') end,
           desc = "Stop/Kill the project REPL started by Calva (Jack-Out)"
         },
+        -- Show REPL window
         {
-          "<leader>mr",
+          "<leader>mrs",
           function() call_vscode('calva.showReplWindow') end,
           desc = "Show REPL window"
         },
+        -- Refresh all namespaces in REPL
+        {
+          "<leader>mrR",
+          function() call_vscode('calva.refreshAll') end,
+          desc = "Refresh all namespaces in REPL"
+        },
+        -- Refresh current namespace in REPL
+        {
+          "<leader>mrr",
+          function() call_vscode('calva.refresh') end,
+          desc = "Refresh current namespace in REPL"
+        },
+        -- Toggle the REPL Connection (clj/cljs)
+        {
+          "<leader>mrt",
+          function() call_vscode('calva.toggleCLJSConnection') end,
+          desc = "Toggle the REPL Connection (clj/cljs)"
+        },
+        -- Evaluate currently open file
         {
           "<leader>me",
           function() call_vscode('calva.loadFile') end,
@@ -397,11 +491,21 @@ require("lazy").setup({
           function() call_vscode('calva.evaluateFiddleForSourceFile') end,
           desc = "Evaluate fiddle for source code"
         },
-        -- Calva Power Tools
+        -- Calva Power Tools (CPT)
+        -- show all CPT command list
         {
           "<leader>mpl",
           function() call_vscode('cpt.showCommands') end,
           desc = "Calva Power Tools: Show Commands"
+        },
+        {
+          "<leader>mpc",
+          group = "[CPT] Clay"
+        },
+        {
+          "<leader>mpcl",
+          function() call_vscode('cpt.showCommands', { args = { "Clay" } }) end,
+          desc = "[CPT] Clay: Show Clay"
         }
       }
     }
