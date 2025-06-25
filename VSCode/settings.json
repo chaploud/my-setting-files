@@ -42,15 +42,12 @@
   "[c]": {
     "editor.tabSize": 4
   },
-  "[php]": {
-    "editor.tabSize": 4
-  },
   // 初回のスタートアップ画面は表示しない
   "workbench.startupEditor": "none",
-  // ボトムパネルの説明をアイコンにする
-  "workbench.panel.showLabels": false,
   // 空のフォルダを省略して一列にしてしまわない(必ずツリー表示にする)
   "explorer.compactFolders": false,
+  // ファイル貼り付け時にダイアログを出さない
+  "explorer.confirmPasteNative": false,
   // 保存時に行末の空白など不要な空白を削除する
   "files.trimTrailingWhitespace": true,
   // Emacsキーバインドをターミナルでも有効に使いたい
@@ -95,19 +92,16 @@
   "settingsSync.keybindingsPerPlatform": false,
   // 信頼されたワークスペースを開いているならば、信頼されていないファイルを開くときに警告を出さない
   "security.workspace.trust.untrustedFiles": "open",
-  //  ===== デフォルトフォーマッタ =====
-  // "[json]": {
-  //   "editor.defaultFormatter": "vscode.json-language-features"
-  // },
+  //  ===== 言語別 =====
+  "[json]": {
+    // "editor.defaultFormatter": "vscode.json-language-features"
+  },
   "[jsonc]": {
     "editor.defaultFormatter": "vscode.json-language-features"
   },
-  "[markdown]": {
-    "editor.defaultFormatter": "DavidAnson.vscode-markdownlint"
+  "[typescript]": {
+    // "editor.defaultFormatter": "vscode.typescript-language-features"
   },
-  // "[typescript]": {
-  //   "editor.defaultFormatter": "vscode.typescript-language-features"
-  // },
   // === TypeScript
   "typescript.updateImportsOnFileMove.enabled": "always",
   // ===== 拡張機能の設定 =====
@@ -172,12 +166,6 @@
       ]
     }
   },
-  // === Prettify TypeScript: Better Type Previews
-  "prettify-ts.hidePrivateProperties": false,
-  "prettify-ts.typeIndentation": 2,
-  "prettify-ts.maxDepth": 2,
-  "prettify-ts.maxSubProperties": 20,
-  "prettify-ts.maxUnionMembers": 30,
   // === Todo Tree
   "todo-tree.tree.showCountsInTree": true,
   "todo-tree.tree.expanded": true,
@@ -319,5 +307,7 @@
   "path-intellisense.autoTriggerNextSuggestion": true,
   "security.allowedUNCHosts": [
     "wsl.localhost"
-  ]
+  ],
+  // === Project Manager
+  "projectManager.sortList": "Saved"
 }

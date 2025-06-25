@@ -55,6 +55,7 @@
     "command": "workbench.action.toggleMaximizedPanel",
     "when": "terminal.active"
   },
+  // 複数ターミナル間を切り替え
   {
     "key": "ctrl+t",
     "command": "workbench.action.terminal.focusNext",
@@ -364,47 +365,47 @@
     "command": "-workbench.action.terminal.killEditor",
     "when": "terminalEditorFocus && terminalFocus && terminalHasBeenCreated || terminalEditorFocus && terminalFocus && terminalProcessSupported"
   },
-  // ctrl+'でインラインサジェストをトリガー
+  // alt+' で補完候補トリガー
   {
     "key": "ctrl+oem_7",
-    "command": "editor.action.inlineSuggest.trigger",
-    "when": "editorTextFocus && !editorHasSelection && !inlineSuggestionsVisible"
-  },
-  // ===== alt+' で補完候補トリガー =====
-  {
-    "key": "alt+oem_7",
     "command": "workbench.action.terminal.requestCompletions",
     "when": "config.terminal.integrated.suggest.enabled && terminalFocus && terminalProcessSupported && !terminalSuggestWidgetVisible"
   },
   {
-    "key": "alt+oem_7",
+    "key": "ctrl+oem_7",
     "command": "editor.action.triggerSuggest",
     "when": "editorHasCompletionItemProvider && textInputFocus && !editorReadonly && !suggestWidgetVisible"
   },
   {
-    "key": "alt+oem_7",
+    "key": "ctrl+oem_7",
     "command": "focusSuggestion",
     "when": "suggestWidgetVisible && textInputFocus && !suggestWidgetHasFocusedSuggestion"
   },
   {
-    "key": "alt+oem_7",
+    "key": "ctrl+oem_7",
     "command": "quickInput.toggleHover",
     "when": "inQuickInput && quickInputType == 'quickPick'"
   },
   {
-    "key": "alt+oem_7",
+    "key": "ctrl+oem_7",
     "command": "toggleSuggestionDetails",
     "when": "suggestWidgetHasFocusedSuggestion && suggestWidgetVisible && textInputFocus"
   },
   {
-    "key": "alt+oem_7",
+    "key": "ctrl+oem_7",
     "command": "workbench.action.terminal.sendSequence",
     "when": "terminalFocus && terminalShellIntegrationEnabled && !accessibilityModeEnabled && terminalShellType == 'pwsh'"
   },
   {
-    "key": "alt+oem_7",
+    "key": "ctrl+oem_7",
     "command": "workbench.action.terminal.suggestToggleDetails",
     "when": "simpleSuggestWidgetHasFocusedSuggestion && terminalFocus && terminalHasBeenCreated && terminalIsOpen && terminalSuggestWidgetVisible || simpleSuggestWidgetHasFocusedSuggestion && terminalFocus && terminalIsOpen && terminalProcessSupported && terminalSuggestWidgetVisible"
+  },
+  // alt+'でインラインサジェストをトリガー
+  {
+    "key": "alt+oem_7",
+    "command": "editor.action.inlineSuggest.trigger",
+    "when": "editorTextFocus && !editorHasSelection && !inlineSuggestionsVisible"
   },
   // ===== "ctrl+m" を "enter" として振舞わせる =====
   // [A] 余計な"ctrl+m"を解除
