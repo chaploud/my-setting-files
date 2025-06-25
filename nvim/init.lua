@@ -227,6 +227,12 @@ require("lazy").setup({
           function() call_vscode('workbench.action.closeOtherEditors') end,
           desc = "Close Other Editors"
         },
+        -- Close all tabs
+        {
+          "<leader>wa",
+          function() call_vscode('workbench.action.closeAllEditors') end,
+          desc = "Close All Editors"
+        },
         -- Reload Window
         {
           "<leader>wr",
@@ -321,6 +327,18 @@ require("lazy").setup({
           "<leader>tc",
           function() call_vscode('github.copilot.completions.toggle') end,
           desc = "Toggle Copilot Completion"
+        },
+        -- create new tempfile (.md)
+        {
+          "<leader>tn",
+          function() call_vscode('tempfile.newfile') end,
+          desc = "Create Tempfile"
+        },
+        -- create new tempfile with extension
+        {
+          "<leader>tN",
+          function() call_vscode('tempfile.newfile_with_extension') end,
+          desc = "Create Tempfile with Extension"
         },
         -- Clojure operations
         -- NOTE: need `betterthantomorrow.calva`
