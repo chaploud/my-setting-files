@@ -16,7 +16,7 @@ local function recenter_cycle()
   -- Define positions and commands in an array
   local positions = {
     { pos = "center", cmd = "zz" },
-    { pos = "top", cmd = "zt" },
+    { pos = "top",    cmd = "zt" },
     { pos = "bottom", cmd = "zb" }
   }
 
@@ -52,53 +52,50 @@ vim.opt.clipboard:append("unnamedplus")
 vim.opt.ignorecase = true
 vim.opt.smartcase = true
 
--- Highlight on yank (copy)
-vim.api.nvim_create_autocmd("TextYankPost", {
-  group = vim.api.nvim_create_augroup("YankHighlight", { clear = true }),
-  callback = function()
-    vim.highlight.on_yank({ timeout = 200 })
-  end,
-})
-
 -- In Clojure, want <C-w> to stop at / and .
 vim.api.nvim_create_autocmd("FileType", {
   pattern = "clojure",
   callback = function()
     -- Remove / and . from iskeyword
-    vim.opt_local.iskeyword:remove({"/", "."})
+    vim.opt_local.iskeyword:remove({ "/", "." })
   end,
 })
 
 -- keymap: 'i': insert, 'n': normal, 'v': visual, 'c': command
 -- Bind Recenter Top Bottom to ctrl+l
-vim.keymap.set({'n', 'v', 'i'}, '<C-l>', recenter_cycle)
+vim.keymap.set({ 'n', 'v', 'i' }, '<C-l>', recenter_cycle)
 
 -- In insert mode, pressing 'fd' quickly also acts as escape
 vim.keymap.set('i', 'fd', '<ESC>')
 
 -- Emulate Emacs keybindings (move/edit only) in insert mode
-vim.keymap.set('i', '<C-p>', '<Up>') -- up
-vim.keymap.set('i', '<C-n>', '<Down>') -- down
-vim.keymap.set('i', '<C-b>', '<Left>') -- left
-vim.keymap.set('i', '<C-f>', '<Right>') -- right
-vim.keymap.set('i', '<C-a>', '<C-o>^') -- move to line start
-vim.keymap.set('i', '<C-e>', '<End>') -- move to line end
-vim.keymap.set('i', '<C-d>', '<Del>') -- Del
-vim.keymap.set('i', '<C-k>', '<C-o>d$') -- delete to end of line
-vim.keymap.set('i', '<C-y>', '<C-r>+') -- paste last yank
-vim.keymap.set({'i', 'c'}, '<C-h>', '<BS>') -- BackSpace
+vim.keymap.set('i', '<C-p>', '<Up>')          -- up
+vim.keymap.set('i', '<C-n>', '<Down>')        -- down
+vim.keymap.set('i', '<C-b>', '<Left>')        -- left
+vim.keymap.set('i', '<C-f>', '<Right>')       -- right
+vim.keymap.set('i', '<C-a>', '<C-o>^')        -- move to line start
+vim.keymap.set('i', '<C-e>', '<End>')         -- move to line end
+vim.keymap.set('i', '<C-d>', '<Del>')         -- Del
+vim.keymap.set('i', '<C-k>', '<C-o>d$')       -- delete to end of line
+vim.keymap.set('i', '<C-y>', '<C-r>+')        -- paste last yank
+vim.keymap.set({ 'i', 'c' }, '<C-h>', '<BS>') -- BackSpace
 
--- Do not overwrite register when pasting in visual mode
-vim.keymap.set('v', 'p', '"_dP')
+-- for yanky kill-ring
+vim.keymap.set('n', 'p', '<Plug>(YankyPutAfter)')
+vim.keymap.set('n', 'P', '<Plug>(YankyPutBefore)')
+vim.keymap.set('n', 'gp', '<Plug>(YankyGPutAfter)')
+vim.keymap.set('n', 'gP', '<Plug>(YankyGPutBefore)')
+vim.keymap.set('n', '<C-p>', '<Plug>(YankyPreviousEntry)')
+vim.keymap.set('n', '<C-n>', '<Plug>(YankyNextEntry)')
 
 -- Set <leader> key to space
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
 -- Save with ctrl+s
-vim.keymap.set({'n', 'i'}, '<C-s>', vim.cmd.write)
+vim.keymap.set({ 'n', 'i' }, '<C-s>', vim.cmd.write)
 -- Undo with ctrl+z
-vim.keymap.set({'n', 'i'}, '<C-z>', vim.cmd.undo)
+vim.keymap.set({ 'n', 'i' }, '<C-z>', vim.cmd.undo)
 
 -- Install lazy.nvim (only on first run)
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
@@ -108,7 +105,7 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
   if vim.v.shell_error ~= 0 then
     vim.api.nvim_echo({
       { "Failed to clone lazy.nvim:\n", "ErrorMsg" },
-      { out, "WarningMsg" },
+      { out,                            "WarningMsg" },
       { "\nPress any key to exit..." },
     }, true, {})
     vim.fn.getchar()
@@ -138,6 +135,18 @@ require("lazy").setup({
       end
     },
     {
+      -- yank kill-ring
+      "gbprod/yanky.nvim",
+      event = "VeryLazy",
+      opts = {
+        highlight = {
+          on_put = false,
+          on_yank = true,
+          timer = 200,
+        },
+      }
+    },
+    {
       -- which-key
       "folke/which-key.nvim",
       event = "VeryLazy",
@@ -150,17 +159,40 @@ require("lazy").setup({
         }
       },
       keys = {
+        -- Show All Commands
+        {
+          "<leader><leader>",
+          function() call_vscode('workbench.action.showCommands') end,
+          desc = "Show All Commands"
+        },
         -- Hlsearch highlights off
         {
           "<leader>h",
           vim.cmd.nohlsearch,
           desc = "Highlights Off"
         },
-        -- Focus Explorer in side bar
+        -- File operations
         {
           "<leader>f",
+          group = "File"
+        },
+        -- Select Project's file
+        {
+          "<leader>ff",
+          function() call_vscode('workbench.action.quickOpen') end,
+          desc = "quickOpen"
+        },
+        -- Focus Explorer in side bar
+        {
+          "<leader>ft",
           function() call_vscode('workbench.view.explorer') end,
           desc = "File Explorer"
+        },
+        -- Select Opened file
+        {
+          "<leader>bb",
+          function() call_vscode('workbench.action.showAllEditors') end,
+          desc = "Select Opened File"
         },
         -- Focus Search in side bar
         {
@@ -212,7 +244,7 @@ require("lazy").setup({
         },
         -- Open terminal in editor
         {
-          "<leader><leader>'",
+          "<leader>\"",
           function() call_vscode('workbench.action.createTerminalEditor') end,
           desc = "Create Terminal in Editor"
         },
@@ -404,8 +436,9 @@ require("lazy").setup({
         {
           "<leader>mrn",
           function()
-            local snippet_code = "(require '[clojure.repl.deps :refer [add-libs]])\n\n(add-libs '{ org.glassfish.jaxb/jaxb-runtime {:mvn/version \"2.3.2\"}, org.clojars.abhinav/snitch {:mvn/version \"0.1.16\"}})\n\n(require '[snitch.core :refer [defn* defmethod* *fn *let]])"
-            call_vscode('calva.runCustomREPLCommand', {args = {snippet = snippet_code}})
+            local snippet_code =
+            "(require '[clojure.repl.deps :refer [add-libs]])\n\n(add-libs '{ org.glassfish.jaxb/jaxb-runtime {:mvn/version \"2.3.2\"}, org.clojars.abhinav/snitch {:mvn/version \"0.1.16\"}})\n\n(require '[snitch.core :refer [defn* defmethod* *fn *let]])"
+            call_vscode('calva.runCustomREPLCommand', { args = { snippet = snippet_code } })
           end,
           desc = "Load Snitch in REPL"
         },
