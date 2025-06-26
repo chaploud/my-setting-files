@@ -194,3 +194,5 @@ export WASMER_DIR="/home/chaploud/.wasmer"
 export JAVA_HOME="$HOME/Install/graalvm-jdk-21.0.7+8.1"
 export PATH="$JAVA_HOME/bin:$PATH"
 export WASMTIME_HOME="$HOME/.wasmtime"
+
+alias claude="/home/chaploud/.claude/local/claude"

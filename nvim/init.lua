@@ -85,7 +85,9 @@ vim.keymap.set('n', 'p', '<Plug>(YankyPutAfter)')
 vim.keymap.set('n', 'P', '<Plug>(YankyPutBefore)')
 vim.keymap.set('n', 'gp', '<Plug>(YankyGPutAfter)')
 vim.keymap.set('n', 'gP', '<Plug>(YankyGPutBefore)')
-vim.keymap.set('n', '<C-p>', '<Plug>(YankyPreviousEntry)')
+vim.keymap.set('n', '<C-p>', function()
+  return require('yanky').can_cycle() and '<Plug>(YankyPreviousEntry)' or call_vscode('workbench.action.quickOpen')
+end, { expr = true })
 vim.keymap.set('n', '<C-n>', '<Plug>(YankyNextEntry)')
 
 -- Set <leader> key to space
@@ -139,6 +141,9 @@ require("lazy").setup({
       "gbprod/yanky.nvim",
       event = "VeryLazy",
       opts = {
+        ring = {
+          cancel_event = "move",
+        },
         highlight = {
           on_put = false,
           on_yank = true,
