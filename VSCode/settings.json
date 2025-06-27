@@ -2,8 +2,8 @@
   // ===== エディタ基本設定 =====
   // フォント
   "editor.fontFamily": "'Source Han Code JP', 'Cica', 'UDEV Gothic 35NFLG', 'Droid Sans Mono', 'monospace', monospace",
-  "editor.fontSize": 16,
-  "terminal.integrated.fontSize": 16,
+  "editor.fontSize": 15,
+  "terminal.integrated.fontSize": 15,
   "debug.console.fontSize": 16,
   // 行番号
   "editor.lineNumbers": "on",
@@ -27,7 +27,8 @@
   "editor.occurrencesHighlight": "off",
   // コメントの色が薄すぎるので主張しすぎず見えやすい色にする
   "editor.tokenColorCustomizations": {
-    "comments": "#2aa1ae"
+    // "comments": "#2aa1ae"
+    "comments": "#5fafa2"
   },
   // NeoVimとの相性(日本語入力で上書されてしまう)への対処
   "editor.experimentalEditContextEnabled": false,
@@ -93,21 +94,22 @@
   // 信頼されたワークスペースを開いているならば、信頼されていないファイルを開くときに警告を出さない
   "security.workspace.trust.untrustedFiles": "open",
   //  ===== 言語別 =====
+  "[typescript]": {
+    // "editor.defaultFormatter": "vscode.typescript-language-features"
+  },
   "[json]": {
     // "editor.defaultFormatter": "vscode.json-language-features"
   },
   "[jsonc]": {
     "editor.defaultFormatter": "vscode.json-language-features"
   },
-  "[typescript]": {
-    // "editor.defaultFormatter": "vscode.typescript-language-features"
-  },
   // === TypeScript
   "typescript.updateImportsOnFileMove.enabled": "always",
   // ===== 拡張機能の設定 =====
   // === 見た目
-  // Color Theme (GitHub Dark Default)
-  "workbench.colorTheme": "GitHub Dark Default",
+  // Color Theme
+  // "workbench.colorTheme": "GitHub Dark Default",,
+  "workbench.colorTheme": "Tokyo Night Gogh",
   // メリハリをつけるため下部パネルとサイドバーの色を調整
   "workbench.colorCustomizations": {
     "[GitHub Dark Default]": {
@@ -126,6 +128,14 @@
       "diffEditor.insertedTextBackground": "#2ea04366",
       "diffEditor.removedLineBackground": "#ff5a6a44",
       "diffEditor.removedTextBackground": "#ff5a6a66"
+    },
+    "[Tokyo Night Gogh]": {
+      "editor.selectionBackground": "#303f6b",
+      "editor.inactiveSelectionBackground": "#303f6bbb",
+      "list.activeSelectionBackground": "#303f6b",
+      "list.inactiveSelectionBackground": "#303f6bbb",
+      "terminal.selectionBackground": "#303f6b",
+      "terminal.inactiveSelectionBackground": "#303f6bbb",
     }
   },
   // vscode-icons
@@ -141,9 +151,9 @@
   // === GitHub Copilot
   // デフォルトでオフになっている言語も補完を効かせるようにする
   "github.copilot.enable": {
-    "*": false,
+    "*": true,
     "plaintext": false,
-    "markdown": false,
+    "markdown": true,
     "scminput": true,
     "clojure": true
   },
@@ -227,7 +237,9 @@
     "h", // backspace
     "l", // Recenter Top Bottom
     "m", // enter
+    "n", // yanky後のctrl+n
     // "o", // 前の場所に戻る(keybindings.jsonで設定)
+    "p", // yanky後のctrl+p
     "r", // Redo
     // "t", // 元の場所に戻る(keybindings.jsonで設定)
     "u", // 画面半分上にスクロール
@@ -263,12 +275,13 @@
   "calva.autoOpenInspector": false,
   // Clojure/ClojureScriptのコード参照などの機能(CodeLens)を有効にする
   "calva.referencesCodeLens.enabled": true,
-  "calva.evaluationSendCodeToOutputWindow": false,
+  "calva.evaluationSendCodeToOutputWindow": true,
+  "calva.autoOpenResultOutputDestination": true,
   // VSCodeのテストエクスプローラを使う(Experimental)
   "calva.useTestExplorer": true,
   // Calva Backseat Driver
   "calva-backseat-driver.enableMcpReplEvaluation": true,
-  "calva-backseat-driver.autoStartMCPServer": true,
+  // "calva-backseat-driver.autoStartMCPServer": true,
   // === Code Runner
   "code-runner.runInTerminal": true,
   "code-runner.saveFileBeforeRun": true,
@@ -309,5 +322,5 @@
     "wsl.localhost"
   ],
   // === Project Manager
-  "projectManager.sortList": "Saved"
+  "projectManager.sortList": "Saved",
 }
