@@ -118,6 +118,10 @@ fi
 
 # ===== My Settings =====
 
+# ctrl+wを/まで削除の挙動に
+stty werase undef
+bind \\C-w:unix-filename-rubout
+
 # === Aliases
 # ls
 alias sl="ls"
