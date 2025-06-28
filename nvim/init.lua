@@ -267,7 +267,7 @@ require("lazy").setup({
         -- Close all tabs
         {
           "<leader>wa",
-          function() call_vscode('workbench.action.closeAllEditors') end,
+          function() call_vscode('workbench.action.closeEditorsInGroup') end,
           desc = "Close All Editors"
         },
         -- Reload Window

@@ -2,10 +2,10 @@
 [
   // ===== 設定ファイル =====
   // JSONの方の設定ファイルを開くことが多い
-  // {
-  //   "key": "ctrl+oem_comma",
-  //   "command": "workbench.action.openSettingsJson"
-  // },
+  {
+    "key": "ctrl+oem_comma",
+    "command": "workbench.action.openSettingsJson"
+  },
   // JSONの方のキーバインディング設定ファイルを開くことが多い
   {
     "key": "ctrl+k ctrl+s",

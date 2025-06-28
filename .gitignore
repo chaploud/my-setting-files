@@ -4,3 +4,5 @@
 .cpcache/
 .portal/
 .nrepl-port
+.cljs_node_repl/
+.calva/
