@@ -6,3 +6,4 @@
 .nrepl-port
 .cljs_node_repl/
 .calva/
+lazy-lock.json
