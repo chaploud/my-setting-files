@@ -53,3 +53,7 @@ disabled = true
 
 [hostname]
 disabled = true
+
+[username]
+show_always = true
+format = '[$user](bold green) '
