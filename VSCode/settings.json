@@ -2,9 +2,9 @@
   // ===== エディタ基本設定 =====
   // フォント
   "editor.fontFamily": "'Source Han Code JP', 'Cica', 'UDEV Gothic 35NFLG', 'Droid Sans Mono', 'monospace', monospace",
-  "editor.fontSize": 15,
-  "terminal.integrated.fontSize": 15,
-  "debug.console.fontSize": 16,
+  "editor.fontSize": 14,
+  "terminal.integrated.fontSize": 14,
+  "debug.console.fontSize": 14,
   // 行番号
   "editor.lineNumbers": "on",
   // カーソルがいい感じに点滅する
@@ -135,7 +135,7 @@
       "list.activeSelectionBackground": "#303f6b",
       "list.inactiveSelectionBackground": "#303f6bbb",
       "terminal.selectionBackground": "#303f6b",
-      "terminal.inactiveSelectionBackground": "#303f6bbb",
+      "terminal.inactiveSelectionBackground": "#303f6bbb"
     }
   },
   // vscode-icons
@@ -146,14 +146,15 @@
   "remote.SSH.remotePlatform": {
     "dev-almalinux": "linux",
     "gpu-ubuntu": "linux",
-    "mac-mini": "macOS"
+    "mac-mini": "macOS",
+    "mac": "macOS"
   },
   // === GitHub Copilot
   // デフォルトでオフになっている言語も補完を効かせるようにする
   "github.copilot.enable": {
     "*": true,
     "plaintext": false,
-    "markdown": true,
+    "markdown": false,
     "scminput": true,
     "clojure": true
   },
@@ -273,8 +274,6 @@
   "calva.legacyPrintBareReplWindowOutput": true,
   // CalvaのREPL接続時に自動でサイドパネルのインスペクタにフォーカスが当たるのをやめる
   "calva.autoOpenInspector": false,
-  // Clojure/ClojureScriptのコード参照などの機能(CodeLens)を有効にする
-  "calva.referencesCodeLens.enabled": true,
   "calva.evaluationSendCodeToOutputWindow": true,
   "calva.autoOpenResultOutputDestination": true,
   // VSCodeのテストエクスプローラを使う(Experimental)
@@ -322,5 +321,5 @@
     "wsl.localhost"
   ],
   // === Project Manager
-  "projectManager.sortList": "Saved",
+  "projectManager.sortList": "Saved"
 }

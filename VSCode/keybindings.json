@@ -997,5 +997,5 @@
     "key": "ctrl+g",
     "command": "workbench.statusBar.clearFocus",
     "when": "statusBarFocused"
-  }
+  },
 ]
