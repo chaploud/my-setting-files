@@ -50,3 +50,6 @@ disabled = true
 
 [golang]
 disabled = true
+
+[hostname]
+disabled = true
