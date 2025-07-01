@@ -13,10 +13,8 @@
                 javax.xml.bind/jaxb-api {:mvn/version "2.3.1"}
                 org.glassfish.jaxb/jaxb-runtime {:mvn/version "2.3.1"}
                 ;; ↑↑↑ Java 9+ requires these dependencies↑↑↑
-                cider/cider-nrepl {:mvn/version "0.56.0"}
-                cider/piggieback {:mvn/version "0.6.0"}}
+                cider/cider-nrepl {:mvn/version "0.56.0"}}
    :main-opts ["-m" "nrepl.cmdline"
-               "--middleware" "[cider.nrepl/cider-middleware cider.piggieback/wrap-cljs-repl]"
-               "--middleware" "[cider.piggieback/wrap-cljs-repl]"
+               "--middleware" "[cider.nrepl/cider-middleware]"
                "--port" "7888"
                "--bind" "127.0.0.1"]}}}
