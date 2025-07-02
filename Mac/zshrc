@@ -25,3 +25,11 @@ alias gzp='git stash pop'
 
 # === Starship
 eval "$(starship init zsh)"
+
+# === local bin
+export PATH="$PATH:$HOME/.local/bin"
+
+# === Open JDK
+# Java (OpenJDK via Homebrew)
+export JAVA_HOME="/opt/homebrew/opt/openjdk"
+export PATH="$JAVA_HOME/bin:$PATH"
