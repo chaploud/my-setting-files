@@ -7,3 +7,4 @@
 .cljs_node_repl/
 .calva/
 lazy-lock.json
+.DS_Store
