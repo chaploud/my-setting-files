@@ -95,9 +95,9 @@ vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
 -- Save with ctrl+s
-vim.keymap.set({ 'n', 'i' }, '<C-s>', vim.cmd.write)
+-- vim.keymap.set({ 'n', 'i' }, '<C-s>', vim.cmd.write)
 -- Undo with ctrl+z
-vim.keymap.set({ 'n', 'i' }, '<C-z>', vim.cmd.undo)
+-- vim.keymap.set({ 'n', 'i' }, '<C-z>', vim.cmd.undo)
 
 -- Install lazy.nvim (only on first run)
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"

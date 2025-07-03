@@ -90,7 +90,7 @@
   "search.useGlobalIgnoreFiles": true,
   "search.useParentIgnoreFiles": true,
   // プラットフォームごとにキーバインドを分けない
-  "settingsSync.keybindingsPerPlatform": false,
+  "settingsSync.keybindingsPerPlatform": true,
   // 信頼されたワークスペースを開いているならば、信頼されていないファイルを開くときに警告を出さない
   "security.workspace.trust.untrustedFiles": "open",
   //  ===== 言語別 =====
@@ -154,7 +154,7 @@
   "github.copilot.enable": {
     "*": true,
     "plaintext": false,
-    "markdown": false,
+    "markdown": true,
     "scminput": true,
     "clojure": true
   },

@@ -11,28 +11,66 @@
     "key": "ctrl+k ctrl+s",
     "command": "workbench.action.openGlobalKeybindingsFile"
   },
+  // 保存
+  {
+    "key": "ctrl+s",
+    "command": "workbench.action.files.save"
+  },
+  // ペースト
+  {
+    "key": "ctrl+v",
+    "command": "editor.action.clipboardPasteAction",
+    "when": "editorTextFocus && neovim.mode == 'insert'"
+  },
+  {
+    "key": "cmd+p",
+    "command": "-workbench.action.quickOpenNavigateNextInFilePicker",
+    "when": "inFilesPicker && inQuickOpen"
+  },
+  {
+    "key": "cmd+p",
+    "command": "-workbench.action.quickOpen"
+  },
   // ===== 変更点への移動 =====
   // compare editor内で次の変更点へジャンプ
   {
-    "key": "alt+n",
+    "key": "cmd+n",
     "command": "workbench.action.compareEditor.nextChange",
     "when": "textCompareEditorVisible"
   },
+  {
+    "key": "cmd+n",
+    "command": "-chatEditor.action.undoHunk",
+    "when": "chatEdits.hasEditorModifications && editorFocus && !chatEdits.isRequestInProgress || chatEdits.hasEditorModifications && notebookCellListFocused && !chatEdits.isRequestInProgress"
+  },
+  {
+    "key": "cmd+n",
+    "command": "-workbench.action.files.newUntitledFile"
+  },
   // compare editor内で前の変更点へジャンプ
   {
-    "key": "alt+p",
+    "key": "cmd+p",
     "command": "workbench.action.compareEditor.previousChange",
     "when": "textCompareEditorVisible"
   },
+  {
+    "key": "cmd+p",
+    "command": "-workbench.action.quickOpenNavigateNextInFilePicker",
+    "when": "inFilesPicker && inQuickOpen"
+  },
+  {
+    "key": "cmd+p",
+    "command": "-workbench.action.quickOpen"
+  },
   // 編集中のエディタで次の変更点へジャンプ
   {
-    "key": "alt+n",
+    "key": "cmd+n",
     "command": "workbench.action.editor.nextChange",
     "when": "editorTextFocus && !textCompareEditorActive && quickDiffDecorationCount != '0'"
   },
   // 編集中のエディタで前の変更点へジャンプ
   {
-    "key": "alt+p",
+    "key": "cmd+p",
     "command": "workbench.action.editor.previousChange",
     "when": "editorTextFocus && !textCompareEditorActive && quickDiffDecorationCount != '0'"
   },
@@ -314,6 +352,12 @@
     "key": "ctrl+oem_1",
     "command": "editor.action.commentLine",
     "when": "editorTextFocus && !editorReadonly"
+  },
+  // インサートモード時にUndo
+  {
+    "key": "ctrl+z",
+    "command": "undo",
+    "when": "editorTextFocus && neovim.mode == 'insert'"
   },
   // インサートモード時にRedo
   {
