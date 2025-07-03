@@ -1,0 +1,325 @@
+{
+  // ===== エディタ基本設定 =====
+  // フォント
+  "editor.fontFamily": "'Source Han Code JP', 'Cica', 'UDEV Gothic 35NFLG', 'Droid Sans Mono', 'monospace', monospace",
+  "editor.fontSize": 14,
+  "terminal.integrated.fontSize": 14,
+  "debug.console.fontSize": 14,
+  // 行番号
+  "editor.lineNumbers": "on",
+  // カーソルがいい感じに点滅する
+  "editor.cursorBlinking": "phase",
+  // スクロールがなめらかになる
+  "editor.smoothScrolling": true,
+  // カーソルの移動がアニメーション風になる
+  "editor.cursorSmoothCaretAnimation": "on",
+  // 貼り付け時にフォーマット指定があれば適用する
+  "editor.formatOnPaste": true,
+  // 保存時にフォーマット指定があれば適用する
+  "editor.formatOnSave": true,
+  // ミニマップは領域を圧迫するので消す
+  "editor.minimap.enabled": false,
+  // スペースを可視化する
+  "editor.renderWhitespace": "all",
+  // 選択した語と一致する他の箇所のハイライトは不要
+  "editor.selectionHighlight": false,
+  // カーソル下の語と一致する他の箇所のハイライトは不要
+  "editor.occurrencesHighlight": "off",
+  // コメントの色が薄すぎるので主張しすぎず見えやすい色にする
+  "editor.tokenColorCustomizations": {
+    // "comments": "#2aa1ae"
+    "comments": "#5fafa2"
+  },
+  // NeoVimとの相性(日本語入力で上書されてしまう)への対処
+  "editor.experimentalEditContextEnabled": false,
+  // 言語によるタブサイズの設定
+  "editor.tabSize": 2,
+  "[zig]": {
+    "editor.tabSize": 4
+  },
+  "[cpp]": {
+    "editor.tabSize": 4
+  },
+  "[c]": {
+    "editor.tabSize": 4
+  },
+  // 初回のスタートアップ画面は表示しない
+  "workbench.startupEditor": "none",
+  // 空のフォルダを省略して一列にしてしまわない(必ずツリー表示にする)
+  "explorer.compactFolders": false,
+  // ファイル貼り付け時にダイアログを出さない
+  "explorer.confirmPasteNative": false,
+  // 保存時に行末の空白など不要な空白を削除する
+  "files.trimTrailingWhitespace": true,
+  // Emacsキーバインドをターミナルでも有効に使いたい
+  "terminal.integrated.allowChords": false,
+  "terminal.integrated.commandsToSkipShell": [
+    "-workbench.action.toggleSidebarVisibility",
+    "-workbench.action.terminal.focusFind",
+    "-workbench.action.quickOpen",
+    "-workbench.action.quickOpenNavigateNextInFilePicker",
+    "-editor.action.toggleTabFocusMode"
+  ],
+  // ターミナルのスクロールバックをたくさんできるようにする
+  "terminal.integrated.scrollback": 10000,
+  // VSCodeを終了した後、前回のプロセスを復元しない
+  "terminal.integrated.persistentSessionReviveProcess": "never",
+  "terminal.integrated.cursorBlinking": true,
+  // デバッグ開始時に自動でデバッグコンソールを開かない
+  "debug.internalConsoleOptions": "neverOpen",
+  // Zen Mode
+  "zenMode.fullScreen": false,
+  "zenMode.showTabs": "none",
+  "zenMode.centerLayout": false,
+  // なるべくコンパクトに
+  "window.menuBarVisibility": "compact",
+  "window.commandCenter": false,
+  // Git関連の設定
+  "git.autofetch": true,
+  "git.enableSmartCommit": true,
+  "git.confirmSync": false,
+  "git.openRepositoryInParentFolders": "never",
+  "github.gitProtocol": "ssh",
+  // 変更点の強調
+  "scm.diffDecorationsGutterPattern": {
+    "added": false,
+    "modified": false
+  },
+  // 文字検索時に大文字小文字を都合よく検索する
+  "search.smartCase": true,
+  "search.useGlobalIgnoreFiles": true,
+  "search.useParentIgnoreFiles": true,
+  // プラットフォームごとにキーバインドを分けない
+  "settingsSync.keybindingsPerPlatform": false,
+  // 信頼されたワークスペースを開いているならば、信頼されていないファイルを開くときに警告を出さない
+  "security.workspace.trust.untrustedFiles": "open",
+  //  ===== 言語別 =====
+  "[typescript]": {
+    // "editor.defaultFormatter": "vscode.typescript-language-features"
+  },
+  "[json]": {
+    // "editor.defaultFormatter": "vscode.json-language-features"
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "vscode.json-language-features"
+  },
+  // === TypeScript
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  // ===== 拡張機能の設定 =====
+  // === 見た目
+  // Color Theme
+  // "workbench.colorTheme": "GitHub Dark Default",,
+  "workbench.colorTheme": "Tokyo Night Gogh",
+  // メリハリをつけるため下部パネルとサイドバーの色を調整
+  "workbench.colorCustomizations": {
+    "[GitHub Dark Default]": {
+      "panel.background": "#0d1117", // 下部パネルの背景色
+      "sideBar.background": "#0a0c10", // サイドバーの背景色
+      "sideBarSectionHeader.background": "#07080a", // サイドバーのセクションヘッダーの背景色
+      "textPreformat.background": "#6e768144", // コードの背景色
+      "textPreformat.foreground": "#f0883e", // コードの文字色
+      "peekViewEditorStickyScroll.background": "#0d1117",
+      // 差分のGutterアイコン
+      "editorGutter.addedBackground": "#28a745cc", // 追加
+      "editorGutter.deletedBackground": "#ff6f7acc", // 削除
+      "editorGutter.modifiedBackground": "#e6c200cc", // 変更
+      // 差分エディタ
+      "diffEditor.insertedLineBackground": "#2ea04344",
+      "diffEditor.insertedTextBackground": "#2ea04366",
+      "diffEditor.removedLineBackground": "#ff5a6a44",
+      "diffEditor.removedTextBackground": "#ff5a6a66"
+    },
+    "[Tokyo Night Gogh]": {
+      "editor.selectionBackground": "#303f6b",
+      "editor.inactiveSelectionBackground": "#303f6bbb",
+      "list.activeSelectionBackground": "#303f6b",
+      "list.inactiveSelectionBackground": "#303f6bbb",
+      "terminal.selectionBackground": "#303f6b",
+      "terminal.inactiveSelectionBackground": "#303f6bbb"
+    }
+  },
+  // vscode-icons
+  "workbench.iconTheme": "vscode-icons",
+  // === Remote SSH
+  "remote.SSH.enableAgentForwarding": true,
+  "remote.autoForwardPortsSource": "hybrid",
+  "remote.SSH.remotePlatform": {
+    "dev-almalinux": "linux",
+    "gpu-ubuntu": "linux",
+    "mac-mini": "macOS",
+    "mac": "macOS"
+  },
+  // === GitHub Copilot
+  // デフォルトでオフになっている言語も補完を効かせるようにする
+  "github.copilot.enable": {
+    "*": true,
+    "plaintext": false,
+    "markdown": false,
+    "scminput": true,
+    "clojure": true
+  },
+  // === GitHub Copilot Chat
+  // 日本語で応答してもらう
+  "github.copilot.chat.localeOverride": "ja",
+  // OSSなどでコミットメッセージを英語で生成するのに便利
+  "github.copilot.chat.commitMessageGeneration.instructions": [
+    {
+      "text": "Use a maximum of 120 characters."
+    },
+    {
+      "text": "Messages should be in English."
+    }
+  ],
+  "chat.mcp.serverSampling": {
+    "GistPad: GistPad": {
+      "allowedModels": [
+        "github.copilot-chat/gpt-4.1"
+      ]
+    }
+  },
+  // === Todo Tree
+  "todo-tree.tree.showCountsInTree": true,
+  "todo-tree.tree.expanded": true,
+  "todo-tree.tree.scanMode": "workspace only",
+  "todo-tree.highlights.highlightDelay": 100,
+  "todo-tree.general.tags": [
+    "TODO",
+    "NOTE",
+    "FIXME",
+    "XXX"
+  ],
+  "todo-tree.highlights.useColourScheme": true,
+  "todo-tree.highlights.backgroundColourScheme": [
+    "F2CC60",
+    "79C0FF",
+    "DB61A2",
+    "F85149"
+  ],
+  "todo-tree.highlights.foregroundColourScheme": [
+    "black",
+    "black",
+    "white",
+    "white"
+  ],
+  // === VSCode NeoVim
+  // 公式の推奨設定
+  "extensions.experimental.affinity": {
+    "asvetliakov.vscode-neovim": 1
+  },
+  // `f` `d` を連続で押した時、escape扱いになる
+  "vscode-neovim.compositeKeys": {
+    "fd": {
+      "command": "vscode-neovim.escape"
+    }
+  },
+  // insertモード時にctrl+<key>をNeoVim側に送信したいものだけを指定
+  "vscode-neovim.ctrlKeysForInsertMode": [
+    "a", // 行頭に移動
+    "b", // 1文字戻る
+    "d", // delete
+    "e", // 行末に移動
+    "f", // 1文字進む
+    // "g", // ESC(keybindings.jsonで設定)
+    "p", // カーソルを上に移動
+    "h", // backspace
+    "k", // カーソルから行末まで削除
+    "l", // Recenter Top Bottom
+    // "m", // enterとして認識させる(keybindings.jsonで設定)
+    "n", // カーソルを下に移動
+    "w", // 1単語削除
+    "y" // 貼り付け
+  ],
+  // normalモード時にctrl+<key>をNeoVim側に送信したいものだけを指定
+  "vscode-neovim.ctrlKeysForNormalMode": [
+    "a", // 数字を1増やす
+    "d", // 画面半分下にスクロール
+    "e", // カーソルを移動せず画面を下にスクロール
+    "g", // ESC
+    "h", // backspace
+    "l", // Recenter Top Bottom
+    "m", // enter
+    "n", // yanky後のctrl+n
+    // "o", // 前の場所に戻る(keybindings.jsonで設定)
+    "p", // yanky後のctrl+p
+    "r", // Redo
+    // "t", // 元の場所に戻る(keybindings.jsonで設定)
+    "u", // 画面半分上にスクロール
+    "v", // 矩形選択
+    "w", // ウィンドウ操作
+    "x", // decrement
+    "y", // カーソルを移動せず画面を上にスクロール
+    "/", // コメントアウト
+    "]" // 定義ジャンプ
+  ],
+  // === Calva
+  // サイドバーにおけるREPLのインスペクタの階層的な括弧の色付けを有効にする
+  "calva.enableInspectorRainbow": true,
+  // REPLの出力ファイルは${projectRootPath}/.calva/repl.calva-replを使う
+  "calva.useLegacyReplWindowPath": false,
+  // デフォルトでは、入力や出力やエラーがそれぞれ別の場所に出力される
+  // すべてREPLウィンドウにまとめて表示されてほしい場合は以下を設定
+  "calva.outputDestinations": {
+    "evalResults": "repl-window", // 評価結果をREPLウィンドウに出力
+    "evalOutput": "repl-window", // 標準出力/エラーをREPLウィンドウに出力
+    "otherOutput": "repl-window" // CalvaのメッセージなどをREPLウィンドウに出力
+  },
+  // インデントガイドのレインボー化
+  "calva.highlight.rainbowIndentGuides": true,
+  // CalvaでのPareditによる削除操作時、削除したものをクリップボードにコピーする
+  "calva.paredit.killAlsoCutsToClipboard": true,
+  // Clojureプロジェクトを開いたとき、自動的にREPLに接続する(プロジェクト設定に従う)
+  "calva.autoConnectRepl": false, // しない設定
+  // 標準出力やエラー出力がコメント(;)でプレフィックスされるのをやめる
+  // ただし、Calva公式によると、予期せぬエラーが発生する可能性があるため、falseが無難ではある
+  "calva.legacyPrintBareReplWindowOutput": true,
+  // CalvaのREPL接続時に自動でサイドパネルのインスペクタにフォーカスが当たるのをやめる
+  "calva.autoOpenInspector": false,
+  "calva.evaluationSendCodeToOutputWindow": true,
+  "calva.autoOpenResultOutputDestination": true,
+  // VSCodeのテストエクスプローラを使う(Experimental)
+  "calva.useTestExplorer": true,
+  // Calva Backseat Driver
+  "calva-backseat-driver.enableMcpReplEvaluation": true,
+  // "calva-backseat-driver.autoStartMCPServer": true,
+  // === Code Runner
+  "code-runner.runInTerminal": true,
+  "code-runner.saveFileBeforeRun": true,
+  "code-runner.clearPreviousOutput": true,
+  "code-runner.showExecutionMessage": false,
+  "code-runner.showRunCommandInEditorContextMenu": false,
+  "code-runner.showRunCommandInExplorerContextMenu": false,
+  "code-runner.executorMap": {
+    "javascript": "bun",
+    "typescript": "bun"
+  },
+  // === Rust Analyzer
+  "rust-analyzer.inlayHints.parameterHints.enable": false,
+  "rust-analyzer.inlayHints.typeHints.enable": false,
+  "rust-analyzer.inlayHints.chainingHints.enable": false,
+  // === Python
+  "python.analysis.typeCheckingMode": "strict",
+  // === Zig
+  "zig.zls.enabled": "on",
+  "zig.zls.inlayHintsHideRedundantParamNames": true,
+  "zig.zls.inlayHintsHideRedundantParamNamesLastToken": true,
+  "zig.zls.inlayHintsShowVariableTypeHints": false,
+  "zig.zls.inlayHintsShowParameterName": false,
+  "zig.zls.inlayHintsShowStructLiteralFieldType": false,
+  // === Code LLDB
+  "lldb.suppressUpdateNotifications": true,
+  // === Pomodoro Timer
+  "pomodoro.breakTime": 10,
+  "pomodoro.soundIntervalNotification": 1,
+  "pomodoro.workColorButton": "orange",
+  "pomodoro.workColorTime": "orange",
+  "pomodoro.workTime": 45,
+  // === Path Intellisense
+  "path-intellisense.absolutePathToWorkspace": false,
+  "path-intellisense.autoSlashAfterDirectory": true,
+  "path-intellisense.autoTriggerNextSuggestion": true,
+  "security.allowedUNCHosts": [
+    "wsl.localhost"
+  ],
+  // === Project Manager
+  "projectManager.sortList": "Saved"
+}

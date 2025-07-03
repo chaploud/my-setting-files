@@ -1,0 +1,1001 @@
+// Place your key bindings in this file to override the defaults
+[
+  // ===== 設定ファイル =====
+  // JSONの方の設定ファイルを開くことが多い
+  {
+    "key": "ctrl+oem_comma",
+    "command": "workbench.action.openSettingsJson"
+  },
+  // JSONの方のキーバインディング設定ファイルを開くことが多い
+  {
+    "key": "ctrl+k ctrl+s",
+    "command": "workbench.action.openGlobalKeybindingsFile"
+  },
+  // ===== 変更点への移動 =====
+  // compare editor内で次の変更点へジャンプ
+  {
+    "key": "alt+n",
+    "command": "workbench.action.compareEditor.nextChange",
+    "when": "textCompareEditorVisible"
+  },
+  // compare editor内で前の変更点へジャンプ
+  {
+    "key": "alt+p",
+    "command": "workbench.action.compareEditor.previousChange",
+    "when": "textCompareEditorVisible"
+  },
+  // 編集中のエディタで次の変更点へジャンプ
+  {
+    "key": "alt+n",
+    "command": "workbench.action.editor.nextChange",
+    "when": "editorTextFocus && !textCompareEditorActive && quickDiffDecorationCount != '0'"
+  },
+  // 編集中のエディタで前の変更点へジャンプ
+  {
+    "key": "alt+p",
+    "command": "workbench.action.editor.previousChange",
+    "when": "editorTextFocus && !textCompareEditorActive && quickDiffDecorationCount != '0'"
+  },
+  // ===== 統合ターミナル =====
+  // ターミナル領域でターミナルにフォーカス
+  {
+    "key": "ctrl+j",
+    "command": "workbench.action.terminal.toggleTerminal",
+    "when": "terminal.active"
+  },
+  // 新しいシェルを開く
+  {
+    "key": "alt+j",
+    "command": "workbench.action.terminal.new",
+    "when": "terminalProcessSupported || terminalWebExtensionContributedProfile"
+  },
+  // ターミナルフォーカス時、最大化/元に戻すをトグル
+  {
+    "key": "ctrl+o",
+    "command": "workbench.action.toggleMaximizedPanel",
+    "when": "terminal.active"
+  },
+  // 複数ターミナル間を切り替え
+  {
+    "key": "ctrl+t",
+    "command": "workbench.action.terminal.focusNext",
+    "when": "terminalFocus && terminalHasBeenCreated && !terminalEditorFocus || terminalFocus && terminalProcessSupported && !terminalEditorFocus"
+  },
+  // 選択範囲/現在行をターミナルに送る
+  {
+    "key": "shift+enter",
+    "command": "workbench.action.terminal.runSelectedText",
+    "when": "editorTextFocus && !sideBarFocus && editorLangId != 'clojure'"
+  },
+  // ===== Markdown All in One =====
+  // alt+,でチェックボックスをトグル
+  {
+    "key": "alt+oem_comma",
+    "command": "markdown.extension.checkTaskList",
+    "when": "editorTextFocus && editorLangId =~ /^markdown$|^rmd$|^quarto$/ && neovim.mode == 'normal'"
+  },
+  // ===== Calculator =====
+  {
+    "key": "ctrl+k c",
+    "command": "calculator.showInput"
+  },
+  // ===== VSCode NeoVim =====
+  // カーソル操作が効かなくなったときは実行
+  {
+    "key": "ctrl+shift+r",
+    "command": "vscode-neovim.restart",
+    "when": "editorTextFocus"
+  },
+  // insertモード時はctrl+kによるコマンド待ち受けをしない
+  {
+    "key": "ctrl+k",
+    "command": "vscode-neovim.send",
+    "args": "<C-k>",
+    "when": "editorTextFocus && neovim.mode == 'insert'"
+  },
+  // ctrl+d, ctrl+uの挙動修正
+  {
+    "key": "ctrl+d",
+    "command": "vscode-neovim.send",
+    "args": "<C-d>",
+    "when": "editorTextFocus && neovim.init"
+  },
+  {
+    "key": "ctrl+u",
+    "command": "vscode-neovim.send",
+    "args": "<C-u>",
+    "when": "editorTextFocus && neovim.init"
+  },
+  // Ex Commandインプットにフォーカス時
+  {
+    "key": "ctrl+h",
+    "command": "vscode-neovim.send-cmdline",
+    "args": "<C-h>",
+    "when": "neovim.mode == 'cmdline'"
+  },
+  // Go back/forwardはVSCode側の機能を使う
+  // 前の位置に戻る
+  {
+    "key": "ctrl+o",
+    "command": "workbench.action.navigateBack",
+    "when": "editorTextFocus"
+  },
+  // 先の位置に進む
+  {
+    "key": "ctrl+t",
+    "command": "workbench.action.navigateForward",
+    "args": "<C-t>",
+    "when": "editorTextFocus"
+  },
+  // 最終変更点だった位置まで一気に戻る
+  {
+    "key": "ctrl+shift+t",
+    "command": "workbench.action.navigateToLastEditLocation"
+  },
+  // insert時にenterキーを押した挙動に対応
+  {
+    "key": "ctrl+m",
+    "command": "type",
+    "args": {
+      "text": "\n"
+    },
+    "when": "editorTextFocus && neovim.mode == 'insert' && !suggestWidgetVisible"
+  },
+  {
+    "key": "ctrl+g",
+    "command": "-workbench.action.gotoLine"
+  },
+  {
+    // NeoVim側にはESCで伝わる
+    "key": "ctrl+g",
+    "command": "vscode-neovim.send",
+    "args": "<ESC>",
+    "when": "editorTextFocus && neovim.init"
+  },
+  // Normal Modeでのctrl+zによるUndoの挙動
+  {
+    "key": "ctrl+z",
+    "command": "vscode-neovim.send",
+    "args": "u",
+    "when": "editorTextFocus && neovim.mode == 'normal'"
+  },
+  // ctrl+6(^)で直前に開いていたバッファに戻る
+  {
+    "key": "ctrl+6",
+    "command": "-workbench.action.focusSixthEditorGroup"
+  },
+  {
+    "key": "ctrl+6",
+    "command": "runCommands",
+    "args": {
+      "commands": [
+        "workbench.action.quickOpenPreviousRecentlyUsedEditorInGroup",
+        "list.select"
+      ]
+    },
+    "when": "editorTextFocus && (neovim.mode == 'normal' || neovim.mode == 'visual' ) && editorLangId not in 'neovim.editorLangIdExclusions'"
+  },
+  // === サイドパネルのSearch + キーボード操作
+  {
+    "key": "ctrl+j",
+    "command": "search.focus.nextInputBox",
+    "when": "sideBarFocus && focusedView == 'workbench.view.search'"
+  },
+  {
+    "key": "ctrl+k",
+    "command": "search.focus.previousInputBox",
+    "when": "sideBarFocus && focusedView == 'workbench.view.search'"
+  },
+  // === Git (SCM: Source Control Management) + キーボード操作
+  // space => フォーカスはそのまま、差分を開く
+  // enter/ctrl+m => 差分を開いてフォーカスを移す
+  // コミットメッセージ入力欄にフォーカス
+  {
+    "key": "i",
+    "command": "workbench.scm.action.focusPreviousInput",
+    "when": "sideBarFocus && focusedView == 'workbench.scm' && listFocus && !inputFocus"
+  },
+  // 上のリソースグループにフォーカス移動
+  {
+    "key": "ctrl+k",
+    "command": "workbench.scm.action.focusPreviousResourceGroup",
+    "when": "sideBarFocus && focusedView == 'workbench.scm'"
+  },
+  // 下のリソースグループにフォーカス移動
+  {
+    "key": "ctrl+j",
+    "command": "workbench.scm.action.focusNextResourceGroup",
+    "when": "sideBarFocus && focusedView == 'workbench.scm'"
+  },
+  // すべてステージ
+  {
+    "key": "shift+s",
+    "command": "git.stageAll",
+    "when": "sideBarFocus && focusedView == 'workbench.scm' && listFocus && !inputFocus"
+  },
+  // すべてアンステージ
+  {
+    "key": "shift+u",
+    "command": "git.unstageAll",
+    "when": "sideBarFocus && focusedView == 'workbench.scm' && listFocus && !inputFocus"
+  },
+  // すべての変更を破棄
+  {
+    "key": "shift+x",
+    "command": "git.cleanAll",
+    "when": "sideBarFocus && focusedView == 'workbench.scm' && listFocus && !inputFocus"
+  },
+  // コミット
+  {
+    "key": "c",
+    "command": "git.commit",
+    "when": "sideBarFocus && focusedView == 'workbench.scm' && listFocus && !inputFocus"
+  },
+  // スタッシュ
+  {
+    "key": "z",
+    "command": "git.stash",
+    "when": "sideBarFocus && focusedView == 'workbench.scm' && listFocus && !inputFocus"
+  },
+  // === spaceで開いた直後にそのファイルについて実行する
+  {
+    "key": "o",
+    "command": "git.openFile",
+    "when": "sideBarFocus && focusedView == 'workbench.scm' && listFocus && !inputFocus"
+  },
+  {
+    "key": "s",
+    "command": "git.stage",
+    "when": "sideBarFocus && focusedView == 'workbench.scm' && listFocus && !inputFocus"
+  },
+  {
+    "key": "u",
+    "command": "git.unstage",
+    "when": "sideBarFocus && focusedView == 'workbench.scm' && listFocus && !inputFocus"
+  },
+  {
+    "key": "x",
+    "command": "git.clean",
+    "when": "sideBarFocus && focusedView == 'workbench.scm' && listFocus && !inputFocus"
+  },
+  // === Calva
+  {
+    "key": "ctrl+i",
+    "command": "-calva-fmt.tabIndent",
+    "when": "calva:keybindingsEnabled && editorTextFocus && !editorReadOnly && !hasOtherSuggestions && !suggestWidgetVisible && editorLangId == 'clojure'"
+  },
+  {
+    "key": "shift+enter",
+    "command": "calva.evaluateCurrentTopLevelForm",
+    "when": "calva:keybindingsEnabled && editorTextFocus && !calva:cursorInComment && !editorHasMultipleSelections && !editorReadOnly && editorLangId == 'clojure' && neovim.mode == 'normal'"
+  },
+  {
+    "key": "ctrl+shift+enter",
+    "command": "calva.evaluateTopLevelFormAsComment",
+    "when": "calva:keybindingsEnabled && editorTextFocus && !calva:cursorInComment && !editorHasMultipleSelections && !editorReadOnly && editorLangId == 'clojure' && neovim.mode == 'normal'"
+  },
+  {
+    "key": "alt+n",
+    "command": "calva.showNextReplHistoryEntry",
+    "when": "calva:connected && calva:keybindingsEnabled && calva:outputWindowActive && calva:replHistoryCommandsActive && editorLangId == 'clojure'"
+  },
+  {
+    "key": "alt+p",
+    "command": "calva.showPreviousReplHistoryEntry",
+    "when": "calva:connected && calva:keybindingsEnabled && calva:outputWindowActive && calva:replHistoryCommandsActive && editorLangId == 'clojure'"
+  },
+  {
+    "key": "ctrl+h",
+    "command": "paredit.deleteBackward",
+    "when": "calva:keybindingsEnabled && editorTextFocus && !calva:cursorInComment && !editorHasMultipleSelections && !editorReadOnly && editorLangId == 'clojure' && paredit:keyMap == 'strict' && neovim.mode == 'insert'"
+  },
+  {
+    "key": "ctrl+d",
+    "command": "paredit.deleteForward",
+    "when": "calva:keybindingsEnabled && editorTextFocus && !calva:cursorInComment && !editorHasMultipleSelections && !editorReadOnly && editorLangId == 'clojure' && paredit:keyMap == 'strict' && neovim.mode == 'insert'"
+  },
+  {
+    "command": "paredit.insertSemiColon",
+    "key": ";",
+    "when": "calva:keybindingsEnabled && editorLangId == clojure && editorTextFocus && paredit:keyMap == strict && !editorReadOnly && !editorHasMultipleSelections && !calva:cursorInComment && neovim.mode == 'insert'"
+  },
+  {
+    "key": "ctrl+w",
+    "command": "paredit.killSexpBackward",
+    "when": "calva:keybindingsEnabled && editorTextFocus && !calva:cursorInComment && !calva:cursorAtStartOfLine && !calva:cursorAtAfterComment && !calva:cursorInString && !cursorInIndentation && !editorHasMultipleSelections && !editorReadOnly && editorLangId == 'clojure' && paredit:keyMap == 'strict' && neovim.mode == 'insert'"
+  },
+  {
+    "key": "ctrl+k",
+    "command": "paredit.killSexpForward",
+    "when": "calva:keybindingsEnabled && editorTextFocus && !calva:cursorInComment && !editorHasMultipleSelections && !editorReadOnly && editorLangId == 'clojure' && paredit:keyMap == 'strict' && neovim.mode == 'insert'"
+  },
+  // コメントアウトはctrl+;でも行える(Lisp風)
+  {
+    "key": "ctrl+oem_1",
+    "command": "editor.action.commentLine",
+    "when": "editorTextFocus && !editorReadonly"
+  },
+  // インサートモード時にRedo
+  {
+    "key": "ctrl+r",
+    "command": "redo",
+    "when": "editorTextFocus && neovim.mode == 'insert'"
+  },
+  // === Markdown All in OneとコンフリクトするInsert時のキーバインドを解除
+  {
+    "key": "ctrl+i",
+    "command": "-markdown.extension.editing.toggleItalic",
+    "when": "editorTextFocus && !editorReadonly && editorLangId =~ /^markdown$|^rmd$|^quarto$/"
+  },
+  {
+    "key": "ctrl+b",
+    "command": "-markdown.extension.editing.toggleBold",
+    "when": "editorTextFocus && !editorReadonly && editorLangId =~ /^markdown$|^rmd$|^quarto$/"
+  },
+  // Insert時における単語単位での進む
+  {
+    "key": "alt+f",
+    "command": "cursorWordEndRight",
+    "when": "textInputFocus && !accessibilityModeEnabled && neovim.mode == 'insert'"
+  },
+  // Insert時における単語単位での戻る
+  {
+    "key": "alt+b",
+    "command": "cursorWordStartLeft",
+    "when": "textInputFocus && !accessibilityModeEnabled && neovim.mode == 'insert'"
+  },
+  // Insert時における単語単位でのDelete
+  {
+    "key": "alt+d",
+    "command": "deleteWordRight",
+    "when": "textInputFocus && !accessibilityModeEnabled && neovim.mode == 'insert'"
+  },
+  // ctrl+w による不意の閉じるを防ぐ
+  {
+    "key": "ctrl+w",
+    "command": "-workbench.action.closeActiveEditor"
+  },
+  {
+    "key": "ctrl+w",
+    "command": "-workbench.action.closeGroup",
+    "when": "activeEditorGroupEmpty && multipleEditorGroups"
+  },
+  {
+    "key": "ctrl+w",
+    "command": "-workbench.action.terminal.killEditor",
+    "when": "terminalEditorFocus && terminalFocus && terminalHasBeenCreated || terminalEditorFocus && terminalFocus && terminalProcessSupported"
+  },
+  // ctrl+' で補完候補トリガー
+  {
+    "key": "ctrl+oem_7",
+    "command": "workbench.action.terminal.requestCompletions",
+    "when": "config.terminal.integrated.suggest.enabled && terminalFocus && terminalProcessSupported && !terminalSuggestWidgetVisible"
+  },
+  {
+    "key": "ctrl+oem_7",
+    "command": "editor.action.triggerSuggest",
+    "when": "editorHasCompletionItemProvider && textInputFocus && !editorReadonly && !suggestWidgetVisible"
+  },
+  {
+    "key": "ctrl+oem_7",
+    "command": "focusSuggestion",
+    "when": "suggestWidgetVisible && textInputFocus && !suggestWidgetHasFocusedSuggestion"
+  },
+  {
+    "key": "ctrl+oem_7",
+    "command": "quickInput.toggleHover",
+    "when": "inQuickInput && quickInputType == 'quickPick'"
+  },
+  {
+    "key": "ctrl+oem_7",
+    "command": "toggleSuggestionDetails",
+    "when": "suggestWidgetHasFocusedSuggestion && suggestWidgetVisible && textInputFocus"
+  },
+  {
+    "key": "ctrl+oem_7",
+    "command": "workbench.action.terminal.sendSequence",
+    "when": "terminalFocus && terminalShellIntegrationEnabled && !accessibilityModeEnabled && terminalShellType == 'pwsh'"
+  },
+  {
+    "key": "ctrl+oem_7",
+    "command": "workbench.action.terminal.suggestToggleDetails",
+    "when": "simpleSuggestWidgetHasFocusedSuggestion && terminalFocus && terminalHasBeenCreated && terminalIsOpen && terminalSuggestWidgetVisible || simpleSuggestWidgetHasFocusedSuggestion && terminalFocus && terminalIsOpen && terminalProcessSupported && terminalSuggestWidgetVisible"
+  },
+  // alt+'でインラインサジェストをトリガー
+  {
+    "key": "alt+oem_7",
+    "command": "editor.action.inlineSuggest.trigger",
+    "when": "editorTextFocus && !editorHasSelection && !inlineSuggestionsVisible"
+  },
+  // ===== "ctrl+m" を "enter" として振舞わせる =====
+  // [A] 余計な"ctrl+m"を解除
+  {
+    "key": "ctrl+m",
+    "command": "-editor.action.toggleTabFocusMode"
+  },
+  // [B] 元々"enter"にも割り当てられていないもの
+  // quick open
+  { // 確定
+    "key": "ctrl+m",
+    "command": "workbench.action.acceptSelectedQuickOpenItem",
+    "when": "inQuickOpen"
+  },
+  // [C] "enter" でkeybindingsを検索して出てきたものに、"ctrl+m"も割り当てる
+  // デフォルトのABC順(大文字→小文字)でその都度過不足があれば修正していく
+  {
+    "key": "ctrl+m",
+    "command": "repl.action.acceptInput",
+    "when": "inDebugRepl && textInputFocus"
+  },
+  {
+    "key": "ctrl+m",
+    "command": "editor.action.nextMatchFindAction",
+    "when": "editorFocus && findInputFocussed"
+  },
+  {
+    "key": "ctrl+m",
+    "command": "editor.action.insertColorWithStandaloneColorPicker",
+    "when": "standaloneColorPickerFocused"
+  },
+  {
+    "key": "ctrl+m",
+    "command": "notebook.cell.edit",
+    "when": "notebookCellListFocused && !editorHoverFocused && !inputFocus && !notebookOutputInputFocused"
+  },
+  {
+    "key": "ctrl+m",
+    "command": "workbench.action.terminal.findPrevious",
+    "when": "terminalFindInputFocused && terminalHasBeenCreated || terminalFindInputFocused && terminalProcessSupported"
+  },
+  {
+    "key": "ctrl+m",
+    "command": "acceptRenameInput",
+    "when": "editorFocus && renameInputVisible && !isComposing"
+  },
+  {
+    "key": "ctrl+m",
+    "command": "acceptSelectedCodeAction",
+    "when": "codeActionMenuVisible"
+  },
+  {
+    "key": "ctrl+m",
+    "command": "acceptSelectedSuggestion",
+    "when": "acceptSuggestionOnEnter && suggestWidgetHasFocusedSuggestion && suggestWidgetVisible && suggestionMakesTextEdit && textInputFocus"
+  },
+  {
+    "key": "ctrl+m",
+    "command": "breadcrumbs.selectFocused",
+    "when": "breadcrumbsActive && breadcrumbsVisible"
+  },
+  {
+    "key": "ctrl+m",
+    "command": "breakpointWidget.action.acceptInput",
+    "when": "breakpointWidgetVisible && inBreakpointWidget"
+  },
+  {
+    "key": "ctrl+m",
+    "command": "calva.evaluateReplWindowForm",
+    "when": "calva:keybindingsEnabled && calva:outputWindowActive && calva:replWindowSubmitOnEnter && editorTextFocus && !suggestWidgetVisible"
+  },
+  {
+    "key": "ctrl+m",
+    "command": "editor.action.extensioneditor.findNext",
+    "when": "webviewFindWidgetFocused && !editorFocus && activeEditor == 'workbench.editor.extension'"
+  },
+  {
+    "key": "ctrl+m",
+    "command": "editor.action.goToFocusedStickyScrollLine",
+    "when": "stickyScrollFocused"
+  },
+  {
+    "key": "ctrl+m",
+    "command": "editor.action.replaceOne",
+    "when": "editorFocus && findWidgetVisible && replaceInputFocussed"
+  },
+  {
+    "key": "ctrl+m",
+    "command": "editor.action.webvieweditor.findNext",
+    "when": "webviewFindWidgetFocused && !editorFocus && activeEditor == 'WebviewEditor'"
+  },
+  {
+    "key": "ctrl+m",
+    "command": "explorer.openAndPassFocus",
+    "when": "filesExplorerFocus && foldersViewVisible && !explorerResourceIsFolder && !inputFocus"
+  },
+  {
+    "key": "ctrl+m",
+    "command": "iconSelectBox.selectFocused",
+    "when": "iconSelectBoxFocus"
+  },
+  {
+    "key": "ctrl+m",
+    "command": "interactive.execute",
+    "when": "isCompositeNotebook && !config.interactiveWindow.executeWithShiftEnter && activeEditor == 'workbench.editor.interactive'"
+  },
+  {
+    "key": "ctrl+m",
+    "command": "keybindings.editor.acceptWhenExpression",
+    "when": "inKeybindings && whenFocus && !suggestWidgetVisible"
+  },
+  {
+    "key": "ctrl+m",
+    "command": "keybindings.editor.defineKeybinding",
+    "when": "inKeybindings && keybindingFocus && !whenFocus"
+  },
+  {
+    "key": "ctrl+m",
+    "command": "list.closeFind",
+    "when": "inputFocus && listFocus && treeFindOpen"
+  },
+  {
+    "key": "ctrl+m",
+    "command": "list.select",
+    "when": "listFocus && !inputFocus && !treestickyScrollFocused"
+  },
+  {
+    "key": "ctrl+m",
+    "command": "list.select",
+    "when": "listFocus && !inputFocus && !notebookCellListFocused"
+  },
+  {
+    "key": "ctrl+m",
+    "command": "list.stickyScrollselect",
+    "when": "treestickyScrollFocused"
+  },
+  {
+    "key": "ctrl+m",
+    "command": "markdown.extension.onEnterKey",
+    "when": "editorTextFocus && !editorHasMultipleSelections && !editorReadonly && !markdown.extension.editor.cursor.inFencedCodeBlock && !markdown.extension.editor.cursor.inMathEnv && !suggestWidgetVisible && vim.mode != 'CommandlineInProgress' && vim.mode != 'EasyMotionInputMode' && vim.mode != 'EasyMotionMode' && vim.mode != 'Normal' && vim.mode != 'Replace' && vim.mode != 'SearchInProgressMode' && vim.mode != 'SurroundInputMode' && vim.mode != 'Visual' && vim.mode != 'VisualBlock' && vim.mode != 'VisualLine' && editorLangId =~ /^markdown$|^rmd$|^quarto$/ || editorTextFocus && !editorHasMultipleSelections && !editorReadonly && !markdown.extension.editor.cursor.inFencedCodeBlock && !markdown.extension.editor.cursor.inMathEnv && config.editor.acceptSuggestionOnEnter == 'off' && vim.mode != 'CommandlineInProgress' && vim.mode != 'EasyMotionInputMode' && vim.mode != 'EasyMotionMode' && vim.mode != 'Normal' && vim.mode != 'Replace' && vim.mode != 'SearchInProgressMode' && vim.mode != 'SurroundInputMode' && vim.mode != 'Visual' && vim.mode != 'VisualBlock' && vim.mode != 'VisualLine' && editorLangId =~ /^markdown$|^rmd$|^quarto$/"
+  },
+  {
+    "key": "ctrl+m",
+    "command": "notebook.cell.chat.accept",
+    "when": "inlineChatFocused && notebookCellChatFocused && !notebookCellEditorFocused"
+  },
+  {
+    "key": "ctrl+m",
+    "command": "notification.toggle",
+    "when": "notificationFocus"
+  },
+  {
+    "key": "ctrl+m",
+    "command": "problems.action.open",
+    "when": "problemFocus"
+  },
+  {
+    "key": "ctrl+m",
+    "command": "python.execInInteractiveWindowEnter",
+    "when": "isCompositeNotebook && !config.interactiveWindow.executeWithShiftEnter && !inlineChatFocused && !notebookCellListFocused && activeEditor == 'workbench.editor.interactive'"
+  },
+  {
+    "key": "ctrl+m",
+    "command": "python.execInREPLEnter",
+    "when": "isCompositeNotebook && !config.interactiveWindow.executeWithShiftEnter && !inlineChatFocused && !notebookCellListFocused && activeEditor == 'workbench.editor.repl'"
+  },
+  {
+    "key": "ctrl+m",
+    "command": "repl.execute",
+    "when": "isCompositeNotebook && !config.interactiveWindow.executeWithShiftEnter && !notebookCellListFocused && activeEditor == 'workbench.editor.repl'"
+  },
+  {
+    "key": "ctrl+m",
+    "command": "revealReference",
+    "when": "listFocus && referenceSearchVisible && !inputFocus && !treeElementCanCollapse && !treeElementCanExpand && !treestickyScrollFocused"
+  },
+  {
+    "key": "ctrl+m",
+    "command": "search.action.openResult",
+    "when": "fileMatchOrMatchFocus && searchViewletVisible"
+  },
+  {
+    "key": "ctrl+m",
+    "command": "settings.action.focusSettingControl",
+    "when": "inSettingsEditor && settingRowFocus"
+  },
+  {
+    "key": "ctrl+m",
+    "command": "settings.action.focusSettingsList",
+    "when": "inSettingsEditor && settingsTocRowFocus"
+  },
+  {
+    "key": "ctrl+m",
+    "command": "tinymist.onEnter",
+    "when": "editorTextFocus && !editorHasMultipleSelections && !editorReadonly && !suggestWidgetVisible && editorLangId == 'typst' && vim.mode != 'CommandlineInProgress' && vim.mode != 'EasyMotionInputMode' && vim.mode != 'EasyMotionMode' && vim.mode != 'Normal' && vim.mode != 'Replace' && vim.mode != 'SearchInProgressMode' && vim.mode != 'SurroundInputMode' && vim.mode != 'Visual' && vim.mode != 'VisualBlock' && vim.mode != 'VisualLine'"
+  },
+  {
+    "key": "ctrl+m",
+    "command": "workbench.action.chat.submit",
+    "when": "inChatInput && chatMode == 'ask'"
+  },
+  {
+    "key": "ctrl+m",
+    "command": "workbench.action.edits.submit",
+    "when": "inChatInput && chatMode != 'ask'"
+  },
+  {
+    "key": "ctrl+m",
+    "command": "workbench.action.terminal.acceptSelectedSuggestionEnter",
+    "when": "terminalFocus && terminalHasBeenCreated && terminalIsOpen && terminalSuggestWidgetVisible && config.terminal.integrated.suggest.runOnEnter != 'ignore' || terminalFocus && terminalIsOpen && terminalProcessSupported && terminalSuggestWidgetVisible && config.terminal.integrated.suggest.runOnEnter != 'ignore'"
+  },
+  // ===== "ctrl+g" を "escape" として振舞わせる =====
+  {
+    "key": "ctrl+g",
+    "command": "calva.clearInlineResults",
+    "when": "calva:hasInlineResults && calva:keybindingsEnabled && editorTextFocus && !editorHasMultipleSelections && !editorHasSelection && !editorReadOnly && !hasOtherSuggestions && !inlineSuggestionVisible && !parameterHintsVisible && !selectionAnchorSet && !suggestWidgetVisible && editorLangId == 'clojure'"
+  },
+  {
+    "key": "ctrl+g",
+    "command": "editor.action.cancelSelectionAnchor",
+    "when": "editorTextFocus && selectionAnchorSet"
+  },
+  {
+    "key": "ctrl+g",
+    "command": "workbench.action.chat.stopListening",
+    "when": "voiceChatInProgress && scopedVoiceChatInProgress == 'editor' || voiceChatInProgress && scopedVoiceChatInProgress == 'inline' || voiceChatInProgress && scopedVoiceChatInProgress == 'quick' || voiceChatInProgress && scopedVoiceChatInProgress == 'view'"
+  },
+  {
+    "key": "ctrl+g",
+    "command": "workbench.action.speech.stopReadAloud",
+    "when": "scopedChatSynthesisInProgress && textToSpeechInProgress"
+  },
+  {
+    "key": "ctrl+g",
+    "command": "editor.debug.action.closeExceptionWidget",
+    "when": "exceptionWidgetVisible"
+  },
+  {
+    "key": "ctrl+g",
+    "command": "editor.action.inlineSuggest.hide",
+    "when": "inInlineEditsPreviewEditor"
+  },
+  {
+    "key": "ctrl+g",
+    "command": "editor.action.inlineSuggest.hide",
+    "when": "inlineEditIsVisible || inlineSuggestionVisible"
+  },
+  {
+    "key": "ctrl+g",
+    "command": "editor.action.hideColorPicker",
+    "when": "standaloneColorPickerVisible"
+  },
+  {
+    "key": "ctrl+g",
+    "command": "inlineChat2.close",
+    "when": "inlineChatHasEditsAgent && inlineChatVisible && !chatEdits.hasEditorModifications && !chatEdits.isRequestInProgress || inlineChatHasEditsAgent && inlineChatVisible && !chatEdits.isRequestInProgress && chatEdits.requestCount == '0'"
+  },
+  {
+    "key": "ctrl+g",
+    "command": "workbench.action.terminal.chat.close",
+    "when": "chatIsEnabled && terminalChatFocus && terminalChatVisible || chatIsEnabled && terminalChatVisible && terminalFocus"
+  },
+  {
+    "key": "ctrl+g",
+    "command": "vscode-neovim.escape",
+    "when": "editorTextFocus && neovim.init && !dirtyDiffVisible && !findWidgetVisible && !inReferenceSearchEditor && !markersNavigationVisible && !notebookCellFocused && !notificationCenterVisible && !parameterHintsVisible && !referenceSearchVisible && neovim.mode == 'normal' && editorLangId not in 'neovim.editorLangIdExclusions'"
+  },
+  {
+    "key": "ctrl+g",
+    "command": "vscode-neovim.escape",
+    "when": "editorTextFocus && neovim.init && neovim.mode != 'normal' && editorLangId not in 'neovim.editorLangIdExclusions'"
+  },
+  {
+    "key": "ctrl+g",
+    "command": "noteMultiCursor.exit",
+    "when": "config.notebook.multiCursor.enabled && isNotebookMultiSelect && activeEditor == 'workbench.editor.notebook'"
+  },
+  {
+    "key": "ctrl+g",
+    "command": "notebook.cell.quitEdit",
+    "when": "inputFocus && notebookEditorFocused && !editorHasMultipleSelections && !editorHasSelection && !editorHoverVisible && !inlineChatFocused"
+  },
+  {
+    "key": "ctrl+g",
+    "command": "notebook.cell.quitEdit",
+    "when": "notebookEditorFocused && notebookOutputFocused"
+  },
+  {
+    "key": "ctrl+g",
+    "command": "notifications.hideList",
+    "when": "notificationCenterVisible"
+  },
+  {
+    "key": "ctrl+g",
+    "command": "settings.action.clearSearchResults",
+    "when": "inSettingsEditor && inSettingsSearch"
+  },
+  {
+    "key": "ctrl+g",
+    "command": "settings.action.focusLevelUp",
+    "when": "inSettingsEditor && !inSettingsJSONEditor && !inSettingsSearch"
+  },
+  {
+    "key": "ctrl+g",
+    "command": "search.action.focusQueryEditorWidget",
+    "when": "inSearchEditor"
+  },
+  {
+    "key": "ctrl+g",
+    "command": "search.action.cancel",
+    "when": "listFocus && searchViewletVisible && !inputFocus && !treestickyScrollFocused && searchState != '0'"
+  },
+  {
+    "key": "ctrl+g",
+    "command": "inlayHints.stopReadingLineWithHint",
+    "when": "isReadingLineWithInlayHints"
+  },
+  {
+    "key": "ctrl+g",
+    "command": "workbench.action.terminal.clearSelection",
+    "when": "terminalFocusInAny && terminalHasBeenCreated && terminalTextSelected && !terminalFindVisible || terminalFocusInAny && terminalProcessSupported && terminalTextSelected && !terminalFindVisible"
+  },
+  {
+    "key": "ctrl+g",
+    "command": "workbench.action.terminal.hideFind",
+    "when": "terminalFindVisible && terminalFocusInAny && terminalHasBeenCreated || terminalFindVisible && terminalFocusInAny && terminalProcessSupported"
+  },
+  {
+    "key": "ctrl+g",
+    "command": "workbench.action.editorDictation.stop",
+    "when": "editorDictation.inProgress"
+  },
+  {
+    "key": "ctrl+g",
+    "command": "welcome.goBack",
+    "when": "inWelcome && activeEditor == 'gettingStartedPage'"
+  },
+  {
+    "key": "ctrl+g",
+    "command": "breadcrumbs.selectEditor",
+    "when": "breadcrumbsActive && breadcrumbsVisible"
+  },
+  {
+    "key": "ctrl+g",
+    "command": "cancelLinkedEditingInput",
+    "when": "LinkedEditingInputVisible && editorTextFocus"
+  },
+  {
+    "key": "ctrl+g",
+    "command": "cancelRenameInput",
+    "when": "editorFocus && renameInputVisible"
+  },
+  {
+    "key": "ctrl+g",
+    "command": "cancelSelection",
+    "when": "editorHasSelection && textInputFocus"
+  },
+  {
+    "key": "ctrl+g",
+    "command": "closeBreakpointWidget",
+    "when": "breakpointWidgetVisible && textInputFocus"
+  },
+  {
+    "key": "ctrl+g",
+    "command": "closeFindWidget",
+    "when": "editorFocus && findWidgetVisible && !isComposing"
+  },
+  {
+    "key": "ctrl+g",
+    "command": "closeMarkersNavigation",
+    "when": "editorFocus && markersNavigationVisible"
+  },
+  {
+    "key": "ctrl+g",
+    "command": "closeParameterHints",
+    "when": "editorFocus && parameterHintsVisible"
+  },
+  {
+    "key": "ctrl+g",
+    "command": "closeQuickDiff",
+    "when": "dirtyDiffVisible"
+  },
+  {
+    "key": "ctrl+g",
+    "command": "closeReferenceSearch",
+    "when": "inReferenceSearchEditor && !config.editor.stablePeek"
+  },
+  {
+    "key": "ctrl+g",
+    "command": "closeReferenceSearch",
+    "when": "editorTextFocus && referenceSearchVisible && !config.editor.stablePeek || referenceSearchVisible && !config.editor.stablePeek && !inputFocus"
+  },
+  {
+    "key": "ctrl+g",
+    "command": "closeReplaceInFilesWidget",
+    "when": "replaceInputBoxFocus && searchViewletVisible"
+  },
+  {
+    "key": "ctrl+g",
+    "command": "commentsClearFilterText",
+    "when": "commentsFilterFocus"
+  },
+  {
+    "key": "ctrl+g",
+    "command": "diffEditor.exitCompareMove",
+    "when": "comparingMovedCode"
+  },
+  {
+    "key": "ctrl+g",
+    "command": "editor.action.selectEditor",
+    "when": "stickyScrollFocused"
+  },
+  {
+    "key": "ctrl+g",
+    "command": "editor.action.webvieweditor.hideFind",
+    "when": "webviewFindWidgetVisible && !editorFocus && activeEditor == 'WebviewEditor'"
+  },
+  {
+    "key": "ctrl+g",
+    "command": "editor.cancelOperation",
+    "when": "cancellableOperation"
+  },
+  {
+    "key": "ctrl+g",
+    "command": "editor.closeCallHierarchy",
+    "when": "callHierarchyVisible && !config.editor.stablePeek"
+  },
+  {
+    "key": "ctrl+g",
+    "command": "editor.closeTestPeek",
+    "when": "testing.isInPeek && !config.editor.stablePeek || testing.isPeekVisible && !config.editor.stablePeek"
+  },
+  {
+    "key": "ctrl+g",
+    "command": "editor.closeTypeHierarchy",
+    "when": "typeHierarchyVisible && !config.editor.stablePeek"
+  },
+  {
+    "key": "ctrl+g",
+    "command": "editor.gotoNextSymbolFromResult.cancel",
+    "when": "hasSymbols"
+  },
+  {
+    "key": "ctrl+g",
+    "command": "editor.hideDropWidget",
+    "when": "dropWidgetVisible"
+  },
+  {
+    "key": "ctrl+g",
+    "command": "editor.hidePasteWidget",
+    "when": "pasteWidgetVisible"
+  },
+  {
+    "key": "ctrl+g",
+    "command": "filesExplorer.cancelCut",
+    "when": "explorerResourceCut && filesExplorerFocus && foldersViewVisible && !inputFocus"
+  },
+  {
+    "key": "ctrl+g",
+    "command": "hideCodeActionWidget",
+    "when": "codeActionMenuVisible"
+  },
+  {
+    "key": "ctrl+g",
+    "command": "hideSuggestWidget",
+    "when": "suggestWidgetVisible && textInputFocus"
+  },
+  {
+    "key": "ctrl+g",
+    "command": "inlineChat.close",
+    "when": "inlineChatHasProvider && inlineChatVisible"
+  },
+  {
+    "key": "ctrl+g",
+    "command": "inlineChat.discardHunkChange",
+    "when": "inlineChatHasProvider && inlineChatVisible && inlineChatResponseType == 'messagesAndEdits'"
+  },
+  {
+    "key": "ctrl+g",
+    "command": "inlineChat.hideHint",
+    "when": "inlineChatShowingHint"
+  },
+  {
+    "key": "ctrl+g",
+    "command": "interactive.input.clear",
+    "when": "isCompositeNotebook && !LinkedEditingInputVisible && !accessibilityHelpWidgetVisible && !breakpointWidgetVisible && !editorHasMultipleSelections && !editorHasSelection && !editorHoverVisible && !exceptionWidgetVisible && !findWidgetVisible && !inSnippetMode && !inlineChatVisible && !isComposing && !markersNavigationVisible && !notebookEditorFocused && !notificationToastsVisible && !parameterHintsVisible && !renameInputVisible && !selectionAnchorSet && !suggestWidgetVisible"
+  },
+  {
+    "key": "ctrl+g",
+    "command": "keybindings.editor.clearSearchResults",
+    "when": "inKeybindings && inKeybindingsSearch"
+  },
+  {
+    "key": "ctrl+g",
+    "command": "keybindings.editor.rejectWhenExpression",
+    "when": "inKeybindings && whenFocus && !suggestWidgetVisible"
+  },
+  {
+    "key": "ctrl+g",
+    "command": "leaveEditorMessage",
+    "when": "messageVisible"
+  },
+  {
+    "key": "ctrl+g",
+    "command": "leaveSnippet",
+    "when": "inSnippetMode && textInputFocus"
+  },
+  {
+    "key": "ctrl+g",
+    "command": "list.clear",
+    "when": "listFocus && listHasSelectionOrFocus && !inputFocus && !treestickyScrollFocused"
+  },
+  {
+    "key": "ctrl+g",
+    "command": "list.closeFind",
+    "when": "listFocus && treeFindOpen"
+  },
+  {
+    "key": "ctrl+g",
+    "command": "notebook.cell.chat.acceptChanges",
+    "when": "inlineChatFocused && notebookCellChatFocused && notebookChatUserDidEdit && !notebookCellEditorFocused"
+  },
+  {
+    "key": "ctrl+g",
+    "command": "notebook.cell.chat.discard",
+    "when": "inlineChatFocused && notebookCellChatFocused && !notebookCellEditorFocused && !notebookChatUserDidEdit"
+  },
+  {
+    "key": "ctrl+g",
+    "command": "notebook.hideFind",
+    "when": "notebookEditorFocused && notebookFindWidgetFocused"
+  },
+  {
+    "key": "ctrl+g",
+    "command": "notifications.hideToasts",
+    "when": "notificationToastsVisible"
+  },
+  {
+    "key": "ctrl+g",
+    "command": "notifications.hideToasts",
+    "when": "notificationFocus && notificationToastsVisible"
+  },
+  {
+    "key": "ctrl+g",
+    "command": "problems.action.clearFilterText",
+    "when": "problemsFilterFocus"
+  },
+  {
+    "key": "ctrl+g",
+    "command": "removeSecondaryCursors",
+    "when": "editorHasMultipleSelections && textInputFocus"
+  },
+  {
+    "key": "ctrl+g",
+    "command": "scm.clearInput",
+    "when": "scmRepository && !editorHasSelection && !suggestWidgetVisible"
+  },
+  {
+    "key": "ctrl+g",
+    "command": "workbench.action.chat.stopReadChatItemAloud",
+    "when": "scopedChatSynthesisInProgress"
+  },
+  {
+    "key": "ctrl+g",
+    "command": "workbench.action.closeQuickOpen",
+    "when": "inQuickOpen"
+  },
+  {
+    "key": "ctrl+g",
+    "command": "workbench.action.hideComment",
+    "when": "commentEditorFocused || commentFocused"
+  },
+  {
+    "key": "ctrl+g",
+    "command": "workbench.action.terminal.hideSuggestWidget",
+    "when": "terminalFocus && terminalHasBeenCreated && terminalIsOpen && terminalSuggestWidgetVisible || terminalFocus && terminalIsOpen && terminalProcessSupported && terminalSuggestWidgetVisible"
+  },
+  {
+    "key": "ctrl+g",
+    "command": "workbench.actions.workbench.panel.output.clearFilterText",
+    "when": "outputFilterFocus"
+  },
+  {
+    "key": "ctrl+g",
+    "command": "workbench.banner.focusBanner",
+    "when": "bannerFocused"
+  },
+  {
+    "key": "ctrl+g",
+    "command": "workbench.statusBar.clearFocus",
+    "when": "statusBarFocused"
+  },
+]
