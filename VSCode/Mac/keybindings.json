@@ -2,34 +2,39 @@
 [
   // ===== 設定ファイル =====
   // JSONの方の設定ファイルを開くことが多い
+  // (Habit of Windows/Linux)
   {
     "key": "ctrl+oem_comma",
     "command": "workbench.action.openSettingsJson"
   },
   // JSONの方のキーバインディング設定ファイルを開くことが多い
+  // (Habit of Windows/Linux)
   {
     "key": "ctrl+k ctrl+s",
-    "command": "workbench.action.openGlobalKeybindingsFile"
+    "command": "workbench.action.openGlobalKeybindingsFile",
   },
-  // 保存
+  // 保存 (Habit of Windows/Linux)
   {
     "key": "ctrl+s",
     "command": "workbench.action.files.save"
   },
-  // ペースト
+  // ペースト (Habit of Windows/Linux)
   {
     "key": "ctrl+v",
     "command": "editor.action.clipboardPasteAction",
     "when": "editorTextFocus && neovim.mode == 'insert'"
   },
+  // 検索 (Habit of Windows/Linux)
   {
-    "key": "cmd+p",
-    "command": "-workbench.action.quickOpenNavigateNextInFilePicker",
-    "when": "inFilesPicker && inQuickOpen"
+    "key": "ctrl+f",
+    "command": "actions.find",
+    "when": "(editorFocus || editorIsOpen) && neovim.mode != 'insert'"
   },
+  // サイドバーのトグル (Habit of Windows/Linux)
   {
-    "key": "cmd+p",
-    "command": "-workbench.action.quickOpen"
+    "key": "ctrl+b",
+    "command": "workbench.action.toggleSidebarVisibility",
+    "when": "neovim.mode != 'insert'"
   },
   // ===== 変更点への移動 =====
   // compare editor内で次の変更点へジャンプ
@@ -38,6 +43,7 @@
     "command": "workbench.action.compareEditor.nextChange",
     "when": "textCompareEditorVisible"
   },
+  // cmd+nのためにオフにする
   {
     "key": "cmd+n",
     "command": "-chatEditor.action.undoHunk",
@@ -53,6 +59,7 @@
     "command": "workbench.action.compareEditor.previousChange",
     "when": "textCompareEditorVisible"
   },
+  // cmd+pのためにオフにする
   {
     "key": "cmd+p",
     "command": "-workbench.action.quickOpenNavigateNextInFilePicker",
@@ -83,7 +90,7 @@
   },
   // 新しいシェルを開く
   {
-    "key": "alt+j",
+    "key": "cmd+j",
     "command": "workbench.action.terminal.new",
     "when": "terminalProcessSupported || terminalWebExtensionContributedProfile"
   },
@@ -106,9 +113,9 @@
     "when": "editorTextFocus && !sideBarFocus && editorLangId != 'clojure'"
   },
   // ===== Markdown All in One =====
-  // alt+,でチェックボックスをトグル
+  // cmd+,でチェックボックスをトグル
   {
-    "key": "alt+oem_comma",
+    "key": "cmd+oem_comma",
     "command": "markdown.extension.checkTaskList",
     "when": "editorTextFocus && editorLangId =~ /^markdown$|^rmd$|^quarto$/ && neovim.mode == 'normal'"
   },
@@ -313,12 +320,12 @@
     "when": "calva:keybindingsEnabled && editorTextFocus && !calva:cursorInComment && !editorHasMultipleSelections && !editorReadOnly && editorLangId == 'clojure' && neovim.mode == 'normal'"
   },
   {
-    "key": "alt+n",
+    "key": "cmd+n",
     "command": "calva.showNextReplHistoryEntry",
     "when": "calva:connected && calva:keybindingsEnabled && calva:outputWindowActive && calva:replHistoryCommandsActive && editorLangId == 'clojure'"
   },
   {
-    "key": "alt+p",
+    "key": "cmd+p",
     "command": "calva.showPreviousReplHistoryEntry",
     "when": "calva:connected && calva:keybindingsEnabled && calva:outputWindowActive && calva:replHistoryCommandsActive && editorLangId == 'clojure'"
   },
@@ -359,6 +366,12 @@
     "command": "undo",
     "when": "editorTextFocus && neovim.mode == 'insert'"
   },
+  // ctrl+/でもインサートモード時にUndo
+  {
+    "key": "ctrl+oem_2",
+    "command": "undo",
+    "when": "editorTextFocus && neovim.mode == 'insert'"
+  },
   // インサートモード時にRedo
   {
     "key": "ctrl+r",
@@ -378,19 +391,19 @@
   },
   // Insert時における単語単位での進む
   {
-    "key": "alt+f",
+    "key": "cmd+f",
     "command": "cursorWordEndRight",
     "when": "textInputFocus && !accessibilityModeEnabled && neovim.mode == 'insert'"
   },
   // Insert時における単語単位での戻る
   {
-    "key": "alt+b",
+    "key": "cmd+b",
     "command": "cursorWordStartLeft",
     "when": "textInputFocus && !accessibilityModeEnabled && neovim.mode == 'insert'"
   },
   // Insert時における単語単位でのDelete
   {
-    "key": "alt+d",
+    "key": "cmd+d",
     "command": "deleteWordRight",
     "when": "textInputFocus && !accessibilityModeEnabled && neovim.mode == 'insert'"
   },
@@ -445,9 +458,9 @@
     "command": "workbench.action.terminal.suggestToggleDetails",
     "when": "simpleSuggestWidgetHasFocusedSuggestion && terminalFocus && terminalHasBeenCreated && terminalIsOpen && terminalSuggestWidgetVisible || simpleSuggestWidgetHasFocusedSuggestion && terminalFocus && terminalIsOpen && terminalProcessSupported && terminalSuggestWidgetVisible"
   },
-  // alt+'でインラインサジェストをトリガー
+  // cmd+'でインラインサジェストをトリガー
   {
-    "key": "alt+oem_7",
+    "key": "cmd+oem_7",
     "command": "editor.action.inlineSuggest.trigger",
     "when": "editorTextFocus && !editorHasSelection && !inlineSuggestionsVisible"
   },

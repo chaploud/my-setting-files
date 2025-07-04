@@ -1,5 +1,9 @@
 {
   // ===== エディタ基本設定 =====
+  // プラットフォームごとにキーバインドを分けない
+  "settingsSync.keybindingsPerPlatform": true,
+  // 信頼されたワークスペースを開いているならば、信頼されていないファイルを開くときに警告を出さない
+  "security.workspace.trust.untrustedFiles": "open",
   // フォント
   "editor.fontFamily": "'Source Han Code JP', 'Cica', 'UDEV Gothic 35NFLG', 'Droid Sans Mono', 'monospace', monospace",
   "editor.fontSize": 14,
@@ -28,7 +32,21 @@
   // コメントの色が薄すぎるので主張しすぎず見えやすい色にする
   "editor.tokenColorCustomizations": {
     // "comments": "#2aa1ae"
-    "comments": "#5fafa2"
+    "comments": "#5fafa2",
+    "textMateRules": [
+      {
+        "scope": [
+          "comment",
+          "comment.block",
+          "comment.block.documentation",
+          "comment.line",
+          "comment.line.double-slash",
+        ],
+        "settings": {
+          "fontStyle": ""
+        }
+      }
+    ]
   },
   // NeoVimとの相性(日本語入力で上書されてしまう)への対処
   "editor.experimentalEditContextEnabled": false,
@@ -72,7 +90,6 @@
   "zenMode.showTabs": "none",
   "zenMode.centerLayout": false,
   // なるべくコンパクトに
-  "window.menuBarVisibility": "compact",
   "window.commandCenter": false,
   // Git関連の設定
   "git.autofetch": true,
@@ -89,10 +106,6 @@
   "search.smartCase": true,
   "search.useGlobalIgnoreFiles": true,
   "search.useParentIgnoreFiles": true,
-  // プラットフォームごとにキーバインドを分けない
-  "settingsSync.keybindingsPerPlatform": true,
-  // 信頼されたワークスペースを開いているならば、信頼されていないファイルを開くときに警告を出さない
-  "security.workspace.trust.untrustedFiles": "open",
   //  ===== 言語別 =====
   "[typescript]": {
     // "editor.defaultFormatter": "vscode.typescript-language-features"
@@ -135,7 +148,7 @@
       "list.activeSelectionBackground": "#303f6b",
       "list.inactiveSelectionBackground": "#303f6bbb",
       "terminal.selectionBackground": "#303f6b",
-      "terminal.inactiveSelectionBackground": "#303f6bbb"
+      "terminal.inactiveSelectionBackground": "#303f6bbb",
     }
   },
   // vscode-icons
@@ -158,6 +171,8 @@
     "scminput": true,
     "clojure": true
   },
+  // 次の変更点を提案はオフ
+  "github.copilot.nextEditSuggestions.enabled": false,
   // === GitHub Copilot Chat
   // 日本語で応答してもらう
   "github.copilot.chat.localeOverride": "ja",
@@ -190,16 +205,16 @@
   ],
   "todo-tree.highlights.useColourScheme": true,
   "todo-tree.highlights.backgroundColourScheme": [
-    "F2CC60",
-    "79C0FF",
-    "DB61A2",
-    "F85149"
+    "E6D8A8",
+    "B3C7E6",
+    "D6A8C7",
+    "E6B3B3"
   ],
   "todo-tree.highlights.foregroundColourScheme": [
     "black",
     "black",
-    "white",
-    "white"
+    "black",
+    "black"
   ],
   // === VSCode NeoVim
   // 公式の推奨設定
@@ -317,9 +332,6 @@
   "path-intellisense.absolutePathToWorkspace": false,
   "path-intellisense.autoSlashAfterDirectory": true,
   "path-intellisense.autoTriggerNextSuggestion": true,
-  "security.allowedUNCHosts": [
-    "wsl.localhost"
-  ],
   // === Project Manager
-  "projectManager.sortList": "Saved"
+  "projectManager.sortList": "Saved",
 }

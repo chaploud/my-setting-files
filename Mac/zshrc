@@ -33,3 +33,30 @@ export PATH="$PATH:$HOME/.local/bin"
 # Java (OpenJDK via Homebrew)
 export JAVA_HOME="/opt/homebrew/opt/openjdk"
 export PATH="$JAVA_HOME/bin:$PATH"
+
+# === zsh-completions
+# === zsh-autosuggestions
+if type brew &>/dev/null; then
+  FPATH=$(brew --prefix)/share/zsh-completions:$FPATH
+  source $(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+fi
+
+# === pyenv
+# 2025-07-04: python 3.13.5
+export PYENV_ROOT="$HOME/.pyenv"
+[[ -d "$PYENV_ROOT/bin" ]] && export PATH="$PYENV_ROOT/bin:$PATH"
+eval "$(pyenv init - zsh)"
+
+# === rbenv
+# 2025-07-04: ruby 3.3.8
+FPATH="$HOME/.rbenv/completions:$FPATH"
+export RBENV_ROOT="$HOME/.rbenv"
+[[ -d "$RBENV_ROOT/bin" ]] && export PATH="$RBENV_ROOT/bin:$PATH"
+eval "$(rbenv init -)"
+
+# === Zig
+# ~/.local/share/zig/shell-completionsに補完用リポジトリをclone
+FPATH="$HOME/.local/share/zig/shell-completions:$FPATH"
+
+# === 補完候補の読み込み(最後に1回実行でOK)
+autoload -Uz compinit && compinit
