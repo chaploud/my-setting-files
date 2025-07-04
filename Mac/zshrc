@@ -30,8 +30,8 @@ eval "$(starship init zsh)"
 export PATH="$PATH:$HOME/.local/bin"
 
 # === Open JDK
-# Java (OpenJDK via Homebrew)
-export JAVA_HOME="/opt/homebrew/opt/openjdk"
+# JDK (Eclipse Adoptium/temurin-21.jdk)
+export JAVA_HOME=$(/usr/libexec/java_home -v 21)
 export PATH="$JAVA_HOME/bin:$PATH"
 
 # === zsh-completions
@@ -57,6 +57,9 @@ eval "$(rbenv init -)"
 # === Zig
 # ~/.local/share/zig/shell-completionsに補完用リポジトリをclone
 FPATH="$HOME/.local/share/zig/shell-completions:$FPATH"
+
+# fvm
+[[ -f /Users/shota.508/.dart-cli-completion/zsh-config.zsh ]] && . /Users/shota.508/.dart-cli-completion/zsh-config.zsh || true
 
 # === 補完候補の読み込み(最後に1回実行でOK)
 autoload -Uz compinit && compinit
