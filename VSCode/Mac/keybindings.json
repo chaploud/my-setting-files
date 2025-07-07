@@ -1,40 +1,28 @@
 // Place your key bindings in this file to override the defaults
 [
+  // (Habit)とは、Windows/Linux時の慣れたキーバインド
+  // なるべくMac標準側を使うように心がける
   // ===== 設定ファイル =====
   // JSONの方の設定ファイルを開くことが多い
-  // (Habit of Windows/Linux)
   {
-    "key": "ctrl+oem_comma",
+    "key": "cmd+oem_comma",
     "command": "workbench.action.openSettingsJson"
   },
   // JSONの方のキーバインディング設定ファイルを開くことが多い
-  // (Habit of Windows/Linux)
   {
-    "key": "ctrl+k ctrl+s",
+    "key": "cmd+k cmd+s",
     "command": "workbench.action.openGlobalKeybindingsFile",
   },
-  // 保存 (Habit of Windows/Linux)
+  // 保存 (Habit)
   {
     "key": "ctrl+s",
     "command": "workbench.action.files.save"
   },
-  // ペースト (Habit of Windows/Linux)
-  {
-    "key": "ctrl+v",
-    "command": "editor.action.clipboardPasteAction",
-    "when": "editorTextFocus && neovim.mode == 'insert'"
-  },
-  // 検索 (Habit of Windows/Linux)
-  {
-    "key": "ctrl+f",
-    "command": "actions.find",
-    "when": "(editorFocus || editorIsOpen) && neovim.mode != 'insert'"
-  },
-  // サイドバーのトグル (Habit of Windows/Linux)
+  // サイドバーのトグル (Habit)
   {
     "key": "ctrl+b",
     "command": "workbench.action.toggleSidebarVisibility",
-    "when": "neovim.mode != 'insert'"
+    "when": "(editorTextFocus && neovim.mode != 'insert') || !editorTextFocus"
   },
   // ===== 変更点への移動 =====
   // compare editor内で次の変更点へジャンプ
@@ -43,31 +31,11 @@
     "command": "workbench.action.compareEditor.nextChange",
     "when": "textCompareEditorVisible"
   },
-  // cmd+nのためにオフにする
-  {
-    "key": "cmd+n",
-    "command": "-chatEditor.action.undoHunk",
-    "when": "chatEdits.hasEditorModifications && editorFocus && !chatEdits.isRequestInProgress || chatEdits.hasEditorModifications && notebookCellListFocused && !chatEdits.isRequestInProgress"
-  },
-  {
-    "key": "cmd+n",
-    "command": "-workbench.action.files.newUntitledFile"
-  },
   // compare editor内で前の変更点へジャンプ
   {
     "key": "cmd+p",
     "command": "workbench.action.compareEditor.previousChange",
     "when": "textCompareEditorVisible"
-  },
-  // cmd+pのためにオフにする
-  {
-    "key": "cmd+p",
-    "command": "-workbench.action.quickOpenNavigateNextInFilePicker",
-    "when": "inFilesPicker && inQuickOpen"
-  },
-  {
-    "key": "cmd+p",
-    "command": "-workbench.action.quickOpen"
   },
   // 編集中のエディタで次の変更点へジャンプ
   {
@@ -80,6 +48,26 @@
     "key": "cmd+p",
     "command": "workbench.action.editor.previousChange",
     "when": "editorTextFocus && !textCompareEditorActive && quickDiffDecorationCount != '0'"
+  },
+  // cmd+nのためにオフにする
+  {
+    "key": "cmd+n",
+    "command": "-chatEditor.action.undoHunk",
+    "when": "chatEdits.hasEditorModifications && editorFocus && !chatEdits.isRequestInProgress || chatEdits.hasEditorModifications && notebookCellListFocused && !chatEdits.isRequestInProgress"
+  },
+  {
+    "key": "cmd+n",
+    "command": "-workbench.action.files.newUntitledFile"
+  },
+  // cmd+pのためにオフにする
+  {
+    "key": "cmd+p",
+    "command": "-workbench.action.quickOpenNavigateNextInFilePicker",
+    "when": "inFilesPicker && inQuickOpen"
+  },
+  {
+    "key": "cmd+p",
+    "command": "-workbench.action.quickOpen"
   },
   // ===== 統合ターミナル =====
   // ターミナル領域でターミナルにフォーカス
@@ -113,7 +101,7 @@
     "when": "editorTextFocus && !sideBarFocus && editorLangId != 'clojure'"
   },
   // ===== Markdown All in One =====
-  // cmd+,でチェックボックスをトグル
+  // cmd-,でチェックボックスをトグル
   {
     "key": "cmd+oem_comma",
     "command": "markdown.extension.checkTaskList",
@@ -121,7 +109,7 @@
   },
   // ===== Calculator =====
   {
-    "key": "ctrl+k c",
+    "key": "cmd+k c",
     "command": "calculator.showInput"
   },
   // ===== VSCode NeoVim =====
@@ -131,14 +119,12 @@
     "command": "vscode-neovim.restart",
     "when": "editorTextFocus"
   },
-  // insertモード時はctrl+kによるコマンド待ち受けをしない
+  // NeoVim側のC-kを用いる
   {
     "key": "ctrl+k",
-    "command": "vscode-neovim.send",
-    "args": "<C-k>",
-    "when": "editorTextFocus && neovim.mode == 'insert'"
+    "command": "-deleteAllRight",
+    "when": "textInputFocus && !editorReadonly"
   },
-  // ctrl+d, ctrl+uの挙動修正
   {
     "key": "ctrl+d",
     "command": "vscode-neovim.send",
@@ -150,13 +136,6 @@
     "command": "vscode-neovim.send",
     "args": "<C-u>",
     "when": "editorTextFocus && neovim.init"
-  },
-  // Ex Commandインプットにフォーカス時
-  {
-    "key": "ctrl+h",
-    "command": "vscode-neovim.send-cmdline",
-    "args": "<C-h>",
-    "when": "neovim.mode == 'cmdline'"
   },
   // Go back/forwardはVSCode側の機能を使う
   // 前の位置に戻る
@@ -177,38 +156,7 @@
     "key": "ctrl+shift+t",
     "command": "workbench.action.navigateToLastEditLocation"
   },
-  // insert時にenterキーを押した挙動に対応
-  {
-    "key": "ctrl+m",
-    "command": "type",
-    "args": {
-      "text": "\n"
-    },
-    "when": "editorTextFocus && neovim.mode == 'insert' && !suggestWidgetVisible"
-  },
-  {
-    "key": "ctrl+g",
-    "command": "-workbench.action.gotoLine"
-  },
-  {
-    // NeoVim側にはESCで伝わる
-    "key": "ctrl+g",
-    "command": "vscode-neovim.send",
-    "args": "<ESC>",
-    "when": "editorTextFocus && neovim.init"
-  },
-  // Normal Modeでのctrl+zによるUndoの挙動
-  {
-    "key": "ctrl+z",
-    "command": "vscode-neovim.send",
-    "args": "u",
-    "when": "editorTextFocus && neovim.mode == 'normal'"
-  },
   // ctrl+6(^)で直前に開いていたバッファに戻る
-  {
-    "key": "ctrl+6",
-    "command": "-workbench.action.focusSixthEditorGroup"
-  },
   {
     "key": "ctrl+6",
     "command": "runCommands",
@@ -219,6 +167,50 @@
       ]
     },
     "when": "editorTextFocus && (neovim.mode == 'normal' || neovim.mode == 'visual' ) && editorLangId not in 'neovim.editorLangIdExclusions'"
+  },
+  // 分割したエディタ領域にフォーカス
+  {
+    "key": "ctrl+1",
+    "command": "workbench.action.focusFirstEditorGroup"
+  },
+  {
+    "key": "ctrl+2",
+    "command": "workbench.action.focusSecondEditorGroup"
+  },
+  {
+    "key": "ctrl+3",
+    "command": "workbench.action.focusThirdEditorGroup"
+  },
+  {
+    "key": "ctrl+4",
+    "command": "workbench.action.focusFourthEditorGroup"
+  },
+  // タブ切り替えに割り当てられていたものを解除
+  {
+    "key": "ctrl+1",
+    "command": "-workbench.action.openEditorAtIndex1"
+  },
+  {
+    "key": "ctrl+2",
+    "command": "-workbench.action.openEditorAtIndex2"
+  },
+  {
+    "key": "ctrl+3",
+    "command": "-workbench.action.openEditorAtIndex3"
+  },
+  {
+    "key": "ctrl+4",
+    "command": "workbench.action.openEditorAtIndex4"
+  },
+  // ctrl+qで各種ビューに移動できるのは便利だが、ターミナルでは無効化
+  {
+    "key": "ctrl+q",
+    "command": "workbench.action.quickOpenView",
+    "when": "!terminalFocus"
+  },
+  {
+    "key": "ctrl+q",
+    "command": "-workbench.action.quickOpenView"
   },
   // === サイドパネルのSearch + キーボード操作
   {
@@ -354,19 +346,19 @@
     "command": "paredit.killSexpForward",
     "when": "calva:keybindingsEnabled && editorTextFocus && !calva:cursorInComment && !editorHasMultipleSelections && !editorReadOnly && editorLangId == 'clojure' && paredit:keyMap == 'strict' && neovim.mode == 'insert'"
   },
-  // コメントアウトはctrl+;でも行える(Lisp風)
+  // 選択範囲を広げるC-wが衝突していたのでオフに
+  {
+    "key": "ctrl+w",
+    "command": "-paredit.sexpRangeExpansion",
+    "when": "calva:keybindingsEnabled && editorTextFocus && !calva:cursorInComment && editorLangId == 'clojure' && paredit:keyMap =~ /original|strict/"
+  },
+  // コメントアウトはctrl+;で行う(Lisp風)
   {
     "key": "ctrl+oem_1",
     "command": "editor.action.commentLine",
     "when": "editorTextFocus && !editorReadonly"
   },
-  // インサートモード時にUndo
-  {
-    "key": "ctrl+z",
-    "command": "undo",
-    "when": "editorTextFocus && neovim.mode == 'insert'"
-  },
-  // ctrl+/でもインサートモード時にUndo
+  // ctrl+/でインサートモード時にUndo
   {
     "key": "ctrl+oem_2",
     "command": "undo",
@@ -377,17 +369,6 @@
     "key": "ctrl+r",
     "command": "redo",
     "when": "editorTextFocus && neovim.mode == 'insert'"
-  },
-  // === Markdown All in OneとコンフリクトするInsert時のキーバインドを解除
-  {
-    "key": "ctrl+i",
-    "command": "-markdown.extension.editing.toggleItalic",
-    "when": "editorTextFocus && !editorReadonly && editorLangId =~ /^markdown$|^rmd$|^quarto$/"
-  },
-  {
-    "key": "ctrl+b",
-    "command": "-markdown.extension.editing.toggleBold",
-    "when": "editorTextFocus && !editorReadonly && editorLangId =~ /^markdown$|^rmd$|^quarto$/"
   },
   // Insert時における単語単位での進む
   {
@@ -406,21 +387,6 @@
     "key": "cmd+d",
     "command": "deleteWordRight",
     "when": "textInputFocus && !accessibilityModeEnabled && neovim.mode == 'insert'"
-  },
-  // ctrl+w による不意の閉じるを防ぐ
-  {
-    "key": "ctrl+w",
-    "command": "-workbench.action.closeActiveEditor"
-  },
-  {
-    "key": "ctrl+w",
-    "command": "-workbench.action.closeGroup",
-    "when": "activeEditorGroupEmpty && multipleEditorGroups"
-  },
-  {
-    "key": "ctrl+w",
-    "command": "-workbench.action.terminal.killEditor",
-    "when": "terminalEditorFocus && terminalFocus && terminalHasBeenCreated || terminalEditorFocus && terminalFocus && terminalProcessSupported"
   },
   // ctrl+' で補完候補トリガー
   {
@@ -465,19 +431,14 @@
     "when": "editorTextFocus && !editorHasSelection && !inlineSuggestionsVisible"
   },
   // ===== "ctrl+m" を "enter" として振舞わせる =====
-  // [A] 余計な"ctrl+m"を解除
-  {
-    "key": "ctrl+m",
-    "command": "-editor.action.toggleTabFocusMode"
-  },
-  // [B] 元々"enter"にも割り当てられていないもの
+  // [A] 元々"enter"にも割り当てられていないもの
   // quick open
   { // 確定
     "key": "ctrl+m",
     "command": "workbench.action.acceptSelectedQuickOpenItem",
     "when": "inQuickOpen"
   },
-  // [C] "enter" でkeybindingsを検索して出てきたものに、"ctrl+m"も割り当てる
+  // [B] "enter" でkeybindingsを検索して出てきたものに、"ctrl+m"も割り当てる
   // デフォルトのABC順(大文字→小文字)でその都度過不足があれば修正していく
   {
     "key": "ctrl+m",

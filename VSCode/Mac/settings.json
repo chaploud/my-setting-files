@@ -1,6 +1,6 @@
 {
   // ===== エディタ基本設定 =====
-  // プラットフォームごとにキーバインドを分けない
+  // プラットフォームごとにキーバインドを分ける
   "settingsSync.keybindingsPerPlatform": true,
   // 信頼されたワークスペースを開いているならば、信頼されていないファイルを開くときに警告を出さない
   "security.workspace.trust.untrustedFiles": "open",
@@ -24,15 +24,15 @@
   // ミニマップは領域を圧迫するので消す
   "editor.minimap.enabled": false,
   // スペースを可視化する
-  "editor.renderWhitespace": "all",
+  "editor.renderWhitespace": "boundary",
   // 選択した語と一致する他の箇所のハイライトは不要
   "editor.selectionHighlight": false,
   // カーソル下の語と一致する他の箇所のハイライトは不要
   "editor.occurrencesHighlight": "off",
-  // コメントの色が薄すぎるので主張しすぎず見えやすい色にする
   "editor.tokenColorCustomizations": {
-    // "comments": "#2aa1ae"
+    // コメントの色が薄すぎるので主張しすぎず見えやすい色にする
     "comments": "#5fafa2",
+    // コメントが斜体であるのを標準にする
     "textMateRules": [
       {
         "scope": [
@@ -50,38 +50,44 @@
   },
   // NeoVimとの相性(日本語入力で上書されてしまう)への対処
   "editor.experimentalEditContextEnabled": false,
-  // 言語によるタブサイズの設定
+  // タブサイズの設定
   "editor.tabSize": 2,
-  "[zig]": {
-    "editor.tabSize": 4
-  },
-  "[cpp]": {
+  // 言語別
+  "[python]": {
     "editor.tabSize": 4
   },
   "[c]": {
     "editor.tabSize": 4
   },
+  "[cpp]": {
+    "editor.tabSize": 4
+  },
+  "[zig]": {
+    "editor.tabSize": 4
+  },
+  "[rust]": {
+    "editor.tabSize": 4
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "vscode.json-language-features"
+  },
   // 初回のスタートアップ画面は表示しない
   "workbench.startupEditor": "none",
   // 空のフォルダを省略して一列にしてしまわない(必ずツリー表示にする)
   "explorer.compactFolders": false,
-  // ファイル貼り付け時にダイアログを出さない
+  // ファイル貼り付け時に確認ダイアログを出さない
   "explorer.confirmPasteNative": false,
+  // ドラッグアンドドロップに確認ダイアログを出さない
+  "explorer.confirmDragAndDrop": false,
   // 保存時に行末の空白など不要な空白を削除する
   "files.trimTrailingWhitespace": true,
   // Emacsキーバインドをターミナルでも有効に使いたい
   "terminal.integrated.allowChords": false,
-  "terminal.integrated.commandsToSkipShell": [
-    "-workbench.action.toggleSidebarVisibility",
-    "-workbench.action.terminal.focusFind",
-    "-workbench.action.quickOpen",
-    "-workbench.action.quickOpenNavigateNextInFilePicker",
-    "-editor.action.toggleTabFocusMode"
-  ],
   // ターミナルのスクロールバックをたくさんできるようにする
   "terminal.integrated.scrollback": 10000,
   // VSCodeを終了した後、前回のプロセスを復元しない
   "terminal.integrated.persistentSessionReviveProcess": "never",
+  // ターミナルでカーソルを点滅させる
   "terminal.integrated.cursorBlinking": true,
   // デバッグ開始時に自動でデバッグコンソールを開かない
   "debug.internalConsoleOptions": "neverOpen",
@@ -106,42 +112,11 @@
   "search.smartCase": true,
   "search.useGlobalIgnoreFiles": true,
   "search.useParentIgnoreFiles": true,
-  //  ===== 言語別 =====
-  "[typescript]": {
-    // "editor.defaultFormatter": "vscode.typescript-language-features"
-  },
-  "[json]": {
-    // "editor.defaultFormatter": "vscode.json-language-features"
-  },
-  "[jsonc]": {
-    "editor.defaultFormatter": "vscode.json-language-features"
-  },
-  // === TypeScript
-  "typescript.updateImportsOnFileMove.enabled": "always",
   // ===== 拡張機能の設定 =====
-  // === 見た目
-  // Color Theme
-  // "workbench.colorTheme": "GitHub Dark Default",,
+  // === Color Theme
   "workbench.colorTheme": "Tokyo Night Gogh",
   // メリハリをつけるため下部パネルとサイドバーの色を調整
   "workbench.colorCustomizations": {
-    "[GitHub Dark Default]": {
-      "panel.background": "#0d1117", // 下部パネルの背景色
-      "sideBar.background": "#0a0c10", // サイドバーの背景色
-      "sideBarSectionHeader.background": "#07080a", // サイドバーのセクションヘッダーの背景色
-      "textPreformat.background": "#6e768144", // コードの背景色
-      "textPreformat.foreground": "#f0883e", // コードの文字色
-      "peekViewEditorStickyScroll.background": "#0d1117",
-      // 差分のGutterアイコン
-      "editorGutter.addedBackground": "#28a745cc", // 追加
-      "editorGutter.deletedBackground": "#ff6f7acc", // 削除
-      "editorGutter.modifiedBackground": "#e6c200cc", // 変更
-      // 差分エディタ
-      "diffEditor.insertedLineBackground": "#2ea04344",
-      "diffEditor.insertedTextBackground": "#2ea04366",
-      "diffEditor.removedLineBackground": "#ff5a6a44",
-      "diffEditor.removedTextBackground": "#ff5a6a66"
-    },
     "[Tokyo Night Gogh]": {
       "editor.selectionBackground": "#303f6b",
       "editor.inactiveSelectionBackground": "#303f6bbb",
@@ -151,25 +126,18 @@
       "terminal.inactiveSelectionBackground": "#303f6bbb",
     }
   },
-  // vscode-icons
+  // === vscode-icons
   "workbench.iconTheme": "vscode-icons",
   // === Remote SSH
   "remote.SSH.enableAgentForwarding": true,
-  "remote.autoForwardPortsSource": "hybrid",
-  "remote.SSH.remotePlatform": {
-    "dev-almalinux": "linux",
-    "gpu-ubuntu": "linux",
-    "mac-mini": "macOS",
-    "mac": "macOS"
-  },
+  "remote.autoForwardPortsSource": "process",
   // === GitHub Copilot
   // デフォルトでオフになっている言語も補完を効かせるようにする
   "github.copilot.enable": {
     "*": true,
-    "plaintext": false,
+    "plaintext": true,
     "markdown": true,
     "scminput": true,
-    "clojure": true
   },
   // 次の変更点を提案はオフ
   "github.copilot.nextEditSuggestions.enabled": false,
@@ -179,7 +147,7 @@
   // OSSなどでコミットメッセージを英語で生成するのに便利
   "github.copilot.chat.commitMessageGeneration.instructions": [
     {
-      "text": "Use a maximum of 120 characters."
+      "text": "Use a maximum of 80 characters."
     },
     {
       "text": "Messages should be in English."
@@ -282,20 +250,14 @@
   "calva.highlight.rainbowIndentGuides": true,
   // CalvaでのPareditによる削除操作時、削除したものをクリップボードにコピーする
   "calva.paredit.killAlsoCutsToClipboard": true,
-  // Clojureプロジェクトを開いたとき、自動的にREPLに接続する(プロジェクト設定に従う)
-  "calva.autoConnectRepl": false, // しない設定
   // 標準出力やエラー出力がコメント(;)でプレフィックスされるのをやめる
-  // ただし、Calva公式によると、予期せぬエラーが発生する可能性があるため、falseが無難ではある
   "calva.legacyPrintBareReplWindowOutput": true,
   // CalvaのREPL接続時に自動でサイドパネルのインスペクタにフォーカスが当たるのをやめる
   "calva.autoOpenInspector": false,
   "calva.evaluationSendCodeToOutputWindow": true,
   "calva.autoOpenResultOutputDestination": true,
-  // VSCodeのテストエクスプローラを使う(Experimental)
-  "calva.useTestExplorer": true,
   // Calva Backseat Driver
   "calva-backseat-driver.enableMcpReplEvaluation": true,
-  // "calva-backseat-driver.autoStartMCPServer": true,
   // === Code Runner
   "code-runner.runInTerminal": true,
   "code-runner.saveFileBeforeRun": true,

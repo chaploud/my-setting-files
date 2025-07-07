@@ -1,14 +1,18 @@
-alias ls='ls -GF'
-alias ll='ls -lGF'
-alias grep='grep --color=auto'
-
 # ctrl+wを/まで削除の挙動に
 WORDCHARS=${WORDCHARS//\//}
 
 # ls
+alias ls='ls -GF'
+alias ll='ls -lGF'
 alias sl="ls"
 alias s="ls"
 alias l="ls"
+
+chpwd() {
+  ls
+}
+
+alias grep='grep --color=auto'
 
 # Git
 alias log="git log --decorate --format=format:'%C(bold cyan)%as%C(reset) %C(bold blue)%h%C(reset) %C(white bold)%<(14,trunc)%an%C(reset) %C(green)%<(38,trunc)%s%C(reset) '"
@@ -29,11 +33,6 @@ eval "$(starship init zsh)"
 # === local bin
 export PATH="$PATH:$HOME/.local/bin"
 
-# === Open JDK
-# JDK (Eclipse Adoptium/temurin-21.jdk)
-export JAVA_HOME=$(/usr/libexec/java_home -v 21)
-export PATH="$JAVA_HOME/bin:$PATH"
-
 # === zsh-completions
 # === zsh-autosuggestions
 if type brew &>/dev/null; then
@@ -41,25 +40,31 @@ if type brew &>/dev/null; then
   source $(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 fi
 
+# === Open JDK
+# JDK (Eclipse Adoptium/temurin-21.jdk)
+export JAVA_HOME=$(/usr/libexec/java_home -v 21)
+export PATH="$JAVA_HOME/bin:$PATH"
+
 # === pyenv
 # 2025-07-04: python 3.13.5
-export PYENV_ROOT="$HOME/.pyenv"
-[[ -d "$PYENV_ROOT/bin" ]] && export PATH="$PYENV_ROOT/bin:$PATH"
-eval "$(pyenv init - zsh)"
+# export PYENV_ROOT="$HOME/.pyenv"
+# [[ -d "$PYENV_ROOT/bin" ]] && export PATH="$PYENV_ROOT/bin:$PATH"
+# eval "$(pyenv init - zsh)"
 
 # === rbenv
 # 2025-07-04: ruby 3.3.8
-FPATH="$HOME/.rbenv/completions:$FPATH"
-export RBENV_ROOT="$HOME/.rbenv"
-[[ -d "$RBENV_ROOT/bin" ]] && export PATH="$RBENV_ROOT/bin:$PATH"
-eval "$(rbenv init -)"
+# FPATH="$HOME/.rbenv/completions:$FPATH"
+# export RBENV_ROOT="$HOME/.rbenv"
+# [[ -d "$RBENV_ROOT/bin" ]] && export PATH="$RBENV_ROOT/bin:$PATH"
+# eval "$(rbenv init -)"
 
 # === Zig
+# 2025-07-04: 0.14.1
 # ~/.local/share/zig/shell-completionsに補完用リポジトリをclone
-FPATH="$HOME/.local/share/zig/shell-completions:$FPATH"
+# FPATH="$HOME/.local/share/zig/shell-completions:$FPATH"
 
 # fvm
-[[ -f /Users/shota.508/.dart-cli-completion/zsh-config.zsh ]] && . /Users/shota.508/.dart-cli-completion/zsh-config.zsh || true
+# [[ -f /Users/shota.508/.dart-cli-completion/zsh-config.zsh ]] && . /Users/shota.508/.dart-cli-completion/zsh-config.zsh || true
 
 # === 補完候補の読み込み(最後に1回実行でOK)
 autoload -Uz compinit && compinit
