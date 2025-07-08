@@ -66,5 +66,7 @@ export PATH="$JAVA_HOME/bin:$PATH"
 # fvm
 # [[ -f /Users/shota.508/.dart-cli-completion/zsh-config.zsh ]] && . /Users/shota.508/.dart-cli-completion/zsh-config.zsh || true
 
+FPATH="$HOME/Documents/OSS/cljtab/dev:$FPATH"
+
 # === 補完候補の読み込み(最後に1回実行でOK)
 autoload -Uz compinit && compinit

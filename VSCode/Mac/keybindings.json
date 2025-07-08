@@ -103,9 +103,15 @@
   // ===== Markdown All in One =====
   // cmd-,でチェックボックスをトグル
   {
-    "key": "cmd+oem_comma",
+    "key": "ctrl+oem_comma",
     "command": "markdown.extension.checkTaskList",
     "when": "editorTextFocus && editorLangId =~ /^markdown$|^rmd$|^quarto$/ && neovim.mode == 'normal'"
+  },
+  // cmd+iはinline chat用に使う
+  {
+    "key": "cmd+i",
+    "command": "-markdown.extension.editing.toggleItalic",
+    "when": "editorTextFocus && !editorReadonly && editorLangId =~ /^markdown$|^rmd$|^quarto$/"
   },
   // ===== Calculator =====
   {
@@ -211,6 +217,15 @@
   {
     "key": "ctrl+q",
     "command": "-workbench.action.quickOpenView"
+  },
+  // insert時にenterキーを押した挙動に対応(改行後にカッコ内に編集点を移動するなど有効に)
+  {
+    "key": "ctrl+m",
+    "command": "type",
+    "args": {
+      "text": "\n"
+    },
+    "when": "editorTextFocus && neovim.mode == 'insert' && !suggestWidgetVisible"
   },
   // === サイドパネルのSearch + キーボード操作
   {

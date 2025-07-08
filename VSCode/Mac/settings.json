@@ -202,12 +202,12 @@
     "d", // delete
     "e", // 行末に移動
     "f", // 1文字進む
-    // "g", // ESC(keybindings.jsonで設定)
+    "g", // ESC
     "p", // カーソルを上に移動
     "h", // backspace
     "k", // カーソルから行末まで削除
     "l", // Recenter Top Bottom
-    // "m", // enterとして認識させる(keybindings.jsonで設定)
+    // "m", // enterとして認識させる
     "n", // カーソルを下に移動
     "w", // 1単語削除
     "y" // 貼り付け
