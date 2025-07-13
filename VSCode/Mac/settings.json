@@ -20,7 +20,7 @@
   // 貼り付け時にフォーマット指定があれば適用する
   "editor.formatOnPaste": true,
   // 保存時にフォーマット指定があれば適用する
-  "editor.formatOnSave": true,
+  "editor.formatOnSave": false,
   // ミニマップは領域を圧迫するので消す
   "editor.minimap.enabled": false,
   // スペースを可視化する
@@ -123,7 +123,7 @@
       "list.activeSelectionBackground": "#303f6b",
       "list.inactiveSelectionBackground": "#303f6bbb",
       "terminal.selectionBackground": "#303f6b",
-      "terminal.inactiveSelectionBackground": "#303f6bbb",
+      "terminal.inactiveSelectionBackground": "#303f6bbb"
     }
   },
   // === vscode-icons
@@ -131,6 +131,37 @@
   // === Remote SSH
   "remote.SSH.enableAgentForwarding": true,
   "remote.autoForwardPortsSource": "process",
+  // === Remote Containers
+  // コンテナ接続時に自分の設定をなるべく再現する
+  "dotfiles.repository": "https://github.com/chaploud/my-setting-files.git",
+  "dotfiles.targetPath": "~/dotfiles",
+  "dotfiles.installCommand": "dev_container/install.sh",
+  // 拡張機能は以下が追加でインストールされる
+  "dev.containers.defaultExtensions": [
+    "betterthantomorrow.calva",
+    "betterthantomorrow.calva-backseat-driver",
+    "Anthropic.claude-code",
+    "ms-azuretools.vscode-containers",
+    "dbcode.dbcode",
+    "figma.figma-vscode-extension",
+    "github.vscode-github-actions",
+    "GitHub.vscode-pull-request-github",
+    "yzhang.markdown-all-in-one",
+    "shd101wyy.markdown-preview-enhanced",
+    "TakumiI.markdowntable",
+    "christian-kohler.npm-intellisense",
+    "christian-kohler.path-intellisense",
+    "Amin.omodoro",
+    "mechatroner.rainbow-csv",
+    "humao.rest-client",
+    "timonwong.shellcheck",
+    "wtetsu.tempfile",
+    "Gruntfuggly.todo-tree",
+    "shardulm94.trailing-spaces",
+    "lixquid.calculator",
+    "adpyke.codesnap",
+    "yandeu.five-server"
+  ],
   // === GitHub Copilot
   // デフォルトでオフになっている言語も補完を効かせるようにする
   "github.copilot.enable": {
@@ -138,6 +169,7 @@
     "plaintext": true,
     "markdown": true,
     "scminput": true,
+    "sql": true
   },
   // 次の変更点を提案はオフ
   "github.copilot.nextEditSuggestions.enabled": false,
@@ -256,6 +288,8 @@
   "calva.autoOpenInspector": false,
   "calva.evaluationSendCodeToOutputWindow": true,
   "calva.autoOpenResultOutputDestination": true,
+  "calva.referencesCodeLens.enabled": true,
+  "clojure.trace.server": "messages",
   // Calva Backseat Driver
   "calva-backseat-driver.enableMcpReplEvaluation": true,
   // === Code Runner
@@ -295,5 +329,5 @@
   "path-intellisense.autoSlashAfterDirectory": true,
   "path-intellisense.autoTriggerNextSuggestion": true,
   // === Project Manager
-  "projectManager.sortList": "Saved",
+  "projectManager.sortList": "Saved"
 }
