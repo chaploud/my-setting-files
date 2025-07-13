@@ -3,17 +3,8 @@
 # ホストPCでSSHキーエージェント転送していることを前提とする
 # 個人用拡張期機能はsettings.jsonに記載
 
-set -ex # エラー時停止 & コマンド実行ログ表示
-
 DOT=$HOME/dotfiles
 DEV=$DOT/dev_container
-
-echo "=== Dev Container Setup Started ==="
-echo "DOT: $DOT"
-echo "DEV: $DEV"
-echo "PWD: $(pwd)"
-echo "USER: $(whoami)"
-echo "HOME: $HOME"
 
 # CLIツール
 apt install -y tree jq ripgrep fzf neovim
