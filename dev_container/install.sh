@@ -24,7 +24,7 @@ mkdir -p $HOME/.config
 cp $DOT/starship/starship.toml $HOME/.config/starship.toml
 
 # bashrc
-echo $DEV/bashrc >> $HOME/.bashrc
+cat $DEV/bashrc >> $HOME/.bashrc
 
 if command -v npm &> /dev/null; then
   echo "npm is already installed."
