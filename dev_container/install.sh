@@ -25,15 +25,6 @@ cp $DOT/starship/starship.toml $HOME/.config/starship.toml
 # bashrc
 echo $DEV/bashrc >> $HOME/.bashrc
 
-# VSCode拡張機能
-echo "=== Installing VSCode Extensions ==="
-if [ -f $DEV/extensions.txt ]; then
-  echo "Found extensions.txt, installing..."
-  cat $DEV/extensions.txt | xargs -L 1 code --install-extension
-else
-  echo "extensions.txt not found at $DEV/extensions.txt"
-fi
-
 if command -v npm &> /dev/null; then
   echo "npm is already installed."
 else
@@ -45,3 +36,27 @@ fi
 
 # claude code
 npm install -g @anthropic-ai/claude-code
+
+# VSCode拡張機能
+echo "=== Installing VSCode Extensions ==="
+# codeコマンドが利用可能になるまで最大30秒待機
+for i in {1..6}; do
+  if command -v code &> /dev/null; then
+    echo "code command is available, proceeding with extension installation"
+    break
+  else
+    echo "Waiting for code command to be available... (attempt $i/6)"
+    sleep 5
+  fi
+done
+
+if command -v code &> /dev/null; then
+  if [ -f $DEV/extensions.txt ]; then
+    echo "Found extensions.txt, installing..."
+    cat $DEV/extensions.txt | xargs -L 1 code --install-extension
+  else
+    echo "extensions.txt not found at $DEV/extensions.txt"
+  fi
+else
+  echo "code command not available after 30 seconds, skipping extension installation"
+fi
