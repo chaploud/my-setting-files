@@ -1,6 +1,7 @@
 #!/bin/bash
 # 開発コンテナ内になるべく自分の環境を再現
 # ホストPCでSSHキーエージェント転送していることを前提とする
+# ホストPCの~/.config/dev-containers/devcontainer.jsonで拡張機能をを追加
 
 set -ex # エラー時停止 & コマンド実行ログ表示
 
@@ -36,27 +37,3 @@ fi
 
 # claude code
 npm install -g @anthropic-ai/claude-code
-
-# VSCode拡張機能
-echo "=== Installing VSCode Extensions ==="
-# codeコマンドが利用可能になるまで最大30秒待機
-for i in {1..6}; do
-  if command -v code &> /dev/null; then
-    echo "code command is available, proceeding with extension installation"
-    break
-  else
-    echo "Waiting for code command to be available... (attempt $i/6)"
-    sleep 5
-  fi
-done
-
-if command -v code &> /dev/null; then
-  if [ -f $DEV/extensions.txt ]; then
-    echo "Found extensions.txt, installing..."
-    cat $DEV/extensions.txt | xargs -L 1 code --install-extension
-  else
-    echo "extensions.txt not found at $DEV/extensions.txt"
-  fi
-else
-  echo "code command not available after 30 seconds, skipping extension installation"
-fi
