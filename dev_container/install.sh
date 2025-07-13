@@ -11,3 +11,8 @@ cp ../starship/starship.toml ~/.config/starship.toml
 
 # bashrc
 cp ./bashrc ~/.bashrc
+
+# VSCode拡張機能
+if [ -f ./extensions.txt ]; then
+  cat ./extensions.txt | xargs -L 1 code --install-extension
+fi
