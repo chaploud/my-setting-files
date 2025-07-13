@@ -1,7 +1,7 @@
 #!/bin/bash
 # 開発コンテナ内になるべく自分の環境を再現
 # ホストPCでSSHキーエージェント転送していることを前提とする
-# ホストPCの~/.config/dev-containers/devcontainer.jsonで拡張機能をを追加
+# 個人用拡張期機能はsettings.jsonに記載
 
 set -ex # エラー時停止 & コマンド実行ログ表示
 
