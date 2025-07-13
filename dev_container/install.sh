@@ -2,8 +2,17 @@
 # 開発コンテナ内になるべく自分の環境を再現
 # ホストPCでSSHキーエージェント転送していることを前提とする
 
+set -ex # エラー時停止 & コマンド実行ログ表示
+
 DOT=$HOME/dotfiles
 DEV=$DOT/dev_container
+
+echo "=== Dev Container Setup Started ==="
+echo "DOT: $DOT"
+echo "DEV: $DEV"
+echo "PWD: $(pwd)"
+echo "USER: $(whoami)"
+echo "HOME: $HOME"
 
 # CLIツール
 apt install -y tree jq ripgrep fzf neovim
@@ -17,8 +26,12 @@ cp $DOT/starship/starship.toml $HOME/.config/starship.toml
 echo $DEV/bashrc >> $HOME/.bashrc
 
 # VSCode拡張機能
-if [ -f ./extensions.txt ]; then
+echo "=== Installing VSCode Extensions ==="
+if [ -f $DEV/extensions.txt ]; then
+  echo "Found extensions.txt, installing..."
   cat $DEV/extensions.txt | xargs -L 1 code --install-extension
+else
+  echo "extensions.txt not found at $DEV/extensions.txt"
 fi
 
 if command -v npm &> /dev/null; then
