@@ -202,9 +202,15 @@ require("lazy").setup({
         },
         -- Rename symbol under cursor (and all its references)
         {
-          "<leader>r",
+          "<leader>rn",
           function() call_vscode('editor.action.rename') end,
           desc = "Rename Symbol"
+        },
+        -- Remote Containers: reopen in container
+        {
+          "<leader>rr",
+          function() call_vscode('remote-containers.reopenInContainer') end,
+          desc = "Reopen in Container"
         },
         -- Go to next marker (error, warning, etc.)
         {
