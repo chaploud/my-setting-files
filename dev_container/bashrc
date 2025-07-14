@@ -7,7 +7,10 @@ alias sl="ls"
 alias s="ls"
 
 # cd後にlsを実行
-PROMPT_COMMAND='ls'
+function cdls() {
+  \cd $@ && ls
+}
+alias cd="cdls"
 
 # Git
 alias log="git log --decorate --format=format:'%C(bold cyan)%as%C(reset) %C(bold blue)%h%C(reset) %C(white bold)%<(14,trunc)%an%C(reset) %C(green)%<(38,trunc)%s%C(reset) '"
