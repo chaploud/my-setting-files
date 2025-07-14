@@ -6,12 +6,6 @@ bind \\C-w:unix-filename-rubout
 alias sl="ls"
 alias s="ls"
 
-# cd後にlsを実行
-function cdls() {
-  \cd $@ && ls
-}
-alias cd="cdls"
-
 # Git
 alias log="git log --decorate --format=format:'%C(bold cyan)%as%C(reset) %C(bold blue)%h%C(reset) %C(white bold)%<(14,trunc)%an%C(reset) %C(green)%<(38,trunc)%s%C(reset) '"
 alias gs="git status"
@@ -31,3 +25,9 @@ eval "$(starship init bash)"
 # volta
 export VOLTA_HOME="$HOME/.volta"
 export PATH="$VOLTA_HOME/bin:$PATH"
+
+# cd後にlsを実行
+function cdls() {
+  \cd $@ && ls
+}
+alias cd="cdls"
