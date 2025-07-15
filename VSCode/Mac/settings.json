@@ -20,7 +20,7 @@
   // 貼り付け時にフォーマット指定があれば適用する
   "editor.formatOnPaste": true,
   // 保存時にフォーマット指定があれば適用する
-  "editor.formatOnSave": false,
+  "editor.formatOnSave": true,
   // ミニマップは領域を圧迫するので消す
   "editor.minimap.enabled": false,
   // スペースを可視化する
@@ -138,29 +138,32 @@
   "dotfiles.installCommand": "dev_container/install.sh",
   // 拡張機能は以下が追加でインストールされる
   "dev.containers.defaultExtensions": [
+    "adpyke.codesnap",
+    "Amin.omodoro",
+    "Anthropic.claude-code",
     "betterthantomorrow.calva",
     "betterthantomorrow.calva-backseat-driver",
-    "Anthropic.claude-code",
-    "ms-azuretools.vscode-containers",
-    "dbcode.dbcode",
-    "figma.figma-vscode-extension",
-    "github.vscode-github-actions",
-    "GitHub.vscode-pull-request-github",
-    "yzhang.markdown-all-in-one",
-    "shd101wyy.markdown-preview-enhanced",
-    "TakumiI.markdowntable",
     "christian-kohler.npm-intellisense",
     "christian-kohler.path-intellisense",
-    "Amin.omodoro",
-    "mechatroner.rainbow-csv",
+    "dbcode.dbcode",
+    "fill-labs.dependi",
+    "figma.figma-vscode-extension",
+    "GitHub.copilot-chat",
+    "GitHub.vscode-pull-request-github",
+    "github.vscode-github-actions",
+    "Gruntfuggly.todo-tree",
     "humao.rest-client",
+    "lixquid.calculator",
+    "mechatroner.rainbow-csv",
+    "ms-azuretools.vscode-containers",
+    "Oracle.oracle-java",
+    "shardulm94.trailing-spaces",
+    "shd101wyy.markdown-preview-enhanced",
+    "TakumiI.markdowntable",
     "timonwong.shellcheck",
     "wtetsu.tempfile",
-    "Gruntfuggly.todo-tree",
-    "shardulm94.trailing-spaces",
-    "lixquid.calculator",
-    "adpyke.codesnap",
-    "yandeu.five-server"
+    "yandeu.five-server",
+    "yzhang.markdown-all-in-one"
   ],
   // === GitHub Copilot
   // デフォルトでオフになっている言語も補完を効かせるようにする
@@ -192,6 +195,8 @@
       ]
     }
   },
+  // Continueをポチポチしなくて済む自動承認
+  "chat.tools.autoApprove": true,
   // === Todo Tree
   "todo-tree.tree.showCountsInTree": true,
   "todo-tree.tree.expanded": true,
@@ -329,5 +334,23 @@
   "path-intellisense.autoSlashAfterDirectory": true,
   "path-intellisense.autoTriggerNextSuggestion": true,
   // === Project Manager
-  "projectManager.sortList": "Saved"
+  "projectManager.sortList": "Saved",
+  "dbcode.ai.mcp.autoStart": true,
+  "dbcode.history.enabled": true,
+  "dbcode.connections": [
+    {
+      "connectionId": "9KwLg7vYVqNeZKMEAzCIS",
+      "name": "eboshigara_database",
+      "driver": "postgres",
+      "connectionType": "host",
+      "host": "database",
+      "port": 5432,
+      "ssl": false,
+      "username": "root",
+      "password": "",
+      "savePassword": "secretStorage",
+      "readOnly": false,
+      "connectionTimeout": 30
+    }
+  ]
 }
