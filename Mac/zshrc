@@ -70,3 +70,6 @@ export PATH="$HOME/fvm/default/bin:$PATH"
 
 # === 補完候補の読み込み(最後に1回実行でOK)
 autoload -U compinit && compinit
+
+# 1password ssh-agent
+export SSH_AUTH_SOCK="$HOME/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"

@@ -19,15 +19,11 @@ alias gff='git pull'
 alias gz='git stash -u'
 alias gzp='git stash pop'
 
-# === Starship
-eval "$(starship init bash)"
-
-# volta
-export VOLTA_HOME="$HOME/.volta"
-export PATH="$VOLTA_HOME/bin:$PATH"
-
 # cd後にlsを実行
 function cdls() {
   \cd $@ && ls
 }
 alias cd="cdls"
+
+# === Starship
+eval "$(starship init bash)"
