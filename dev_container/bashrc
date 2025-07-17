@@ -27,3 +27,9 @@ alias cd="cdls"
 
 # === Starship
 eval "$(starship init bash)"
+
+if [ -d "/usr/local/eboshigara" ]; then
+  cd /usr/local/eboshigara
+elif [ -d "/usr/local/mukudori" ]; then
+  cd /usr/local/mukudori
+fi
