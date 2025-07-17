@@ -16,6 +16,3 @@ cp $DOT/starship/starship.toml $HOME/.config/starship.toml
 
 # bashrc
 cat $DEV/bashrc >> $HOME/.bashrc
-
-# claude code
-npm install -g @anthropic-ai/claude-code
