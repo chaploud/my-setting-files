@@ -420,6 +420,12 @@ require("lazy").setup({
           function() call_vscode('calva.showReplWindow') end,
           desc = "Show REPL window"
         },
+        -- Show REPL output view
+        {
+          "<leader>mro",
+          function() call_vscode('calva.showReplOutputView') end,
+          desc = "Show REPL output view"
+        },
         -- Refresh all namespaces in REPL
         {
           "<leader>mrR",
