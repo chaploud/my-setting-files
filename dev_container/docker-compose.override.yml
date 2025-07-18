@@ -1,0 +1,18 @@
+x-claude-volumes: &claude-volumes
+  - claude-data:/root/.claude
+  - vscode-data:/root/.vscode-server
+  - ~/.claude.json:/root/.claude.json
+  - ~/.claude.json.backup:/root/.claude.json.backup
+  - ./setup-claude.sh:/tmp/setup-claude.sh:ro
+
+services:
+  server:
+    volumes: *claude-volumes
+    command: bash /tmp/setup-claude.sh server
+  frontend:
+    volumes: *claude-volumes
+    command: bash /tmp/setup-claude.sh frontend
+
+volumes:
+  claude-data:
+  vscode-data:
