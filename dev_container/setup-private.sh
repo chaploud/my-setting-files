@@ -4,6 +4,7 @@
 SERVICE_TYPE=$1
 
 setup_tools() {
+    echo "[Private Setup]"
     # 任意のコマンドをdocker compose up時に実行できる
     # apt install -y tree jq ripgrep fzf neovim
     # curl -sS https://starship.rs/install.sh | sh -s -- --yes
