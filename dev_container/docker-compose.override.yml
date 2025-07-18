@@ -1,18 +1,18 @@
-x-claude-volumes: &claude-volumes
-  - claude-data:/root/.claude
-  - vscode-data:/root/.vscode-server
+x-private-volumes: &private-volumes
+  - ~/.claude:/root/.claude
   - ~/.claude.json:/root/.claude.json
   - ~/.claude.json.backup:/root/.claude.json.backup
-  - ./setup-claude.sh:/tmp/setup-claude.sh:ro
+  - ./setup-private.sh:/tmp/setup-private.sh:ro
+  # VSCodeを使用している場合は拡張機能のインストールをキャッシュできる(以下とvolumesをコメントイン)
+  # - vscode-data:/root/.vscode-server
 
 services:
   server:
-    volumes: *claude-volumes
-    command: bash /tmp/setup-claude.sh server
+    volumes: *private-volumes
+    command: bash /tmp/setup-private.sh server
   frontend:
-    volumes: *claude-volumes
-    command: bash /tmp/setup-claude.sh frontend
+    volumes: *private-volumes
+    command: bash /tmp/setup-private.sh frontend
 
-volumes:
-  claude-data:
-  vscode-data:
+# volumes:
+#   vscode-data:

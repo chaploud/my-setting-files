@@ -1,11 +1,12 @@
 #!/bin/bash
-# setup-claude.sh - Claude Code setup script
+# setup-private.sh - personal setup script for container
 
 SERVICE_TYPE=$1
 
 setup_tools() {
-    apt install -y tree jq ripgrep fzf neovim
-    curl -sS https://starship.rs/install.sh | sh -s -- --yes
+    # 任意のコマンドをdocker compose up時に実行できる
+    # apt install -y tree jq ripgrep fzf neovim
+    # curl -sS https://starship.rs/install.sh | sh -s -- --yes
 }
 
 # serverサービス用のNode.jsセットアップ
