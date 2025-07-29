@@ -71,10 +71,16 @@
   },
   // ===== 統合ターミナル =====
   // ターミナル領域でターミナルにフォーカス
+  // {
+  //   "key": "ctrl+j",
+  //   "command": "workbench.action.terminal.toggleTerminal",
+  //   "when": "terminal.active"
+  // },
+  // For macSKK
   {
     "key": "ctrl+j",
-    "command": "workbench.action.terminal.toggleTerminal",
-    "when": "terminal.active"
+    "command": "-editor.action.joinLines",
+    "when": "editorTextFocus && !editorReadonly"
   },
   // 新しいシェルを開く
   {
@@ -234,11 +240,11 @@
     "when": "editorTextFocus && neovim.mode == 'insert' && !suggestWidgetVisible"
   },
   // === サイドパネルのSearch + キーボード操作
-  {
-    "key": "ctrl+j",
-    "command": "search.focus.nextInputBox",
-    "when": "sideBarFocus && focusedView == 'workbench.view.search'"
-  },
+  // {
+  //   "key": "ctrl+j",
+  //   "command": "search.focus.nextInputBox",
+  //   "when": "sideBarFocus && focusedView == 'workbench.view.search'"
+  // },
   {
     "key": "ctrl+k",
     "command": "search.focus.previousInputBox",
@@ -260,11 +266,11 @@
     "when": "sideBarFocus && focusedView == 'workbench.scm'"
   },
   // 下のリソースグループにフォーカス移動
-  {
-    "key": "ctrl+j",
-    "command": "workbench.scm.action.focusNextResourceGroup",
-    "when": "sideBarFocus && focusedView == 'workbench.scm'"
-  },
+  // {
+  //   "key": "ctrl+j",
+  //   "command": "workbench.scm.action.focusNextResourceGroup",
+  //   "when": "sideBarFocus && focusedView == 'workbench.scm'"
+  // },
   // すべてステージ
   {
     "key": "shift+s",
@@ -1037,5 +1043,13 @@
     "key": "ctrl+g",
     "command": "workbench.statusBar.clearFocus",
     "when": "statusBarFocused"
-  }
+  },
+  {
+    "key": "shift+enter",
+    "command": "workbench.action.terminal.sendSequence",
+    "args": {
+      "text": "\\\r\n"
+    },
+    "when": "terminalFocus"
+  },
 ]

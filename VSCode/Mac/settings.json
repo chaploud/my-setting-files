@@ -41,15 +41,34 @@
           "comment.block.documentation",
           "comment.line",
           "comment.line.double-slash",
+          "punctuation.definition.comment"
         ],
         "settings": {
           "fontStyle": ""
+        }
+      },
+      {
+        "scope": [
+          "constant.language.nil.clojure",
+          "constant.language.boolean.clojure",
+          "constant.numeric"
+        ],
+        "settings": {
+          "foreground": "#7DCFFF",
+        }
+      },
+      {
+        "scope": [
+          "constant.keyword.clojure",
+        ],
+        "settings": {
+          "foreground": "#bb9af7",
         }
       }
     ]
   },
   // NeoVimとの相性(日本語入力で上書されてしまう)への対処
-  "editor.experimentalEditContextEnabled": false,
+  // "editor.editContext": true,
   // タブサイズの設定
   "editor.tabSize": 2,
   // 言語別
@@ -112,9 +131,6 @@
   "search.smartCase": true,
   "search.useGlobalIgnoreFiles": true,
   "search.useParentIgnoreFiles": true,
-  // ===== 拡張機能の設定 =====
-  // === Color Theme
-  "workbench.colorTheme": "Tokyo Night Gogh",
   // メリハリをつけるため下部パネルとサイドバーの色を調整
   "workbench.colorCustomizations": {
     "[Tokyo Night Gogh]": {
@@ -123,14 +139,29 @@
       "list.activeSelectionBackground": "#303f6b",
       "list.inactiveSelectionBackground": "#303f6bbb",
       "terminal.selectionBackground": "#303f6b",
-      "terminal.inactiveSelectionBackground": "#303f6bbb"
+      "terminal.inactiveSelectionBackground": "#303f6bbb",
+      "diffEditor.insertedLineBackground": "#2ea04344",
+      "diffEditor.insertedTextBackground": "#2ea04366",
+      "diffEditor.removedLineBackground": "#ff5a6a44",
+      "diffEditor.removedTextBackground": "#ff5a6a66"
+    }
+  },
+  "editor.semanticTokenColorCustomizations": {
+    "enabled": true,
+    "rules": {
+      "macro": {
+        "foreground": "#F7768E"
+      },
+      "variable": {
+        "foreground": "#E08F68"
+      },
     }
   },
   // === vscode-icons
   "workbench.iconTheme": "vscode-icons",
   // === Remote SSH
   "remote.SSH.enableAgentForwarding": true,
-  "remote.autoForwardPortsSource": "process",
+  "remote.autoForwardPorts": false,
   // === Remote Containers
   // コンテナ接続時に自分の設定をなるべく再現する
   "dotfiles.repository": "https://github.com/chaploud/my-setting-files.git",
@@ -156,7 +187,6 @@
     "lixquid.calculator",
     "mechatroner.rainbow-csv",
     "ms-azuretools.vscode-containers",
-    "Oracle.oracle-java",
     "shardulm94.trailing-spaces",
     "shd101wyy.markdown-preview-enhanced",
     "TakumiI.markdowntable",
@@ -197,6 +227,8 @@
   },
   // Continueをポチポチしなくて済む自動承認
   "chat.tools.autoApprove": true,
+  "chat.mcp.discovery.enabled": true,
+  "chat.agent.enabled": true,
   // === Todo Tree
   "todo-tree.tree.showCountsInTree": true,
   "todo-tree.tree.expanded": true,
@@ -280,8 +312,8 @@
   // すべてREPLウィンドウにまとめて表示されてほしい場合は以下を設定
   "calva.outputDestinations": {
     "evalResults": "repl-window", // 評価結果をREPLウィンドウに出力
-    "evalOutput": "repl-window", // 標準出力/エラーをREPLウィンドウに出力
-    "otherOutput": "repl-window" // CalvaのメッセージなどをREPLウィンドウに出力
+    "evalOutput": "output-view", // 標準出力/エラーをREPLウィンドウに出力
+    "otherOutput": "output-view" // CalvaのメッセージなどをREPLウィンドウに出力
   },
   // インデントガイドのレインボー化
   "calva.highlight.rainbowIndentGuides": true,
@@ -291,7 +323,7 @@
   "calva.legacyPrintBareReplWindowOutput": true,
   // CalvaのREPL接続時に自動でサイドパネルのインスペクタにフォーカスが当たるのをやめる
   "calva.autoOpenInspector": false,
-  "calva.evaluationSendCodeToOutputWindow": true,
+  // "calva.evaluationSendCodeToOutputWindow": true,
   "calva.autoOpenResultOutputDestination": true,
   "calva.referencesCodeLens.enabled": true,
   "clojure.trace.server": "messages",
@@ -335,13 +367,15 @@
   "path-intellisense.autoTriggerNextSuggestion": true,
   // === Project Manager
   "projectManager.sortList": "Saved",
-  "dbcode.ai.mcp.autoStart": true,
+  "dbcode.resultLocation": "panel",
+  "dbcode.ai.mcp.autoStart": false,
   "dbcode.history.enabled": true,
   "dbcode.connections": [
     {
-      "connectionId": "9KwLg7vYVqNeZKMEAzCIS",
-      "name": "eboshigara_database",
+      "connectionId": "iw95kZ6WPAIJ4fk_H4kxf",
+      "name": "eboshigara_container",
       "driver": "postgres",
+      "color": "#7655FF",
       "connectionType": "host",
       "host": "database",
       "port": 5432,
@@ -351,6 +385,45 @@
       "savePassword": "secretStorage",
       "readOnly": false,
       "connectionTimeout": 30
+    },
+    {
+      "connectionId": "MixRJYcvec7qLM7XM8NXz",
+      "name": "eboshigara_host",
+      "driver": "postgres",
+      "color": "#F00019",
+      "connectionType": "host",
+      "host": "localhost",
+      "port": 54320,
+      "ssl": false,
+      "username": "root",
+      "password": "",
+      "savePassword": "secretStorage",
+      "readOnly": false,
+      "connectionTimeout": 30
+    },
+    {
+      "connectionId": "MNRwzfdJbVHbY1dXl_lvB",
+      "name": "web_duvel_host",
+      "driver": "mysql",
+      "color": "#F00019",
+      "connectionType": "host",
+      "host": "localhost",
+      "port": 3333,
+      "ssl": false,
+      "username": "root",
+      "password": "",
+      "savePassword": "secretStorage",
+      "readOnly": false,
+      "connectionTimeout": 30,
+      "driverOptions": {
+        "retrievePublickey": true
+      },
+      "filters": {}
     }
-  ]
+  ],
+  "dart.flutterSdkPath": "/Users/shota.508/flutter",
+  "githubPullRequests.pullBranch": "never",
+  "diffEditor.renderSideBySideInlineBreakpoint": 1600,
+  "workbench.colorTheme": "Tokyo Night Gogh",
+  "workbench.editor.empty.hint": "hidden",
 }

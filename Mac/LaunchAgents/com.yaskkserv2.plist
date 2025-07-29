@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.yaskkserv2</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>yaskkserv2</string>
+        <string>--port=1178</string>
+        <string>--google-cache-filename=/tmp/yaskkserv2.cache</string>
+        <string>/Users/shota.508/Install/dictionary.yaskkserv2</string>
+    </array>
+    <key>RunAtLoad</key>
+    <true/>
+    <key>KeepAlive</key>
+    <true/>
+    <key>StandardOutPath</key>
+    <string>/tmp/yaskkserv2.out</string>
+    <key>StandardErrorPath</key>
+    <string>/tmp/yaskkserv2.err</string>
+</dict>
+</plist>
