@@ -8,7 +8,7 @@
     <array>
         <string>/Users/shota.508/.local/bin/yaskkserv2</string>
         <string>--port=1178</string>
-        <string>--google-cache-filename=/tmp/yaskkserv2.cache</string>
+        <string>--google-cache-filename=/User/shota.508/Install/yaskkserv2.cache</string>
         <string>/Users/shota.508/Install/dictionary.yaskkserv2</string>
     </array>
     <key>RunAtLoad</key>

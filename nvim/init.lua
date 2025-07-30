@@ -5,7 +5,6 @@
 local recenter_state = 0
 local last_recenter_time = 0
 local CONSECUTIVE_THRESHOLD = 2000 -- milliseconds
-
 local function recenter_cycle()
   -- Reset if a certain amount of time has passed
   local current_time = vim.uv.now()
@@ -145,6 +144,16 @@ require("lazy").setup({
           timer = 200,
         },
       }
+    },
+    {
+      -- im-select.nvim (require 'macism' installation)
+      "keaising/im-select.nvim",
+      config = function()
+        require("im_select").setup({
+          default_im_select = "net.mtgto.inputmethod.macSKK.ascii",
+          set_default_events = { "InsertLeave", "CmdlineLeave", "VimEnter", "FocusGained" },
+        })
+      end,
     },
     {
       -- which-key
