@@ -6,7 +6,7 @@
     <string>com.yaskkserv2</string>
     <key>ProgramArguments</key>
     <array>
-        <string>yaskkserv2</string>
+        <string>/Users/shota.508/.local/bin/yaskkserv2</string>
         <string>--port=1178</string>
         <string>--google-cache-filename=/tmp/yaskkserv2.cache</string>
         <string>/Users/shota.508/Install/dictionary.yaskkserv2</string>
