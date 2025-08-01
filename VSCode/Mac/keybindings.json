@@ -22,7 +22,7 @@
   {
     "key": "ctrl+b",
     "command": "workbench.action.toggleSidebarVisibility",
-    "when": "(editorTextFocus && neovim.mode != 'insert') || !editorTextFocus"
+    "when": "(editorTextFocus && neovim.mode != 'insert')"
   },
   // ===== 変更点への移動 =====
   // compare editor内で次の変更点へジャンプ
@@ -71,11 +71,17 @@
   },
   // ===== 統合ターミナル =====
   // ターミナル領域でターミナルにフォーカス
-  // {
-  //   "key": "ctrl+j",
-  //   "command": "workbench.action.terminal.toggleTerminal",
-  //   "when": "terminal.active"
-  // },
+  {
+    "key": "ctrl+.",
+    "command": "workbench.action.terminal.toggleTerminal",
+    "when": "terminal.active"
+  },
+  // macSKKのためにctrl+jはなにもしない
+  {
+    "key": "ctrl+j",
+    "command": "noop",
+    "when": "terminal.active"
+  },
   // For macSKK
   {
     "key": "ctrl+j",
@@ -84,7 +90,7 @@
   },
   // 新しいシェルを開く
   {
-    "key": "cmd+j",
+    "key": "cmd+.",
     "command": "workbench.action.terminal.new",
     "when": "terminalProcessSupported || terminalWebExtensionContributedProfile"
   },
@@ -588,11 +594,11 @@
     "when": "treestickyScrollFocused"
   },
   // これは解除
-  // {
-  //   "key": "ctrl+m",
-  //   "command": "markdown.extension.onEnterKey",
-  //   "when": "editorTextFocus && !editorHasMultipleSelections && !editorReadonly && !markdown.extension.editor.cursor.inFencedCodeBlock && !markdown.extension.editor.cursor.inMathEnv && !suggestWidgetVisible && vim.mode != 'CommandlineInProgress' && vim.mode != 'EasyMotionInputMode' && vim.mode != 'EasyMotionMode' && vim.mode != 'Normal' && vim.mode != 'Replace' && vim.mode != 'SearchInProgressMode' && vim.mode != 'SurroundInputMode' && vim.mode != 'Visual' && vim.mode != 'VisualBlock' && vim.mode != 'VisualLine' && editorLangId =~ /^markdown$|^rmd$|^quarto$/ || editorTextFocus && !editorHasMultipleSelections && !editorReadonly && !markdown.extension.editor.cursor.inFencedCodeBlock && !markdown.extension.editor.cursor.inMathEnv && config.editor.acceptSuggestionOnEnter == 'off' && vim.mode != 'CommandlineInProgress' && vim.mode != 'EasyMotionInputMode' && vim.mode != 'EasyMotionMode' && vim.mode != 'Normal' && vim.mode != 'Replace' && vim.mode != 'SearchInProgressMode' && vim.mode != 'SurroundInputMode' && vim.mode != 'Visual' && vim.mode != 'VisualBlock' && vim.mode != 'VisualLine' && editorLangId =~ /^markdown$|^rmd$|^quarto$/"
-  // },
+  {
+    "key": "ctrl+m",
+    "command": "markdown.extension.onEnterKey",
+    "when": "editorTextFocus && !editorHasMultipleSelections && !editorReadonly && !markdown.extension.editor.cursor.inFencedCodeBlock && !markdown.extension.editor.cursor.inMathEnv && !suggestWidgetVisible && vim.mode != 'CommandlineInProgress' && vim.mode != 'EasyMotionInputMode' && vim.mode != 'EasyMotionMode' && vim.mode != 'Normal' && vim.mode != 'Replace' && vim.mode != 'SearchInProgressMode' && vim.mode != 'SurroundInputMode' && vim.mode != 'Visual' && vim.mode != 'VisualBlock' && vim.mode != 'VisualLine' && editorLangId =~ /^markdown$|^rmd$|^quarto$/ || editorTextFocus && !editorHasMultipleSelections && !editorReadonly && !markdown.extension.editor.cursor.inFencedCodeBlock && !markdown.extension.editor.cursor.inMathEnv && config.editor.acceptSuggestionOnEnter == 'off' && vim.mode != 'CommandlineInProgress' && vim.mode != 'EasyMotionInputMode' && vim.mode != 'EasyMotionMode' && vim.mode != 'Normal' && vim.mode != 'Replace' && vim.mode != 'SearchInProgressMode' && vim.mode != 'SurroundInputMode' && vim.mode != 'Visual' && vim.mode != 'VisualBlock' && vim.mode != 'VisualLine' && editorLangId =~ /^markdown$|^rmd$|^quarto$/"
+  },
   {
     "key": "ctrl+m",
     "command": "notebook.cell.chat.accept",
@@ -1044,6 +1050,7 @@
     "command": "workbench.statusBar.clearFocus",
     "when": "statusBarFocused"
   },
+  // Claude Codeの改行
   {
     "key": "shift+enter",
     "command": "workbench.action.terminal.sendSequence",
@@ -1051,5 +1058,5 @@
       "text": "\\\r\n"
     },
     "when": "terminalFocus"
-  },
+  }
 ]

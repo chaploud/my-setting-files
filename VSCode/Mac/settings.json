@@ -54,15 +54,15 @@
           "constant.numeric"
         ],
         "settings": {
-          "foreground": "#7DCFFF",
+          "foreground": "#7DCFFF"
         }
       },
       {
         "scope": [
-          "constant.keyword.clojure",
+          "constant.keyword.clojure"
         ],
         "settings": {
-          "foreground": "#bb9af7",
+          "foreground": "#bb9af7"
         }
       }
     ]
@@ -90,6 +90,8 @@
   "[jsonc]": {
     "editor.defaultFormatter": "vscode.json-language-features"
   },
+  // diffEditorは画面が狭いとスプリットしないようにする
+  "diffEditor.renderSideBySideInlineBreakpoint": 1600,
   // 初回のスタートアップ画面は表示しない
   "workbench.startupEditor": "none",
   // 空のフォルダを省略して一列にしてしまわない(必ずツリー表示にする)
@@ -131,6 +133,7 @@
   "search.smartCase": true,
   "search.useGlobalIgnoreFiles": true,
   "search.useParentIgnoreFiles": true,
+  "workbench.colorTheme": "Tokyo Night Gogh",
   // メリハリをつけるため下部パネルとサイドバーの色を調整
   "workbench.colorCustomizations": {
     "[Tokyo Night Gogh]": {
@@ -154,7 +157,7 @@
       },
       "variable": {
         "foreground": "#E08F68"
-      },
+      }
     }
   },
   // === vscode-icons
@@ -420,10 +423,5 @@
       },
       "filters": {}
     }
-  ],
-  "dart.flutterSdkPath": "/Users/shota.508/flutter",
-  "githubPullRequests.pullBranch": "never",
-  "diffEditor.renderSideBySideInlineBreakpoint": 1600,
-  "workbench.colorTheme": "Tokyo Night Gogh",
-  "workbench.editor.empty.hint": "hidden",
+  ]
 }

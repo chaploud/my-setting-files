@@ -27,6 +27,22 @@ alias gff='git pull'
 alias gz='git stash -u'
 alias gzp='git stash pop'
 
+# grmb: git remove branch
+git_rmb() {
+  local current_branch=$(git branch --show-current)
+  local branches=$(git branch | grep -v "^\*" | sed 's/^[ \t]*//')
+  local selected_branch=$(echo "$branches" | fzf \
+    --prompt="Select branch to remove: " \
+    --preview="git log --oneline --graph --color=always {}" \
+    --header="Current branch: $current_branch")
+
+  if [ -n "$selected_branch" ]; then
+    git branch -d "$selected_branch"
+    echo "Removed branch: $selected_branch"
+  fi
+}
+alias grmb='git_rmb'
+
 # === Starship
 eval "$(starship init zsh)"
 
