@@ -1,0 +1,904 @@
+{:additional-snippets
+ [;; ===== shadow-cssで利用するエイリアス =====
+  ;; 利用するであろうものや、独自定義したエイリアスに絞っています
+  ;; ある意味これが利用できるエイリアスの一覧とも言える
+  ;; 適宜メンテナンスお願いします
+
+  ;; 疑似クラス
+  {:name "hover" :detail "shadow-css: :hover (&:hover)" :snippet ":hover"}
+  {:name "focus" :detail "shadow-css: :focus (&:focus)" :snippet ":focus"}
+  {:name "focus-within" :detail "shadow-css: :focus-within (&:focus-within)" :snippet ":focus-within"}
+  {:name "focus-visible" :detail "shadow-css: :focus-visible (&:focus-visible)" :snippet ":focus-visible"}
+  {:name "active" :detail "shadow-css: :active (&:active)" :snippet ":active"}
+  {:name "visited" :detail "shadow-css: :visited (&:visited)" :snippet ":visited"}
+  {:name "disabled" :detail "shadow-css: :disabled (&:disabled)" :snippet ":disabled"}
+  {:name "checked" :detail "shadow-css: :checked (&:checked)" :snippet ":checked"}
+  {:name "target" :detail "shadow-css: :target (&:target)" :snippet ":target"}
+  {:name "first" :detail "shadow-css: :first (&:first-child)" :snippet ":first"}
+  {:name "last" :detail "shadow-css: :last (&:last-child)" :snippet ":last"}
+  {:name "only" :detail "shadow-css: :only (&:only-child)" :snippet ":only"}
+  {:name "odd" :detail "shadow-css: :odd (&:nth-child(odd))" :snippet ":odd"}
+  {:name "even" :detail "shadow-css: :even (&:nth-child(even))" :snippet ":even"}
+
+  ;; display
+  {:name "block" :detail "shadow-css: :block (display: block)" :snippet ":block"}
+  {:name "hidden" :detail "shadow-css: :hidden (display: none)" :snippet ":hidden"}
+  {:name "inline" :detail "shadow-css: :inline (display: inline)" :snippet ":inline"}
+  {:name "inline-block" :detail "shadow-css: :inline-block (display: inline-block)" :snippet ":inline-block"}
+  {:name "inline-flex" :detail "shadow-css: :inline-flex (display: inline-flex)" :snippet ":inline-flex"}
+  {:name "grid" :detail "shadow-css: :grid (display: grid)" :snippet ":grid"}
+  {:name "inline-grid" :detail "shadow-css: :inline-grid (display: inline-grid)" :snippet ":inline-grid"}
+
+  ;; grid-template-columns
+  {:name "grid-cols-1" :detail "shadow-css: :grid-cols-1 (1 column grid)" :snippet ":grid-cols-1"}
+  {:name "grid-cols-2" :detail "shadow-css: :grid-cols-2 (2 column grid)" :snippet ":grid-cols-2"}
+  {:name "grid-cols-3" :detail "shadow-css: :grid-cols-3 (3 column grid)" :snippet ":grid-cols-3"}
+  {:name "grid-cols-4" :detail "shadow-css: :grid-cols-4 (4 column grid)" :snippet ":grid-cols-4"}
+  {:name "grid-cols-5" :detail "shadow-css: :grid-cols-5 (5 column grid)" :snippet ":grid-cols-5"}
+  {:name "grid-cols-6" :detail "shadow-css: :grid-cols-6 (6 column grid)" :snippet ":grid-cols-6"}
+  {:name "grid-cols-7" :detail "shadow-css: :grid-cols-7 (7 column grid)" :snippet ":grid-cols-7"}
+  {:name "grid-cols-8" :detail "shadow-css: :grid-cols-8 (8 column grid)" :snippet ":grid-cols-8"}
+  {:name "grid-cols-9" :detail "shadow-css: :grid-cols-9 (9 column grid)" :snippet ":grid-cols-9"}
+  {:name "grid-cols-10" :detail "shadow-css: :grid-cols-10 (10 column grid)" :snippet ":grid-cols-10"}
+  {:name "grid-cols-11" :detail "shadow-css: :grid-cols-11 (11 column grid)" :snippet ":grid-cols-11"}
+  {:name "grid-cols-12" :detail "shadow-css: :grid-cols-12 (12 column grid)" :snippet ":grid-cols-12"}
+  {:name "grid-cols-none" :detail "shadow-css: :grid-cols-none (no grid columns)" :snippet ":grid-cols-none"}
+
+  ;; margin
+  {:name "m-auto" :detail "shadow-css: :m-auto (margin: auto)" :snippet ":m-auto"}
+  {:name "mx-auto" :detail "shadow-css: :mx-auto (horizontal margin: auto)" :snippet ":mx-auto"}
+  {:name "my-auto" :detail "shadow-css: :my-auto (vertical margin: auto)" :snippet ":my-auto"}
+  {:name "mt-auto" :detail "shadow-css: :mt-auto (margin-top: auto)" :snippet ":mt-auto"}
+  {:name "mb-auto" :detail "shadow-css: :mb-auto (margin-bottom: auto)" :snippet ":mb-auto"}
+  {:name "ml-auto" :detail "shadow-css: :ml-auto (margin-left: auto)" :snippet ":ml-auto"}
+  {:name "mr-auto" :detail "shadow-css: :mr-auto (margin-right: auto)" :snippet ":mr-auto"}
+
+  ;; margin with numeric values
+  {:name "m-0.5" :detail "shadow-css: :m-0.5" :snippet ":m-0.5"}
+  {:name "m-1" :detail "shadow-css: :m-1" :snippet ":m-1"}
+  {:name "m-2" :detail "shadow-css: :m-2" :snippet ":m-2"}
+  {:name "m-3" :detail "shadow-css: :m-3" :snippet ":m-3"}
+  {:name "m-4" :detail "shadow-css: :m-4" :snippet ":m-4"}
+  {:name "m-5" :detail "shadow-css: :m-5" :snippet ":m-5"}
+  {:name "m-6" :detail "shadow-css: :m-6" :snippet ":m-6"}
+  {:name "m-7" :detail "shadow-css: :m-7" :snippet ":m-7"}
+  {:name "m-8" :detail "shadow-css: :m-8" :snippet ":m-8"}
+
+  {:name "mt-0.5" :detail "shadow-css: :mt-0.5" :snippet ":mt-0.5"}
+  {:name "mt-1" :detail "shadow-css: :mt-1" :snippet ":mt-1"}
+  {:name "mt-2" :detail "shadow-css: :mt-2" :snippet ":mt-2"}
+  {:name "mt-3" :detail "shadow-css: :mt-3" :snippet ":mt-3"}
+  {:name "mt-4" :detail "shadow-css: :mt-4" :snippet ":mt-4"}
+  {:name "mt-5" :detail "shadow-css: :mt-5" :snippet ":mt-5"}
+  {:name "mt-6" :detail "shadow-css: :mt-6" :snippet ":mt-6"}
+  {:name "mt-7" :detail "shadow-css: :mt-7" :snippet ":mt-7"}
+  {:name "mt-8" :detail "shadow-css: :mt-8" :snippet ":mt-8"}
+
+  {:name "mr-0.5" :detail "shadow-css: :mr-0.5" :snippet ":mr-0.5"}
+  {:name "mr-1" :detail "shadow-css: :mr-1" :snippet ":mr-1"}
+  {:name "mr-2" :detail "shadow-css: :mr-2" :snippet ":mr-2"}
+  {:name "mr-3" :detail "shadow-css: :mr-3" :snippet ":mr-3"}
+  {:name "mr-4" :detail "shadow-css: :mr-4" :snippet ":mr-4"}
+  {:name "mr-5" :detail "shadow-css: :mr-5" :snippet ":mr-5"}
+  {:name "mr-6" :detail "shadow-css: :mr-6" :snippet ":mr-6"}
+  {:name "mr-7" :detail "shadow-css: :mr-7" :snippet ":mr-7"}
+  {:name "mr-8" :detail "shadow-css: :mr-8" :snippet ":mr-8"}
+
+  {:name "mb-0.5" :detail "shadow-css: :mb-0.5" :snippet ":mb-0.5"}
+  {:name "mb-1" :detail "shadow-css: :mb-1" :snippet ":mb-1"}
+  {:name "mb-2" :detail "shadow-css: :mb-2" :snippet ":mb-2"}
+  {:name "mb-3" :detail "shadow-css: :mb-3" :snippet ":mb-3"}
+  {:name "mb-4" :detail "shadow-css: :mb-4" :snippet ":mb-4"}
+  {:name "mb-5" :detail "shadow-css: :mb-5" :snippet ":mb-5"}
+  {:name "mb-6" :detail "shadow-css: :mb-6" :snippet ":mb-6"}
+  {:name "mb-7" :detail "shadow-css: :mb-7" :snippet ":mb-7"}
+  {:name "mb-8" :detail "shadow-css: :mb-8" :snippet ":mb-8"}
+
+  {:name "ml-0.5" :detail "shadow-css: :ml-0.5" :snippet ":ml-0.5"}
+  {:name "ml-1" :detail "shadow-css: :ml-1" :snippet ":ml-1"}
+  {:name "ml-2" :detail "shadow-css: :ml-2" :snippet ":ml-2"}
+  {:name "ml-3" :detail "shadow-css: :ml-3" :snippet ":ml-3"}
+  {:name "ml-4" :detail "shadow-css: :ml-4" :snippet ":ml-4"}
+  {:name "ml-5" :detail "shadow-css: :ml-5" :snippet ":ml-5"}
+  {:name "ml-6" :detail "shadow-css: :ml-6" :snippet ":ml-6"}
+  {:name "ml-7" :detail "shadow-css: :ml-7" :snippet ":ml-7"}
+  {:name "ml-8" :detail "shadow-css: :ml-8" :snippet ":ml-8"}
+
+  {:name "mx-0.5" :detail "shadow-css: :mx-0.5" :snippet ":mx-0.5"}
+  {:name "mx-1" :detail "shadow-css: :mx-1" :snippet ":mx-1"}
+  {:name "mx-2" :detail "shadow-css: :mx-2" :snippet ":mx-2"}
+  {:name "mx-3" :detail "shadow-css: :mx-3" :snippet ":mx-3"}
+  {:name "mx-4" :detail "shadow-css: :mx-4" :snippet ":mx-4"}
+  {:name "mx-5" :detail "shadow-css: :mx-5" :snippet ":mx-5"}
+  {:name "mx-6" :detail "shadow-css: :mx-6" :snippet ":mx-6"}
+  {:name "mx-7" :detail "shadow-css: :mx-7" :snippet ":mx-7"}
+  {:name "mx-8" :detail "shadow-css: :mx-8" :snippet ":mx-8"}
+
+  {:name "my-0.5" :detail "shadow-css: :my-0.5" :snippet ":my-0.5"}
+  {:name "my-1" :detail "shadow-css: :my-1" :snippet ":my-1"}
+  {:name "my-2" :detail "shadow-css: :my-2" :snippet ":my-2"}
+  {:name "my-3" :detail "shadow-css: :my-3" :snippet ":my-3"}
+  {:name "my-4" :detail "shadow-css: :my-4" :snippet ":my-4"}
+  {:name "my-5" :detail "shadow-css: :my-5" :snippet ":my-5"}
+  {:name "my-6" :detail "shadow-css: :my-6" :snippet ":my-6"}
+  {:name "my-7" :detail "shadow-css: :my-7" :snippet ":my-7"}
+  {:name "my-8" :detail "shadow-css: :my-8" :snippet ":my-8"}
+
+  ;; padding
+  {:name "p-0.5" :detail "shadow-css: :p-0.5" :snippet ":p-0.5"}
+  {:name "p-1" :detail "shadow-css: :p-1" :snippet ":p-1"}
+  {:name "p-2" :detail "shadow-css: :p-2" :snippet ":p-2"}
+  {:name "p-3" :detail "shadow-css: :p-3" :snippet ":p-3"}
+  {:name "p-4" :detail "shadow-css: :p-4" :snippet ":p-4"}
+  {:name "p-5" :detail "shadow-css: :p-5" :snippet ":p-5"}
+  {:name "p-6" :detail "shadow-css: :p-6" :snippet ":p-6"}
+  {:name "p-7" :detail "shadow-css: :p-7" :snippet ":p-7"}
+  {:name "p-8" :detail "shadow-css: :p-8" :snippet ":p-8"}
+
+  {:name "pt-0.5" :detail "shadow-css: :pt-0.5" :snippet ":pt-0.5"}
+  {:name "pt-1" :detail "shadow-css: :pt-1" :snippet ":pt-1"}
+  {:name "pt-2" :detail "shadow-css: :pt-2" :snippet ":pt-2"}
+  {:name "pt-3" :detail "shadow-css: :pt-3" :snippet ":pt-3"}
+  {:name "pt-4" :detail "shadow-css: :pt-4" :snippet ":pt-4"}
+  {:name "pt-5" :detail "shadow-css: :pt-5" :snippet ":pt-5"}
+  {:name "pt-6" :detail "shadow-css: :pt-6" :snippet ":pt-6"}
+  {:name "pt-7" :detail "shadow-css: :pt-7" :snippet ":pt-7"}
+  {:name "pt-8" :detail "shadow-css: :pt-8" :snippet ":pt-8"}
+
+  {:name "pr-0.5" :detail "shadow-css: :pr-0.5" :snippet ":pr-0.5"}
+  {:name "pr-1" :detail "shadow-css: :pr-1" :snippet ":pr-1"}
+  {:name "pr-2" :detail "shadow-css: :pr-2" :snippet ":pr-2"}
+  {:name "pr-3" :detail "shadow-css: :pr-3" :snippet ":pr-3"}
+  {:name "pr-4" :detail "shadow-css: :pr-4" :snippet ":pr-4"}
+  {:name "pr-5" :detail "shadow-css: :pr-5" :snippet ":pr-5"}
+  {:name "pr-6" :detail "shadow-css: :pr-6" :snippet ":pr-6"}
+  {:name "pr-7" :detail "shadow-css: :pr-7" :snippet ":pr-7"}
+  {:name "pr-8" :detail "shadow-css: :pr-8" :snippet ":pr-8"}
+
+  {:name "pb-0.5" :detail "shadow-css: :pb-0.5" :snippet ":pb-0.5"}
+  {:name "pb-1" :detail "shadow-css: :pb-1" :snippet ":pb-1"}
+  {:name "pb-2" :detail "shadow-css: :pb-2" :snippet ":pb-2"}
+  {:name "pb-3" :detail "shadow-css: :pb-3" :snippet ":pb-3"}
+  {:name "pb-4" :detail "shadow-css: :pb-4" :snippet ":pb-4"}
+  {:name "pb-5" :detail "shadow-css: :pb-5" :snippet ":pb-5"}
+  {:name "pb-6" :detail "shadow-css: :pb-6" :snippet ":pb-6"}
+  {:name "pb-7" :detail "shadow-css: :pb-7" :snippet ":pb-7"}
+  {:name "pb-8" :detail "shadow-css: :pb-8" :snippet ":pb-8"}
+
+  {:name "pl-0.5" :detail "shadow-css: :pl-0.5" :snippet ":pl-0.5"}
+  {:name "pl-1" :detail "shadow-css: :pl-1" :snippet ":pl-1"}
+  {:name "pl-2" :detail "shadow-css: :pl-2" :snippet ":pl-2"}
+  {:name "pl-3" :detail "shadow-css: :pl-3" :snippet ":pl-3"}
+  {:name "pl-4" :detail "shadow-css: :pl-4" :snippet ":pl-4"}
+  {:name "pl-5" :detail "shadow-css: :pl-5" :snippet ":pl-5"}
+  {:name "pl-6" :detail "shadow-css: :pl-6" :snippet ":pl-6"}
+  {:name "pl-7" :detail "shadow-css: :pl-7" :snippet ":pl-7"}
+  {:name "pl-8" :detail "shadow-css: :pl-8" :snippet ":pl-8"}
+
+  {:name "px-0.5" :detail "shadow-css: :px-0.5" :snippet ":px-0.5"}
+  {:name "px-1" :detail "shadow-css: :px-1" :snippet ":px-1"}
+  {:name "px-2" :detail "shadow-css: :px-2" :snippet ":px-2"}
+  {:name "px-3" :detail "shadow-css: :px-3" :snippet ":px-3"}
+  {:name "px-4" :detail "shadow-css: :px-4" :snippet ":px-4"}
+  {:name "px-5" :detail "shadow-css: :px-5" :snippet ":px-5"}
+  {:name "px-6" :detail "shadow-css: :px-6" :snippet ":px-6"}
+  {:name "px-7" :detail "shadow-css: :px-7" :snippet ":px-7"}
+  {:name "px-8" :detail "shadow-css: :px-8" :snippet ":px-8"}
+
+  {:name "py-0.5" :detail "shadow-css: :py-0.5" :snippet ":py-0.5"}
+  {:name "py-1" :detail "shadow-css: :py-1" :snippet ":py-1"}
+  {:name "py-2" :detail "shadow-css: :py-2" :snippet ":py-2"}
+  {:name "py-3" :detail "shadow-css: :py-3" :snippet ":py-3"}
+  {:name "py-4" :detail "shadow-css: :py-4" :snippet ":py-4"}
+  {:name "py-5" :detail "shadow-css: :py-5" :snippet ":py-5"}
+  {:name "py-6" :detail "shadow-css: :py-6" :snippet ":py-6"}
+  {:name "py-7" :detail "shadow-css: :py-7" :snippet ":py-7"}
+  {:name "py-8" :detail "shadow-css: :py-8" :snippet ":py-8"}
+
+  ;; gap
+  {:name "gap-0.5" :detail "shadow-css: :gap-0.5" :snippet ":gap-0.5"}
+  {:name "gap-1" :detail "shadow-css: :gap-1" :snippet ":gap-1"}
+  {:name "gap-2" :detail "shadow-css: :gap-2" :snippet ":gap-2"}
+  {:name "gap-3" :detail "shadow-css: :gap-3" :snippet ":gap-3"}
+  {:name "gap-4" :detail "shadow-css: :gap-4" :snippet ":gap-4"}
+  {:name "gap-5" :detail "shadow-css: :gap-5" :snippet ":gap-5"}
+  {:name "gap-6" :detail "shadow-css: :gap-6" :snippet ":gap-6"}
+  {:name "gap-7" :detail "shadow-css: :gap-7" :snippet ":gap-7"}
+  {:name "gap-8" :detail "shadow-css: :gap-8" :snippet ":gap-8"}
+  {:name "gap-x-0.5" :detail "shadow-css: :gap-x-0.5" :snippet ":gap-x-0.5"}
+  {:name "gap-x-1" :detail "shadow-css: :gap-x-1" :snippet ":gap-x-1"}
+  {:name "gap-x-2" :detail "shadow-css: :gap-x-2" :snippet ":gap-x-2"}
+  {:name "gap-x-3" :detail "shadow-css: :gap-x-3" :snippet ":gap-x-3"}
+  {:name "gap-x-4" :detail "shadow-css: :gap-x-4" :snippet ":gap-x-4"}
+  {:name "gap-x-5" :detail "shadow-css: :gap-x-5" :snippet ":gap-x-5"}
+  {:name "gap-x-6" :detail "shadow-css: :gap-x-6" :snippet ":gap-x-6"}
+  {:name "gap-x-7" :detail "shadow-css: :gap-x-7" :snippet ":gap-x-7"}
+  {:name "gap-x-8" :detail "shadow-css: :gap-x-8" :snippet ":gap-x-8"}
+  {:name "gap-y-0.5" :detail "shadow-css: :gap-y-0.5" :snippet ":gap-y-0.5"}
+  {:name "gap-y-1" :detail "shadow-css: :gap-y-1" :snippet ":gap-y-1"}
+  {:name "gap-y-2" :detail "shadow-css: :gap-y-2" :snippet ":gap-y-2"}
+  {:name "gap-y-3" :detail "shadow-css: :gap-y-3" :snippet ":gap-y-3"}
+  {:name "gap-y-4" :detail "shadow-css: :gap-y-4" :snippet ":gap-y-4"}
+  {:name "gap-y-5" :detail "shadow-css: :gap-y-5" :snippet ":gap-y-5"}
+  {:name "gap-y-6" :detail "shadow-css: :gap-y-6" :snippet ":gap-y-6"}
+  {:name "gap-y-7" :detail "shadow-css: :gap-y-7" :snippet ":gap-y-7"}
+  {:name "gap-y-8" :detail "shadow-css: :gap-y-8" :snippet ":gap-y-8"}
+
+  ;; flex
+  {:name "flex" :detail "shadow-css: :flex (display: flex)" :snippet ":flex"}
+  {:name "flex-inline" :detail "shadow-css: :flex-inline (display: inline-flex)" :snippet ":flex-inline"}
+  {:name "flex-1" :detail "shadow-css: :flex-1 (flex: 1 1 0%)" :snippet ":flex-1"}
+  {:name "flex-auto" :detail "shadow-css: :flex-auto (flex: 1 1 auto)" :snippet ":flex-auto"}
+  {:name "flex-initial" :detail "shadow-css: :flex-initial (flex: 0 1 auto)" :snippet ":flex-initial"}
+  {:name "flex-none" :detail "shadow-css: :flex-none (flex: none)" :snippet ":flex-none"}
+
+  ;; flex-direction
+  {:name "flex-row" :detail "shadow-css: :flex-row (flex-direction: row)" :snippet ":flex-row"}
+  {:name "flex-row-reverse" :detail "shadow-css: :flex-row-reverse (flex-direction: row-reverse)" :snippet ":flex-row-reverse"}
+  {:name "flex-col" :detail "shadow-css: :flex-col (flex-direction: column)" :snippet ":flex-col"}
+  {:name "flex-col-reverse" :detail "shadow-css: :flex-col-reverse (flex-direction: column-reverse)" :snippet ":flex-col-reverse"}
+
+  ;; flex-wrap
+  {:name "flex-wrap" :detail "shadow-css: :flex-wrap (flex-wrap: wrap)" :snippet ":flex-wrap"}
+  {:name "flex-wrap-reverse" :detail "shadow-css: :flex-wrap-reverse (flex-wrap: wrap-reverse)" :snippet ":flex-wrap-reverse"}
+  {:name "flex-nowrap" :detail "shadow-css: :flex-nowrap (flex-wrap: nowrap)" :snippet ":flex-nowrap"}
+
+  ;; flex-shrink, flex-grow
+  {:name "flex-shrink" :detail "shadow-css: :flex-shrink (flex-shrink: 1)" :snippet ":flex-shrink"}
+  {:name "flex-shrink-0" :detail "shadow-css: :flex-shrink-0 (flex-shrink: 0)" :snippet ":flex-shrink-0"}
+  {:name "shrink" :detail "shadow-css: :shrink (flex-shrink: 1)" :snippet ":shrink"}
+  {:name "shrink-0" :detail "shadow-css: :shrink-0 (flex-shrink: 0)" :snippet ":shrink-0"}
+  {:name "grow" :detail "shadow-css: :grow (flex-grow: 1)" :snippet ":grow"}
+  {:name "grow-0" :detail "shadow-css: :grow-0 (flex-grow: 0)" :snippet ":grow-0"}
+
+  ;; align-items
+  {:name "items-baseline" :detail "shadow-css: :items-baseline (align-items: baseline)" :snippet ":items-baseline"}
+  {:name "items-center" :detail "shadow-css: :items-center (align-items: center)" :snippet ":items-center"}
+  {:name "items-end" :detail "shadow-css: :items-end (align-items: flex-end)" :snippet ":items-end"}
+  {:name "items-start" :detail "shadow-css: :items-start (align-items: flex-start)" :snippet ":items-start"}
+  {:name "items-stretch" :detail "shadow-css: :items-stretch (align-items: stretch)" :snippet ":items-stretch"}
+
+  ;; align-self
+  {:name "self-auto" :detail "shadow-css: :self-auto (align-self: auto)" :snippet ":self-auto"}
+  {:name "self-baseline" :detail "shadow-css: :self-baseline (align-self: baseline)" :snippet ":self-baseline"}
+  {:name "self-center" :detail "shadow-css: :self-center (align-self: center)" :snippet ":self-center"}
+  {:name "self-end" :detail "shadow-css: :self-end (align-self: flex-end)" :snippet ":self-end"}
+  {:name "self-start" :detail "shadow-css: :self-start (align-self: flex-start)" :snippet ":self-start"}
+  {:name "self-stretch" :detail "shadow-css: :self-stretch (align-self: stretch)" :snippet ":self-stretch"}
+
+  ;; justify-items
+  {:name "justify-items-center" :detail "shadow-css: :justify-items-center (justify-items: center)" :snippet ":justify-items-center"}
+  {:name "justify-items-end" :detail "shadow-css: :justify-items-end (justify-items: end)" :snippet ":justify-items-end"}
+  {:name "justify-items-start" :detail "shadow-css: :justify-items-start (justify-items: start)" :snippet ":justify-items-start"}
+  {:name "justify-items-stretch" :detail "shadow-css: :justify-items-stretch (justify-items: stretch)" :snippet ":justify-items-stretch"}
+
+  ;; justify-self
+  {:name "justify-self-auto" :detail "shadow-css: :justify-self-auto (justify-self: auto)" :snippet ":justify-self-auto"}
+  {:name "justify-self-center" :detail "shadow-css: :justify-self-center (justify-self: center)" :snippet ":justify-self-center"}
+  {:name "justify-self-end" :detail "shadow-css: :justify-self-end (justify-self: end)" :snippet ":justify-self-end"}
+  {:name "justify-self-start" :detail "shadow-css: :justify-self-start (justify-self: start)" :snippet ":justify-self-start"}
+  {:name "justify-self-stretch" :detail "shadow-css: :justify-self-stretch (justify-self: stretch)" :snippet ":justify-self-stretch"}
+
+  ;; justify-content
+  {:name "justify-around" :detail "shadow-css: :justify-around (justify-content: space-around)" :snippet ":justify-around"}
+  {:name "justify-between" :detail "shadow-css: :justify-between (justify-content: space-between)" :snippet ":justify-between"}
+  {:name "justify-center" :detail "shadow-css: :justify-center (justify-content: center)" :snippet ":justify-center"}
+  {:name "justify-end" :detail "shadow-css: :justify-end (justify-content: flex-end)" :snippet ":justify-end"}
+  {:name "justify-evenly" :detail "shadow-css: :justify-evenly (justify-content: space-evenly)" :snippet ":justify-evenly"}
+  {:name "justify-start" :detail "shadow-css: :justify-start (justify-content: flex-start)" :snippet ":justify-start"}
+
+  ;; vertical-align
+  {:name "align-baseline" :detail "shadow-css: :align-baseline (vertical-align: baseline)" :snippet ":align-baseline"}
+  {:name "align-bottom" :detail "shadow-css: :align-bottom (vertical-align: bottom)" :snippet ":align-bottom"}
+  {:name "align-middle" :detail "shadow-css: :align-middle (vertical-align: middle)" :snippet ":align-middle"}
+  {:name "align-sub" :detail "shadow-css: :align-sub (vertical-align: sub)" :snippet ":align-sub"}
+  {:name "align-super" :detail "shadow-css: :align-super (vertical-align: super)" :snippet ":align-super"}
+  {:name "align-text-bottom" :detail "shadow-css: :align-text-bottom (vertical-align: text-bottom)" :snippet ":align-text-bottom"}
+  {:name "align-text-top" :detail "shadow-css: :align-text-top (vertical-align: text-top)" :snippet ":align-text-top"}
+  {:name "align-top" :detail "shadow-css: :align-top (vertical-align: top)" :snippet ":align-top"}
+
+  ;; white-space
+  {:name "whitespace-normal" :detail "shadow-css: :whitespace-normal (white-space: normal)" :snippet ":whitespace-normal"}
+  {:name "whitespace-nowrap" :detail "shadow-css: :whitespace-nowrap (white-space: nowrap)" :snippet ":whitespace-nowrap"}
+  {:name "whitespace-pre" :detail "shadow-css: :whitespace-pre (white-space: pre)" :snippet ":whitespace-pre"}
+  {:name "whitespace-pre-line" :detail "shadow-css: :whitespace-pre-line (white-space: pre-line)" :snippet ":whitespace-pre-line"}
+  {:name "whitespace-pre-wrap" :detail "shadow-css: :whitespace-pre-wrap (white-space: pre-wrap)" :snippet ":whitespace-pre-wrap"}
+
+  ;; font-weight
+  {:name "font-normal" :detail "shadow-css: :font-normal (font-weight: 400)" :snippet ":font-normal"}
+  {:name "font-medium" :detail "shadow-css: :font-medium (font-weight: 500)" :snippet ":font-medium"}
+  {:name "font-bold" :detail "shadow-css: :font-bold (font-weight: 700)" :snippet ":font-bold"}
+
+  ;; font-family
+  {:name "font-sans" :detail "shadow-css: :font-sans (sans-serif font stack)" :snippet ":font-sans"}
+
+  ;; line-height
+  {:name "leading-none" :detail "shadow-css: :leading-none (line-height: 1)" :snippet ":leading-none"}
+  {:name "leading-heading" :detail "shadow-css: :leading-heading (line-height: 1.25)" :snippet ":leading-heading"}
+  {:name "leading-normal" :detail "shadow-css: :leading-normal (line-height: 1.6)" :snippet ":leading-normal"}
+
+  ;; font-size
+  {:name "text-xxs" :detail "shadow-css: :text-xxs (font-size: 0.625rem)" :snippet ":text-xxs"}
+  {:name "text-xs" :detail "shadow-css: :text-xs (font-size: 0.75rem)" :snippet ":text-xs"}
+  {:name "text-sm" :detail "shadow-css: :text-sm (font-size: 0.875rem)" :snippet ":text-sm"}
+  {:name "text-base" :detail "shadow-css: :text-base (font-size: 1rem)" :snippet ":text-base"}
+  {:name "text-lg" :detail "shadow-css: :text-lg (font-size: 1.125rem)" :snippet ":text-lg"}
+  {:name "text-xl" :detail "shadow-css: :text-xl (font-size: 1.25rem)" :snippet ":text-xl"}
+  {:name "text-2xl" :detail "shadow-css: :text-2xl (font-size: 1.5rem)" :snippet ":text-2xl"}
+  {:name "text-3xl" :detail "shadow-css: :text-3xl (font-size: 1.875rem)" :snippet ":text-3xl"}
+  {:name "text-4xl" :detail "shadow-css: :text-4xl (font-size: 2.25rem)" :snippet ":text-4xl"}
+  {:name "text-5xl" :detail "shadow-css: :text-5xl (font-size: 3rem)" :snippet ":text-5xl"}
+
+  ;; text-overflow
+  {:name "truncate" :detail "shadow-css: :truncate (text overflow ellipsis)" :snippet ":truncate"}
+  {:name "text-ellipsis" :detail "shadow-css: :text-ellipsis (text-overflow: ellipsis)" :snippet ":text-ellipsis"}
+  {:name "text-clip" :detail "shadow-css: :text-clip (text-overflow: clip)" :snippet ":text-clip"}
+
+  ;; overflow
+  {:name "overflow-auto" :detail "shadow-css: :overflow-auto (overflow: auto)" :snippet ":overflow-auto"}
+  {:name "overflow-clip" :detail "shadow-css: :overflow-clip (overflow: clip)" :snippet ":overflow-clip"}
+  {:name "overflow-hidden" :detail "shadow-css: :overflow-hidden (overflow: hidden)" :snippet ":overflow-hidden"}
+  {:name "overflow-scroll" :detail "shadow-css: :overflow-scroll (overflow: scroll)" :snippet ":overflow-scroll"}
+  {:name "overflow-visible" :detail "shadow-css: :overflow-visible (overflow: visible)" :snippet ":overflow-visible"}
+  {:name "overflow-x-auto" :detail "shadow-css: :overflow-x-auto (overflow-x: auto)" :snippet ":overflow-x-auto"}
+  {:name "overflow-x-clip" :detail "shadow-css: :overflow-x-clip (overflow-x: clip)" :snippet ":overflow-x-clip"}
+  {:name "overflow-x-hidden" :detail "shadow-css: :overflow-x-hidden (overflow-x: hidden)" :snippet ":overflow-x-hidden"}
+  {:name "overflow-x-scroll" :detail "shadow-css: :overflow-x-scroll (overflow-x: scroll)" :snippet ":overflow-x-scroll"}
+  {:name "overflow-x-visible" :detail "shadow-css: :overflow-x-visible (overflow-x: visible)" :snippet ":overflow-x-visible"}
+  {:name "overflow-y-auto" :detail "shadow-css: :overflow-y-auto (overflow-y: auto)" :snippet ":overflow-y-auto"}
+  {:name "overflow-y-clip" :detail "shadow-css: :overflow-y-clip (overflow-y: clip)" :snippet ":overflow-y-clip"}
+  {:name "overflow-y-hidden" :detail "shadow-css: :overflow-y-hidden (overflow-y: hidden)" :snippet ":overflow-y-hidden"}
+  {:name "overflow-y-scroll" :detail "shadow-css: :overflow-y-scroll (overflow-y: scroll)" :snippet ":overflow-y-scroll"}
+  {:name "overflow-y-visible" :detail "shadow-css: :overflow-y-visible (overflow-y: visible)" :snippet ":overflow-y-visible"}
+
+  ;; border
+  {:name "border" :detail "shadow-css: :border (border-width: 1px)" :snippet ":border"}
+  {:name "border-0" :detail "shadow-css: :border-0 (border-width: 0px)" :snippet ":border-0"}
+  {:name "border-2" :detail "shadow-css: :border-2 (border-width: 2px)" :snippet ":border-2"}
+  {:name "border-4" :detail "shadow-css: :border-4 (border-width: 4px)" :snippet ":border-4"}
+  {:name "border-8" :detail "shadow-css: :border-8 (border-width: 8px)" :snippet ":border-8"}
+  {:name "border-t" :detail "shadow-css: :border-t (border-top-width: 1px)" :snippet ":border-t"}
+  {:name "border-t-0" :detail "shadow-css: :border-t-0 (border-top-width: 0px)" :snippet ":border-t-0"}
+  {:name "border-t-2" :detail "shadow-css: :border-t-2 (border-top-width: 2px)" :snippet ":border-t-2"}
+  {:name "border-t-4" :detail "shadow-css: :border-t-4 (border-top-width: 4px)" :snippet ":border-t-4"}
+  {:name "border-t-8" :detail "shadow-css: :border-t-8 (border-top-width: 8px)" :snippet ":border-t-8"}
+  {:name "border-r" :detail "shadow-css: :border-r (border-right-width: 1px)" :snippet ":border-r"}
+  {:name "border-r-0" :detail "shadow-css: :border-r-0 (border-right-width: 0px)" :snippet ":border-r-0"}
+  {:name "border-r-2" :detail "shadow-css: :border-r-2 (border-right-width: 2px)" :snippet ":border-r-2"}
+  {:name "border-r-4" :detail "shadow-css: :border-r-4 (border-right-width: 4px)" :snippet ":border-r-4"}
+  {:name "border-r-8" :detail "shadow-css: :border-r-8 (border-right-width: 8px)" :snippet ":border-r-8"}
+  {:name "border-b" :detail "shadow-css: :border-b (border-bottom-width: 1px)" :snippet ":border-b"}
+  {:name "border-b-0" :detail "shadow-css: :border-b-0 (border-bottom-width: 0px)" :snippet ":border-b-0"}
+  {:name "border-b-2" :detail "shadow-css: :border-b-2 (border-bottom-width: 2px)" :snippet ":border-b-2"}
+  {:name "border-b-4" :detail "shadow-css: :border-b-4 (border-bottom-width: 4px)" :snippet ":border-b-4"}
+  {:name "border-b-8" :detail "shadow-css: :border-b-8 (border-bottom-width: 8px)" :snippet ":border-b-8"}
+  {:name "border-l" :detail "shadow-css: :border-l (border-left-width: 1px)" :snippet ":border-l"}
+  {:name "border-l-0" :detail "shadow-css: :border-l-0 (border-left-width: 0px)" :snippet ":border-l-0"}
+  {:name "border-l-2" :detail "shadow-css: :border-l-2 (border-left-width: 2px)" :snippet ":border-l-2"}
+  {:name "border-l-4" :detail "shadow-css: :border-l-4 (border-left-width: 4px)" :snippet ":border-l-4"}
+  {:name "border-l-8" :detail "shadow-css: :border-l-8 (border-left-width: 8px)" :snippet ":border-l-8"}
+  {:name "border-x" :detail "shadow-css: :border-x (horizontal border: 1px)" :snippet ":border-x"}
+  {:name "border-x-0" :detail "shadow-css: :border-x-0 (horizontal border: 0px)" :snippet ":border-x-0"}
+  {:name "border-x-2" :detail "shadow-css: :border-x-2 (horizontal border: 2px)" :snippet ":border-x-2"}
+  {:name "border-x-4" :detail "shadow-css: :border-x-4 (horizontal border: 4px)" :snippet ":border-x-4"}
+  {:name "border-x-8" :detail "shadow-css: :border-x-8 (horizontal border: 8px)" :snippet ":border-x-8"}
+  {:name "border-y" :detail "shadow-css: :border-y (vertical border: 1px)" :snippet ":border-y"}
+  {:name "border-y-0" :detail "shadow-css: :border-y-0 (vertical border: 0px)" :snippet ":border-y-0"}
+  {:name "border-y-2" :detail "shadow-css: :border-y-2 (vertical border: 2px)" :snippet ":border-y-2"}
+  {:name "border-y-4" :detail "shadow-css: :border-y-4 (vertical border: 4px)" :snippet ":border-y-4"}
+  {:name "border-y-8" :detail "shadow-css: :border-y-8 (vertical border: 8px)" :snippet ":border-y-8"}
+
+  ;; shadow
+  {:name "shadow-sm" :detail "shadow-css: :shadow-sm" :snippet ":shadow-sm"}
+  {:name "shadow-md" :detail "shadow-css: :shadow-md" :snippet ":shadow-md"}
+  {:name "shadow-lg" :detail "shadow-css: :shadow-lg" :snippet ":shadow-lg"}
+
+  ;; outline
+  {:name "outline" :detail "shadow-css: :outline (outline-style: solid)" :snippet ":outline"}
+  {:name "outline-dashed" :detail "shadow-css: :outline-dashed (outline-style: dashed)" :snippet ":outline-dashed"}
+  {:name "outline-dotted" :detail "shadow-css: :outline-dotted (outline-style: dotted)" :snippet ":outline-dotted"}
+  {:name "outline-double" :detail "shadow-css: :outline-double (outline-style: double)" :snippet ":outline-double"}
+  {:name "outline-hidden" :detail "shadow-css: :outline-hidden (outline-style: hidden)" :snippet ":outline-hidden"}
+  {:name "outline-none" :detail "shadow-css: :outline-none (outline: transparent)" :snippet ":outline-none"}
+
+  ;; z-index
+  {:name "z-0" :detail "shadow-css: :z-0 (z-index: 0)" :snippet ":z-0"}
+  {:name "z-10" :detail "shadow-css: :z-10 (z-index: 10)" :snippet ":z-10"}
+  {:name "z-20" :detail "shadow-css: :z-20 (z-index: 20)" :snippet ":z-20"}
+  {:name "z-30" :detail "shadow-css: :z-30 (z-index: 30)" :snippet ":z-30"}
+  {:name "z-40" :detail "shadow-css: :z-40 (z-index: 40)" :snippet ":z-40"}
+  {:name "z-50" :detail "shadow-css: :z-50 (z-index: 50)" :snippet ":z-50"}
+  {:name "z-auto" :detail "shadow-css: :z-auto (z-index: auto)" :snippet ":z-auto"}
+
+  ;; height
+  {:name "h-auto" :detail "shadow-css: :h-auto (height: auto)" :snippet ":h-auto"}
+  {:name "h-full" :detail "shadow-css: :h-full (height: 100%)" :snippet ":h-full"}
+  {:name "h-screen" :detail "shadow-css: :h-screen (height: 100vh)" :snippet ":h-screen"}
+  {:name "h-min" :detail "shadow-css: :h-min (height: min-content)" :snippet ":h-min"}
+  {:name "h-max" :detail "shadow-css: :h-max (height: max-content)" :snippet ":h-max"}
+  {:name "h-fit" :detail "shadow-css: :h-fit (height: fit-content)" :snippet ":h-fit"}
+  {:name "h-1of2" :detail "shadow-css: :h-1of2 (height: 50%)" :snippet ":h-1of2"}
+  {:name "h-1of3" :detail "shadow-css: :h-1of3 (height: 33.333%)" :snippet ":h-1of3"}
+  {:name "h-2of3" :detail "shadow-css: :h-2of3 (height: 66.667%)" :snippet ":h-2of3"}
+  {:name "h-1of4" :detail "shadow-css: :h-1of4 (height: 25%)" :snippet ":h-1of4"}
+  {:name "h-2of4" :detail "shadow-css: :h-2of4 (height: 50%)" :snippet ":h-2of4"}
+  {:name "h-3of4" :detail "shadow-css: :h-3of4 (height: 75%)" :snippet ":h-3of4"}
+  {:name "h-1of5" :detail "shadow-css: :h-1of5 (height: 20%)" :snippet ":h-1of5"}
+  {:name "h-2of5" :detail "shadow-css: :h-2of5 (height: 40%)" :snippet ":h-2of5"}
+  {:name "h-3of5" :detail "shadow-css: :h-3of5 (height: 60%)" :snippet ":h-3of5"}
+  {:name "h-4of5" :detail "shadow-css: :h-4of5 (height: 80%)" :snippet ":h-4of5"}
+  {:name "h-1of6" :detail "shadow-css: :h-1of6 (height: 16.667%)" :snippet ":h-1of6"}
+  {:name "h-2of6" :detail "shadow-css: :h-2of6 (height: 33.333%)" :snippet ":h-2of6"}
+  {:name "h-3of6" :detail "shadow-css: :h-3of6 (height: 50%)" :snippet ":h-3of6"}
+  {:name "h-4of6" :detail "shadow-css: :h-4of6 (height: 66.667%)" :snippet ":h-4of6"}
+  {:name "h-5of6" :detail "shadow-css: :h-5of6 (height: 83.333%)" :snippet ":h-5of6"}
+
+  ;; min-height
+  {:name "min-h-0" :detail "shadow-css: :min-h-0 (min-height: 0px)" :snippet ":min-h-0"}
+  {:name "min-h-fit" :detail "shadow-css: :min-h-fit (min-height: fit-content)" :snippet ":min-h-fit"}
+  {:name "min-h-full" :detail "shadow-css: :min-h-full (min-height: 100%)" :snippet ":min-h-full"}
+  {:name "min-h-max" :detail "shadow-css: :min-h-max (min-height: max-content)" :snippet ":min-h-max"}
+  {:name "min-h-min" :detail "shadow-css: :min-h-min (min-height: min-content)" :snippet ":min-h-min"}
+  {:name "min-h-screen" :detail "shadow-css: :min-h-screen (min-height: 100vh)" :snippet ":min-h-screen"}
+
+  ;; max-height
+  {:name "max-h-fit" :detail "shadow-css: :max-h-fit (max-height: fit-content)" :snippet ":max-h-fit"}
+  {:name "max-h-full" :detail "shadow-css: :max-h-full (max-height: 100%)" :snippet ":max-h-full"}
+  {:name "max-h-max" :detail "shadow-css: :max-h-max (max-height: max-content)" :snippet ":max-h-max"}
+  {:name "max-h-min" :detail "shadow-css: :max-h-min (max-height: min-content)" :snippet ":max-h-min"}
+  {:name "max-h-screen" :detail "shadow-css: :max-h-screen (max-height: 100vh)" :snippet ":max-h-screen"}
+
+  ;; width
+  {:name "w-auto" :detail "shadow-css: :w-auto (width: auto)" :snippet ":w-auto"}
+  {:name "w-full" :detail "shadow-css: :w-full (width: 100%)" :snippet ":w-full"}
+  {:name "w-screen" :detail "shadow-css: :w-screen (width: 100vw)" :snippet ":w-screen"}
+  {:name "w-min" :detail "shadow-css: :w-min (width: min-content)" :snippet ":w-min"}
+  {:name "w-max" :detail "shadow-css: :w-max (width: max-content)" :snippet ":w-max"}
+  {:name "w-fit" :detail "shadow-css: :w-fit (width: fit-content)" :snippet ":w-fit"}
+  {:name "w-1of2" :detail "shadow-css: :w-1of2 (width: 50%)" :snippet ":w-1of2"}
+  {:name "w-1of3" :detail "shadow-css: :w-1of3 (width: 33.333%)" :snippet ":w-1of3"}
+  {:name "w-2of3" :detail "shadow-css: :w-2of3 (width: 66.667%)" :snippet ":w-2of3"}
+  {:name "w-1of4" :detail "shadow-css: :w-1of4 (width: 25%)" :snippet ":w-1of4"}
+  {:name "w-2of4" :detail "shadow-css: :w-2of4 (width: 50%)" :snippet ":w-2of4"}
+  {:name "w-3of4" :detail "shadow-css: :w-3of4 (width: 75%)" :snippet ":w-3of4"}
+  {:name "w-1of5" :detail "shadow-css: :w-1of5 (width: 20%)" :snippet ":w-1of5"}
+  {:name "w-2of5" :detail "shadow-css: :w-2of5 (width: 40%)" :snippet ":w-2of5"}
+  {:name "w-3of5" :detail "shadow-css: :w-3of5 (width: 60%)" :snippet ":w-3of5"}
+  {:name "w-4of5" :detail "shadow-css: :w-4of5 (width: 80%)" :snippet ":w-4of5"}
+  {:name "w-1of6" :detail "shadow-css: :w-1of6 (width: 16.667%)" :snippet ":w-1of6"}
+  {:name "w-2of6" :detail "shadow-css: :w-2of6 (width: 33.333%)" :snippet ":w-2of6"}
+  {:name "w-3of6" :detail "shadow-css: :w-3of6 (width: 50%)" :snippet ":w-3of6"}
+  {:name "w-4of6" :detail "shadow-css: :w-4of6 (width: 66.667%)" :snippet ":w-4of6"}
+  {:name "w-5of6" :detail "shadow-css: :w-5of6 (width: 83.333%)" :snippet ":w-5of6"}
+  {:name "w-1of12" :detail "shadow-css: :w-1of12 (width: 8.333%)" :snippet ":w-1of12"}
+  {:name "w-2of12" :detail "shadow-css: :w-2of12 (width: 16.667%)" :snippet ":w-2of12"}
+  {:name "w-3of12" :detail "shadow-css: :w-3of12 (width: 25%)" :snippet ":w-3of12"}
+  {:name "w-4of12" :detail "shadow-css: :w-4of12 (width: 33.333%)" :snippet ":w-4of12"}
+  {:name "w-5of12" :detail "shadow-css: :w-5of12 (width: 41.667%)" :snippet ":w-5of12"}
+  {:name "w-6of12" :detail "shadow-css: :w-6of12 (width: 50%)" :snippet ":w-6of12"}
+  {:name "w-7of12" :detail "shadow-css: :w-7of12 (width: 58.333%)" :snippet ":w-7of12"}
+  {:name "w-8of12" :detail "shadow-css: :w-8of12 (width: 66.667%)" :snippet ":w-8of12"}
+  {:name "w-9of12" :detail "shadow-css: :w-9of12 (width: 75%)" :snippet ":w-9of12"}
+  {:name "w-10of12" :detail "shadow-css: :w-10of12 (width: 83.333%)" :snippet ":w-10of12"}
+  {:name "w-11of12" :detail "shadow-css: :w-11of12 (width: 91.667%)" :snippet ":w-11of12"}
+
+  ;; min-width
+  {:name "min-w-0" :detail "shadow-css: :min-w-0 (min-width: 0px)" :snippet ":min-w-0"}
+  {:name "min-w-fit" :detail "shadow-css: :min-w-fit (min-width: fit-content)" :snippet ":min-w-fit"}
+  {:name "min-w-full" :detail "shadow-css: :min-w-full (min-width: 100%)" :snippet ":min-w-full"}
+  {:name "min-w-max" :detail "shadow-css: :min-w-max (min-width: max-content)" :snippet ":min-w-max"}
+  {:name "min-w-min" :detail "shadow-css: :min-w-min (min-width: min-content)" :snippet ":min-w-min"}
+  {:name "min-w-screen" :detail "shadow-css: :min-w-screen (min-width: 100vw)" :snippet ":min-w-screen"}
+
+  ;; max-width
+  {:name "max-w-fit" :detail "shadow-css: :max-w-fit (max-width: fit-content)" :snippet ":max-w-fit"}
+  {:name "max-w-full" :detail "shadow-css: :max-w-full (max-width: 100%)" :snippet ":max-w-full"}
+  {:name "max-w-max" :detail "shadow-css: :max-w-max (max-width: max-content)" :snippet ":max-w-max"}
+  {:name "max-w-min" :detail "shadow-css: :max-w-min (max-width: min-content)" :snippet ":max-w-min"}
+  {:name "max-w-screen" :detail "shadow-css: :max-w-screen (max-width: 100vw)" :snippet ":max-w-screen"}
+
+  ;; テキスト整列
+  {:name "text-left" :detail "shadow-css: :text-left (text-align: left)" :snippet ":text-left"}
+  {:name "text-center" :detail "shadow-css: :text-center (text-align: center)" :snippet ":text-center"}
+  {:name "text-right" :detail "shadow-css: :text-right (text-align: right)" :snippet ":text-right"}
+  {:name "text-justify" :detail "shadow-css: :text-justify (text-align: justify)" :snippet ":text-justify"}
+  {:name "text-start" :detail "shadow-css: :text-start (text-align: start)" :snippet ":text-start"}
+  {:name "text-end" :detail "shadow-css: :text-end (text-align: end)" :snippet ":text-end"}
+
+  ;; cursor
+  {:name "cursor-auto" :detail "shadow-css: :cursor-auto (cursor: auto)" :snippet ":cursor-auto"}
+  {:name "cursor-default" :detail "shadow-css: :cursor-default (cursor: default)" :snippet ":cursor-default"}
+  {:name "cursor-pointer" :detail "shadow-css: :cursor-pointer (cursor: pointer)" :snippet ":cursor-pointer"}
+  {:name "cursor-wait" :detail "shadow-css: :cursor-wait (cursor: wait)" :snippet ":cursor-wait"}
+  {:name "cursor-text" :detail "shadow-css: :cursor-text (cursor: text)" :snippet ":cursor-text"}
+  {:name "cursor-move" :detail "shadow-css: :cursor-move (cursor: move)" :snippet ":cursor-move"}
+  {:name "cursor-help" :detail "shadow-css: :cursor-help (cursor: help)" :snippet ":cursor-help"}
+  {:name "cursor-not-allowed" :detail "shadow-css: :cursor-not-allowed (cursor: not-allowed)" :snippet ":cursor-not-allowed"}
+  {:name "cursor-none" :detail "shadow-css: :cursor-none (cursor: none)" :snippet ":cursor-none"}
+  {:name "cursor-context-menu" :detail "shadow-css: :cursor-context-menu (cursor: context-menu)" :snippet ":cursor-context-menu"}
+  {:name "cursor-progress" :detail "shadow-css: :cursor-progress (cursor: progress)" :snippet ":cursor-progress"}
+  {:name "cursor-cell" :detail "shadow-css: :cursor-cell (cursor: cell)" :snippet ":cursor-cell"}
+  {:name "cursor-crosshair" :detail "shadow-css: :cursor-crosshair (cursor: crosshair)" :snippet ":cursor-crosshair"}
+  {:name "cursor-vertical-text" :detail "shadow-css: :cursor-vertical-text (cursor: vertical-text)" :snippet ":cursor-vertical-text"}
+  {:name "cursor-alias" :detail "shadow-css: :cursor-alias (cursor: alias)" :snippet ":cursor-alias"}
+  {:name "cursor-copy" :detail "shadow-css: :cursor-copy (cursor: copy)" :snippet ":cursor-copy"}
+  {:name "cursor-no-drop" :detail "shadow-css: :cursor-no-drop (cursor: no-drop)" :snippet ":cursor-no-drop"}
+  {:name "cursor-grab" :detail "shadow-css: :cursor-grab (cursor: grab)" :snippet ":cursor-grab"}
+  {:name "cursor-grabbing" :detail "shadow-css: :cursor-grabbing (cursor: grabbing)" :snippet ":cursor-grabbing"}
+  {:name "cursor-all-scroll" :detail "shadow-css: :cursor-all-scroll (cursor: all-scroll)" :snippet ":cursor-all-scroll"}
+  {:name "cursor-col-resize" :detail "shadow-css: :cursor-col-resize (cursor: col-resize)" :snippet ":cursor-col-resize"}
+  {:name "cursor-row-resize" :detail "shadow-css: :cursor-row-resize (cursor: row-resize)" :snippet ":cursor-row-resize"}
+  {:name "cursor-n-resize" :detail "shadow-css: :cursor-n-resize (cursor: n-resize)" :snippet ":cursor-n-resize"}
+  {:name "cursor-e-resize" :detail "shadow-css: :cursor-e-resize (cursor: e-resize)" :snippet ":cursor-e-resize"}
+  {:name "cursor-s-resize" :detail "shadow-css: :cursor-s-resize (cursor: s-resize)" :snippet ":cursor-s-resize"}
+  {:name "cursor-w-resize" :detail "shadow-css: :cursor-w-resize (cursor: w-resize)" :snippet ":cursor-w-resize"}
+  {:name "cursor-ne-resize" :detail "shadow-css: :cursor-ne-resize (cursor: ne-resize)" :snippet ":cursor-ne-resize"}
+  {:name "cursor-nw-resize" :detail "shadow-css: :cursor-nw-resize (cursor: nw-resize)" :snippet ":cursor-nw-resize"}
+  {:name "cursor-se-resize" :detail "shadow-css: :cursor-se-resize (cursor: se-resize)" :snippet ":cursor-se-resize"}
+  {:name "cursor-sw-resize" :detail "shadow-css: :cursor-sw-resize (cursor: sw-resize)" :snippet ":cursor-sw-resize"}
+  {:name "cursor-ew-resize" :detail "shadow-css: :cursor-ew-resize (cursor: ew-resize)" :snippet ":cursor-ew-resize"}
+  {:name "cursor-ns-resize" :detail "shadow-css: :cursor-ns-resize (cursor: ns-resize)" :snippet ":cursor-ns-resize"}
+  {:name "cursor-nesw-resize" :detail "shadow-css: :cursor-nesw-resize (cursor: nesw-resize)" :snippet ":cursor-nesw-resize"}
+  {:name "cursor-nwse-resize" :detail "shadow-css: :cursor-nwse-resize (cursor: nwse-resize)" :snippet ":cursor-nwse-resize"}
+  {:name "cursor-zoom-in" :detail "shadow-css: :cursor-zoom-in (cursor: zoom-in)" :snippet ":cursor-zoom-in"}
+  {:name "cursor-zoom-out" :detail "shadow-css: :cursor-zoom-out (cursor: zoom-out)" :snippet ":cursor-zoom-out"}
+
+  ;; user-select
+  {:name "select-none" :detail "shadow-css: :select-none (user-select: none)" :snippet ":select-none"}
+  {:name "select-text" :detail "shadow-css: :select-text (user-select: text)" :snippet ":select-text"}
+  {:name "select-all" :detail "shadow-css: :select-all (user-select: all)" :snippet ":select-all"}
+  {:name "select-auto" :detail "shadow-css: :select-auto (user-select: auto)" :snippet ":select-auto"}
+
+  ;; pointer-events
+  {:name "pointer-events-none" :detail "shadow-css: :pointer-events-none (pointer-events: none)" :snippet ":pointer-events-none"}
+  {:name "pointer-events-auto" :detail "shadow-css: :pointer-events-auto (pointer-events: auto)" :snippet ":pointer-events-auto"}
+
+  ;; position
+  {:name "static" :detail "shadow-css: :static (position: static)" :snippet ":static"}
+  {:name "fixed" :detail "shadow-css: :fixed (position: fixed)" :snippet ":fixed"}
+  {:name "absolute" :detail "shadow-css: :absolute (position: absolute)" :snippet ":absolute"}
+  {:name "relative" :detail "shadow-css: :relative (position: relative)" :snippet ":relative"}
+  {:name "sticky" :detail "shadow-css: :sticky (position: sticky)" :snippet ":sticky"}
+
+  ;; top/right/bottom/left
+  {:name "inset-0" :detail "shadow-css: :inset-0 (top/right/bottom/left: 0px)" :snippet ":inset-0"}
+  {:name "top-full" :detail "shadow-css: :top-full (top: 100%)" :snippet ":top-full"}
+  {:name "right-full" :detail "shadow-css: :right-full (right: 100%)" :snippet ":right-full"}
+  {:name "bottom-full" :detail "shadow-css: :bottom-full (bottom: 100%)" :snippet ":bottom-full"}
+  {:name "left-full" :detail "shadow-css: :left-full (left: 100%)" :snippet ":left-full"}
+
+  ;; border-radius (全部の角)
+  {:name "rounded" :detail "shadow-css: :rounded (border-radius: 0.25rem)" :snippet ":rounded"}
+  {:name "rounded-none" :detail "shadow-css: :rounded-none (border-radius: 0px)" :snippet ":rounded-none"}
+  {:name "rounded-sm" :detail "shadow-css: :rounded-sm (border-radius: 0.125rem)" :snippet ":rounded-sm"}
+  {:name "rounded-md" :detail "shadow-css: :rounded-md (border-radius: 0.375rem)" :snippet ":rounded-md"}
+  {:name "rounded-lg" :detail "shadow-css: :rounded-lg (border-radius: 0.5rem)" :snippet ":rounded-lg"}
+  {:name "rounded-xl" :detail "shadow-css: :rounded-xl (border-radius: 0.75rem)" :snippet ":rounded-xl"}
+  {:name "rounded-2xl" :detail "shadow-css: :rounded-2xl (border-radius: 1rem)" :snippet ":rounded-2xl"}
+  {:name "rounded-3xl" :detail "shadow-css: :rounded-3xl (border-radius: 1.5rem)" :snippet ":rounded-3xl"}
+  {:name "rounded-full" :detail "shadow-css: :rounded-full (border-radius: 9999px)" :snippet ":rounded-full"}
+
+  ;; border-radius (上の角）
+  {:name "rounded-t" :detail "shadow-css: :rounded-t (top border-radius: 0.25rem)" :snippet ":rounded-t"}
+  {:name "rounded-t-none" :detail "shadow-css: :rounded-t-none (top border-radius: 0px)" :snippet ":rounded-t-none"}
+  {:name "rounded-t-sm" :detail "shadow-css: :rounded-t-sm (top border-radius: 0.125rem)" :snippet ":rounded-t-sm"}
+  {:name "rounded-t-md" :detail "shadow-css: :rounded-t-md (top border-radius: 0.375rem)" :snippet ":rounded-t-md"}
+  {:name "rounded-t-lg" :detail "shadow-css: :rounded-t-lg (top border-radius: 0.5rem)" :snippet ":rounded-t-lg"}
+  {:name "rounded-t-xl" :detail "shadow-css: :rounded-t-xl (top border-radius: 0.75rem)" :snippet ":rounded-t-xl"}
+  {:name "rounded-t-2xl" :detail "shadow-css: :rounded-t-2xl (top border-radius: 1rem)" :snippet ":rounded-t-2xl"}
+  {:name "rounded-t-3xl" :detail "shadow-css: :rounded-t-3xl (top border-radius: 1.5rem)" :snippet ":rounded-t-3xl"}
+  {:name "rounded-t-full" :detail "shadow-css: :rounded-t-full (top border-radius: 9999px)" :snippet ":rounded-t-full"}
+
+  ;; border-radius (右の角)
+  {:name "rounded-r" :detail "shadow-css: :rounded-r (right border-radius: 0.25rem)" :snippet ":rounded-r"}
+  {:name "rounded-r-none" :detail "shadow-css: :rounded-r-none (right border-radius: 0px)" :snippet ":rounded-r-none"}
+  {:name "rounded-r-sm" :detail "shadow-css: :rounded-r-sm (right border-radius: 0.125rem)" :snippet ":rounded-r-sm"}
+  {:name "rounded-r-md" :detail "shadow-css: :rounded-r-md (right border-radius: 0.375rem)" :snippet ":rounded-r-md"}
+  {:name "rounded-r-lg" :detail "shadow-css: :rounded-r-lg (right border-radius: 0.5rem)" :snippet ":rounded-r-lg"}
+  {:name "rounded-r-xl" :detail "shadow-css: :rounded-r-xl (right border-radius: 0.75rem)" :snippet ":rounded-r-xl"}
+  {:name "rounded-r-2xl" :detail "shadow-css: :rounded-r-2xl (right border-radius: 1rem)" :snippet ":rounded-r-2xl"}
+  {:name "rounded-r-3xl" :detail "shadow-css: :rounded-r-3xl (right border-radius: 1.5rem)" :snippet ":rounded-r-3xl"}
+  {:name "rounded-r-full" :detail "shadow-css: :rounded-r-full (right border-radius: 9999px)" :snippet ":rounded-r-full"}
+
+  ;; border-radius (下の角)
+  {:name "rounded-b" :detail "shadow-css: :rounded-b (bottom border-radius: 0.25rem)" :snippet ":rounded-b"}
+  {:name "rounded-b-none" :detail "shadow-css: :rounded-b-none (bottom border-radius: 0px)" :snippet ":rounded-b-none"}
+  {:name "rounded-b-sm" :detail "shadow-css: :rounded-b-sm (bottom border-radius: 0.125rem)" :snippet ":rounded-b-sm"}
+  {:name "rounded-b-md" :detail "shadow-css: :rounded-b-md (bottom border-radius: 0.375rem)" :snippet ":rounded-b-md"}
+  {:name "rounded-b-lg" :detail "shadow-css: :rounded-b-lg (bottom border-radius: 0.5rem)" :snippet ":rounded-b-lg"}
+  {:name "rounded-b-xl" :detail "shadow-css: :rounded-b-xl (bottom border-radius: 0.75rem)" :snippet ":rounded-b-xl"}
+  {:name "rounded-b-2xl" :detail "shadow-css: :rounded-b-2xl (bottom border-radius: 1rem)" :snippet ":rounded-b-2xl"}
+  {:name "rounded-b-3xl" :detail "shadow-css: :rounded-b-3xl (bottom border-radius: 1.5rem)" :snippet ":rounded-b-3xl"}
+  {:name "rounded-b-full" :detail "shadow-css: :rounded-b-full (bottom border-radius: 9999px)" :snippet ":rounded-b-full"}
+
+  ;; border-radius (左の角)
+  {:name "rounded-l" :detail "shadow-css: :rounded-l (left border-radius: 0.25rem)" :snippet ":rounded-l"}
+  {:name "rounded-l-none" :detail "shadow-css: :rounded-l-none (left border-radius: 0px)" :snippet ":rounded-l-none"}
+  {:name "rounded-l-sm" :detail "shadow-css: :rounded-l-sm (left border-radius: 0.125rem)" :snippet ":rounded-l-sm"}
+  {:name "rounded-l-md" :detail "shadow-css: :rounded-l-md (left border-radius: 0.375rem)" :snippet ":rounded-l-md"}
+  {:name "rounded-l-lg" :detail "shadow-css: :rounded-l-lg (left border-radius: 0.5rem)" :snippet ":rounded-l-lg"}
+  {:name "rounded-l-xl" :detail "shadow-css: :rounded-l-xl (left border-radius: 0.75rem)" :snippet ":rounded-l-xl"}
+  {:name "rounded-l-2xl" :detail "shadow-css: :rounded-l-2xl (left border-radius: 1rem)" :snippet ":rounded-l-2xl"}
+  {:name "rounded-l-3xl" :detail "shadow-css: :rounded-l-3xl (left border-radius: 1.5rem)" :snippet ":rounded-l-3xl"}
+  {:name "rounded-l-full" :detail "shadow-css: :rounded-l-full (left border-radius: 9999px)" :snippet ":rounded-l-full"}
+
+  ;; border-radius (左上の角)
+  {:name "rounded-tl" :detail "shadow-css: :rounded-tl (top-left border-radius: 0.25rem)" :snippet ":rounded-tl"}
+  {:name "rounded-tl-none" :detail "shadow-css: :rounded-tl-none (top-left border-radius: 0px)" :snippet ":rounded-tl-none"}
+  {:name "rounded-tl-sm" :detail "shadow-css: :rounded-tl-sm (top-left border-radius: 0.125rem)" :snippet ":rounded-tl-sm"}
+  {:name "rounded-tl-md" :detail "shadow-css: :rounded-tl-md (top-left border-radius: 0.375rem)" :snippet ":rounded-tl-md"}
+  {:name "rounded-tl-lg" :detail "shadow-css: :rounded-tl-lg (top-left border-radius: 0.5rem)" :snippet ":rounded-tl-lg"}
+  {:name "rounded-tl-xl" :detail "shadow-css: :rounded-tl-xl (top-left border-radius: 0.75rem)" :snippet ":rounded-tl-xl"}
+  {:name "rounded-tl-2xl" :detail "shadow-css: :rounded-tl-2xl (top-left border-radius: 1rem)" :snippet ":rounded-tl-2xl"}
+  {:name "rounded-tl-3xl" :detail "shadow-css: :rounded-tl-3xl (top-left border-radius: 1.5rem)" :snippet ":rounded-tl-3xl"}
+  {:name "rounded-tl-full" :detail "shadow-css: :rounded-tl-full (top-left border-radius: 9999px)" :snippet ":rounded-tl-full"}
+
+  ;; border-radius (右上の角)
+  {:name "rounded-tr" :detail "shadow-css: :rounded-tr (top-right border-radius: 0.25rem)" :snippet ":rounded-tr"}
+  {:name "rounded-tr-none" :detail "shadow-css: :rounded-tr-none (top-right border-radius: 0px)" :snippet ":rounded-tr-none"}
+  {:name "rounded-tr-sm" :detail "shadow-css: :rounded-tr-sm (top-right border-radius: 0.125rem)" :snippet ":rounded-tr-sm"}
+  {:name "rounded-tr-md" :detail "shadow-css: :rounded-tr-md (top-right border-radius: 0.375rem)" :snippet ":rounded-tr-md"}
+  {:name "rounded-tr-lg" :detail "shadow-css: :rounded-tr-lg (top-right border-radius: 0.5rem)" :snippet ":rounded-tr-lg"}
+  {:name "rounded-tr-xl" :detail "shadow-css: :rounded-tr-xl (top-right border-radius: 0.75rem)" :snippet ":rounded-tr-xl"}
+  {:name "rounded-tr-2xl" :detail "shadow-css: :rounded-tr-2xl (top-right border-radius: 1rem)" :snippet ":rounded-tr-2xl"}
+  {:name "rounded-tr-3xl" :detail "shadow-css: :rounded-tr-3xl (top-right border-radius: 1.5rem)" :snippet ":rounded-tr-3xl"}
+  {:name "rounded-tr-full" :detail "shadow-css: :rounded-tr-full (top-right border-radius: 9999px)" :snippet ":rounded-tr-full"}
+
+  ;; border-radius (右下の角)
+  {:name "rounded-br" :detail "shadow-css: :rounded-br (bottom-right border-radius: 0.25rem)" :snippet ":rounded-br"}
+  {:name "rounded-br-none" :detail "shadow-css: :rounded-br-none (bottom-right border-radius: 0px)" :snippet ":rounded-br-none"}
+  {:name "rounded-br-sm" :detail "shadow-css: :rounded-br-sm (bottom-right border-radius: 0.125rem)" :snippet ":rounded-br-sm"}
+  {:name "rounded-br-md" :detail "shadow-css: :rounded-br-md (bottom-right border-radius: 0.375rem)" :snippet ":rounded-br-md"}
+  {:name "rounded-br-lg" :detail "shadow-css: :rounded-br-lg (bottom-right border-radius: 0.5rem)" :snippet ":rounded-br-lg"}
+  {:name "rounded-br-xl" :detail "shadow-css: :rounded-br-xl (bottom-right border-radius: 0.75rem)" :snippet ":rounded-br-xl"}
+  {:name "rounded-br-2xl" :detail "shadow-css: :rounded-br-2xl (bottom-right border-radius: 1rem)" :snippet ":rounded-br-2xl"}
+  {:name "rounded-br-3xl" :detail "shadow-css: :rounded-br-3xl (bottom-right border-radius: 1.5rem)" :snippet ":rounded-br-3xl"}
+  {:name "rounded-br-full" :detail "shadow-css: :rounded-br-full (bottom-right border-radius: 9999px)" :snippet ":rounded-br-full"}
+
+  ;; border-radius (左下の角)
+  {:name "rounded-bl" :detail "shadow-css: :rounded-bl (bottom-left border-radius: 0.25rem)" :snippet ":rounded-bl"}
+  {:name "rounded-bl-none" :detail "shadow-css: :rounded-bl-none (bottom-left border-radius: 0px)" :snippet ":rounded-bl-none"}
+  {:name "rounded-bl-sm" :detail "shadow-css: :rounded-bl-sm (bottom-left border-radius: 0.125rem)" :snippet ":rounded-bl-sm"}
+  {:name "rounded-bl-md" :detail "shadow-css: :rounded-bl-md (bottom-left border-radius: 0.375rem)" :snippet ":rounded-bl-md"}
+  {:name "rounded-bl-lg" :detail "shadow-css: :rounded-bl-lg (bottom-left border-radius: 0.5rem)" :snippet ":rounded-bl-lg"}
+  {:name "rounded-bl-xl" :detail "shadow-css: :rounded-bl-xl (bottom-left border-radius: 0.75rem)" :snippet ":rounded-bl-xl"}
+  {:name "rounded-bl-2xl" :detail "shadow-css: :rounded-bl-2xl (bottom-left border-radius: 1rem)" :snippet ":rounded-bl-2xl"}
+  {:name "rounded-bl-3xl" :detail "shadow-css: :rounded-bl-3xl (bottom-left border-radius: 1.5rem)" :snippet ":rounded-bl-3xl"}
+  {:name "rounded-bl-full" :detail "shadow-css: :rounded-bl-full (bottom-left border-radius: 9999px)" :snippet ":rounded-bl-full"}
+
+  ;; 分割線
+  {:name "divide-x" :detail "shadow-css: :divide-x (horizontal dividers)" :snippet ":divide-x"}
+  {:name "divide-x-0" :detail "shadow-css: :divide-x-0 (no horizontal dividers)" :snippet ":divide-x-0"}
+  {:name "divide-x-2" :detail "shadow-css: :divide-x-2 (2px horizontal dividers)" :snippet ":divide-x-2"}
+  {:name "divide-x-4" :detail "shadow-css: :divide-x-4 (4px horizontal dividers)" :snippet ":divide-x-4"}
+  {:name "divide-x-8" :detail "shadow-css: :divide-x-8 (8px horizontal dividers)" :snippet ":divide-x-8"}
+  {:name "divide-y" :detail "shadow-css: :divide-y (vertical dividers)" :snippet ":divide-y"}
+  {:name "divide-y-0" :detail "shadow-css: :divide-y-0 (no vertical dividers)" :snippet ":divide-y-0"}
+  {:name "divide-y-2" :detail "shadow-css: :divide-y-2 (2px vertical dividers)" :snippet ":divide-y-2"}
+  {:name "divide-y-4" :detail "shadow-css: :divide-y-4 (4px vertical dividers)" :snippet ":divide-y-4"}
+  {:name "divide-y-8" :detail "shadow-css: :divide-y-8 (8px vertical dividers)" :snippet ":divide-y-8"}
+  {:name "divide-solid" :detail "shadow-css: :divide-solid (solid divider style)" :snippet ":divide-solid"}
+  {:name "divide-dashed" :detail "shadow-css: :divide-dashed (dashed divider style)" :snippet ":divide-dashed"}
+  {:name "divide-dotted" :detail "shadow-css: :divide-dotted (dotted divider style)" :snippet ":divide-dotted"}
+  {:name "divide-double" :detail "shadow-css: :divide-double (double divider style)" :snippet ":divide-double"}
+  {:name "divide-none" :detail "shadow-css: :divide-none (no divider style)" :snippet ":divide-none"}
+
+  ;; opacity
+  {:name "opacity-0" :detail "shadow-css: :opacity-0 (opacity: 0)" :snippet ":opacity-0"}
+  {:name "opacity-5" :detail "shadow-css: :opacity-5 (opacity: 0.05)" :snippet ":opacity-5"}
+  {:name "opacity-10" :detail "shadow-css: :opacity-10 (opacity: 0.1)" :snippet ":opacity-10"}
+  {:name "opacity-20" :detail "shadow-css: :opacity-20 (opacity: 0.2)" :snippet ":opacity-20"}
+  {:name "opacity-25" :detail "shadow-css: :opacity-25 (opacity: 0.25)" :snippet ":opacity-25"}
+  {:name "opacity-30" :detail "shadow-css: :opacity-30 (opacity: 0.3)" :snippet ":opacity-30"}
+  {:name "opacity-40" :detail "shadow-css: :opacity-40 (opacity: 0.4)" :snippet ":opacity-40"}
+  {:name "opacity-50" :detail "shadow-css: :opacity-50 (opacity: 0.5)" :snippet ":opacity-50"}
+  {:name "opacity-60" :detail "shadow-css: :opacity-60 (opacity: 0.6)" :snippet ":opacity-60"}
+  {:name "opacity-70" :detail "shadow-css: :opacity-70 (opacity: 0.7)" :snippet ":opacity-70"}
+  {:name "opacity-75" :detail "shadow-css: :opacity-75 (opacity: 0.75)" :snippet ":opacity-75"}
+  {:name "opacity-80" :detail "shadow-css: :opacity-80 (opacity: 0.8)" :snippet ":opacity-80"}
+  {:name "opacity-90" :detail "shadow-css: :opacity-90 (opacity: 0.9)" :snippet ":opacity-90"}
+  {:name "opacity-95" :detail "shadow-css: :opacity-95 (opacity: 0.95)" :snippet ":opacity-95"}
+  {:name "opacity-100" :detail "shadow-css: :opacity-100 (opacity: 1)" :snippet ":opacity-100"}
+
+  ;; transition
+  {:name "transition-none" :detail "shadow-css: :transition-none (no transition)" :snippet ":transition-none"}
+  {:name "transition-all" :detail "shadow-css: :transition-all (transition all properties)" :snippet ":transition-all"}
+  {:name "transition" :detail "shadow-css: :transition (default transition)" :snippet ":transition"}
+  {:name "transition-colors" :detail "shadow-css: :transition-colors (transition colors)" :snippet ":transition-colors"}
+  {:name "transition-opacity" :detail "shadow-css: :transition-opacity (transition opacity)" :snippet ":transition-opacity"}
+  {:name "transition-shadow" :detail "shadow-css: :transition-shadow (transition shadow)" :snippet ":transition-shadow"}
+  {:name "transition-transform" :detail "shadow-css: :transition-transform (transition transform)" :snippet ":transition-transform"}
+
+  ;; transition-duration
+  {:name "duration-0" :detail "shadow-css: :duration-0 (transition-duration: 0s)" :snippet ":duration-0"}
+  {:name "duration-75" :detail "shadow-css: :duration-75 (transition-duration: 75ms)" :snippet ":duration-75"}
+  {:name "duration-100" :detail "shadow-css: :duration-100 (transition-duration: 100ms)" :snippet ":duration-100"}
+  {:name "duration-150" :detail "shadow-css: :duration-150 (transition-duration: 150ms)" :snippet ":duration-150"}
+  {:name "duration-200" :detail "shadow-css: :duration-200 (transition-duration: 200ms)" :snippet ":duration-200"}
+  {:name "duration-300" :detail "shadow-css: :duration-300 (transition-duration: 300ms)" :snippet ":duration-300"}
+  {:name "duration-500" :detail "shadow-css: :duration-500 (transition-duration: 500ms)" :snippet ":duration-500"}
+  {:name "duration-700" :detail "shadow-css: :duration-700 (transition-duration: 700ms)" :snippet ":duration-700"}
+  {:name "duration-1000" :detail "shadow-css: :duration-1000 (transition-duration: 1000ms)" :snippet ":duration-1000"}
+
+  ;; transition-timing-function
+  {:name "ease-linear" :detail "shadow-css: :ease-linear (transition-timing-function: linear)" :snippet ":ease-linear"}
+  {:name "ease-in" :detail "shadow-css: :ease-in (transition-timing-function: ease-in)" :snippet ":ease-in"}
+  {:name "ease-out" :detail "shadow-css: :ease-out (transition-timing-function: ease-out)" :snippet ":ease-out"}
+  {:name "ease-in-out" :detail "shadow-css: :ease-in-out (transition-timing-function: ease-in-out)" :snippet ":ease-in-out"}
+
+  ;; transition-delay
+  {:name "delay-0" :detail "shadow-css: :delay-0 (transition-delay: 0s)" :snippet ":delay-0"}
+  {:name "delay-75" :detail "shadow-css: :delay-75 (transition-delay: 75ms)" :snippet ":delay-75"}
+  {:name "delay-100" :detail "shadow-css: :delay-100 (transition-delay: 100ms)" :snippet ":delay-100"}
+  {:name "delay-150" :detail "shadow-css: :delay-150 (transition-delay: 150ms)" :snippet ":delay-150"}
+  {:name "delay-200" :detail "shadow-css: :delay-200 (transition-delay: 200ms)" :snippet ":delay-200"}
+  {:name "delay-300" :detail "shadow-css: :delay-300 (transition-delay: 300ms)" :snippet ":delay-300"}
+  {:name "delay-500" :detail "shadow-css: :delay-500 (transition-delay: 500ms)" :snippet ":delay-500"}
+  {:name "delay-700" :detail "shadow-css: :delay-700 (transition-delay: 700ms)" :snippet ":delay-700"}
+  {:name "delay-1000" :detail "shadow-css: :delay-1000 (transition-delay: 1000ms)" :snippet ":delay-1000"}
+
+  ;; transform-origin
+  {:name "origin-center" :detail "shadow-css: :origin-center (transform-origin: center)" :snippet ":origin-center"}
+  {:name "origin-top" :detail "shadow-css: :origin-top (transform-origin: top)" :snippet ":origin-top"}
+  {:name "origin-top-right" :detail "shadow-css: :origin-top-right (transform-origin: top right)" :snippet ":origin-top-right"}
+  {:name "origin-right" :detail "shadow-css: :origin-right (transform-origin: right)" :snippet ":origin-right"}
+  {:name "origin-bottom-right" :detail "shadow-css: :origin-bottom-right (transform-origin: bottom right)" :snippet ":origin-bottom-right"}
+  {:name "origin-bottom" :detail "shadow-css: :origin-bottom (transform-origin: bottom)" :snippet ":origin-bottom"}
+  {:name "origin-bottom-left" :detail "shadow-css: :origin-bottom-left (transform-origin: bottom left)" :snippet ":origin-bottom-left"}
+  {:name "origin-left" :detail "shadow-css: :origin-left (transform-origin: left)" :snippet ":origin-left"}
+  {:name "origin-top-left" :detail "shadow-css: :origin-top-left (transform-origin: top left)" :snippet ":origin-top-left"}
+
+  ;; visibility
+  {:name "visible" :detail "shadow-css: :visible (visibility: visible)" :snippet ":visible"}
+  {:name "invisible" :detail "shadow-css: :invisible (visibility: hidden)" :snippet ":invisible"}
+
+  ;; aspect-ratio
+  {:name "aspect-auto" :detail "shadow-css: :aspect-auto (aspect-ratio: auto)" :snippet ":aspect-auto"}
+  {:name "aspect-square" :detail "shadow-css: :aspect-square (aspect-ratio: 1 / 1)" :snippet ":aspect-square"}
+  {:name "aspect-video" :detail "shadow-css: :aspect-video (aspect-ratio: 16 / 9)" :snippet ":aspect-video"}
+
+  ;; text-decoration-line
+  {:name "underline" :detail "shadow-css: :underline (text-decoration-line: underline)" :snippet ":underline"}
+  {:name "overline" :detail "shadow-css: :overline (text-decoration-line: overline)" :snippet ":overline"}
+  {:name "line-through" :detail "shadow-css: :line-through (text-decoration-line: line-through)" :snippet ":line-through"}
+  {:name "no-underline" :detail "shadow-css: :no-underline (text-decoration-line: none)" :snippet ":no-underline"}
+
+  ;; background-color
+  {:name "bg-white-50" :detail "shadow-css: :bg-white-50" :snippet ":bg-white-50"}
+  {:name "bg-white-100" :detail "shadow-css: :bg-white-100" :snippet ":bg-white-100"}
+  {:name "bg-white-300" :detail "shadow-css: :bg-white-300" :snippet ":bg-white-300"}
+  {:name "bg-black-400" :detail "shadow-css: :bg-black-400" :snippet ":bg-black-400"}
+  {:name "bg-black-500" :detail "shadow-css: :bg-black-500" :snippet ":bg-black-500"}
+  {:name "bg-black-600" :detail "shadow-css: :bg-black-600" :snippet ":bg-black-600"}
+  {:name "bg-gray-100" :detail "shadow-css: :bg-gray-100" :snippet ":bg-gray-100"}
+  {:name "bg-gray-200" :detail "shadow-css: :bg-gray-200" :snippet ":bg-gray-200"}
+  {:name "bg-gray-300" :detail "shadow-css: :bg-gray-300" :snippet ":bg-gray-300"}
+  {:name "bg-gray-400" :detail "shadow-css: :bg-gray-400" :snippet ":bg-gray-400"}
+  {:name "bg-gray-500" :detail "shadow-css: :bg-gray-500" :snippet ":bg-gray-500"}
+  {:name "bg-gray-600" :detail "shadow-css: :bg-gray-600" :snippet ":bg-gray-600"}
+  {:name "bg-gray-700" :detail "shadow-css: :bg-gray-700" :snippet ":bg-gray-700"}
+  {:name "bg-gray-800" :detail "shadow-css: :bg-gray-800" :snippet ":bg-gray-800"}
+  {:name "bg-gray-900" :detail "shadow-css: :bg-gray-900" :snippet ":bg-gray-900"}
+  {:name "bg-blue-100" :detail "shadow-css: :bg-blue-100" :snippet ":bg-blue-100"}
+  {:name "bg-blue-200" :detail "shadow-css: :bg-blue-200" :snippet ":bg-blue-200"}
+  {:name "bg-blue-300" :detail "shadow-css: :bg-blue-300" :snippet ":bg-blue-300"}
+  {:name "bg-blue-400" :detail "shadow-css: :bg-blue-400" :snippet ":bg-blue-400"}
+  {:name "bg-blue-500" :detail "shadow-css: :bg-blue-500" :snippet ":bg-blue-500"}
+  {:name "bg-blue-600" :detail "shadow-css: :bg-blue-600" :snippet ":bg-blue-600"}
+  {:name "bg-blue-700" :detail "shadow-css: :bg-blue-700" :snippet ":bg-blue-700"}
+  {:name "bg-blue-800" :detail "shadow-css: :bg-blue-800" :snippet ":bg-blue-800"}
+  {:name "bg-blue-900" :detail "shadow-css: :bg-blue-900" :snippet ":bg-blue-900"}
+  {:name "bg-red-100" :detail "shadow-css: :bg-red-100" :snippet ":bg-red-100"}
+  {:name "bg-red-400" :detail "shadow-css: :bg-red-400" :snippet ":bg-red-400"}
+  {:name "bg-red-500" :detail "shadow-css: :bg-red-500" :snippet ":bg-red-500"}
+  {:name "bg-red-700" :detail "shadow-css: :bg-red-700" :snippet ":bg-red-700"}
+  {:name "bg-green-100" :detail "shadow-css: :bg-green-100" :snippet ":bg-green-100"}
+  {:name "bg-green-400" :detail "shadow-css: :bg-green-400" :snippet ":bg-green-400"}
+  {:name "bg-green-500" :detail "shadow-css: :bg-green-500" :snippet ":bg-green-500"}
+  {:name "bg-green-700" :detail "shadow-css: :bg-green-700" :snippet ":bg-green-700"}
+
+  ;; color
+  {:name "text-white-50" :detail "shadow-css: :text-white-50" :snippet ":text-white-50"}
+  {:name "text-white-100" :detail "shadow-css: :text-white-100" :snippet ":text-white-100"}
+  {:name "text-white-300" :detail "shadow-css: :text-white-300" :snippet ":text-white-300"}
+  {:name "text-black-400" :detail "shadow-css: :text-black-400" :snippet ":text-black-400"}
+  {:name "text-black-500" :detail "shadow-css: :text-black-500" :snippet ":text-black-500"}
+  {:name "text-black-600" :detail "shadow-css: :text-black-600" :snippet ":text-black-600"}
+  {:name "text-gray-100" :detail "shadow-css: :text-gray-100" :snippet ":text-gray-100"}
+  {:name "text-gray-200" :detail "shadow-css: :text-gray-200" :snippet ":text-gray-200"}
+  {:name "text-gray-300" :detail "shadow-css: :text-gray-300" :snippet ":text-gray-300"}
+  {:name "text-gray-400" :detail "shadow-css: :text-gray-400" :snippet ":text-gray-400"}
+  {:name "text-gray-500" :detail "shadow-css: :text-gray-500" :snippet ":text-gray-500"}
+  {:name "text-gray-600" :detail "shadow-css: :text-gray-600" :snippet ":text-gray-600"}
+  {:name "text-gray-700" :detail "shadow-css: :text-gray-700" :snippet ":text-gray-700"}
+  {:name "text-gray-800" :detail "shadow-css: :text-gray-800" :snippet ":text-gray-800"}
+  {:name "text-gray-900" :detail "shadow-css: :text-gray-900" :snippet ":text-gray-900"}
+  {:name "text-blue-100" :detail "shadow-css: :text-blue-100" :snippet ":text-blue-100"}
+  {:name "text-blue-200" :detail "shadow-css: :text-blue-200" :snippet ":text-blue-200"}
+  {:name "text-blue-300" :detail "shadow-css: :text-blue-300" :snippet ":text-blue-300"}
+  {:name "text-blue-400" :detail "shadow-css: :text-blue-400" :snippet ":text-blue-400"}
+  {:name "text-blue-500" :detail "shadow-css: :text-blue-500" :snippet ":text-blue-500"}
+  {:name "text-blue-600" :detail "shadow-css: :text-blue-600" :snippet ":text-blue-600"}
+  {:name "text-blue-700" :detail "shadow-css: :text-blue-700" :snippet ":text-blue-700"}
+  {:name "text-blue-800" :detail "shadow-css: :text-blue-800" :snippet ":text-blue-800"}
+  {:name "text-blue-900" :detail "shadow-css: :text-blue-900" :snippet ":text-blue-900"}
+  {:name "text-red-100" :detail "shadow-css: :text-red-100" :snippet ":text-red-100"}
+  {:name "text-red-400" :detail "shadow-css: :text-red-400" :snippet ":text-red-400"}
+  {:name "text-red-500" :detail "shadow-css: :text-red-500" :snippet ":text-red-500"}
+  {:name "text-red-700" :detail "shadow-css: :text-red-700" :snippet ":text-red-700"}
+  {:name "text-green-100" :detail "shadow-css: :text-green-100" :snippet ":text-green-100"}
+  {:name "text-green-400" :detail "shadow-css: :text-green-400" :snippet ":text-green-400"}
+  {:name "text-green-500" :detail "shadow-css: :text-green-500" :snippet ":text-green-500"}
+  {:name "text-green-700" :detail "shadow-css: :text-green-700" :snippet ":text-green-700"}
+
+  ;; border-color
+  {:name "border-white-50" :detail "shadow-css: :border-white-50" :snippet ":border-white-50"}
+  {:name "border-white-100" :detail "shadow-css: :border-white-100" :snippet ":border-white-100"}
+  {:name "border-white-300" :detail "shadow-css: :border-white-300" :snippet ":border-white-300"}
+  {:name "border-black-400" :detail "shadow-css: :border-black-400" :snippet ":border-black-400"}
+  {:name "border-black-500" :detail "shadow-css: :border-black-500" :snippet ":border-black-500"}
+  {:name "border-black-600" :detail "shadow-css: :border-black-600" :snippet ":border-black-600"}
+  {:name "border-gray-100" :detail "shadow-css: :border-gray-100" :snippet ":border-gray-100"}
+  {:name "border-gray-200" :detail "shadow-css: :border-gray-200" :snippet ":border-gray-200"}
+  {:name "border-gray-300" :detail "shadow-css: :border-gray-300" :snippet ":border-gray-300"}
+  {:name "border-gray-400" :detail "shadow-css: :border-gray-400" :snippet ":border-gray-400"}
+  {:name "border-gray-500" :detail "shadow-css: :border-gray-500" :snippet ":border-gray-500"}
+  {:name "border-gray-600" :detail "shadow-css: :border-gray-600" :snippet ":border-gray-600"}
+  {:name "border-gray-700" :detail "shadow-css: :border-gray-700" :snippet ":border-gray-700"}
+  {:name "border-gray-800" :detail "shadow-css: :border-gray-800" :snippet ":border-gray-800"}
+  {:name "border-gray-900" :detail "shadow-css: :border-gray-900" :snippet ":border-gray-900"}
+  {:name "border-blue-100" :detail "shadow-css: :border-blue-100" :snippet ":border-blue-100"}
+  {:name "border-blue-200" :detail "shadow-css: :border-blue-200" :snippet ":border-blue-200"}
+  {:name "border-blue-300" :detail "shadow-css: :border-blue-300" :snippet ":border-blue-300"}
+  {:name "border-blue-400" :detail "shadow-css: :border-blue-400" :snippet ":border-blue-400"}
+  {:name "border-blue-500" :detail "shadow-css: :border-blue-500" :snippet ":border-blue-500"}
+  {:name "border-blue-600" :detail "shadow-css: :border-blue-600" :snippet ":border-blue-600"}
+  {:name "border-blue-700" :detail "shadow-css: :border-blue-700" :snippet ":border-blue-700"}
+  {:name "border-blue-800" :detail "shadow-css: :border-blue-800" :snippet ":border-blue-800"}
+  {:name "border-blue-900" :detail "shadow-css: :border-blue-900" :snippet ":border-blue-900"}
+  {:name "border-red-100" :detail "shadow-css: :border-red-100" :snippet ":border-red-100"}
+  {:name "border-red-400" :detail "shadow-css: :border-red-400" :snippet ":border-red-400"}
+  {:name "border-red-500" :detail "shadow-css: :border-red-500" :snippet ":border-red-500"}
+  {:name "border-red-700" :detail "shadow-css: :border-red-700" :snippet ":border-red-700"}
+  {:name "border-green-100" :detail "shadow-css: :border-green-100" :snippet ":border-green-100"}
+  {:name "border-green-400" :detail "shadow-css: :border-green-400" :snippet ":border-green-400"}
+  {:name "border-green-500" :detail "shadow-css: :border-green-500" :snippet ":border-green-500"}
+  {:name "border-green-700" :detail "shadow-css: :border-green-700" :snippet ":border-green-700"}
+
+  ;; outline-color
+  {:name "outline-white-50" :detail "shadow-css: :outline-white-50" :snippet ":outline-white-50"}
+  {:name "outline-white-100" :detail "shadow-css: :outline-white-100" :snippet ":outline-white-100"}
+  {:name "outline-white-300" :detail "shadow-css: :outline-white-300" :snippet ":outline-white-300"}
+  {:name "outline-black-400" :detail "shadow-css: :outline-black-400" :snippet ":outline-black-400"}
+  {:name "outline-black-500" :detail "shadow-css: :outline-black-500" :snippet ":outline-black-500"}
+  {:name "outline-black-600" :detail "shadow-css: :outline-black-600" :snippet ":outline-black-600"}
+  {:name "outline-gray-100" :detail "shadow-css: :outline-gray-100" :snippet ":outline-gray-100"}
+  {:name "outline-gray-200" :detail "shadow-css: :outline-gray-200" :snippet ":outline-gray-200"}
+  {:name "outline-gray-300" :detail "shadow-css: :outline-gray-300" :snippet ":outline-gray-300"}
+  {:name "outline-gray-400" :detail "shadow-css: :outline-gray-400" :snippet ":outline-gray-400"}
+  {:name "outline-gray-500" :detail "shadow-css: :outline-gray-500" :snippet ":outline-gray-500"}
+  {:name "outline-gray-600" :detail "shadow-css: :outline-gray-600" :snippet ":outline-gray-600"}
+  {:name "outline-gray-700" :detail "shadow-css: :outline-gray-700" :snippet ":outline-gray-700"}
+  {:name "outline-gray-800" :detail "shadow-css: :outline-gray-800" :snippet ":outline-gray-800"}
+  {:name "outline-gray-900" :detail "shadow-css: :outline-gray-900" :snippet ":outline-gray-900"}
+  {:name "outline-blue-100" :detail "shadow-css: :outline-blue-100" :snippet ":outline-blue-100"}
+  {:name "outline-blue-200" :detail "shadow-css: :outline-blue-200" :snippet ":outline-blue-200"}
+  {:name "outline-blue-300" :detail "shadow-css: :outline-blue-300" :snippet ":outline-blue-300"}
+  {:name "outline-blue-400" :detail "shadow-css: :outline-blue-400" :snippet ":outline-blue-400"}
+  {:name "outline-blue-500" :detail "shadow-css: :outline-blue-500" :snippet ":outline-blue-500"}
+  {:name "outline-blue-600" :detail "shadow-css: :outline-blue-600" :snippet ":outline-blue-600"}
+  {:name "outline-blue-700" :detail "shadow-css: :outline-blue-700" :snippet ":outline-blue-700"}
+  {:name "outline-blue-800" :detail "shadow-css: :outline-blue-800" :snippet ":outline-blue-800"}
+  {:name "outline-blue-900" :detail "shadow-css: :outline-blue-900" :snippet ":outline-blue-900"}
+  {:name "outline-red-100" :detail "shadow-css: :outline-red-100" :snippet ":outline-red-100"}
+  {:name "outline-red-400" :detail "shadow-css: :outline-red-400" :snippet ":outline-red-400"}
+  {:name "outline-red-500" :detail "shadow-css: :outline-red-500" :snippet ":outline-red-500"}
+  {:name "outline-red-700" :detail "shadow-css: :outline-red-700" :snippet ":outline-red-700"}
+  {:name "outline-green-100" :detail "shadow-css: :outline-green-100" :snippet ":outline-green-100"}
+  {:name "outline-green-400" :detail "shadow-css: :outline-green-400" :snippet ":outline-green-400"}
+  {:name "outline-green-500" :detail "shadow-css: :outline-green-500" :snippet ":outline-green-500"}
+  {:name "outline-green-700" :detail "shadow-css: :outline-green-700" :snippet ":outline-green-700"}
+
+  ;; ===== その他（適宜追加）=====
+  ;; HoneySQLのクエリなど(:select)良いんじゃないかな
+  ]}

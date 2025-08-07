@@ -1,0 +1,34 @@
+{
+  "Insert Breakpoint": {
+    "scope": "clojure",
+    "prefix": "br",
+    "body": [
+      "#break "
+    ],
+    "description": "Insert a break statement"
+  },
+  "Insert Conditional Breakpoint": {
+    "scope": "clojure",
+    "prefix": "br",
+    "body": [
+      "#break ^{:break/when (= $1)} "
+    ],
+    "description": "Insert a conditional break statement"
+  },
+  "Insert Debugger Statement": {
+    "scope": "clojure",
+    "prefix": "db",
+    "body": [
+      "#dbg"
+    ],
+    "description": "Insert a debugger statement"
+  },
+  "println": {
+    "scope": "clojure",
+    "prefix": "p",
+    "body": [
+      "(println $1)"
+    ],
+    "description": "Insert a println statement"
+  }
+}
