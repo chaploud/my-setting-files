@@ -1,6 +1,6 @@
 #!/usr/bin/env bb
 
-;; bb convert.clj shadow-css-snippets.edn clojure_snippet.code-snippets
+;; bb convert.clj shadow-css-snippets.edn clojure.json
 ;; その後エディタでJSONフォーマット
 
 (require '[clojure.edn :as edn])
@@ -13,8 +13,7 @@
       dest (->> src
                 (map (fn [{:keys [name detail snippet]}]
                        {(str "shadow-css/" name)
-                        {:scope "clojure"
-                         :prefix name
+                        {:prefix name
                          :body [snippet]
                          :description detail}}))
                 (into {})
