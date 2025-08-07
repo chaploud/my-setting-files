@@ -1,34 +1,6058 @@
 {
-  "Insert Breakpoint": {
+  "shadow-css/justify-self-stretch": {
     "scope": "clojure",
-    "prefix": "br",
+    "prefix": "justify-self-stretch",
     "body": [
-      "#break "
+      ":justify-self-stretch"
     ],
-    "description": "Insert a break statement"
+    "description": "shadow-css: :justify-self-stretch (justify-self: stretch)"
   },
-  "Insert Conditional Breakpoint": {
+  "shadow-css/divide-x-4": {
     "scope": "clojure",
-    "prefix": "br",
+    "prefix": "divide-x-4",
     "body": [
-      "#break ^{:break/when (= $1)} "
+      ":divide-x-4"
     ],
-    "description": "Insert a conditional break statement"
+    "description": "shadow-css: :divide-x-4 (4px horizontal dividers)"
   },
-  "Insert Debugger Statement": {
+  "shadow-css/cursor-vertical-text": {
     "scope": "clojure",
-    "prefix": "db",
+    "prefix": "cursor-vertical-text",
     "body": [
-      "#dbg"
+      ":cursor-vertical-text"
     ],
-    "description": "Insert a debugger statement"
+    "description": "shadow-css: :cursor-vertical-text (cursor: vertical-text)"
   },
-  "println": {
+  "shadow-css/text-blue-900": {
     "scope": "clojure",
-    "prefix": "p",
+    "prefix": "text-blue-900",
     "body": [
-      "(println $1)"
+      ":text-blue-900"
     ],
-    "description": "Insert a println statement"
+    "description": "shadow-css: :text-blue-900"
+  },
+  "shadow-css/z-30": {
+    "scope": "clojure",
+    "prefix": "z-30",
+    "body": [
+      ":z-30"
+    ],
+    "description": "shadow-css: :z-30 (z-index: 30)"
+  },
+  "shadow-css/z-50": {
+    "scope": "clojure",
+    "prefix": "z-50",
+    "body": [
+      ":z-50"
+    ],
+    "description": "shadow-css: :z-50 (z-index: 50)"
+  },
+  "shadow-css/font-sans": {
+    "scope": "clojure",
+    "prefix": "font-sans",
+    "body": [
+      ":font-sans"
+    ],
+    "description": "shadow-css: :font-sans (sans-serif font stack)"
+  },
+  "shadow-css/rounded-br-md": {
+    "scope": "clojure",
+    "prefix": "rounded-br-md",
+    "body": [
+      ":rounded-br-md"
+    ],
+    "description": "shadow-css: :rounded-br-md (bottom-right border-radius: 0.375rem)"
+  },
+  "shadow-css/shrink-0": {
+    "scope": "clojure",
+    "prefix": "shrink-0",
+    "body": [
+      ":shrink-0"
+    ],
+    "description": "shadow-css: :shrink-0 (flex-shrink: 0)"
+  },
+  "shadow-css/rounded-tl-none": {
+    "scope": "clojure",
+    "prefix": "rounded-tl-none",
+    "body": [
+      ":rounded-tl-none"
+    ],
+    "description": "shadow-css: :rounded-tl-none (top-left border-radius: 0px)"
+  },
+  "shadow-css/outline-blue-300": {
+    "scope": "clojure",
+    "prefix": "outline-blue-300",
+    "body": [
+      ":outline-blue-300"
+    ],
+    "description": "shadow-css: :outline-blue-300"
+  },
+  "shadow-css/flex-1": {
+    "scope": "clojure",
+    "prefix": "flex-1",
+    "body": [
+      ":flex-1"
+    ],
+    "description": "shadow-css: :flex-1 (flex: 1 1 0%)"
+  },
+  "shadow-css/bottom-full": {
+    "scope": "clojure",
+    "prefix": "bottom-full",
+    "body": [
+      ":bottom-full"
+    ],
+    "description": "shadow-css: :bottom-full (bottom: 100%)"
+  },
+  "shadow-css/text-blue-300": {
+    "scope": "clojure",
+    "prefix": "text-blue-300",
+    "body": [
+      ":text-blue-300"
+    ],
+    "description": "shadow-css: :text-blue-300"
+  },
+  "shadow-css/rounded-l-xl": {
+    "scope": "clojure",
+    "prefix": "rounded-l-xl",
+    "body": [
+      ":rounded-l-xl"
+    ],
+    "description": "shadow-css: :rounded-l-xl (left border-radius: 0.75rem)"
+  },
+  "shadow-css/cursor-zoom-out": {
+    "scope": "clojure",
+    "prefix": "cursor-zoom-out",
+    "body": [
+      ":cursor-zoom-out"
+    ],
+    "description": "shadow-css: :cursor-zoom-out (cursor: zoom-out)"
+  },
+  "shadow-css/border-r-4": {
+    "scope": "clojure",
+    "prefix": "border-r-4",
+    "body": [
+      ":border-r-4"
+    ],
+    "description": "shadow-css: :border-r-4 (border-right-width: 4px)"
+  },
+  "shadow-css/inline-flex": {
+    "scope": "clojure",
+    "prefix": "inline-flex",
+    "body": [
+      ":inline-flex"
+    ],
+    "description": "shadow-css: :inline-flex (display: inline-flex)"
+  },
+  "shadow-css/mx-8": {
+    "scope": "clojure",
+    "prefix": "mx-8",
+    "body": [
+      ":mx-8"
+    ],
+    "description": "shadow-css: :mx-8"
+  },
+  "shadow-css/align-super": {
+    "scope": "clojure",
+    "prefix": "align-super",
+    "body": [
+      ":align-super"
+    ],
+    "description": "shadow-css: :align-super (vertical-align: super)"
+  },
+  "shadow-css/my-7": {
+    "scope": "clojure",
+    "prefix": "my-7",
+    "body": [
+      ":my-7"
+    ],
+    "description": "shadow-css: :my-7"
+  },
+  "shadow-css/rounded-l-full": {
+    "scope": "clojure",
+    "prefix": "rounded-l-full",
+    "body": [
+      ":rounded-l-full"
+    ],
+    "description": "shadow-css: :rounded-l-full (left border-radius: 9999px)"
+  },
+  "shadow-css/h-max": {
+    "scope": "clojure",
+    "prefix": "h-max",
+    "body": [
+      ":h-max"
+    ],
+    "description": "shadow-css: :h-max (height: max-content)"
+  },
+  "shadow-css/no-underline": {
+    "scope": "clojure",
+    "prefix": "no-underline",
+    "body": [
+      ":no-underline"
+    ],
+    "description": "shadow-css: :no-underline (text-decoration-line: none)"
+  },
+  "shadow-css/opacity-70": {
+    "scope": "clojure",
+    "prefix": "opacity-70",
+    "body": [
+      ":opacity-70"
+    ],
+    "description": "shadow-css: :opacity-70 (opacity: 0.7)"
+  },
+  "shadow-css/outline-dashed": {
+    "scope": "clojure",
+    "prefix": "outline-dashed",
+    "body": [
+      ":outline-dashed"
+    ],
+    "description": "shadow-css: :outline-dashed (outline-style: dashed)"
+  },
+  "shadow-css/select-all": {
+    "scope": "clojure",
+    "prefix": "select-all",
+    "body": [
+      ":select-all"
+    ],
+    "description": "shadow-css: :select-all (user-select: all)"
+  },
+  "shadow-css/underline": {
+    "scope": "clojure",
+    "prefix": "underline",
+    "body": [
+      ":underline"
+    ],
+    "description": "shadow-css: :underline (text-decoration-line: underline)"
+  },
+  "shadow-css/border-red-400": {
+    "scope": "clojure",
+    "prefix": "border-red-400",
+    "body": [
+      ":border-red-400"
+    ],
+    "description": "shadow-css: :border-red-400"
+  },
+  "shadow-css/outline-gray-200": {
+    "scope": "clojure",
+    "prefix": "outline-gray-200",
+    "body": [
+      ":outline-gray-200"
+    ],
+    "description": "shadow-css: :outline-gray-200"
+  },
+  "shadow-css/border-red-700": {
+    "scope": "clojure",
+    "prefix": "border-red-700",
+    "body": [
+      ":border-red-700"
+    ],
+    "description": "shadow-css: :border-red-700"
+  },
+  "shadow-css/pl-7": {
+    "scope": "clojure",
+    "prefix": "pl-7",
+    "body": [
+      ":pl-7"
+    ],
+    "description": "shadow-css: :pl-7"
+  },
+  "shadow-css/transition-shadow": {
+    "scope": "clojure",
+    "prefix": "transition-shadow",
+    "body": [
+      ":transition-shadow"
+    ],
+    "description": "shadow-css: :transition-shadow (transition shadow)"
+  },
+  "shadow-css/border-b-2": {
+    "scope": "clojure",
+    "prefix": "border-b-2",
+    "body": [
+      ":border-b-2"
+    ],
+    "description": "shadow-css: :border-b-2 (border-bottom-width: 2px)"
+  },
+  "shadow-css/whitespace-pre-wrap": {
+    "scope": "clojure",
+    "prefix": "whitespace-pre-wrap",
+    "body": [
+      ":whitespace-pre-wrap"
+    ],
+    "description": "shadow-css: :whitespace-pre-wrap (white-space: pre-wrap)"
+  },
+  "shadow-css/mr-8": {
+    "scope": "clojure",
+    "prefix": "mr-8",
+    "body": [
+      ":mr-8"
+    ],
+    "description": "shadow-css: :mr-8"
+  },
+  "shadow-css/delay-75": {
+    "scope": "clojure",
+    "prefix": "delay-75",
+    "body": [
+      ":delay-75"
+    ],
+    "description": "shadow-css: :delay-75 (transition-delay: 75ms)"
+  },
+  "shadow-css/flex-none": {
+    "scope": "clojure",
+    "prefix": "flex-none",
+    "body": [
+      ":flex-none"
+    ],
+    "description": "shadow-css: :flex-none (flex: none)"
+  },
+  "shadow-css/rounded-t-xl": {
+    "scope": "clojure",
+    "prefix": "rounded-t-xl",
+    "body": [
+      ":rounded-t-xl"
+    ],
+    "description": "shadow-css: :rounded-t-xl (top border-radius: 0.75rem)"
+  },
+  "shadow-css/gap-x-2": {
+    "scope": "clojure",
+    "prefix": "gap-x-2",
+    "body": [
+      ":gap-x-2"
+    ],
+    "description": "shadow-css: :gap-x-2"
+  },
+  "shadow-css/rounded-2xl": {
+    "scope": "clojure",
+    "prefix": "rounded-2xl",
+    "body": [
+      ":rounded-2xl"
+    ],
+    "description": "shadow-css: :rounded-2xl (border-radius: 1rem)"
+  },
+  "shadow-css/text-start": {
+    "scope": "clojure",
+    "prefix": "text-start",
+    "body": [
+      ":text-start"
+    ],
+    "description": "shadow-css: :text-start (text-align: start)"
+  },
+  "shadow-css/border-l-0": {
+    "scope": "clojure",
+    "prefix": "border-l-0",
+    "body": [
+      ":border-l-0"
+    ],
+    "description": "shadow-css: :border-l-0 (border-left-width: 0px)"
+  },
+  "shadow-css/rounded-t-md": {
+    "scope": "clojure",
+    "prefix": "rounded-t-md",
+    "body": [
+      ":rounded-t-md"
+    ],
+    "description": "shadow-css: :rounded-t-md (top border-radius: 0.375rem)"
+  },
+  "shadow-css/gap-y-2": {
+    "scope": "clojure",
+    "prefix": "gap-y-2",
+    "body": [
+      ":gap-y-2"
+    ],
+    "description": "shadow-css: :gap-y-2"
+  },
+  "shadow-css/overflow-x-clip": {
+    "scope": "clojure",
+    "prefix": "overflow-x-clip",
+    "body": [
+      ":overflow-x-clip"
+    ],
+    "description": "shadow-css: :overflow-x-clip (overflow-x: clip)"
+  },
+  "shadow-css/align-baseline": {
+    "scope": "clojure",
+    "prefix": "align-baseline",
+    "body": [
+      ":align-baseline"
+    ],
+    "description": "shadow-css: :align-baseline (vertical-align: baseline)"
+  },
+  "shadow-css/rounded-b-lg": {
+    "scope": "clojure",
+    "prefix": "rounded-b-lg",
+    "body": [
+      ":rounded-b-lg"
+    ],
+    "description": "shadow-css: :rounded-b-lg (bottom border-radius: 0.5rem)"
+  },
+  "shadow-css/w-auto": {
+    "scope": "clojure",
+    "prefix": "w-auto",
+    "body": [
+      ":w-auto"
+    ],
+    "description": "shadow-css: :w-auto (width: auto)"
+  },
+  "shadow-css/divide-dotted": {
+    "scope": "clojure",
+    "prefix": "divide-dotted",
+    "body": [
+      ":divide-dotted"
+    ],
+    "description": "shadow-css: :divide-dotted (dotted divider style)"
+  },
+  "shadow-css/border-x-4": {
+    "scope": "clojure",
+    "prefix": "border-x-4",
+    "body": [
+      ":border-x-4"
+    ],
+    "description": "shadow-css: :border-x-4 (horizontal border: 4px)"
+  },
+  "shadow-css/pb-4": {
+    "scope": "clojure",
+    "prefix": "pb-4",
+    "body": [
+      ":pb-4"
+    ],
+    "description": "shadow-css: :pb-4"
+  },
+  "shadow-css/text-xxs": {
+    "scope": "clojure",
+    "prefix": "text-xxs",
+    "body": [
+      ":text-xxs"
+    ],
+    "description": "shadow-css: :text-xxs (font-size: 0.625rem)"
+  },
+  "shadow-css/px-8": {
+    "scope": "clojure",
+    "prefix": "px-8",
+    "body": [
+      ":px-8"
+    ],
+    "description": "shadow-css: :px-8"
+  },
+  "shadow-css/justify-around": {
+    "scope": "clojure",
+    "prefix": "justify-around",
+    "body": [
+      ":justify-around"
+    ],
+    "description": "shadow-css: :justify-around (justify-content: space-around)"
+  },
+  "shadow-css/flex-initial": {
+    "scope": "clojure",
+    "prefix": "flex-initial",
+    "body": [
+      ":flex-initial"
+    ],
+    "description": "shadow-css: :flex-initial (flex: 0 1 auto)"
+  },
+  "shadow-css/border-b-4": {
+    "scope": "clojure",
+    "prefix": "border-b-4",
+    "body": [
+      ":border-b-4"
+    ],
+    "description": "shadow-css: :border-b-4 (border-bottom-width: 4px)"
+  },
+  "shadow-css/border-green-100": {
+    "scope": "clojure",
+    "prefix": "border-green-100",
+    "body": [
+      ":border-green-100"
+    ],
+    "description": "shadow-css: :border-green-100"
+  },
+  "shadow-css/border-blue-400": {
+    "scope": "clojure",
+    "prefix": "border-blue-400",
+    "body": [
+      ":border-blue-400"
+    ],
+    "description": "shadow-css: :border-blue-400"
+  },
+  "shadow-css/pr-0.5": {
+    "scope": "clojure",
+    "prefix": "pr-0.5",
+    "body": [
+      ":pr-0.5"
+    ],
+    "description": "shadow-css: :pr-0.5"
+  },
+  "shadow-css/rounded-tl-2xl": {
+    "scope": "clojure",
+    "prefix": "rounded-tl-2xl",
+    "body": [
+      ":rounded-tl-2xl"
+    ],
+    "description": "shadow-css: :rounded-tl-2xl (top-left border-radius: 1rem)"
+  },
+  "shadow-css/rounded-b-full": {
+    "scope": "clojure",
+    "prefix": "rounded-b-full",
+    "body": [
+      ":rounded-b-full"
+    ],
+    "description": "shadow-css: :rounded-b-full (bottom border-radius: 9999px)"
+  },
+  "shadow-css/z-40": {
+    "scope": "clojure",
+    "prefix": "z-40",
+    "body": [
+      ":z-40"
+    ],
+    "description": "shadow-css: :z-40 (z-index: 40)"
+  },
+  "shadow-css/h-1of6": {
+    "scope": "clojure",
+    "prefix": "h-1of6",
+    "body": [
+      ":h-1of6"
+    ],
+    "description": "shadow-css: :h-1of6 (height: 16.667%)"
+  },
+  "shadow-css/align-sub": {
+    "scope": "clojure",
+    "prefix": "align-sub",
+    "body": [
+      ":align-sub"
+    ],
+    "description": "shadow-css: :align-sub (vertical-align: sub)"
+  },
+  "shadow-css/rounded-b-2xl": {
+    "scope": "clojure",
+    "prefix": "rounded-b-2xl",
+    "body": [
+      ":rounded-b-2xl"
+    ],
+    "description": "shadow-css: :rounded-b-2xl (bottom border-radius: 1rem)"
+  },
+  "shadow-css/mx-auto": {
+    "scope": "clojure",
+    "prefix": "mx-auto",
+    "body": [
+      ":mx-auto"
+    ],
+    "description": "shadow-css: :mx-auto (horizontal margin: auto)"
+  },
+  "shadow-css/rounded-r-md": {
+    "scope": "clojure",
+    "prefix": "rounded-r-md",
+    "body": [
+      ":rounded-r-md"
+    ],
+    "description": "shadow-css: :rounded-r-md (right border-radius: 0.375rem)"
+  },
+  "shadow-css/items-baseline": {
+    "scope": "clojure",
+    "prefix": "items-baseline",
+    "body": [
+      ":items-baseline"
+    ],
+    "description": "shadow-css: :items-baseline (align-items: baseline)"
+  },
+  "shadow-css/w-2of6": {
+    "scope": "clojure",
+    "prefix": "w-2of6",
+    "body": [
+      ":w-2of6"
+    ],
+    "description": "shadow-css: :w-2of6 (width: 33.333%)"
+  },
+  "shadow-css/duration-300": {
+    "scope": "clojure",
+    "prefix": "duration-300",
+    "body": [
+      ":duration-300"
+    ],
+    "description": "shadow-css: :duration-300 (transition-duration: 300ms)"
+  },
+  "shadow-css/border-b-0": {
+    "scope": "clojure",
+    "prefix": "border-b-0",
+    "body": [
+      ":border-b-0"
+    ],
+    "description": "shadow-css: :border-b-0 (border-bottom-width: 0px)"
+  },
+  "shadow-css/gap-0.5": {
+    "scope": "clojure",
+    "prefix": "gap-0.5",
+    "body": [
+      ":gap-0.5"
+    ],
+    "description": "shadow-css: :gap-0.5"
+  },
+  "shadow-css/text-ellipsis": {
+    "scope": "clojure",
+    "prefix": "text-ellipsis",
+    "body": [
+      ":text-ellipsis"
+    ],
+    "description": "shadow-css: :text-ellipsis (text-overflow: ellipsis)"
+  },
+  "shadow-css/p-2": {
+    "scope": "clojure",
+    "prefix": "p-2",
+    "body": [
+      ":p-2"
+    ],
+    "description": "shadow-css: :p-2"
+  },
+  "shadow-css/text-gray-900": {
+    "scope": "clojure",
+    "prefix": "text-gray-900",
+    "body": [
+      ":text-gray-900"
+    ],
+    "description": "shadow-css: :text-gray-900"
+  },
+  "shadow-css/bg-red-100": {
+    "scope": "clojure",
+    "prefix": "bg-red-100",
+    "body": [
+      ":bg-red-100"
+    ],
+    "description": "shadow-css: :bg-red-100"
+  },
+  "shadow-css/mx-5": {
+    "scope": "clojure",
+    "prefix": "mx-5",
+    "body": [
+      ":mx-5"
+    ],
+    "description": "shadow-css: :mx-5"
+  },
+  "shadow-css/mb-2": {
+    "scope": "clojure",
+    "prefix": "mb-2",
+    "body": [
+      ":mb-2"
+    ],
+    "description": "shadow-css: :mb-2"
+  },
+  "shadow-css/flex-row": {
+    "scope": "clojure",
+    "prefix": "flex-row",
+    "body": [
+      ":flex-row"
+    ],
+    "description": "shadow-css: :flex-row (flex-direction: row)"
+  },
+  "shadow-css/min-w-0": {
+    "scope": "clojure",
+    "prefix": "min-w-0",
+    "body": [
+      ":min-w-0"
+    ],
+    "description": "shadow-css: :min-w-0 (min-width: 0px)"
+  },
+  "shadow-css/rounded-b-md": {
+    "scope": "clojure",
+    "prefix": "rounded-b-md",
+    "body": [
+      ":rounded-b-md"
+    ],
+    "description": "shadow-css: :rounded-b-md (bottom border-radius: 0.375rem)"
+  },
+  "shadow-css/outline-blue-600": {
+    "scope": "clojure",
+    "prefix": "outline-blue-600",
+    "body": [
+      ":outline-blue-600"
+    ],
+    "description": "shadow-css: :outline-blue-600"
+  },
+  "shadow-css/overline": {
+    "scope": "clojure",
+    "prefix": "overline",
+    "body": [
+      ":overline"
+    ],
+    "description": "shadow-css: :overline (text-decoration-line: overline)"
+  },
+  "shadow-css/rounded-b-xl": {
+    "scope": "clojure",
+    "prefix": "rounded-b-xl",
+    "body": [
+      ":rounded-b-xl"
+    ],
+    "description": "shadow-css: :rounded-b-xl (bottom border-radius: 0.75rem)"
+  },
+  "shadow-css/py-5": {
+    "scope": "clojure",
+    "prefix": "py-5",
+    "body": [
+      ":py-5"
+    ],
+    "description": "shadow-css: :py-5"
+  },
+  "shadow-css/duration-1000": {
+    "scope": "clojure",
+    "prefix": "duration-1000",
+    "body": [
+      ":duration-1000"
+    ],
+    "description": "shadow-css: :duration-1000 (transition-duration: 1000ms)"
+  },
+  "shadow-css/px-0.5": {
+    "scope": "clojure",
+    "prefix": "px-0.5",
+    "body": [
+      ":px-0.5"
+    ],
+    "description": "shadow-css: :px-0.5"
+  },
+  "shadow-css/max-w-max": {
+    "scope": "clojure",
+    "prefix": "max-w-max",
+    "body": [
+      ":max-w-max"
+    ],
+    "description": "shadow-css: :max-w-max (max-width: max-content)"
+  },
+  "shadow-css/text-gray-800": {
+    "scope": "clojure",
+    "prefix": "text-gray-800",
+    "body": [
+      ":text-gray-800"
+    ],
+    "description": "shadow-css: :text-gray-800"
+  },
+  "shadow-css/align-middle": {
+    "scope": "clojure",
+    "prefix": "align-middle",
+    "body": [
+      ":align-middle"
+    ],
+    "description": "shadow-css: :align-middle (vertical-align: middle)"
+  },
+  "shadow-css/border-black-600": {
+    "scope": "clojure",
+    "prefix": "border-black-600",
+    "body": [
+      ":border-black-600"
+    ],
+    "description": "shadow-css: :border-black-600"
+  },
+  "shadow-css/pl-4": {
+    "scope": "clojure",
+    "prefix": "pl-4",
+    "body": [
+      ":pl-4"
+    ],
+    "description": "shadow-css: :pl-4"
+  },
+  "shadow-css/rounded-t": {
+    "scope": "clojure",
+    "prefix": "rounded-t",
+    "body": [
+      ":rounded-t"
+    ],
+    "description": "shadow-css: :rounded-t (top border-radius: 0.25rem)"
+  },
+  "shadow-css/top-full": {
+    "scope": "clojure",
+    "prefix": "top-full",
+    "body": [
+      ":top-full"
+    ],
+    "description": "shadow-css: :top-full (top: 100%)"
+  },
+  "shadow-css/h-2of3": {
+    "scope": "clojure",
+    "prefix": "h-2of3",
+    "body": [
+      ":h-2of3"
+    ],
+    "description": "shadow-css: :h-2of3 (height: 66.667%)"
+  },
+  "shadow-css/text-red-700": {
+    "scope": "clojure",
+    "prefix": "text-red-700",
+    "body": [
+      ":text-red-700"
+    ],
+    "description": "shadow-css: :text-red-700"
+  },
+  "shadow-css/cursor-progress": {
+    "scope": "clojure",
+    "prefix": "cursor-progress",
+    "body": [
+      ":cursor-progress"
+    ],
+    "description": "shadow-css: :cursor-progress (cursor: progress)"
+  },
+  "shadow-css/rounded-t-2xl": {
+    "scope": "clojure",
+    "prefix": "rounded-t-2xl",
+    "body": [
+      ":rounded-t-2xl"
+    ],
+    "description": "shadow-css: :rounded-t-2xl (top border-radius: 1rem)"
+  },
+  "shadow-css/text-gray-500": {
+    "scope": "clojure",
+    "prefix": "text-gray-500",
+    "body": [
+      ":text-gray-500"
+    ],
+    "description": "shadow-css: :text-gray-500"
+  },
+  "shadow-css/cursor-grab": {
+    "scope": "clojure",
+    "prefix": "cursor-grab",
+    "body": [
+      ":cursor-grab"
+    ],
+    "description": "shadow-css: :cursor-grab (cursor: grab)"
+  },
+  "shadow-css/bg-blue-100": {
+    "scope": "clojure",
+    "prefix": "bg-blue-100",
+    "body": [
+      ":bg-blue-100"
+    ],
+    "description": "shadow-css: :bg-blue-100"
+  },
+  "shadow-css/text-5xl": {
+    "scope": "clojure",
+    "prefix": "text-5xl",
+    "body": [
+      ":text-5xl"
+    ],
+    "description": "shadow-css: :text-5xl (font-size: 3rem)"
+  },
+  "shadow-css/mt-5": {
+    "scope": "clojure",
+    "prefix": "mt-5",
+    "body": [
+      ":mt-5"
+    ],
+    "description": "shadow-css: :mt-5"
+  },
+  "shadow-css/outline-blue-900": {
+    "scope": "clojure",
+    "prefix": "outline-blue-900",
+    "body": [
+      ":outline-blue-900"
+    ],
+    "description": "shadow-css: :outline-blue-900"
+  },
+  "shadow-css/my-3": {
+    "scope": "clojure",
+    "prefix": "my-3",
+    "body": [
+      ":my-3"
+    ],
+    "description": "shadow-css: :my-3"
+  },
+  "shadow-css/gap-7": {
+    "scope": "clojure",
+    "prefix": "gap-7",
+    "body": [
+      ":gap-7"
+    ],
+    "description": "shadow-css: :gap-7"
+  },
+  "shadow-css/max-w-fit": {
+    "scope": "clojure",
+    "prefix": "max-w-fit",
+    "body": [
+      ":max-w-fit"
+    ],
+    "description": "shadow-css: :max-w-fit (max-width: fit-content)"
+  },
+  "shadow-css/grow": {
+    "scope": "clojure",
+    "prefix": "grow",
+    "body": [
+      ":grow"
+    ],
+    "description": "shadow-css: :grow (flex-grow: 1)"
+  },
+  "shadow-css/bg-blue-200": {
+    "scope": "clojure",
+    "prefix": "bg-blue-200",
+    "body": [
+      ":bg-blue-200"
+    ],
+    "description": "shadow-css: :bg-blue-200"
+  },
+  "shadow-css/border-white-100": {
+    "scope": "clojure",
+    "prefix": "border-white-100",
+    "body": [
+      ":border-white-100"
+    ],
+    "description": "shadow-css: :border-white-100"
+  },
+  "shadow-css/w-9of12": {
+    "scope": "clojure",
+    "prefix": "w-9of12",
+    "body": [
+      ":w-9of12"
+    ],
+    "description": "shadow-css: :w-9of12 (width: 75%)"
+  },
+  "shadow-css/w-1of12": {
+    "scope": "clojure",
+    "prefix": "w-1of12",
+    "body": [
+      ":w-1of12"
+    ],
+    "description": "shadow-css: :w-1of12 (width: 8.333%)"
+  },
+  "shadow-css/aspect-square": {
+    "scope": "clojure",
+    "prefix": "aspect-square",
+    "body": [
+      ":aspect-square"
+    ],
+    "description": "shadow-css: :aspect-square (aspect-ratio: 1 / 1)"
+  },
+  "shadow-css/outline-blue-800": {
+    "scope": "clojure",
+    "prefix": "outline-blue-800",
+    "body": [
+      ":outline-blue-800"
+    ],
+    "description": "shadow-css: :outline-blue-800"
+  },
+  "shadow-css/text-center": {
+    "scope": "clojure",
+    "prefix": "text-center",
+    "body": [
+      ":text-center"
+    ],
+    "description": "shadow-css: :text-center (text-align: center)"
+  },
+  "shadow-css/items-center": {
+    "scope": "clojure",
+    "prefix": "items-center",
+    "body": [
+      ":items-center"
+    ],
+    "description": "shadow-css: :items-center (align-items: center)"
+  },
+  "shadow-css/cursor-row-resize": {
+    "scope": "clojure",
+    "prefix": "cursor-row-resize",
+    "body": [
+      ":cursor-row-resize"
+    ],
+    "description": "shadow-css: :cursor-row-resize (cursor: row-resize)"
+  },
+  "shadow-css/opacity-40": {
+    "scope": "clojure",
+    "prefix": "opacity-40",
+    "body": [
+      ":opacity-40"
+    ],
+    "description": "shadow-css: :opacity-40 (opacity: 0.4)"
+  },
+  "shadow-css/min-w-max": {
+    "scope": "clojure",
+    "prefix": "min-w-max",
+    "body": [
+      ":min-w-max"
+    ],
+    "description": "shadow-css: :min-w-max (min-width: max-content)"
+  },
+  "shadow-css/outline-black-600": {
+    "scope": "clojure",
+    "prefix": "outline-black-600",
+    "body": [
+      ":outline-black-600"
+    ],
+    "description": "shadow-css: :outline-black-600"
+  },
+  "shadow-css/border-white-50": {
+    "scope": "clojure",
+    "prefix": "border-white-50",
+    "body": [
+      ":border-white-50"
+    ],
+    "description": "shadow-css: :border-white-50"
+  },
+  "shadow-css/mx-0.5": {
+    "scope": "clojure",
+    "prefix": "mx-0.5",
+    "body": [
+      ":mx-0.5"
+    ],
+    "description": "shadow-css: :mx-0.5"
+  },
+  "shadow-css/w-1of4": {
+    "scope": "clojure",
+    "prefix": "w-1of4",
+    "body": [
+      ":w-1of4"
+    ],
+    "description": "shadow-css: :w-1of4 (width: 25%)"
+  },
+  "shadow-css/cursor-none": {
+    "scope": "clojure",
+    "prefix": "cursor-none",
+    "body": [
+      ":cursor-none"
+    ],
+    "description": "shadow-css: :cursor-none (cursor: none)"
+  },
+  "shadow-css/grid-cols-7": {
+    "scope": "clojure",
+    "prefix": "grid-cols-7",
+    "body": [
+      ":grid-cols-7"
+    ],
+    "description": "shadow-css: :grid-cols-7 (7 column grid)"
+  },
+  "shadow-css/grid-cols-4": {
+    "scope": "clojure",
+    "prefix": "grid-cols-4",
+    "body": [
+      ":grid-cols-4"
+    ],
+    "description": "shadow-css: :grid-cols-4 (4 column grid)"
+  },
+  "shadow-css/mx-4": {
+    "scope": "clojure",
+    "prefix": "mx-4",
+    "body": [
+      ":mx-4"
+    ],
+    "description": "shadow-css: :mx-4"
+  },
+  "shadow-css/px-5": {
+    "scope": "clojure",
+    "prefix": "px-5",
+    "body": [
+      ":px-5"
+    ],
+    "description": "shadow-css: :px-5"
+  },
+  "shadow-css/bg-gray-700": {
+    "scope": "clojure",
+    "prefix": "bg-gray-700",
+    "body": [
+      ":bg-gray-700"
+    ],
+    "description": "shadow-css: :bg-gray-700"
+  },
+  "shadow-css/outline-white-50": {
+    "scope": "clojure",
+    "prefix": "outline-white-50",
+    "body": [
+      ":outline-white-50"
+    ],
+    "description": "shadow-css: :outline-white-50"
+  },
+  "shadow-css/focus": {
+    "scope": "clojure",
+    "prefix": "focus",
+    "body": [
+      ":focus"
+    ],
+    "description": "shadow-css: :focus (&:focus)"
+  },
+  "shadow-css/cursor-zoom-in": {
+    "scope": "clojure",
+    "prefix": "cursor-zoom-in",
+    "body": [
+      ":cursor-zoom-in"
+    ],
+    "description": "shadow-css: :cursor-zoom-in (cursor: zoom-in)"
+  },
+  "shadow-css/rounded-md": {
+    "scope": "clojure",
+    "prefix": "rounded-md",
+    "body": [
+      ":rounded-md"
+    ],
+    "description": "shadow-css: :rounded-md (border-radius: 0.375rem)"
+  },
+  "shadow-css/m-1": {
+    "scope": "clojure",
+    "prefix": "m-1",
+    "body": [
+      ":m-1"
+    ],
+    "description": "shadow-css: :m-1"
+  },
+  "shadow-css/duration-200": {
+    "scope": "clojure",
+    "prefix": "duration-200",
+    "body": [
+      ":duration-200"
+    ],
+    "description": "shadow-css: :duration-200 (transition-duration: 200ms)"
+  },
+  "shadow-css/rounded-tr-full": {
+    "scope": "clojure",
+    "prefix": "rounded-tr-full",
+    "body": [
+      ":rounded-tr-full"
+    ],
+    "description": "shadow-css: :rounded-tr-full (top-right border-radius: 9999px)"
+  },
+  "shadow-css/grid-cols-11": {
+    "scope": "clojure",
+    "prefix": "grid-cols-11",
+    "body": [
+      ":grid-cols-11"
+    ],
+    "description": "shadow-css: :grid-cols-11 (11 column grid)"
+  },
+  "shadow-css/only": {
+    "scope": "clojure",
+    "prefix": "only",
+    "body": [
+      ":only"
+    ],
+    "description": "shadow-css: :only (&:only-child)"
+  },
+  "shadow-css/outline-green-500": {
+    "scope": "clojure",
+    "prefix": "outline-green-500",
+    "body": [
+      ":outline-green-500"
+    ],
+    "description": "shadow-css: :outline-green-500"
+  },
+  "shadow-css/rounded-r-full": {
+    "scope": "clojure",
+    "prefix": "rounded-r-full",
+    "body": [
+      ":rounded-r-full"
+    ],
+    "description": "shadow-css: :rounded-r-full (right border-radius: 9999px)"
+  },
+  "shadow-css/border-blue-800": {
+    "scope": "clojure",
+    "prefix": "border-blue-800",
+    "body": [
+      ":border-blue-800"
+    ],
+    "description": "shadow-css: :border-blue-800"
+  },
+  "shadow-css/focus-within": {
+    "scope": "clojure",
+    "prefix": "focus-within",
+    "body": [
+      ":focus-within"
+    ],
+    "description": "shadow-css: :focus-within (&:focus-within)"
+  },
+  "shadow-css/cursor-sw-resize": {
+    "scope": "clojure",
+    "prefix": "cursor-sw-resize",
+    "body": [
+      ":cursor-sw-resize"
+    ],
+    "description": "shadow-css: :cursor-sw-resize (cursor: sw-resize)"
+  },
+  "shadow-css/divide-y-8": {
+    "scope": "clojure",
+    "prefix": "divide-y-8",
+    "body": [
+      ":divide-y-8"
+    ],
+    "description": "shadow-css: :divide-y-8 (8px vertical dividers)"
+  },
+  "shadow-css/delay-200": {
+    "scope": "clojure",
+    "prefix": "delay-200",
+    "body": [
+      ":delay-200"
+    ],
+    "description": "shadow-css: :delay-200 (transition-delay: 200ms)"
+  },
+  "shadow-css/overflow-auto": {
+    "scope": "clojure",
+    "prefix": "overflow-auto",
+    "body": [
+      ":overflow-auto"
+    ],
+    "description": "shadow-css: :overflow-auto (overflow: auto)"
+  },
+  "shadow-css/cursor-text": {
+    "scope": "clojure",
+    "prefix": "cursor-text",
+    "body": [
+      ":cursor-text"
+    ],
+    "description": "shadow-css: :cursor-text (cursor: text)"
+  },
+  "shadow-css/border-b": {
+    "scope": "clojure",
+    "prefix": "border-b",
+    "body": [
+      ":border-b"
+    ],
+    "description": "shadow-css: :border-b (border-bottom-width: 1px)"
+  },
+  "shadow-css/border": {
+    "scope": "clojure",
+    "prefix": "border",
+    "body": [
+      ":border"
+    ],
+    "description": "shadow-css: :border (border-width: 1px)"
+  },
+  "shadow-css/outline-gray-300": {
+    "scope": "clojure",
+    "prefix": "outline-gray-300",
+    "body": [
+      ":outline-gray-300"
+    ],
+    "description": "shadow-css: :outline-gray-300"
+  },
+  "shadow-css/cursor-wait": {
+    "scope": "clojure",
+    "prefix": "cursor-wait",
+    "body": [
+      ":cursor-wait"
+    ],
+    "description": "shadow-css: :cursor-wait (cursor: wait)"
+  },
+  "shadow-css/z-10": {
+    "scope": "clojure",
+    "prefix": "z-10",
+    "body": [
+      ":z-10"
+    ],
+    "description": "shadow-css: :z-10 (z-index: 10)"
+  },
+  "shadow-css/text-gray-400": {
+    "scope": "clojure",
+    "prefix": "text-gray-400",
+    "body": [
+      ":text-gray-400"
+    ],
+    "description": "shadow-css: :text-gray-400"
+  },
+  "shadow-css/rounded-b-none": {
+    "scope": "clojure",
+    "prefix": "rounded-b-none",
+    "body": [
+      ":rounded-b-none"
+    ],
+    "description": "shadow-css: :rounded-b-none (bottom border-radius: 0px)"
+  },
+  "shadow-css/rounded-full": {
+    "scope": "clojure",
+    "prefix": "rounded-full",
+    "body": [
+      ":rounded-full"
+    ],
+    "description": "shadow-css: :rounded-full (border-radius: 9999px)"
+  },
+  "shadow-css/z-auto": {
+    "scope": "clojure",
+    "prefix": "z-auto",
+    "body": [
+      ":z-auto"
+    ],
+    "description": "shadow-css: :z-auto (z-index: auto)"
+  },
+  "shadow-css/min-h-fit": {
+    "scope": "clojure",
+    "prefix": "min-h-fit",
+    "body": [
+      ":min-h-fit"
+    ],
+    "description": "shadow-css: :min-h-fit (min-height: fit-content)"
+  },
+  "shadow-css/invisible": {
+    "scope": "clojure",
+    "prefix": "invisible",
+    "body": [
+      ":invisible"
+    ],
+    "description": "shadow-css: :invisible (visibility: hidden)"
+  },
+  "shadow-css/opacity-95": {
+    "scope": "clojure",
+    "prefix": "opacity-95",
+    "body": [
+      ":opacity-95"
+    ],
+    "description": "shadow-css: :opacity-95 (opacity: 0.95)"
+  },
+  "shadow-css/self-baseline": {
+    "scope": "clojure",
+    "prefix": "self-baseline",
+    "body": [
+      ":self-baseline"
+    ],
+    "description": "shadow-css: :self-baseline (align-self: baseline)"
+  },
+  "shadow-css/max-h-fit": {
+    "scope": "clojure",
+    "prefix": "max-h-fit",
+    "body": [
+      ":max-h-fit"
+    ],
+    "description": "shadow-css: :max-h-fit (max-height: fit-content)"
+  },
+  "shadow-css/border-gray-500": {
+    "scope": "clojure",
+    "prefix": "border-gray-500",
+    "body": [
+      ":border-gray-500"
+    ],
+    "description": "shadow-css: :border-gray-500"
+  },
+  "shadow-css/border-y-8": {
+    "scope": "clojure",
+    "prefix": "border-y-8",
+    "body": [
+      ":border-y-8"
+    ],
+    "description": "shadow-css: :border-y-8 (vertical border: 8px)"
+  },
+  "shadow-css/ml-8": {
+    "scope": "clojure",
+    "prefix": "ml-8",
+    "body": [
+      ":ml-8"
+    ],
+    "description": "shadow-css: :ml-8"
+  },
+  "shadow-css/duration-150": {
+    "scope": "clojure",
+    "prefix": "duration-150",
+    "body": [
+      ":duration-150"
+    ],
+    "description": "shadow-css: :duration-150 (transition-duration: 150ms)"
+  },
+  "shadow-css/items-stretch": {
+    "scope": "clojure",
+    "prefix": "items-stretch",
+    "body": [
+      ":items-stretch"
+    ],
+    "description": "shadow-css: :items-stretch (align-items: stretch)"
+  },
+  "shadow-css/border-0": {
+    "scope": "clojure",
+    "prefix": "border-0",
+    "body": [
+      ":border-0"
+    ],
+    "description": "shadow-css: :border-0 (border-width: 0px)"
+  },
+  "shadow-css/mt-4": {
+    "scope": "clojure",
+    "prefix": "mt-4",
+    "body": [
+      ":mt-4"
+    ],
+    "description": "shadow-css: :mt-4"
+  },
+  "shadow-css/gap-y-1": {
+    "scope": "clojure",
+    "prefix": "gap-y-1",
+    "body": [
+      ":gap-y-1"
+    ],
+    "description": "shadow-css: :gap-y-1"
+  },
+  "shadow-css/flex-shrink": {
+    "scope": "clojure",
+    "prefix": "flex-shrink",
+    "body": [
+      ":flex-shrink"
+    ],
+    "description": "shadow-css: :flex-shrink (flex-shrink: 1)"
+  },
+  "shadow-css/border-green-500": {
+    "scope": "clojure",
+    "prefix": "border-green-500",
+    "body": [
+      ":border-green-500"
+    ],
+    "description": "shadow-css: :border-green-500"
+  },
+  "shadow-css/opacity-25": {
+    "scope": "clojure",
+    "prefix": "opacity-25",
+    "body": [
+      ":opacity-25"
+    ],
+    "description": "shadow-css: :opacity-25 (opacity: 0.25)"
+  },
+  "shadow-css/text-4xl": {
+    "scope": "clojure",
+    "prefix": "text-4xl",
+    "body": [
+      ":text-4xl"
+    ],
+    "description": "shadow-css: :text-4xl (font-size: 2.25rem)"
+  },
+  "shadow-css/target": {
+    "scope": "clojure",
+    "prefix": "target",
+    "body": [
+      ":target"
+    ],
+    "description": "shadow-css: :target (&:target)"
+  },
+  "shadow-css/border-2": {
+    "scope": "clojure",
+    "prefix": "border-2",
+    "body": [
+      ":border-2"
+    ],
+    "description": "shadow-css: :border-2 (border-width: 2px)"
+  },
+  "shadow-css/transition-none": {
+    "scope": "clojure",
+    "prefix": "transition-none",
+    "body": [
+      ":transition-none"
+    ],
+    "description": "shadow-css: :transition-none (no transition)"
+  },
+  "shadow-css/pb-0.5": {
+    "scope": "clojure",
+    "prefix": "pb-0.5",
+    "body": [
+      ":pb-0.5"
+    ],
+    "description": "shadow-css: :pb-0.5"
+  },
+  "shadow-css/opacity-90": {
+    "scope": "clojure",
+    "prefix": "opacity-90",
+    "body": [
+      ":opacity-90"
+    ],
+    "description": "shadow-css: :opacity-90 (opacity: 0.9)"
+  },
+  "shadow-css/justify-evenly": {
+    "scope": "clojure",
+    "prefix": "justify-evenly",
+    "body": [
+      ":justify-evenly"
+    ],
+    "description": "shadow-css: :justify-evenly (justify-content: space-evenly)"
+  },
+  "shadow-css/gap-x-1": {
+    "scope": "clojure",
+    "prefix": "gap-x-1",
+    "body": [
+      ":gap-x-1"
+    ],
+    "description": "shadow-css: :gap-x-1"
+  },
+  "shadow-css/rounded-tl-lg": {
+    "scope": "clojure",
+    "prefix": "rounded-tl-lg",
+    "body": [
+      ":rounded-tl-lg"
+    ],
+    "description": "shadow-css: :rounded-tl-lg (top-left border-radius: 0.5rem)"
+  },
+  "shadow-css/delay-700": {
+    "scope": "clojure",
+    "prefix": "delay-700",
+    "body": [
+      ":delay-700"
+    ],
+    "description": "shadow-css: :delay-700 (transition-delay: 700ms)"
+  },
+  "shadow-css/divide-none": {
+    "scope": "clojure",
+    "prefix": "divide-none",
+    "body": [
+      ":divide-none"
+    ],
+    "description": "shadow-css: :divide-none (no divider style)"
+  },
+  "shadow-css/flex-col": {
+    "scope": "clojure",
+    "prefix": "flex-col",
+    "body": [
+      ":flex-col"
+    ],
+    "description": "shadow-css: :flex-col (flex-direction: column)"
+  },
+  "shadow-css/p-6": {
+    "scope": "clojure",
+    "prefix": "p-6",
+    "body": [
+      ":p-6"
+    ],
+    "description": "shadow-css: :p-6"
+  },
+  "shadow-css/pr-5": {
+    "scope": "clojure",
+    "prefix": "pr-5",
+    "body": [
+      ":pr-5"
+    ],
+    "description": "shadow-css: :pr-5"
+  },
+  "shadow-css/pt-3": {
+    "scope": "clojure",
+    "prefix": "pt-3",
+    "body": [
+      ":pt-3"
+    ],
+    "description": "shadow-css: :pt-3"
+  },
+  "shadow-css/grow-0": {
+    "scope": "clojure",
+    "prefix": "grow-0",
+    "body": [
+      ":grow-0"
+    ],
+    "description": "shadow-css: :grow-0 (flex-grow: 0)"
+  },
+  "shadow-css/ease-out": {
+    "scope": "clojure",
+    "prefix": "ease-out",
+    "body": [
+      ":ease-out"
+    ],
+    "description": "shadow-css: :ease-out (transition-timing-function: ease-out)"
+  },
+  "shadow-css/divide-y-0": {
+    "scope": "clojure",
+    "prefix": "divide-y-0",
+    "body": [
+      ":divide-y-0"
+    ],
+    "description": "shadow-css: :divide-y-0 (no vertical dividers)"
+  },
+  "shadow-css/overflow-x-hidden": {
+    "scope": "clojure",
+    "prefix": "overflow-x-hidden",
+    "body": [
+      ":overflow-x-hidden"
+    ],
+    "description": "shadow-css: :overflow-x-hidden (overflow-x: hidden)"
+  },
+  "shadow-css/border-x-8": {
+    "scope": "clojure",
+    "prefix": "border-x-8",
+    "body": [
+      ":border-x-8"
+    ],
+    "description": "shadow-css: :border-x-8 (horizontal border: 8px)"
+  },
+  "shadow-css/rounded-bl-2xl": {
+    "scope": "clojure",
+    "prefix": "rounded-bl-2xl",
+    "body": [
+      ":rounded-bl-2xl"
+    ],
+    "description": "shadow-css: :rounded-bl-2xl (bottom-left border-radius: 1rem)"
+  },
+  "shadow-css/text-clip": {
+    "scope": "clojure",
+    "prefix": "text-clip",
+    "body": [
+      ":text-clip"
+    ],
+    "description": "shadow-css: :text-clip (text-overflow: clip)"
+  },
+  "shadow-css/relative": {
+    "scope": "clojure",
+    "prefix": "relative",
+    "body": [
+      ":relative"
+    ],
+    "description": "shadow-css: :relative (position: relative)"
+  },
+  "shadow-css/whitespace-normal": {
+    "scope": "clojure",
+    "prefix": "whitespace-normal",
+    "body": [
+      ":whitespace-normal"
+    ],
+    "description": "shadow-css: :whitespace-normal (white-space: normal)"
+  },
+  "shadow-css/bg-gray-800": {
+    "scope": "clojure",
+    "prefix": "bg-gray-800",
+    "body": [
+      ":bg-gray-800"
+    ],
+    "description": "shadow-css: :bg-gray-800"
+  },
+  "shadow-css/opacity-60": {
+    "scope": "clojure",
+    "prefix": "opacity-60",
+    "body": [
+      ":opacity-60"
+    ],
+    "description": "shadow-css: :opacity-60 (opacity: 0.6)"
+  },
+  "shadow-css/block": {
+    "scope": "clojure",
+    "prefix": "block",
+    "body": [
+      ":block"
+    ],
+    "description": "shadow-css: :block (display: block)"
+  },
+  "shadow-css/py-1": {
+    "scope": "clojure",
+    "prefix": "py-1",
+    "body": [
+      ":py-1"
+    ],
+    "description": "shadow-css: :py-1"
+  },
+  "shadow-css/left-full": {
+    "scope": "clojure",
+    "prefix": "left-full",
+    "body": [
+      ":left-full"
+    ],
+    "description": "shadow-css: :left-full (left: 100%)"
+  },
+  "shadow-css/outline-black-500": {
+    "scope": "clojure",
+    "prefix": "outline-black-500",
+    "body": [
+      ":outline-black-500"
+    ],
+    "description": "shadow-css: :outline-black-500"
+  },
+  "shadow-css/justify-items-start": {
+    "scope": "clojure",
+    "prefix": "justify-items-start",
+    "body": [
+      ":justify-items-start"
+    ],
+    "description": "shadow-css: :justify-items-start (justify-items: start)"
+  },
+  "shadow-css/mb-3": {
+    "scope": "clojure",
+    "prefix": "mb-3",
+    "body": [
+      ":mb-3"
+    ],
+    "description": "shadow-css: :mb-3"
+  },
+  "shadow-css/ml-1": {
+    "scope": "clojure",
+    "prefix": "ml-1",
+    "body": [
+      ":ml-1"
+    ],
+    "description": "shadow-css: :ml-1"
+  },
+  "shadow-css/bg-gray-200": {
+    "scope": "clojure",
+    "prefix": "bg-gray-200",
+    "body": [
+      ":bg-gray-200"
+    ],
+    "description": "shadow-css: :bg-gray-200"
+  },
+  "shadow-css/visible": {
+    "scope": "clojure",
+    "prefix": "visible",
+    "body": [
+      ":visible"
+    ],
+    "description": "shadow-css: :visible (visibility: visible)"
+  },
+  "shadow-css/cursor-copy": {
+    "scope": "clojure",
+    "prefix": "cursor-copy",
+    "body": [
+      ":cursor-copy"
+    ],
+    "description": "shadow-css: :cursor-copy (cursor: copy)"
+  },
+  "shadow-css/h-1of4": {
+    "scope": "clojure",
+    "prefix": "h-1of4",
+    "body": [
+      ":h-1of4"
+    ],
+    "description": "shadow-css: :h-1of4 (height: 25%)"
+  },
+  "shadow-css/gap-y-6": {
+    "scope": "clojure",
+    "prefix": "gap-y-6",
+    "body": [
+      ":gap-y-6"
+    ],
+    "description": "shadow-css: :gap-y-6"
+  },
+  "shadow-css/my-5": {
+    "scope": "clojure",
+    "prefix": "my-5",
+    "body": [
+      ":my-5"
+    ],
+    "description": "shadow-css: :my-5"
+  },
+  "shadow-css/overflow-scroll": {
+    "scope": "clojure",
+    "prefix": "overflow-scroll",
+    "body": [
+      ":overflow-scroll"
+    ],
+    "description": "shadow-css: :overflow-scroll (overflow: scroll)"
+  },
+  "shadow-css/w-2of3": {
+    "scope": "clojure",
+    "prefix": "w-2of3",
+    "body": [
+      ":w-2of3"
+    ],
+    "description": "shadow-css: :w-2of3 (width: 66.667%)"
+  },
+  "shadow-css/my-8": {
+    "scope": "clojure",
+    "prefix": "my-8",
+    "body": [
+      ":my-8"
+    ],
+    "description": "shadow-css: :my-8"
+  },
+  "shadow-css/text-3xl": {
+    "scope": "clojure",
+    "prefix": "text-3xl",
+    "body": [
+      ":text-3xl"
+    ],
+    "description": "shadow-css: :text-3xl (font-size: 1.875rem)"
+  },
+  "shadow-css/my-4": {
+    "scope": "clojure",
+    "prefix": "my-4",
+    "body": [
+      ":my-4"
+    ],
+    "description": "shadow-css: :my-4"
+  },
+  "shadow-css/h-3of4": {
+    "scope": "clojure",
+    "prefix": "h-3of4",
+    "body": [
+      ":h-3of4"
+    ],
+    "description": "shadow-css: :h-3of4 (height: 75%)"
+  },
+  "shadow-css/ease-linear": {
+    "scope": "clojure",
+    "prefix": "ease-linear",
+    "body": [
+      ":ease-linear"
+    ],
+    "description": "shadow-css: :ease-linear (transition-timing-function: linear)"
+  },
+  "shadow-css/leading-heading": {
+    "scope": "clojure",
+    "prefix": "leading-heading",
+    "body": [
+      ":leading-heading"
+    ],
+    "description": "shadow-css: :leading-heading (line-height: 1.25)"
+  },
+  "shadow-css/bg-blue-800": {
+    "scope": "clojure",
+    "prefix": "bg-blue-800",
+    "body": [
+      ":bg-blue-800"
+    ],
+    "description": "shadow-css: :bg-blue-800"
+  },
+  "shadow-css/duration-100": {
+    "scope": "clojure",
+    "prefix": "duration-100",
+    "body": [
+      ":duration-100"
+    ],
+    "description": "shadow-css: :duration-100 (transition-duration: 100ms)"
+  },
+  "shadow-css/gap-6": {
+    "scope": "clojure",
+    "prefix": "gap-6",
+    "body": [
+      ":gap-6"
+    ],
+    "description": "shadow-css: :gap-6"
+  },
+  "shadow-css/m-5": {
+    "scope": "clojure",
+    "prefix": "m-5",
+    "body": [
+      ":m-5"
+    ],
+    "description": "shadow-css: :m-5"
+  },
+  "shadow-css/transition-colors": {
+    "scope": "clojure",
+    "prefix": "transition-colors",
+    "body": [
+      ":transition-colors"
+    ],
+    "description": "shadow-css: :transition-colors (transition colors)"
+  },
+  "shadow-css/pt-2": {
+    "scope": "clojure",
+    "prefix": "pt-2",
+    "body": [
+      ":pt-2"
+    ],
+    "description": "shadow-css: :pt-2"
+  },
+  "shadow-css/mt-0.5": {
+    "scope": "clojure",
+    "prefix": "mt-0.5",
+    "body": [
+      ":mt-0.5"
+    ],
+    "description": "shadow-css: :mt-0.5"
+  },
+  "shadow-css/rounded-tl-3xl": {
+    "scope": "clojure",
+    "prefix": "rounded-tl-3xl",
+    "body": [
+      ":rounded-tl-3xl"
+    ],
+    "description": "shadow-css: :rounded-tl-3xl (top-left border-radius: 1.5rem)"
+  },
+  "shadow-css/py-8": {
+    "scope": "clojure",
+    "prefix": "py-8",
+    "body": [
+      ":py-8"
+    ],
+    "description": "shadow-css: :py-8"
+  },
+  "shadow-css/h-2of5": {
+    "scope": "clojure",
+    "prefix": "h-2of5",
+    "body": [
+      ":h-2of5"
+    ],
+    "description": "shadow-css: :h-2of5 (height: 40%)"
+  },
+  "shadow-css/rounded-tl-md": {
+    "scope": "clojure",
+    "prefix": "rounded-tl-md",
+    "body": [
+      ":rounded-tl-md"
+    ],
+    "description": "shadow-css: :rounded-tl-md (top-left border-radius: 0.375rem)"
+  },
+  "shadow-css/border-l-8": {
+    "scope": "clojure",
+    "prefix": "border-l-8",
+    "body": [
+      ":border-l-8"
+    ],
+    "description": "shadow-css: :border-l-8 (border-left-width: 8px)"
+  },
+  "shadow-css/w-fit": {
+    "scope": "clojure",
+    "prefix": "w-fit",
+    "body": [
+      ":w-fit"
+    ],
+    "description": "shadow-css: :w-fit (width: fit-content)"
+  },
+  "shadow-css/pb-3": {
+    "scope": "clojure",
+    "prefix": "pb-3",
+    "body": [
+      ":pb-3"
+    ],
+    "description": "shadow-css: :pb-3"
+  },
+  "shadow-css/pl-1": {
+    "scope": "clojure",
+    "prefix": "pl-1",
+    "body": [
+      ":pl-1"
+    ],
+    "description": "shadow-css: :pl-1"
+  },
+  "shadow-css/bg-blue-400": {
+    "scope": "clojure",
+    "prefix": "bg-blue-400",
+    "body": [
+      ":bg-blue-400"
+    ],
+    "description": "shadow-css: :bg-blue-400"
+  },
+  "shadow-css/mb-7": {
+    "scope": "clojure",
+    "prefix": "mb-7",
+    "body": [
+      ":mb-7"
+    ],
+    "description": "shadow-css: :mb-7"
+  },
+  "shadow-css/outline-red-100": {
+    "scope": "clojure",
+    "prefix": "outline-red-100",
+    "body": [
+      ":outline-red-100"
+    ],
+    "description": "shadow-css: :outline-red-100"
+  },
+  "shadow-css/pl-2": {
+    "scope": "clojure",
+    "prefix": "pl-2",
+    "body": [
+      ":pl-2"
+    ],
+    "description": "shadow-css: :pl-2"
+  },
+  "shadow-css/overflow-x-scroll": {
+    "scope": "clojure",
+    "prefix": "overflow-x-scroll",
+    "body": [
+      ":overflow-x-scroll"
+    ],
+    "description": "shadow-css: :overflow-x-scroll (overflow-x: scroll)"
+  },
+  "shadow-css/border-blue-200": {
+    "scope": "clojure",
+    "prefix": "border-blue-200",
+    "body": [
+      ":border-blue-200"
+    ],
+    "description": "shadow-css: :border-blue-200"
+  },
+  "shadow-css/my-2": {
+    "scope": "clojure",
+    "prefix": "my-2",
+    "body": [
+      ":my-2"
+    ],
+    "description": "shadow-css: :my-2"
+  },
+  "shadow-css/pt-7": {
+    "scope": "clojure",
+    "prefix": "pt-7",
+    "body": [
+      ":pt-7"
+    ],
+    "description": "shadow-css: :pt-7"
+  },
+  "shadow-css/ease-in": {
+    "scope": "clojure",
+    "prefix": "ease-in",
+    "body": [
+      ":ease-in"
+    ],
+    "description": "shadow-css: :ease-in (transition-timing-function: ease-in)"
+  },
+  "shadow-css/justify-self-end": {
+    "scope": "clojure",
+    "prefix": "justify-self-end",
+    "body": [
+      ":justify-self-end"
+    ],
+    "description": "shadow-css: :justify-self-end (justify-self: end)"
+  },
+  "shadow-css/border-t-4": {
+    "scope": "clojure",
+    "prefix": "border-t-4",
+    "body": [
+      ":border-t-4"
+    ],
+    "description": "shadow-css: :border-t-4 (border-top-width: 4px)"
+  },
+  "shadow-css/cursor-e-resize": {
+    "scope": "clojure",
+    "prefix": "cursor-e-resize",
+    "body": [
+      ":cursor-e-resize"
+    ],
+    "description": "shadow-css: :cursor-e-resize (cursor: e-resize)"
+  },
+  "shadow-css/flex-row-reverse": {
+    "scope": "clojure",
+    "prefix": "flex-row-reverse",
+    "body": [
+      ":flex-row-reverse"
+    ],
+    "description": "shadow-css: :flex-row-reverse (flex-direction: row-reverse)"
+  },
+  "shadow-css/truncate": {
+    "scope": "clojure",
+    "prefix": "truncate",
+    "body": [
+      ":truncate"
+    ],
+    "description": "shadow-css: :truncate (text overflow ellipsis)"
+  },
+  "shadow-css/pb-2": {
+    "scope": "clojure",
+    "prefix": "pb-2",
+    "body": [
+      ":pb-2"
+    ],
+    "description": "shadow-css: :pb-2"
+  },
+  "shadow-css/inset-0": {
+    "scope": "clojure",
+    "prefix": "inset-0",
+    "body": [
+      ":inset-0"
+    ],
+    "description": "shadow-css: :inset-0 (top/right/bottom/left: 0px)"
+  },
+  "shadow-css/duration-75": {
+    "scope": "clojure",
+    "prefix": "duration-75",
+    "body": [
+      ":duration-75"
+    ],
+    "description": "shadow-css: :duration-75 (transition-duration: 75ms)"
+  },
+  "shadow-css/divide-x-8": {
+    "scope": "clojure",
+    "prefix": "divide-x-8",
+    "body": [
+      ":divide-x-8"
+    ],
+    "description": "shadow-css: :divide-x-8 (8px horizontal dividers)"
+  },
+  "shadow-css/cursor-move": {
+    "scope": "clojure",
+    "prefix": "cursor-move",
+    "body": [
+      ":cursor-move"
+    ],
+    "description": "shadow-css: :cursor-move (cursor: move)"
+  },
+  "shadow-css/opacity-75": {
+    "scope": "clojure",
+    "prefix": "opacity-75",
+    "body": [
+      ":opacity-75"
+    ],
+    "description": "shadow-css: :opacity-75 (opacity: 0.75)"
+  },
+  "shadow-css/p-7": {
+    "scope": "clojure",
+    "prefix": "p-7",
+    "body": [
+      ":p-7"
+    ],
+    "description": "shadow-css: :p-7"
+  },
+  "shadow-css/border-gray-200": {
+    "scope": "clojure",
+    "prefix": "border-gray-200",
+    "body": [
+      ":border-gray-200"
+    ],
+    "description": "shadow-css: :border-gray-200"
+  },
+  "shadow-css/bg-red-500": {
+    "scope": "clojure",
+    "prefix": "bg-red-500",
+    "body": [
+      ":bg-red-500"
+    ],
+    "description": "shadow-css: :bg-red-500"
+  },
+  "shadow-css/flex-inline": {
+    "scope": "clojure",
+    "prefix": "flex-inline",
+    "body": [
+      ":flex-inline"
+    ],
+    "description": "shadow-css: :flex-inline (display: inline-flex)"
+  },
+  "shadow-css/rounded-t-lg": {
+    "scope": "clojure",
+    "prefix": "rounded-t-lg",
+    "body": [
+      ":rounded-t-lg"
+    ],
+    "description": "shadow-css: :rounded-t-lg (top border-radius: 0.5rem)"
+  },
+  "shadow-css/inline-grid": {
+    "scope": "clojure",
+    "prefix": "inline-grid",
+    "body": [
+      ":inline-grid"
+    ],
+    "description": "shadow-css: :inline-grid (display: inline-grid)"
+  },
+  "shadow-css/active": {
+    "scope": "clojure",
+    "prefix": "active",
+    "body": [
+      ":active"
+    ],
+    "description": "shadow-css: :active (&:active)"
+  },
+  "shadow-css/min-w-full": {
+    "scope": "clojure",
+    "prefix": "min-w-full",
+    "body": [
+      ":min-w-full"
+    ],
+    "description": "shadow-css: :min-w-full (min-width: 100%)"
+  },
+  "shadow-css/border-y-4": {
+    "scope": "clojure",
+    "prefix": "border-y-4",
+    "body": [
+      ":border-y-4"
+    ],
+    "description": "shadow-css: :border-y-4 (vertical border: 4px)"
+  },
+  "shadow-css/h-1of2": {
+    "scope": "clojure",
+    "prefix": "h-1of2",
+    "body": [
+      ":h-1of2"
+    ],
+    "description": "shadow-css: :h-1of2 (height: 50%)"
+  },
+  "shadow-css/inline-block": {
+    "scope": "clojure",
+    "prefix": "inline-block",
+    "body": [
+      ":inline-block"
+    ],
+    "description": "shadow-css: :inline-block (display: inline-block)"
+  },
+  "shadow-css/rounded-b-sm": {
+    "scope": "clojure",
+    "prefix": "rounded-b-sm",
+    "body": [
+      ":rounded-b-sm"
+    ],
+    "description": "shadow-css: :rounded-b-sm (bottom border-radius: 0.125rem)"
+  },
+  "shadow-css/grid-cols-5": {
+    "scope": "clojure",
+    "prefix": "grid-cols-5",
+    "body": [
+      ":grid-cols-5"
+    ],
+    "description": "shadow-css: :grid-cols-5 (5 column grid)"
+  },
+  "shadow-css/rounded-br-sm": {
+    "scope": "clojure",
+    "prefix": "rounded-br-sm",
+    "body": [
+      ":rounded-br-sm"
+    ],
+    "description": "shadow-css: :rounded-br-sm (bottom-right border-radius: 0.125rem)"
+  },
+  "shadow-css/duration-0": {
+    "scope": "clojure",
+    "prefix": "duration-0",
+    "body": [
+      ":duration-0"
+    ],
+    "description": "shadow-css: :duration-0 (transition-duration: 0s)"
+  },
+  "shadow-css/rounded-bl-sm": {
+    "scope": "clojure",
+    "prefix": "rounded-bl-sm",
+    "body": [
+      ":rounded-bl-sm"
+    ],
+    "description": "shadow-css: :rounded-bl-sm (bottom-left border-radius: 0.125rem)"
+  },
+  "shadow-css/grid": {
+    "scope": "clojure",
+    "prefix": "grid",
+    "body": [
+      ":grid"
+    ],
+    "description": "shadow-css: :grid (display: grid)"
+  },
+  "shadow-css/my-0.5": {
+    "scope": "clojure",
+    "prefix": "my-0.5",
+    "body": [
+      ":my-0.5"
+    ],
+    "description": "shadow-css: :my-0.5"
+  },
+  "shadow-css/bg-green-700": {
+    "scope": "clojure",
+    "prefix": "bg-green-700",
+    "body": [
+      ":bg-green-700"
+    ],
+    "description": "shadow-css: :bg-green-700"
+  },
+  "shadow-css/bg-red-400": {
+    "scope": "clojure",
+    "prefix": "bg-red-400",
+    "body": [
+      ":bg-red-400"
+    ],
+    "description": "shadow-css: :bg-red-400"
+  },
+  "shadow-css/align-top": {
+    "scope": "clojure",
+    "prefix": "align-top",
+    "body": [
+      ":align-top"
+    ],
+    "description": "shadow-css: :align-top (vertical-align: top)"
+  },
+  "shadow-css/w-2of12": {
+    "scope": "clojure",
+    "prefix": "w-2of12",
+    "body": [
+      ":w-2of12"
+    ],
+    "description": "shadow-css: :w-2of12 (width: 16.667%)"
+  },
+  "shadow-css/justify-start": {
+    "scope": "clojure",
+    "prefix": "justify-start",
+    "body": [
+      ":justify-start"
+    ],
+    "description": "shadow-css: :justify-start (justify-content: flex-start)"
+  },
+  "shadow-css/text-red-100": {
+    "scope": "clojure",
+    "prefix": "text-red-100",
+    "body": [
+      ":text-red-100"
+    ],
+    "description": "shadow-css: :text-red-100"
+  },
+  "shadow-css/rounded-br-2xl": {
+    "scope": "clojure",
+    "prefix": "rounded-br-2xl",
+    "body": [
+      ":rounded-br-2xl"
+    ],
+    "description": "shadow-css: :rounded-br-2xl (bottom-right border-radius: 1rem)"
+  },
+  "shadow-css/pt-4": {
+    "scope": "clojure",
+    "prefix": "pt-4",
+    "body": [
+      ":pt-4"
+    ],
+    "description": "shadow-css: :pt-4"
+  },
+  "shadow-css/whitespace-pre": {
+    "scope": "clojure",
+    "prefix": "whitespace-pre",
+    "body": [
+      ":whitespace-pre"
+    ],
+    "description": "shadow-css: :whitespace-pre (white-space: pre)"
+  },
+  "shadow-css/rounded-tr": {
+    "scope": "clojure",
+    "prefix": "rounded-tr",
+    "body": [
+      ":rounded-tr"
+    ],
+    "description": "shadow-css: :rounded-tr (top-right border-radius: 0.25rem)"
+  },
+  "shadow-css/text-left": {
+    "scope": "clojure",
+    "prefix": "text-left",
+    "body": [
+      ":text-left"
+    ],
+    "description": "shadow-css: :text-left (text-align: left)"
+  },
+  "shadow-css/m-3": {
+    "scope": "clojure",
+    "prefix": "m-3",
+    "body": [
+      ":m-3"
+    ],
+    "description": "shadow-css: :m-3"
+  },
+  "shadow-css/mr-3": {
+    "scope": "clojure",
+    "prefix": "mr-3",
+    "body": [
+      ":mr-3"
+    ],
+    "description": "shadow-css: :mr-3"
+  },
+  "shadow-css/self-end": {
+    "scope": "clojure",
+    "prefix": "self-end",
+    "body": [
+      ":self-end"
+    ],
+    "description": "shadow-css: :self-end (align-self: flex-end)"
+  },
+  "shadow-css/rounded-bl-md": {
+    "scope": "clojure",
+    "prefix": "rounded-bl-md",
+    "body": [
+      ":rounded-bl-md"
+    ],
+    "description": "shadow-css: :rounded-bl-md (bottom-left border-radius: 0.375rem)"
+  },
+  "shadow-css/text-gray-300": {
+    "scope": "clojure",
+    "prefix": "text-gray-300",
+    "body": [
+      ":text-gray-300"
+    ],
+    "description": "shadow-css: :text-gray-300"
+  },
+  "shadow-css/border-r-8": {
+    "scope": "clojure",
+    "prefix": "border-r-8",
+    "body": [
+      ":border-r-8"
+    ],
+    "description": "shadow-css: :border-r-8 (border-right-width: 8px)"
+  },
+  "shadow-css/pr-6": {
+    "scope": "clojure",
+    "prefix": "pr-6",
+    "body": [
+      ":pr-6"
+    ],
+    "description": "shadow-css: :pr-6"
+  },
+  "shadow-css/mx-1": {
+    "scope": "clojure",
+    "prefix": "mx-1",
+    "body": [
+      ":mx-1"
+    ],
+    "description": "shadow-css: :mx-1"
+  },
+  "shadow-css/m-6": {
+    "scope": "clojure",
+    "prefix": "m-6",
+    "body": [
+      ":m-6"
+    ],
+    "description": "shadow-css: :m-6"
+  },
+  "shadow-css/mb-auto": {
+    "scope": "clojure",
+    "prefix": "mb-auto",
+    "body": [
+      ":mb-auto"
+    ],
+    "description": "shadow-css: :mb-auto (margin-bottom: auto)"
+  },
+  "shadow-css/border-gray-100": {
+    "scope": "clojure",
+    "prefix": "border-gray-100",
+    "body": [
+      ":border-gray-100"
+    ],
+    "description": "shadow-css: :border-gray-100"
+  },
+  "shadow-css/text-gray-100": {
+    "scope": "clojure",
+    "prefix": "text-gray-100",
+    "body": [
+      ":text-gray-100"
+    ],
+    "description": "shadow-css: :text-gray-100"
+  },
+  "shadow-css/ml-5": {
+    "scope": "clojure",
+    "prefix": "ml-5",
+    "body": [
+      ":ml-5"
+    ],
+    "description": "shadow-css: :ml-5"
+  },
+  "shadow-css/outline-gray-800": {
+    "scope": "clojure",
+    "prefix": "outline-gray-800",
+    "body": [
+      ":outline-gray-800"
+    ],
+    "description": "shadow-css: :outline-gray-800"
+  },
+  "shadow-css/pr-1": {
+    "scope": "clojure",
+    "prefix": "pr-1",
+    "body": [
+      ":pr-1"
+    ],
+    "description": "shadow-css: :pr-1"
+  },
+  "shadow-css/pt-8": {
+    "scope": "clojure",
+    "prefix": "pt-8",
+    "body": [
+      ":pt-8"
+    ],
+    "description": "shadow-css: :pt-8"
+  },
+  "shadow-css/leading-none": {
+    "scope": "clojure",
+    "prefix": "leading-none",
+    "body": [
+      ":leading-none"
+    ],
+    "description": "shadow-css: :leading-none (line-height: 1)"
+  },
+  "shadow-css/cursor-help": {
+    "scope": "clojure",
+    "prefix": "cursor-help",
+    "body": [
+      ":cursor-help"
+    ],
+    "description": "shadow-css: :cursor-help (cursor: help)"
+  },
+  "shadow-css/mx-7": {
+    "scope": "clojure",
+    "prefix": "mx-7",
+    "body": [
+      ":mx-7"
+    ],
+    "description": "shadow-css: :mx-7"
+  },
+  "shadow-css/my-1": {
+    "scope": "clojure",
+    "prefix": "my-1",
+    "body": [
+      ":my-1"
+    ],
+    "description": "shadow-css: :my-1"
+  },
+  "shadow-css/aspect-auto": {
+    "scope": "clojure",
+    "prefix": "aspect-auto",
+    "body": [
+      ":aspect-auto"
+    ],
+    "description": "shadow-css: :aspect-auto (aspect-ratio: auto)"
+  },
+  "shadow-css/cursor-ew-resize": {
+    "scope": "clojure",
+    "prefix": "cursor-ew-resize",
+    "body": [
+      ":cursor-ew-resize"
+    ],
+    "description": "shadow-css: :cursor-ew-resize (cursor: ew-resize)"
+  },
+  "shadow-css/pl-8": {
+    "scope": "clojure",
+    "prefix": "pl-8",
+    "body": [
+      ":pl-8"
+    ],
+    "description": "shadow-css: :pl-8"
+  },
+  "shadow-css/rounded-l-md": {
+    "scope": "clojure",
+    "prefix": "rounded-l-md",
+    "body": [
+      ":rounded-l-md"
+    ],
+    "description": "shadow-css: :rounded-l-md (left border-radius: 0.375rem)"
+  },
+  "shadow-css/origin-left": {
+    "scope": "clojure",
+    "prefix": "origin-left",
+    "body": [
+      ":origin-left"
+    ],
+    "description": "shadow-css: :origin-left (transform-origin: left)"
+  },
+  "shadow-css/visited": {
+    "scope": "clojure",
+    "prefix": "visited",
+    "body": [
+      ":visited"
+    ],
+    "description": "shadow-css: :visited (&:visited)"
+  },
+  "shadow-css/outline-black-400": {
+    "scope": "clojure",
+    "prefix": "outline-black-400",
+    "body": [
+      ":outline-black-400"
+    ],
+    "description": "shadow-css: :outline-black-400"
+  },
+  "shadow-css/h-min": {
+    "scope": "clojure",
+    "prefix": "h-min",
+    "body": [
+      ":h-min"
+    ],
+    "description": "shadow-css: :h-min (height: min-content)"
+  },
+  "shadow-css/divide-solid": {
+    "scope": "clojure",
+    "prefix": "divide-solid",
+    "body": [
+      ":divide-solid"
+    ],
+    "description": "shadow-css: :divide-solid (solid divider style)"
+  },
+  "shadow-css/mb-1": {
+    "scope": "clojure",
+    "prefix": "mb-1",
+    "body": [
+      ":mb-1"
+    ],
+    "description": "shadow-css: :mb-1"
+  },
+  "shadow-css/outline-hidden": {
+    "scope": "clojure",
+    "prefix": "outline-hidden",
+    "body": [
+      ":outline-hidden"
+    ],
+    "description": "shadow-css: :outline-hidden (outline-style: hidden)"
+  },
+  "shadow-css/text-green-700": {
+    "scope": "clojure",
+    "prefix": "text-green-700",
+    "body": [
+      ":text-green-700"
+    ],
+    "description": "shadow-css: :text-green-700"
+  },
+  "shadow-css/text-right": {
+    "scope": "clojure",
+    "prefix": "text-right",
+    "body": [
+      ":text-right"
+    ],
+    "description": "shadow-css: :text-right (text-align: right)"
+  },
+  "shadow-css/divide-y": {
+    "scope": "clojure",
+    "prefix": "divide-y",
+    "body": [
+      ":divide-y"
+    ],
+    "description": "shadow-css: :divide-y (vertical dividers)"
+  },
+  "shadow-css/transition-opacity": {
+    "scope": "clojure",
+    "prefix": "transition-opacity",
+    "body": [
+      ":transition-opacity"
+    ],
+    "description": "shadow-css: :transition-opacity (transition opacity)"
+  },
+  "shadow-css/w-7of12": {
+    "scope": "clojure",
+    "prefix": "w-7of12",
+    "body": [
+      ":w-7of12"
+    ],
+    "description": "shadow-css: :w-7of12 (width: 58.333%)"
+  },
+  "shadow-css/min-h-full": {
+    "scope": "clojure",
+    "prefix": "min-h-full",
+    "body": [
+      ":min-h-full"
+    ],
+    "description": "shadow-css: :min-h-full (min-height: 100%)"
+  },
+  "shadow-css/cursor-nwse-resize": {
+    "scope": "clojure",
+    "prefix": "cursor-nwse-resize",
+    "body": [
+      ":cursor-nwse-resize"
+    ],
+    "description": "shadow-css: :cursor-nwse-resize (cursor: nwse-resize)"
+  },
+  "shadow-css/p-5": {
+    "scope": "clojure",
+    "prefix": "p-5",
+    "body": [
+      ":p-5"
+    ],
+    "description": "shadow-css: :p-5"
+  },
+  "shadow-css/h-fit": {
+    "scope": "clojure",
+    "prefix": "h-fit",
+    "body": [
+      ":h-fit"
+    ],
+    "description": "shadow-css: :h-fit (height: fit-content)"
+  },
+  "shadow-css/pl-0.5": {
+    "scope": "clojure",
+    "prefix": "pl-0.5",
+    "body": [
+      ":pl-0.5"
+    ],
+    "description": "shadow-css: :pl-0.5"
+  },
+  "shadow-css/py-2": {
+    "scope": "clojure",
+    "prefix": "py-2",
+    "body": [
+      ":py-2"
+    ],
+    "description": "shadow-css: :py-2"
+  },
+  "shadow-css/flex": {
+    "scope": "clojure",
+    "prefix": "flex",
+    "body": [
+      ":flex"
+    ],
+    "description": "shadow-css: :flex (display: flex)"
+  },
+  "shadow-css/justify-self-start": {
+    "scope": "clojure",
+    "prefix": "justify-self-start",
+    "body": [
+      ":justify-self-start"
+    ],
+    "description": "shadow-css: :justify-self-start (justify-self: start)"
+  },
+  "shadow-css/overflow-visible": {
+    "scope": "clojure",
+    "prefix": "overflow-visible",
+    "body": [
+      ":overflow-visible"
+    ],
+    "description": "shadow-css: :overflow-visible (overflow: visible)"
+  },
+  "shadow-css/grid-cols-2": {
+    "scope": "clojure",
+    "prefix": "grid-cols-2",
+    "body": [
+      ":grid-cols-2"
+    ],
+    "description": "shadow-css: :grid-cols-2 (2 column grid)"
+  },
+  "shadow-css/rounded-r-sm": {
+    "scope": "clojure",
+    "prefix": "rounded-r-sm",
+    "body": [
+      ":rounded-r-sm"
+    ],
+    "description": "shadow-css: :rounded-r-sm (right border-radius: 0.125rem)"
+  },
+  "shadow-css/rounded-tr-xl": {
+    "scope": "clojure",
+    "prefix": "rounded-tr-xl",
+    "body": [
+      ":rounded-tr-xl"
+    ],
+    "description": "shadow-css: :rounded-tr-xl (top-right border-radius: 0.75rem)"
+  },
+  "shadow-css/w-3of12": {
+    "scope": "clojure",
+    "prefix": "w-3of12",
+    "body": [
+      ":w-3of12"
+    ],
+    "description": "shadow-css: :w-3of12 (width: 25%)"
+  },
+  "shadow-css/bg-gray-900": {
+    "scope": "clojure",
+    "prefix": "bg-gray-900",
+    "body": [
+      ":bg-gray-900"
+    ],
+    "description": "shadow-css: :bg-gray-900"
+  },
+  "shadow-css/focus-visible": {
+    "scope": "clojure",
+    "prefix": "focus-visible",
+    "body": [
+      ":focus-visible"
+    ],
+    "description": "shadow-css: :focus-visible (&:focus-visible)"
+  },
+  "shadow-css/opacity-5": {
+    "scope": "clojure",
+    "prefix": "opacity-5",
+    "body": [
+      ":opacity-5"
+    ],
+    "description": "shadow-css: :opacity-5 (opacity: 0.05)"
+  },
+  "shadow-css/bg-white-50": {
+    "scope": "clojure",
+    "prefix": "bg-white-50",
+    "body": [
+      ":bg-white-50"
+    ],
+    "description": "shadow-css: :bg-white-50"
+  },
+  "shadow-css/h-auto": {
+    "scope": "clojure",
+    "prefix": "h-auto",
+    "body": [
+      ":h-auto"
+    ],
+    "description": "shadow-css: :h-auto (height: auto)"
+  },
+  "shadow-css/gap-y-5": {
+    "scope": "clojure",
+    "prefix": "gap-y-5",
+    "body": [
+      ":gap-y-5"
+    ],
+    "description": "shadow-css: :gap-y-5"
+  },
+  "shadow-css/pl-3": {
+    "scope": "clojure",
+    "prefix": "pl-3",
+    "body": [
+      ":pl-3"
+    ],
+    "description": "shadow-css: :pl-3"
+  },
+  "shadow-css/cursor-n-resize": {
+    "scope": "clojure",
+    "prefix": "cursor-n-resize",
+    "body": [
+      ":cursor-n-resize"
+    ],
+    "description": "shadow-css: :cursor-n-resize (cursor: n-resize)"
+  },
+  "shadow-css/transition": {
+    "scope": "clojure",
+    "prefix": "transition",
+    "body": [
+      ":transition"
+    ],
+    "description": "shadow-css: :transition (default transition)"
+  },
+  "shadow-css/min-w-min": {
+    "scope": "clojure",
+    "prefix": "min-w-min",
+    "body": [
+      ":min-w-min"
+    ],
+    "description": "shadow-css: :min-w-min (min-width: min-content)"
+  },
+  "shadow-css/min-h-0": {
+    "scope": "clojure",
+    "prefix": "min-h-0",
+    "body": [
+      ":min-h-0"
+    ],
+    "description": "shadow-css: :min-h-0 (min-height: 0px)"
+  },
+  "shadow-css/opacity-10": {
+    "scope": "clojure",
+    "prefix": "opacity-10",
+    "body": [
+      ":opacity-10"
+    ],
+    "description": "shadow-css: :opacity-10 (opacity: 0.1)"
+  },
+  "shadow-css/py-6": {
+    "scope": "clojure",
+    "prefix": "py-6",
+    "body": [
+      ":py-6"
+    ],
+    "description": "shadow-css: :py-6"
+  },
+  "shadow-css/gap-y-7": {
+    "scope": "clojure",
+    "prefix": "gap-y-7",
+    "body": [
+      ":gap-y-7"
+    ],
+    "description": "shadow-css: :gap-y-7"
+  },
+  "shadow-css/rounded-br": {
+    "scope": "clojure",
+    "prefix": "rounded-br",
+    "body": [
+      ":rounded-br"
+    ],
+    "description": "shadow-css: :rounded-br (bottom-right border-radius: 0.25rem)"
+  },
+  "shadow-css/right-full": {
+    "scope": "clojure",
+    "prefix": "right-full",
+    "body": [
+      ":right-full"
+    ],
+    "description": "shadow-css: :right-full (right: 100%)"
+  },
+  "shadow-css/mx-6": {
+    "scope": "clojure",
+    "prefix": "mx-6",
+    "body": [
+      ":mx-6"
+    ],
+    "description": "shadow-css: :mx-6"
+  },
+  "shadow-css/w-4of12": {
+    "scope": "clojure",
+    "prefix": "w-4of12",
+    "body": [
+      ":w-4of12"
+    ],
+    "description": "shadow-css: :w-4of12 (width: 33.333%)"
+  },
+  "shadow-css/overflow-x-visible": {
+    "scope": "clojure",
+    "prefix": "overflow-x-visible",
+    "body": [
+      ":overflow-x-visible"
+    ],
+    "description": "shadow-css: :overflow-x-visible (overflow-x: visible)"
+  },
+  "shadow-css/ml-3": {
+    "scope": "clojure",
+    "prefix": "ml-3",
+    "body": [
+      ":ml-3"
+    ],
+    "description": "shadow-css: :ml-3"
+  },
+  "shadow-css/origin-top-left": {
+    "scope": "clojure",
+    "prefix": "origin-top-left",
+    "body": [
+      ":origin-top-left"
+    ],
+    "description": "shadow-css: :origin-top-left (transform-origin: top left)"
+  },
+  "shadow-css/border-y-2": {
+    "scope": "clojure",
+    "prefix": "border-y-2",
+    "body": [
+      ":border-y-2"
+    ],
+    "description": "shadow-css: :border-y-2 (vertical border: 2px)"
+  },
+  "shadow-css/w-3of5": {
+    "scope": "clojure",
+    "prefix": "w-3of5",
+    "body": [
+      ":w-3of5"
+    ],
+    "description": "shadow-css: :w-3of5 (width: 60%)"
+  },
+  "shadow-css/outline-gray-700": {
+    "scope": "clojure",
+    "prefix": "outline-gray-700",
+    "body": [
+      ":outline-gray-700"
+    ],
+    "description": "shadow-css: :outline-gray-700"
+  },
+  "shadow-css/w-4of6": {
+    "scope": "clojure",
+    "prefix": "w-4of6",
+    "body": [
+      ":w-4of6"
+    ],
+    "description": "shadow-css: :w-4of6 (width: 66.667%)"
+  },
+  "shadow-css/border-x-2": {
+    "scope": "clojure",
+    "prefix": "border-x-2",
+    "body": [
+      ":border-x-2"
+    ],
+    "description": "shadow-css: :border-x-2 (horizontal border: 2px)"
+  },
+  "shadow-css/max-w-min": {
+    "scope": "clojure",
+    "prefix": "max-w-min",
+    "body": [
+      ":max-w-min"
+    ],
+    "description": "shadow-css: :max-w-min (max-width: min-content)"
+  },
+  "shadow-css/gap-1": {
+    "scope": "clojure",
+    "prefix": "gap-1",
+    "body": [
+      ":gap-1"
+    ],
+    "description": "shadow-css: :gap-1"
+  },
+  "shadow-css/border-b-8": {
+    "scope": "clojure",
+    "prefix": "border-b-8",
+    "body": [
+      ":border-b-8"
+    ],
+    "description": "shadow-css: :border-b-8 (border-bottom-width: 8px)"
+  },
+  "shadow-css/delay-300": {
+    "scope": "clojure",
+    "prefix": "delay-300",
+    "body": [
+      ":delay-300"
+    ],
+    "description": "shadow-css: :delay-300 (transition-delay: 300ms)"
+  },
+  "shadow-css/overflow-y-hidden": {
+    "scope": "clojure",
+    "prefix": "overflow-y-hidden",
+    "body": [
+      ":overflow-y-hidden"
+    ],
+    "description": "shadow-css: :overflow-y-hidden (overflow-y: hidden)"
+  },
+  "shadow-css/outline-gray-500": {
+    "scope": "clojure",
+    "prefix": "outline-gray-500",
+    "body": [
+      ":outline-gray-500"
+    ],
+    "description": "shadow-css: :outline-gray-500"
+  },
+  "shadow-css/rounded-bl-none": {
+    "scope": "clojure",
+    "prefix": "rounded-bl-none",
+    "body": [
+      ":rounded-bl-none"
+    ],
+    "description": "shadow-css: :rounded-bl-none (bottom-left border-radius: 0px)"
+  },
+  "shadow-css/pointer-events-none": {
+    "scope": "clojure",
+    "prefix": "pointer-events-none",
+    "body": [
+      ":pointer-events-none"
+    ],
+    "description": "shadow-css: :pointer-events-none (pointer-events: none)"
+  },
+  "shadow-css/overflow-clip": {
+    "scope": "clojure",
+    "prefix": "overflow-clip",
+    "body": [
+      ":overflow-clip"
+    ],
+    "description": "shadow-css: :overflow-clip (overflow: clip)"
+  },
+  "shadow-css/bg-white-300": {
+    "scope": "clojure",
+    "prefix": "bg-white-300",
+    "body": [
+      ":bg-white-300"
+    ],
+    "description": "shadow-css: :bg-white-300"
+  },
+  "shadow-css/items-end": {
+    "scope": "clojure",
+    "prefix": "items-end",
+    "body": [
+      ":items-end"
+    ],
+    "description": "shadow-css: :items-end (align-items: flex-end)"
+  },
+  "shadow-css/text-2xl": {
+    "scope": "clojure",
+    "prefix": "text-2xl",
+    "body": [
+      ":text-2xl"
+    ],
+    "description": "shadow-css: :text-2xl (font-size: 1.5rem)"
+  },
+  "shadow-css/fixed": {
+    "scope": "clojure",
+    "prefix": "fixed",
+    "body": [
+      ":fixed"
+    ],
+    "description": "shadow-css: :fixed (position: fixed)"
+  },
+  "shadow-css/ml-auto": {
+    "scope": "clojure",
+    "prefix": "ml-auto",
+    "body": [
+      ":ml-auto"
+    ],
+    "description": "shadow-css: :ml-auto (margin-left: auto)"
+  },
+  "shadow-css/grid-cols-1": {
+    "scope": "clojure",
+    "prefix": "grid-cols-1",
+    "body": [
+      ":grid-cols-1"
+    ],
+    "description": "shadow-css: :grid-cols-1 (1 column grid)"
+  },
+  "shadow-css/max-h-screen": {
+    "scope": "clojure",
+    "prefix": "max-h-screen",
+    "body": [
+      ":max-h-screen"
+    ],
+    "description": "shadow-css: :max-h-screen (max-height: 100vh)"
+  },
+  "shadow-css/divide-x": {
+    "scope": "clojure",
+    "prefix": "divide-x",
+    "body": [
+      ":divide-x"
+    ],
+    "description": "shadow-css: :divide-x (horizontal dividers)"
+  },
+  "shadow-css/text-green-100": {
+    "scope": "clojure",
+    "prefix": "text-green-100",
+    "body": [
+      ":text-green-100"
+    ],
+    "description": "shadow-css: :text-green-100"
+  },
+  "shadow-css/pt-0.5": {
+    "scope": "clojure",
+    "prefix": "pt-0.5",
+    "body": [
+      ":pt-0.5"
+    ],
+    "description": "shadow-css: :pt-0.5"
+  },
+  "shadow-css/border-l": {
+    "scope": "clojure",
+    "prefix": "border-l",
+    "body": [
+      ":border-l"
+    ],
+    "description": "shadow-css: :border-l (border-left-width: 1px)"
+  },
+  "shadow-css/mr-2": {
+    "scope": "clojure",
+    "prefix": "mr-2",
+    "body": [
+      ":mr-2"
+    ],
+    "description": "shadow-css: :mr-2"
+  },
+  "shadow-css/max-h-full": {
+    "scope": "clojure",
+    "prefix": "max-h-full",
+    "body": [
+      ":max-h-full"
+    ],
+    "description": "shadow-css: :max-h-full (max-height: 100%)"
+  },
+  "shadow-css/w-5of6": {
+    "scope": "clojure",
+    "prefix": "w-5of6",
+    "body": [
+      ":w-5of6"
+    ],
+    "description": "shadow-css: :w-5of6 (width: 83.333%)"
+  },
+  "shadow-css/rounded-br-xl": {
+    "scope": "clojure",
+    "prefix": "rounded-br-xl",
+    "body": [
+      ":rounded-br-xl"
+    ],
+    "description": "shadow-css: :rounded-br-xl (bottom-right border-radius: 0.75rem)"
+  },
+  "shadow-css/bg-green-400": {
+    "scope": "clojure",
+    "prefix": "bg-green-400",
+    "body": [
+      ":bg-green-400"
+    ],
+    "description": "shadow-css: :bg-green-400"
+  },
+  "shadow-css/rounded-none": {
+    "scope": "clojure",
+    "prefix": "rounded-none",
+    "body": [
+      ":rounded-none"
+    ],
+    "description": "shadow-css: :rounded-none (border-radius: 0px)"
+  },
+  "shadow-css/max-h-min": {
+    "scope": "clojure",
+    "prefix": "max-h-min",
+    "body": [
+      ":max-h-min"
+    ],
+    "description": "shadow-css: :max-h-min (max-height: min-content)"
+  },
+  "shadow-css/z-20": {
+    "scope": "clojure",
+    "prefix": "z-20",
+    "body": [
+      ":z-20"
+    ],
+    "description": "shadow-css: :z-20 (z-index: 20)"
+  },
+  "shadow-css/mx-3": {
+    "scope": "clojure",
+    "prefix": "mx-3",
+    "body": [
+      ":mx-3"
+    ],
+    "description": "shadow-css: :mx-3"
+  },
+  "shadow-css/border-gray-400": {
+    "scope": "clojure",
+    "prefix": "border-gray-400",
+    "body": [
+      ":border-gray-400"
+    ],
+    "description": "shadow-css: :border-gray-400"
+  },
+  "shadow-css/w-1of2": {
+    "scope": "clojure",
+    "prefix": "w-1of2",
+    "body": [
+      ":w-1of2"
+    ],
+    "description": "shadow-css: :w-1of2 (width: 50%)"
+  },
+  "shadow-css/mr-1": {
+    "scope": "clojure",
+    "prefix": "mr-1",
+    "body": [
+      ":mr-1"
+    ],
+    "description": "shadow-css: :mr-1"
+  },
+  "shadow-css/overflow-x-auto": {
+    "scope": "clojure",
+    "prefix": "overflow-x-auto",
+    "body": [
+      ":overflow-x-auto"
+    ],
+    "description": "shadow-css: :overflow-x-auto (overflow-x: auto)"
+  },
+  "shadow-css/rounded-b": {
+    "scope": "clojure",
+    "prefix": "rounded-b",
+    "body": [
+      ":rounded-b"
+    ],
+    "description": "shadow-css: :rounded-b (bottom border-radius: 0.25rem)"
+  },
+  "shadow-css/mr-0.5": {
+    "scope": "clojure",
+    "prefix": "mr-0.5",
+    "body": [
+      ":mr-0.5"
+    ],
+    "description": "shadow-css: :mr-0.5"
+  },
+  "shadow-css/absolute": {
+    "scope": "clojure",
+    "prefix": "absolute",
+    "body": [
+      ":absolute"
+    ],
+    "description": "shadow-css: :absolute (position: absolute)"
+  },
+  "shadow-css/opacity-100": {
+    "scope": "clojure",
+    "prefix": "opacity-100",
+    "body": [
+      ":opacity-100"
+    ],
+    "description": "shadow-css: :opacity-100 (opacity: 1)"
+  },
+  "shadow-css/rounded-l-2xl": {
+    "scope": "clojure",
+    "prefix": "rounded-l-2xl",
+    "body": [
+      ":rounded-l-2xl"
+    ],
+    "description": "shadow-css: :rounded-l-2xl (left border-radius: 1rem)"
+  },
+  "shadow-css/shadow-lg": {
+    "scope": "clojure",
+    "prefix": "shadow-lg",
+    "body": [
+      ":shadow-lg"
+    ],
+    "description": "shadow-css: :shadow-lg"
+  },
+  "shadow-css/flex-col-reverse": {
+    "scope": "clojure",
+    "prefix": "flex-col-reverse",
+    "body": [
+      ":flex-col-reverse"
+    ],
+    "description": "shadow-css: :flex-col-reverse (flex-direction: column-reverse)"
+  },
+  "shadow-css/ml-7": {
+    "scope": "clojure",
+    "prefix": "ml-7",
+    "body": [
+      ":ml-7"
+    ],
+    "description": "shadow-css: :ml-7"
+  },
+  "shadow-css/rounded-tr-2xl": {
+    "scope": "clojure",
+    "prefix": "rounded-tr-2xl",
+    "body": [
+      ":rounded-tr-2xl"
+    ],
+    "description": "shadow-css: :rounded-tr-2xl (top-right border-radius: 1rem)"
+  },
+  "shadow-css/w-6of12": {
+    "scope": "clojure",
+    "prefix": "w-6of12",
+    "body": [
+      ":w-6of12"
+    ],
+    "description": "shadow-css: :w-6of12 (width: 50%)"
+  },
+  "shadow-css/w-2of5": {
+    "scope": "clojure",
+    "prefix": "w-2of5",
+    "body": [
+      ":w-2of5"
+    ],
+    "description": "shadow-css: :w-2of5 (width: 40%)"
+  },
+  "shadow-css/divide-dashed": {
+    "scope": "clojure",
+    "prefix": "divide-dashed",
+    "body": [
+      ":divide-dashed"
+    ],
+    "description": "shadow-css: :divide-dashed (dashed divider style)"
+  },
+  "shadow-css/origin-top-right": {
+    "scope": "clojure",
+    "prefix": "origin-top-right",
+    "body": [
+      ":origin-top-right"
+    ],
+    "description": "shadow-css: :origin-top-right (transform-origin: top right)"
+  },
+  "shadow-css/text-xl": {
+    "scope": "clojure",
+    "prefix": "text-xl",
+    "body": [
+      ":text-xl"
+    ],
+    "description": "shadow-css: :text-xl (font-size: 1.25rem)"
+  },
+  "shadow-css/outline-blue-400": {
+    "scope": "clojure",
+    "prefix": "outline-blue-400",
+    "body": [
+      ":outline-blue-400"
+    ],
+    "description": "shadow-css: :outline-blue-400"
+  },
+  "shadow-css/border-gray-700": {
+    "scope": "clojure",
+    "prefix": "border-gray-700",
+    "body": [
+      ":border-gray-700"
+    ],
+    "description": "shadow-css: :border-gray-700"
+  },
+  "shadow-css/text-black-600": {
+    "scope": "clojure",
+    "prefix": "text-black-600",
+    "body": [
+      ":text-black-600"
+    ],
+    "description": "shadow-css: :text-black-600"
+  },
+  "shadow-css/min-w-fit": {
+    "scope": "clojure",
+    "prefix": "min-w-fit",
+    "body": [
+      ":min-w-fit"
+    ],
+    "description": "shadow-css: :min-w-fit (min-width: fit-content)"
+  },
+  "shadow-css/cursor-col-resize": {
+    "scope": "clojure",
+    "prefix": "cursor-col-resize",
+    "body": [
+      ":cursor-col-resize"
+    ],
+    "description": "shadow-css: :cursor-col-resize (cursor: col-resize)"
+  },
+  "shadow-css/rounded-bl-full": {
+    "scope": "clojure",
+    "prefix": "rounded-bl-full",
+    "body": [
+      ":rounded-bl-full"
+    ],
+    "description": "shadow-css: :rounded-bl-full (bottom-left border-radius: 9999px)"
+  },
+  "shadow-css/h-2of4": {
+    "scope": "clojure",
+    "prefix": "h-2of4",
+    "body": [
+      ":h-2of4"
+    ],
+    "description": "shadow-css: :h-2of4 (height: 50%)"
+  },
+  "shadow-css/border-t": {
+    "scope": "clojure",
+    "prefix": "border-t",
+    "body": [
+      ":border-t"
+    ],
+    "description": "shadow-css: :border-t (border-top-width: 1px)"
+  },
+  "shadow-css/outline-white-300": {
+    "scope": "clojure",
+    "prefix": "outline-white-300",
+    "body": [
+      ":outline-white-300"
+    ],
+    "description": "shadow-css: :outline-white-300"
+  },
+  "shadow-css/text-end": {
+    "scope": "clojure",
+    "prefix": "text-end",
+    "body": [
+      ":text-end"
+    ],
+    "description": "shadow-css: :text-end (text-align: end)"
+  },
+  "shadow-css/checked": {
+    "scope": "clojure",
+    "prefix": "checked",
+    "body": [
+      ":checked"
+    ],
+    "description": "shadow-css: :checked (&:checked)"
+  },
+  "shadow-css/align-text-top": {
+    "scope": "clojure",
+    "prefix": "align-text-top",
+    "body": [
+      ":align-text-top"
+    ],
+    "description": "shadow-css: :align-text-top (vertical-align: text-top)"
+  },
+  "shadow-css/outline": {
+    "scope": "clojure",
+    "prefix": "outline",
+    "body": [
+      ":outline"
+    ],
+    "description": "shadow-css: :outline (outline-style: solid)"
+  },
+  "shadow-css/border-black-500": {
+    "scope": "clojure",
+    "prefix": "border-black-500",
+    "body": [
+      ":border-black-500"
+    ],
+    "description": "shadow-css: :border-black-500"
+  },
+  "shadow-css/text-lg": {
+    "scope": "clojure",
+    "prefix": "text-lg",
+    "body": [
+      ":text-lg"
+    ],
+    "description": "shadow-css: :text-lg (font-size: 1.125rem)"
+  },
+  "shadow-css/outline-green-700": {
+    "scope": "clojure",
+    "prefix": "outline-green-700",
+    "body": [
+      ":outline-green-700"
+    ],
+    "description": "shadow-css: :outline-green-700"
+  },
+  "shadow-css/text-green-400": {
+    "scope": "clojure",
+    "prefix": "text-green-400",
+    "body": [
+      ":text-green-400"
+    ],
+    "description": "shadow-css: :text-green-400"
+  },
+  "shadow-css/mr-5": {
+    "scope": "clojure",
+    "prefix": "mr-5",
+    "body": [
+      ":mr-5"
+    ],
+    "description": "shadow-css: :mr-5"
+  },
+  "shadow-css/outline-red-400": {
+    "scope": "clojure",
+    "prefix": "outline-red-400",
+    "body": [
+      ":outline-red-400"
+    ],
+    "description": "shadow-css: :outline-red-400"
+  },
+  "shadow-css/rounded-bl-3xl": {
+    "scope": "clojure",
+    "prefix": "rounded-bl-3xl",
+    "body": [
+      ":rounded-bl-3xl"
+    ],
+    "description": "shadow-css: :rounded-bl-3xl (bottom-left border-radius: 1.5rem)"
+  },
+  "shadow-css/rounded-lg": {
+    "scope": "clojure",
+    "prefix": "rounded-lg",
+    "body": [
+      ":rounded-lg"
+    ],
+    "description": "shadow-css: :rounded-lg (border-radius: 0.5rem)"
+  },
+  "shadow-css/outline-gray-900": {
+    "scope": "clojure",
+    "prefix": "outline-gray-900",
+    "body": [
+      ":outline-gray-900"
+    ],
+    "description": "shadow-css: :outline-gray-900"
+  },
+  "shadow-css/opacity-20": {
+    "scope": "clojure",
+    "prefix": "opacity-20",
+    "body": [
+      ":opacity-20"
+    ],
+    "description": "shadow-css: :opacity-20 (opacity: 0.2)"
+  },
+  "shadow-css/grid-cols-10": {
+    "scope": "clojure",
+    "prefix": "grid-cols-10",
+    "body": [
+      ":grid-cols-10"
+    ],
+    "description": "shadow-css: :grid-cols-10 (10 column grid)"
+  },
+  "shadow-css/delay-1000": {
+    "scope": "clojure",
+    "prefix": "delay-1000",
+    "body": [
+      ":delay-1000"
+    ],
+    "description": "shadow-css: :delay-1000 (transition-delay: 1000ms)"
+  },
+  "shadow-css/outline-dotted": {
+    "scope": "clojure",
+    "prefix": "outline-dotted",
+    "body": [
+      ":outline-dotted"
+    ],
+    "description": "shadow-css: :outline-dotted (outline-style: dotted)"
+  },
+  "shadow-css/ml-4": {
+    "scope": "clojure",
+    "prefix": "ml-4",
+    "body": [
+      ":ml-4"
+    ],
+    "description": "shadow-css: :ml-4"
+  },
+  "shadow-css/m-4": {
+    "scope": "clojure",
+    "prefix": "m-4",
+    "body": [
+      ":m-4"
+    ],
+    "description": "shadow-css: :m-4"
+  },
+  "shadow-css/gap-4": {
+    "scope": "clojure",
+    "prefix": "gap-4",
+    "body": [
+      ":gap-4"
+    ],
+    "description": "shadow-css: :gap-4"
+  },
+  "shadow-css/text-base": {
+    "scope": "clojure",
+    "prefix": "text-base",
+    "body": [
+      ":text-base"
+    ],
+    "description": "shadow-css: :text-base (font-size: 1rem)"
+  },
+  "shadow-css/shadow-md": {
+    "scope": "clojure",
+    "prefix": "shadow-md",
+    "body": [
+      ":shadow-md"
+    ],
+    "description": "shadow-css: :shadow-md"
+  },
+  "shadow-css/border-white-300": {
+    "scope": "clojure",
+    "prefix": "border-white-300",
+    "body": [
+      ":border-white-300"
+    ],
+    "description": "shadow-css: :border-white-300"
+  },
+  "shadow-css/bg-gray-100": {
+    "scope": "clojure",
+    "prefix": "bg-gray-100",
+    "body": [
+      ":bg-gray-100"
+    ],
+    "description": "shadow-css: :bg-gray-100"
+  },
+  "shadow-css/rounded-br-none": {
+    "scope": "clojure",
+    "prefix": "rounded-br-none",
+    "body": [
+      ":rounded-br-none"
+    ],
+    "description": "shadow-css: :rounded-br-none (bottom-right border-radius: 0px)"
+  },
+  "shadow-css/pt-5": {
+    "scope": "clojure",
+    "prefix": "pt-5",
+    "body": [
+      ":pt-5"
+    ],
+    "description": "shadow-css: :pt-5"
+  },
+  "shadow-css/my-6": {
+    "scope": "clojure",
+    "prefix": "my-6",
+    "body": [
+      ":my-6"
+    ],
+    "description": "shadow-css: :my-6"
+  },
+  "shadow-css/outline-gray-600": {
+    "scope": "clojure",
+    "prefix": "outline-gray-600",
+    "body": [
+      ":outline-gray-600"
+    ],
+    "description": "shadow-css: :outline-gray-600"
+  },
+  "shadow-css/align-bottom": {
+    "scope": "clojure",
+    "prefix": "align-bottom",
+    "body": [
+      ":align-bottom"
+    ],
+    "description": "shadow-css: :align-bottom (vertical-align: bottom)"
+  },
+  "shadow-css/border-blue-700": {
+    "scope": "clojure",
+    "prefix": "border-blue-700",
+    "body": [
+      ":border-blue-700"
+    ],
+    "description": "shadow-css: :border-blue-700"
+  },
+  "shadow-css/rounded-l-sm": {
+    "scope": "clojure",
+    "prefix": "rounded-l-sm",
+    "body": [
+      ":rounded-l-sm"
+    ],
+    "description": "shadow-css: :rounded-l-sm (left border-radius: 0.125rem)"
+  },
+  "shadow-css/rounded-r-2xl": {
+    "scope": "clojure",
+    "prefix": "rounded-r-2xl",
+    "body": [
+      ":rounded-r-2xl"
+    ],
+    "description": "shadow-css: :rounded-r-2xl (right border-radius: 1rem)"
+  },
+  "shadow-css/pt-1": {
+    "scope": "clojure",
+    "prefix": "pt-1",
+    "body": [
+      ":pt-1"
+    ],
+    "description": "shadow-css: :pt-1"
+  },
+  "shadow-css/pb-7": {
+    "scope": "clojure",
+    "prefix": "pb-7",
+    "body": [
+      ":pb-7"
+    ],
+    "description": "shadow-css: :pb-7"
+  },
+  "shadow-css/mb-6": {
+    "scope": "clojure",
+    "prefix": "mb-6",
+    "body": [
+      ":mb-6"
+    ],
+    "description": "shadow-css: :mb-6"
+  },
+  "shadow-css/pr-2": {
+    "scope": "clojure",
+    "prefix": "pr-2",
+    "body": [
+      ":pr-2"
+    ],
+    "description": "shadow-css: :pr-2"
+  },
+  "shadow-css/text-gray-600": {
+    "scope": "clojure",
+    "prefix": "text-gray-600",
+    "body": [
+      ":text-gray-600"
+    ],
+    "description": "shadow-css: :text-gray-600"
+  },
+  "shadow-css/h-1of5": {
+    "scope": "clojure",
+    "prefix": "h-1of5",
+    "body": [
+      ":h-1of5"
+    ],
+    "description": "shadow-css: :h-1of5 (height: 20%)"
+  },
+  "shadow-css/rounded-t-sm": {
+    "scope": "clojure",
+    "prefix": "rounded-t-sm",
+    "body": [
+      ":rounded-t-sm"
+    ],
+    "description": "shadow-css: :rounded-t-sm (top border-radius: 0.125rem)"
+  },
+  "shadow-css/min-h-screen": {
+    "scope": "clojure",
+    "prefix": "min-h-screen",
+    "body": [
+      ":min-h-screen"
+    ],
+    "description": "shadow-css: :min-h-screen (min-height: 100vh)"
+  },
+  "shadow-css/pb-8": {
+    "scope": "clojure",
+    "prefix": "pb-8",
+    "body": [
+      ":pb-8"
+    ],
+    "description": "shadow-css: :pb-8"
+  },
+  "shadow-css/outline-blue-500": {
+    "scope": "clojure",
+    "prefix": "outline-blue-500",
+    "body": [
+      ":outline-blue-500"
+    ],
+    "description": "shadow-css: :outline-blue-500"
+  },
+  "shadow-css/cursor-cell": {
+    "scope": "clojure",
+    "prefix": "cursor-cell",
+    "body": [
+      ":cursor-cell"
+    ],
+    "description": "shadow-css: :cursor-cell (cursor: cell)"
+  },
+  "shadow-css/mr-4": {
+    "scope": "clojure",
+    "prefix": "mr-4",
+    "body": [
+      ":mr-4"
+    ],
+    "description": "shadow-css: :mr-4"
+  },
+  "shadow-css/duration-500": {
+    "scope": "clojure",
+    "prefix": "duration-500",
+    "body": [
+      ":duration-500"
+    ],
+    "description": "shadow-css: :duration-500 (transition-duration: 500ms)"
+  },
+  "shadow-css/text-black-400": {
+    "scope": "clojure",
+    "prefix": "text-black-400",
+    "body": [
+      ":text-black-400"
+    ],
+    "description": "shadow-css: :text-black-400"
+  },
+  "shadow-css/cursor-w-resize": {
+    "scope": "clojure",
+    "prefix": "cursor-w-resize",
+    "body": [
+      ":cursor-w-resize"
+    ],
+    "description": "shadow-css: :cursor-w-resize (cursor: w-resize)"
+  },
+  "shadow-css/mb-5": {
+    "scope": "clojure",
+    "prefix": "mb-5",
+    "body": [
+      ":mb-5"
+    ],
+    "description": "shadow-css: :mb-5"
+  },
+  "shadow-css/justify-between": {
+    "scope": "clojure",
+    "prefix": "justify-between",
+    "body": [
+      ":justify-between"
+    ],
+    "description": "shadow-css: :justify-between (justify-content: space-between)"
+  },
+  "shadow-css/text-green-500": {
+    "scope": "clojure",
+    "prefix": "text-green-500",
+    "body": [
+      ":text-green-500"
+    ],
+    "description": "shadow-css: :text-green-500"
+  },
+  "shadow-css/gap-5": {
+    "scope": "clojure",
+    "prefix": "gap-5",
+    "body": [
+      ":gap-5"
+    ],
+    "description": "shadow-css: :gap-5"
+  },
+  "shadow-css/gap-y-4": {
+    "scope": "clojure",
+    "prefix": "gap-y-4",
+    "body": [
+      ":gap-y-4"
+    ],
+    "description": "shadow-css: :gap-y-4"
+  },
+  "shadow-css/w-1of3": {
+    "scope": "clojure",
+    "prefix": "w-1of3",
+    "body": [
+      ":w-1of3"
+    ],
+    "description": "shadow-css: :w-1of3 (width: 33.333%)"
+  },
+  "shadow-css/pt-6": {
+    "scope": "clojure",
+    "prefix": "pt-6",
+    "body": [
+      ":pt-6"
+    ],
+    "description": "shadow-css: :pt-6"
+  },
+  "shadow-css/py-7": {
+    "scope": "clojure",
+    "prefix": "py-7",
+    "body": [
+      ":py-7"
+    ],
+    "description": "shadow-css: :py-7"
+  },
+  "shadow-css/pl-5": {
+    "scope": "clojure",
+    "prefix": "pl-5",
+    "body": [
+      ":pl-5"
+    ],
+    "description": "shadow-css: :pl-5"
+  },
+  "shadow-css/text-blue-800": {
+    "scope": "clojure",
+    "prefix": "text-blue-800",
+    "body": [
+      ":text-blue-800"
+    ],
+    "description": "shadow-css: :text-blue-800"
+  },
+  "shadow-css/max-h-max": {
+    "scope": "clojure",
+    "prefix": "max-h-max",
+    "body": [
+      ":max-h-max"
+    ],
+    "description": "shadow-css: :max-h-max (max-height: max-content)"
+  },
+  "shadow-css/pointer-events-auto": {
+    "scope": "clojure",
+    "prefix": "pointer-events-auto",
+    "body": [
+      ":pointer-events-auto"
+    ],
+    "description": "shadow-css: :pointer-events-auto (pointer-events: auto)"
+  },
+  "shadow-css/origin-top": {
+    "scope": "clojure",
+    "prefix": "origin-top",
+    "body": [
+      ":origin-top"
+    ],
+    "description": "shadow-css: :origin-top (transform-origin: top)"
+  },
+  "shadow-css/rounded-br-3xl": {
+    "scope": "clojure",
+    "prefix": "rounded-br-3xl",
+    "body": [
+      ":rounded-br-3xl"
+    ],
+    "description": "shadow-css: :rounded-br-3xl (bottom-right border-radius: 1.5rem)"
+  },
+  "shadow-css/gap-x-6": {
+    "scope": "clojure",
+    "prefix": "gap-x-6",
+    "body": [
+      ":gap-x-6"
+    ],
+    "description": "shadow-css: :gap-x-6"
+  },
+  "shadow-css/pl-6": {
+    "scope": "clojure",
+    "prefix": "pl-6",
+    "body": [
+      ":pl-6"
+    ],
+    "description": "shadow-css: :pl-6"
+  },
+  "shadow-css/bg-blue-700": {
+    "scope": "clojure",
+    "prefix": "bg-blue-700",
+    "body": [
+      ":bg-blue-700"
+    ],
+    "description": "shadow-css: :bg-blue-700"
+  },
+  "shadow-css/bg-green-100": {
+    "scope": "clojure",
+    "prefix": "bg-green-100",
+    "body": [
+      ":bg-green-100"
+    ],
+    "description": "shadow-css: :bg-green-100"
+  },
+  "shadow-css/text-blue-100": {
+    "scope": "clojure",
+    "prefix": "text-blue-100",
+    "body": [
+      ":text-blue-100"
+    ],
+    "description": "shadow-css: :text-blue-100"
+  },
+  "shadow-css/select-auto": {
+    "scope": "clojure",
+    "prefix": "select-auto",
+    "body": [
+      ":select-auto"
+    ],
+    "description": "shadow-css: :select-auto (user-select: auto)"
+  },
+  "shadow-css/gap-x-3": {
+    "scope": "clojure",
+    "prefix": "gap-x-3",
+    "body": [
+      ":gap-x-3"
+    ],
+    "description": "shadow-css: :gap-x-3"
+  },
+  "shadow-css/rounded-tl-xl": {
+    "scope": "clojure",
+    "prefix": "rounded-tl-xl",
+    "body": [
+      ":rounded-tl-xl"
+    ],
+    "description": "shadow-css: :rounded-tl-xl (top-left border-radius: 0.75rem)"
+  },
+  "shadow-css/rounded-bl": {
+    "scope": "clojure",
+    "prefix": "rounded-bl",
+    "body": [
+      ":rounded-bl"
+    ],
+    "description": "shadow-css: :rounded-bl (bottom-left border-radius: 0.25rem)"
+  },
+  "shadow-css/bg-blue-500": {
+    "scope": "clojure",
+    "prefix": "bg-blue-500",
+    "body": [
+      ":bg-blue-500"
+    ],
+    "description": "shadow-css: :bg-blue-500"
+  },
+  "shadow-css/w-full": {
+    "scope": "clojure",
+    "prefix": "w-full",
+    "body": [
+      ":w-full"
+    ],
+    "description": "shadow-css: :w-full (width: 100%)"
+  },
+  "shadow-css/text-red-400": {
+    "scope": "clojure",
+    "prefix": "text-red-400",
+    "body": [
+      ":text-red-400"
+    ],
+    "description": "shadow-css: :text-red-400"
+  },
+  "shadow-css/min-h-min": {
+    "scope": "clojure",
+    "prefix": "min-h-min",
+    "body": [
+      ":min-h-min"
+    ],
+    "description": "shadow-css: :min-h-min (min-height: min-content)"
+  },
+  "shadow-css/text-blue-400": {
+    "scope": "clojure",
+    "prefix": "text-blue-400",
+    "body": [
+      ":text-blue-400"
+    ],
+    "description": "shadow-css: :text-blue-400"
+  },
+  "shadow-css/border-blue-500": {
+    "scope": "clojure",
+    "prefix": "border-blue-500",
+    "body": [
+      ":border-blue-500"
+    ],
+    "description": "shadow-css: :border-blue-500"
+  },
+  "shadow-css/rounded-l": {
+    "scope": "clojure",
+    "prefix": "rounded-l",
+    "body": [
+      ":rounded-l"
+    ],
+    "description": "shadow-css: :rounded-l (left border-radius: 0.25rem)"
+  },
+  "shadow-css/font-medium": {
+    "scope": "clojure",
+    "prefix": "font-medium",
+    "body": [
+      ":font-medium"
+    ],
+    "description": "shadow-css: :font-medium (font-weight: 500)"
+  },
+  "shadow-css/border-green-700": {
+    "scope": "clojure",
+    "prefix": "border-green-700",
+    "body": [
+      ":border-green-700"
+    ],
+    "description": "shadow-css: :border-green-700"
+  },
+  "shadow-css/rounded-l-3xl": {
+    "scope": "clojure",
+    "prefix": "rounded-l-3xl",
+    "body": [
+      ":rounded-l-3xl"
+    ],
+    "description": "shadow-css: :rounded-l-3xl (left border-radius: 1.5rem)"
+  },
+  "shadow-css/delay-500": {
+    "scope": "clojure",
+    "prefix": "delay-500",
+    "body": [
+      ":delay-500"
+    ],
+    "description": "shadow-css: :delay-500 (transition-delay: 500ms)"
+  },
+  "shadow-css/border-gray-800": {
+    "scope": "clojure",
+    "prefix": "border-gray-800",
+    "body": [
+      ":border-gray-800"
+    ],
+    "description": "shadow-css: :border-gray-800"
+  },
+  "shadow-css/gap-x-0.5": {
+    "scope": "clojure",
+    "prefix": "gap-x-0.5",
+    "body": [
+      ":gap-x-0.5"
+    ],
+    "description": "shadow-css: :gap-x-0.5"
+  },
+  "shadow-css/bg-gray-600": {
+    "scope": "clojure",
+    "prefix": "bg-gray-600",
+    "body": [
+      ":bg-gray-600"
+    ],
+    "description": "shadow-css: :bg-gray-600"
+  },
+  "shadow-css/w-8of12": {
+    "scope": "clojure",
+    "prefix": "w-8of12",
+    "body": [
+      ":w-8of12"
+    ],
+    "description": "shadow-css: :w-8of12 (width: 66.667%)"
+  },
+  "shadow-css/overflow-y-clip": {
+    "scope": "clojure",
+    "prefix": "overflow-y-clip",
+    "body": [
+      ":overflow-y-clip"
+    ],
+    "description": "shadow-css: :overflow-y-clip (overflow-y: clip)"
+  },
+  "shadow-css/flex-wrap": {
+    "scope": "clojure",
+    "prefix": "flex-wrap",
+    "body": [
+      ":flex-wrap"
+    ],
+    "description": "shadow-css: :flex-wrap (flex-wrap: wrap)"
+  },
+  "shadow-css/cursor-pointer": {
+    "scope": "clojure",
+    "prefix": "cursor-pointer",
+    "body": [
+      ":cursor-pointer"
+    ],
+    "description": "shadow-css: :cursor-pointer (cursor: pointer)"
+  },
+  "shadow-css/p-4": {
+    "scope": "clojure",
+    "prefix": "p-4",
+    "body": [
+      ":p-4"
+    ],
+    "description": "shadow-css: :p-4"
+  },
+  "shadow-css/ml-6": {
+    "scope": "clojure",
+    "prefix": "ml-6",
+    "body": [
+      ":ml-6"
+    ],
+    "description": "shadow-css: :ml-6"
+  },
+  "shadow-css/mr-6": {
+    "scope": "clojure",
+    "prefix": "mr-6",
+    "body": [
+      ":mr-6"
+    ],
+    "description": "shadow-css: :mr-6"
+  },
+  "shadow-css/bg-blue-900": {
+    "scope": "clojure",
+    "prefix": "bg-blue-900",
+    "body": [
+      ":bg-blue-900"
+    ],
+    "description": "shadow-css: :bg-blue-900"
+  },
+  "shadow-css/select-none": {
+    "scope": "clojure",
+    "prefix": "select-none",
+    "body": [
+      ":select-none"
+    ],
+    "description": "shadow-css: :select-none (user-select: none)"
+  },
+  "shadow-css/justify-items-center": {
+    "scope": "clojure",
+    "prefix": "justify-items-center",
+    "body": [
+      ":justify-items-center"
+    ],
+    "description": "shadow-css: :justify-items-center (justify-items: center)"
+  },
+  "shadow-css/bg-white-100": {
+    "scope": "clojure",
+    "prefix": "bg-white-100",
+    "body": [
+      ":bg-white-100"
+    ],
+    "description": "shadow-css: :bg-white-100"
+  },
+  "shadow-css/leading-normal": {
+    "scope": "clojure",
+    "prefix": "leading-normal",
+    "body": [
+      ":leading-normal"
+    ],
+    "description": "shadow-css: :leading-normal (line-height: 1.6)"
+  },
+  "shadow-css/border-green-400": {
+    "scope": "clojure",
+    "prefix": "border-green-400",
+    "body": [
+      ":border-green-400"
+    ],
+    "description": "shadow-css: :border-green-400"
+  },
+  "shadow-css/border-l-4": {
+    "scope": "clojure",
+    "prefix": "border-l-4",
+    "body": [
+      ":border-l-4"
+    ],
+    "description": "shadow-css: :border-l-4 (border-left-width: 4px)"
+  },
+  "shadow-css/rounded-l-lg": {
+    "scope": "clojure",
+    "prefix": "rounded-l-lg",
+    "body": [
+      ":rounded-l-lg"
+    ],
+    "description": "shadow-css: :rounded-l-lg (left border-radius: 0.5rem)"
+  },
+  "shadow-css/cursor-not-allowed": {
+    "scope": "clojure",
+    "prefix": "cursor-not-allowed",
+    "body": [
+      ":cursor-not-allowed"
+    ],
+    "description": "shadow-css: :cursor-not-allowed (cursor: not-allowed)"
+  },
+  "shadow-css/grid-cols-12": {
+    "scope": "clojure",
+    "prefix": "grid-cols-12",
+    "body": [
+      ":grid-cols-12"
+    ],
+    "description": "shadow-css: :grid-cols-12 (12 column grid)"
+  },
+  "shadow-css/ml-2": {
+    "scope": "clojure",
+    "prefix": "ml-2",
+    "body": [
+      ":ml-2"
+    ],
+    "description": "shadow-css: :ml-2"
+  },
+  "shadow-css/pr-8": {
+    "scope": "clojure",
+    "prefix": "pr-8",
+    "body": [
+      ":pr-8"
+    ],
+    "description": "shadow-css: :pr-8"
+  },
+  "shadow-css/rounded": {
+    "scope": "clojure",
+    "prefix": "rounded",
+    "body": [
+      ":rounded"
+    ],
+    "description": "shadow-css: :rounded (border-radius: 0.25rem)"
+  },
+  "shadow-css/mr-7": {
+    "scope": "clojure",
+    "prefix": "mr-7",
+    "body": [
+      ":mr-7"
+    ],
+    "description": "shadow-css: :mr-7"
+  },
+  "shadow-css/outline-double": {
+    "scope": "clojure",
+    "prefix": "outline-double",
+    "body": [
+      ":outline-double"
+    ],
+    "description": "shadow-css: :outline-double (outline-style: double)"
+  },
+  "shadow-css/cursor-context-menu": {
+    "scope": "clojure",
+    "prefix": "cursor-context-menu",
+    "body": [
+      ":cursor-context-menu"
+    ],
+    "description": "shadow-css: :cursor-context-menu (cursor: context-menu)"
+  },
+  "shadow-css/divide-double": {
+    "scope": "clojure",
+    "prefix": "divide-double",
+    "body": [
+      ":divide-double"
+    ],
+    "description": "shadow-css: :divide-double (double divider style)"
+  },
+  "shadow-css/border-t-2": {
+    "scope": "clojure",
+    "prefix": "border-t-2",
+    "body": [
+      ":border-t-2"
+    ],
+    "description": "shadow-css: :border-t-2 (border-top-width: 2px)"
+  },
+  "shadow-css/divide-x-0": {
+    "scope": "clojure",
+    "prefix": "divide-x-0",
+    "body": [
+      ":divide-x-0"
+    ],
+    "description": "shadow-css: :divide-x-0 (no horizontal dividers)"
+  },
+  "shadow-css/outline-blue-700": {
+    "scope": "clojure",
+    "prefix": "outline-blue-700",
+    "body": [
+      ":outline-blue-700"
+    ],
+    "description": "shadow-css: :outline-blue-700"
+  },
+  "shadow-css/shadow-sm": {
+    "scope": "clojure",
+    "prefix": "shadow-sm",
+    "body": [
+      ":shadow-sm"
+    ],
+    "description": "shadow-css: :shadow-sm"
+  },
+  "shadow-css/h-4of6": {
+    "scope": "clojure",
+    "prefix": "h-4of6",
+    "body": [
+      ":h-4of6"
+    ],
+    "description": "shadow-css: :h-4of6 (height: 66.667%)"
+  },
+  "shadow-css/origin-center": {
+    "scope": "clojure",
+    "prefix": "origin-center",
+    "body": [
+      ":origin-center"
+    ],
+    "description": "shadow-css: :origin-center (transform-origin: center)"
+  },
+  "shadow-css/cursor-se-resize": {
+    "scope": "clojure",
+    "prefix": "cursor-se-resize",
+    "body": [
+      ":cursor-se-resize"
+    ],
+    "description": "shadow-css: :cursor-se-resize (cursor: se-resize)"
+  },
+  "shadow-css/outline-gray-400": {
+    "scope": "clojure",
+    "prefix": "outline-gray-400",
+    "body": [
+      ":outline-gray-400"
+    ],
+    "description": "shadow-css: :outline-gray-400"
+  },
+  "shadow-css/p-0.5": {
+    "scope": "clojure",
+    "prefix": "p-0.5",
+    "body": [
+      ":p-0.5"
+    ],
+    "description": "shadow-css: :p-0.5"
+  },
+  "shadow-css/py-0.5": {
+    "scope": "clojure",
+    "prefix": "py-0.5",
+    "body": [
+      ":py-0.5"
+    ],
+    "description": "shadow-css: :py-0.5"
+  },
+  "shadow-css/pb-1": {
+    "scope": "clojure",
+    "prefix": "pb-1",
+    "body": [
+      ":pb-1"
+    ],
+    "description": "shadow-css: :pb-1"
+  },
+  "shadow-css/disabled": {
+    "scope": "clojure",
+    "prefix": "disabled",
+    "body": [
+      ":disabled"
+    ],
+    "description": "shadow-css: :disabled (&:disabled)"
+  },
+  "shadow-css/transition-all": {
+    "scope": "clojure",
+    "prefix": "transition-all",
+    "body": [
+      ":transition-all"
+    ],
+    "description": "shadow-css: :transition-all (transition all properties)"
+  },
+  "shadow-css/select-text": {
+    "scope": "clojure",
+    "prefix": "select-text",
+    "body": [
+      ":select-text"
+    ],
+    "description": "shadow-css: :select-text (user-select: text)"
+  },
+  "shadow-css/delay-0": {
+    "scope": "clojure",
+    "prefix": "delay-0",
+    "body": [
+      ":delay-0"
+    ],
+    "description": "shadow-css: :delay-0 (transition-delay: 0s)"
+  },
+  "shadow-css/rounded-r": {
+    "scope": "clojure",
+    "prefix": "rounded-r",
+    "body": [
+      ":rounded-r"
+    ],
+    "description": "shadow-css: :rounded-r (right border-radius: 0.25rem)"
+  },
+  "shadow-css/border-r-0": {
+    "scope": "clojure",
+    "prefix": "border-r-0",
+    "body": [
+      ":border-r-0"
+    ],
+    "description": "shadow-css: :border-r-0 (border-right-width: 0px)"
+  },
+  "shadow-css/w-min": {
+    "scope": "clojure",
+    "prefix": "w-min",
+    "body": [
+      ":w-min"
+    ],
+    "description": "shadow-css: :w-min (width: min-content)"
+  },
+  "shadow-css/h-5of6": {
+    "scope": "clojure",
+    "prefix": "h-5of6",
+    "body": [
+      ":h-5of6"
+    ],
+    "description": "shadow-css: :h-5of6 (height: 83.333%)"
+  },
+  "shadow-css/bg-black-600": {
+    "scope": "clojure",
+    "prefix": "bg-black-600",
+    "body": [
+      ":bg-black-600"
+    ],
+    "description": "shadow-css: :bg-black-600"
+  },
+  "shadow-css/border-4": {
+    "scope": "clojure",
+    "prefix": "border-4",
+    "body": [
+      ":border-4"
+    ],
+    "description": "shadow-css: :border-4 (border-width: 4px)"
+  },
+  "shadow-css/gap-8": {
+    "scope": "clojure",
+    "prefix": "gap-8",
+    "body": [
+      ":gap-8"
+    ],
+    "description": "shadow-css: :gap-8"
+  },
+  "shadow-css/rounded-l-none": {
+    "scope": "clojure",
+    "prefix": "rounded-l-none",
+    "body": [
+      ":rounded-l-none"
+    ],
+    "description": "shadow-css: :rounded-l-none (left border-radius: 0px)"
+  },
+  "shadow-css/border-x-0": {
+    "scope": "clojure",
+    "prefix": "border-x-0",
+    "body": [
+      ":border-x-0"
+    ],
+    "description": "shadow-css: :border-x-0 (horizontal border: 0px)"
+  },
+  "shadow-css/pr-3": {
+    "scope": "clojure",
+    "prefix": "pr-3",
+    "body": [
+      ":pr-3"
+    ],
+    "description": "shadow-css: :pr-3"
+  },
+  "shadow-css/p-8": {
+    "scope": "clojure",
+    "prefix": "p-8",
+    "body": [
+      ":p-8"
+    ],
+    "description": "shadow-css: :p-8"
+  },
+  "shadow-css/cursor-no-drop": {
+    "scope": "clojure",
+    "prefix": "cursor-no-drop",
+    "body": [
+      ":cursor-no-drop"
+    ],
+    "description": "shadow-css: :cursor-no-drop (cursor: no-drop)"
+  },
+  "shadow-css/h-3of6": {
+    "scope": "clojure",
+    "prefix": "h-3of6",
+    "body": [
+      ":h-3of6"
+    ],
+    "description": "shadow-css: :h-3of6 (height: 50%)"
+  },
+  "shadow-css/py-4": {
+    "scope": "clojure",
+    "prefix": "py-4",
+    "body": [
+      ":py-4"
+    ],
+    "description": "shadow-css: :py-4"
+  },
+  "shadow-css/border-y": {
+    "scope": "clojure",
+    "prefix": "border-y",
+    "body": [
+      ":border-y"
+    ],
+    "description": "shadow-css: :border-y (vertical border: 1px)"
+  },
+  "shadow-css/pr-7": {
+    "scope": "clojure",
+    "prefix": "pr-7",
+    "body": [
+      ":pr-7"
+    ],
+    "description": "shadow-css: :pr-7"
+  },
+  "shadow-css/rounded-bl-lg": {
+    "scope": "clojure",
+    "prefix": "rounded-bl-lg",
+    "body": [
+      ":rounded-bl-lg"
+    ],
+    "description": "shadow-css: :rounded-bl-lg (bottom-left border-radius: 0.5rem)"
+  },
+  "shadow-css/cursor-default": {
+    "scope": "clojure",
+    "prefix": "cursor-default",
+    "body": [
+      ":cursor-default"
+    ],
+    "description": "shadow-css: :cursor-default (cursor: default)"
+  },
+  "shadow-css/self-auto": {
+    "scope": "clojure",
+    "prefix": "self-auto",
+    "body": [
+      ":self-auto"
+    ],
+    "description": "shadow-css: :self-auto (align-self: auto)"
+  },
+  "shadow-css/self-start": {
+    "scope": "clojure",
+    "prefix": "self-start",
+    "body": [
+      ":self-start"
+    ],
+    "description": "shadow-css: :self-start (align-self: flex-start)"
+  },
+  "shadow-css/text-red-500": {
+    "scope": "clojure",
+    "prefix": "text-red-500",
+    "body": [
+      ":text-red-500"
+    ],
+    "description": "shadow-css: :text-red-500"
+  },
+  "shadow-css/mb-4": {
+    "scope": "clojure",
+    "prefix": "mb-4",
+    "body": [
+      ":mb-4"
+    ],
+    "description": "shadow-css: :mb-4"
+  },
+  "shadow-css/flex-wrap-reverse": {
+    "scope": "clojure",
+    "prefix": "flex-wrap-reverse",
+    "body": [
+      ":flex-wrap-reverse"
+    ],
+    "description": "shadow-css: :flex-wrap-reverse (flex-wrap: wrap-reverse)"
+  },
+  "shadow-css/outline-none": {
+    "scope": "clojure",
+    "prefix": "outline-none",
+    "body": [
+      ":outline-none"
+    ],
+    "description": "shadow-css: :outline-none (outline: transparent)"
+  },
+  "shadow-css/gap-y-3": {
+    "scope": "clojure",
+    "prefix": "gap-y-3",
+    "body": [
+      ":gap-y-3"
+    ],
+    "description": "shadow-css: :gap-y-3"
+  },
+  "shadow-css/cursor-s-resize": {
+    "scope": "clojure",
+    "prefix": "cursor-s-resize",
+    "body": [
+      ":cursor-s-resize"
+    ],
+    "description": "shadow-css: :cursor-s-resize (cursor: s-resize)"
+  },
+  "shadow-css/border-l-2": {
+    "scope": "clojure",
+    "prefix": "border-l-2",
+    "body": [
+      ":border-l-2"
+    ],
+    "description": "shadow-css: :border-l-2 (border-left-width: 2px)"
+  },
+  "shadow-css/font-normal": {
+    "scope": "clojure",
+    "prefix": "font-normal",
+    "body": [
+      ":font-normal"
+    ],
+    "description": "shadow-css: :font-normal (font-weight: 400)"
+  },
+  "shadow-css/h-3of5": {
+    "scope": "clojure",
+    "prefix": "h-3of5",
+    "body": [
+      ":h-3of5"
+    ],
+    "description": "shadow-css: :h-3of5 (height: 60%)"
+  },
+  "shadow-css/justify-self-auto": {
+    "scope": "clojure",
+    "prefix": "justify-self-auto",
+    "body": [
+      ":justify-self-auto"
+    ],
+    "description": "shadow-css: :justify-self-auto (justify-self: auto)"
+  },
+  "shadow-css/w-1of6": {
+    "scope": "clojure",
+    "prefix": "w-1of6",
+    "body": [
+      ":w-1of6"
+    ],
+    "description": "shadow-css: :w-1of6 (width: 16.667%)"
+  },
+  "shadow-css/justify-items-end": {
+    "scope": "clojure",
+    "prefix": "justify-items-end",
+    "body": [
+      ":justify-items-end"
+    ],
+    "description": "shadow-css: :justify-items-end (justify-items: end)"
+  },
+  "shadow-css/border-blue-300": {
+    "scope": "clojure",
+    "prefix": "border-blue-300",
+    "body": [
+      ":border-blue-300"
+    ],
+    "description": "shadow-css: :border-blue-300"
+  },
+  "shadow-css/rounded-tr-sm": {
+    "scope": "clojure",
+    "prefix": "rounded-tr-sm",
+    "body": [
+      ":rounded-tr-sm"
+    ],
+    "description": "shadow-css: :rounded-tr-sm (top-right border-radius: 0.125rem)"
+  },
+  "shadow-css/mb-0.5": {
+    "scope": "clojure",
+    "prefix": "mb-0.5",
+    "body": [
+      ":mb-0.5"
+    ],
+    "description": "shadow-css: :mb-0.5"
+  },
+  "shadow-css/text-sm": {
+    "scope": "clojure",
+    "prefix": "text-sm",
+    "body": [
+      ":text-sm"
+    ],
+    "description": "shadow-css: :text-sm (font-size: 0.875rem)"
+  },
+  "shadow-css/mt-8": {
+    "scope": "clojure",
+    "prefix": "mt-8",
+    "body": [
+      ":mt-8"
+    ],
+    "description": "shadow-css: :mt-8"
+  },
+  "shadow-css/flex-auto": {
+    "scope": "clojure",
+    "prefix": "flex-auto",
+    "body": [
+      ":flex-auto"
+    ],
+    "description": "shadow-css: :flex-auto (flex: 1 1 auto)"
+  },
+  "shadow-css/rounded-tr-lg": {
+    "scope": "clojure",
+    "prefix": "rounded-tr-lg",
+    "body": [
+      ":rounded-tr-lg"
+    ],
+    "description": "shadow-css: :rounded-tr-lg (top-right border-radius: 0.5rem)"
+  },
+  "shadow-css/hover": {
+    "scope": "clojure",
+    "prefix": "hover",
+    "body": [
+      ":hover"
+    ],
+    "description": "shadow-css: :hover (&:hover)"
+  },
+  "shadow-css/duration-700": {
+    "scope": "clojure",
+    "prefix": "duration-700",
+    "body": [
+      ":duration-700"
+    ],
+    "description": "shadow-css: :duration-700 (transition-duration: 700ms)"
+  },
+  "shadow-css/border-blue-600": {
+    "scope": "clojure",
+    "prefix": "border-blue-600",
+    "body": [
+      ":border-blue-600"
+    ],
+    "description": "shadow-css: :border-blue-600"
+  },
+  "shadow-css/origin-bottom-left": {
+    "scope": "clojure",
+    "prefix": "origin-bottom-left",
+    "body": [
+      ":origin-bottom-left"
+    ],
+    "description": "shadow-css: :origin-bottom-left (transform-origin: bottom left)"
+  },
+  "shadow-css/text-xs": {
+    "scope": "clojure",
+    "prefix": "text-xs",
+    "body": [
+      ":text-xs"
+    ],
+    "description": "shadow-css: :text-xs (font-size: 0.75rem)"
+  },
+  "shadow-css/border-red-500": {
+    "scope": "clojure",
+    "prefix": "border-red-500",
+    "body": [
+      ":border-red-500"
+    ],
+    "description": "shadow-css: :border-red-500"
+  },
+  "shadow-css/w-11of12": {
+    "scope": "clojure",
+    "prefix": "w-11of12",
+    "body": [
+      ":w-11of12"
+    ],
+    "description": "shadow-css: :w-11of12 (width: 91.667%)"
+  },
+  "shadow-css/mt-3": {
+    "scope": "clojure",
+    "prefix": "mt-3",
+    "body": [
+      ":mt-3"
+    ],
+    "description": "shadow-css: :mt-3"
+  },
+  "shadow-css/origin-right": {
+    "scope": "clojure",
+    "prefix": "origin-right",
+    "body": [
+      ":origin-right"
+    ],
+    "description": "shadow-css: :origin-right (transform-origin: right)"
+  },
+  "shadow-css/bg-blue-300": {
+    "scope": "clojure",
+    "prefix": "bg-blue-300",
+    "body": [
+      ":bg-blue-300"
+    ],
+    "description": "shadow-css: :bg-blue-300"
+  },
+  "shadow-css/h-screen": {
+    "scope": "clojure",
+    "prefix": "h-screen",
+    "body": [
+      ":h-screen"
+    ],
+    "description": "shadow-css: :h-screen (height: 100vh)"
+  },
+  "shadow-css/px-4": {
+    "scope": "clojure",
+    "prefix": "px-4",
+    "body": [
+      ":px-4"
+    ],
+    "description": "shadow-css: :px-4"
+  },
+  "shadow-css/gap-x-5": {
+    "scope": "clojure",
+    "prefix": "gap-x-5",
+    "body": [
+      ":gap-x-5"
+    ],
+    "description": "shadow-css: :gap-x-5"
+  },
+  "shadow-css/mt-1": {
+    "scope": "clojure",
+    "prefix": "mt-1",
+    "body": [
+      ":mt-1"
+    ],
+    "description": "shadow-css: :mt-1"
+  },
+  "shadow-css/px-2": {
+    "scope": "clojure",
+    "prefix": "px-2",
+    "body": [
+      ":px-2"
+    ],
+    "description": "shadow-css: :px-2"
+  },
+  "shadow-css/origin-bottom-right": {
+    "scope": "clojure",
+    "prefix": "origin-bottom-right",
+    "body": [
+      ":origin-bottom-right"
+    ],
+    "description": "shadow-css: :origin-bottom-right (transform-origin: bottom right)"
+  },
+  "shadow-css/border-t-8": {
+    "scope": "clojure",
+    "prefix": "border-t-8",
+    "body": [
+      ":border-t-8"
+    ],
+    "description": "shadow-css: :border-t-8 (border-top-width: 8px)"
+  },
+  "shadow-css/opacity-50": {
+    "scope": "clojure",
+    "prefix": "opacity-50",
+    "body": [
+      ":opacity-50"
+    ],
+    "description": "shadow-css: :opacity-50 (opacity: 0.5)"
+  },
+  "shadow-css/w-3of4": {
+    "scope": "clojure",
+    "prefix": "w-3of4",
+    "body": [
+      ":w-3of4"
+    ],
+    "description": "shadow-css: :w-3of4 (width: 75%)"
+  },
+  "shadow-css/p-1": {
+    "scope": "clojure",
+    "prefix": "p-1",
+    "body": [
+      ":p-1"
+    ],
+    "description": "shadow-css: :p-1"
+  },
+  "shadow-css/inline": {
+    "scope": "clojure",
+    "prefix": "inline",
+    "body": [
+      ":inline"
+    ],
+    "description": "shadow-css: :inline (display: inline)"
+  },
+  "shadow-css/text-justify": {
+    "scope": "clojure",
+    "prefix": "text-justify",
+    "body": [
+      ":text-justify"
+    ],
+    "description": "shadow-css: :text-justify (text-align: justify)"
+  },
+  "shadow-css/rounded-tl-full": {
+    "scope": "clojure",
+    "prefix": "rounded-tl-full",
+    "body": [
+      ":rounded-tl-full"
+    ],
+    "description": "shadow-css: :rounded-tl-full (top-left border-radius: 9999px)"
+  },
+  "shadow-css/ease-in-out": {
+    "scope": "clojure",
+    "prefix": "ease-in-out",
+    "body": [
+      ":ease-in-out"
+    ],
+    "description": "shadow-css: :ease-in-out (transition-timing-function: ease-in-out)"
+  },
+  "shadow-css/align-text-bottom": {
+    "scope": "clojure",
+    "prefix": "align-text-bottom",
+    "body": [
+      ":align-text-bottom"
+    ],
+    "description": "shadow-css: :align-text-bottom (vertical-align: text-bottom)"
+  },
+  "shadow-css/whitespace-nowrap": {
+    "scope": "clojure",
+    "prefix": "whitespace-nowrap",
+    "body": [
+      ":whitespace-nowrap"
+    ],
+    "description": "shadow-css: :whitespace-nowrap (white-space: nowrap)"
+  },
+  "shadow-css/text-white-100": {
+    "scope": "clojure",
+    "prefix": "text-white-100",
+    "body": [
+      ":text-white-100"
+    ],
+    "description": "shadow-css: :text-white-100"
+  },
+  "shadow-css/m-2": {
+    "scope": "clojure",
+    "prefix": "m-2",
+    "body": [
+      ":m-2"
+    ],
+    "description": "shadow-css: :m-2"
+  },
+  "shadow-css/ml-0.5": {
+    "scope": "clojure",
+    "prefix": "ml-0.5",
+    "body": [
+      ":ml-0.5"
+    ],
+    "description": "shadow-css: :ml-0.5"
+  },
+  "shadow-css/font-bold": {
+    "scope": "clojure",
+    "prefix": "font-bold",
+    "body": [
+      ":font-bold"
+    ],
+    "description": "shadow-css: :font-bold (font-weight: 700)"
+  },
+  "shadow-css/opacity-30": {
+    "scope": "clojure",
+    "prefix": "opacity-30",
+    "body": [
+      ":opacity-30"
+    ],
+    "description": "shadow-css: :opacity-30 (opacity: 0.3)"
+  },
+  "shadow-css/bg-green-500": {
+    "scope": "clojure",
+    "prefix": "bg-green-500",
+    "body": [
+      ":bg-green-500"
+    ],
+    "description": "shadow-css: :bg-green-500"
+  },
+  "shadow-css/static": {
+    "scope": "clojure",
+    "prefix": "static",
+    "body": [
+      ":static"
+    ],
+    "description": "shadow-css: :static (position: static)"
+  },
+  "shadow-css/py-3": {
+    "scope": "clojure",
+    "prefix": "py-3",
+    "body": [
+      ":py-3"
+    ],
+    "description": "shadow-css: :py-3"
+  },
+  "shadow-css/outline-red-500": {
+    "scope": "clojure",
+    "prefix": "outline-red-500",
+    "body": [
+      ":outline-red-500"
+    ],
+    "description": "shadow-css: :outline-red-500"
+  },
+  "shadow-css/rounded-br-full": {
+    "scope": "clojure",
+    "prefix": "rounded-br-full",
+    "body": [
+      ":rounded-br-full"
+    ],
+    "description": "shadow-css: :rounded-br-full (bottom-right border-radius: 9999px)"
+  },
+  "shadow-css/rounded-t-3xl": {
+    "scope": "clojure",
+    "prefix": "rounded-t-3xl",
+    "body": [
+      ":rounded-t-3xl"
+    ],
+    "description": "shadow-css: :rounded-t-3xl (top border-radius: 1.5rem)"
+  },
+  "shadow-css/bg-blue-600": {
+    "scope": "clojure",
+    "prefix": "bg-blue-600",
+    "body": [
+      ":bg-blue-600"
+    ],
+    "description": "shadow-css: :bg-blue-600"
+  },
+  "shadow-css/border-blue-900": {
+    "scope": "clojure",
+    "prefix": "border-blue-900",
+    "body": [
+      ":border-blue-900"
+    ],
+    "description": "shadow-css: :border-blue-900"
+  },
+  "shadow-css/opacity-0": {
+    "scope": "clojure",
+    "prefix": "opacity-0",
+    "body": [
+      ":opacity-0"
+    ],
+    "description": "shadow-css: :opacity-0 (opacity: 0)"
+  },
+  "shadow-css/w-screen": {
+    "scope": "clojure",
+    "prefix": "w-screen",
+    "body": [
+      ":w-screen"
+    ],
+    "description": "shadow-css: :w-screen (width: 100vw)"
+  },
+  "shadow-css/bg-gray-500": {
+    "scope": "clojure",
+    "prefix": "bg-gray-500",
+    "body": [
+      ":bg-gray-500"
+    ],
+    "description": "shadow-css: :bg-gray-500"
+  },
+  "shadow-css/text-white-50": {
+    "scope": "clojure",
+    "prefix": "text-white-50",
+    "body": [
+      ":text-white-50"
+    ],
+    "description": "shadow-css: :text-white-50"
+  },
+  "shadow-css/border-gray-300": {
+    "scope": "clojure",
+    "prefix": "border-gray-300",
+    "body": [
+      ":border-gray-300"
+    ],
+    "description": "shadow-css: :border-gray-300"
+  },
+  "shadow-css/flex-shrink-0": {
+    "scope": "clojure",
+    "prefix": "flex-shrink-0",
+    "body": [
+      ":flex-shrink-0"
+    ],
+    "description": "shadow-css: :flex-shrink-0 (flex-shrink: 0)"
+  },
+  "shadow-css/pb-6": {
+    "scope": "clojure",
+    "prefix": "pb-6",
+    "body": [
+      ":pb-6"
+    ],
+    "description": "shadow-css: :pb-6"
+  },
+  "shadow-css/px-6": {
+    "scope": "clojure",
+    "prefix": "px-6",
+    "body": [
+      ":px-6"
+    ],
+    "description": "shadow-css: :px-6"
+  },
+  "shadow-css/w-3of6": {
+    "scope": "clojure",
+    "prefix": "w-3of6",
+    "body": [
+      ":w-3of6"
+    ],
+    "description": "shadow-css: :w-3of6 (width: 50%)"
+  },
+  "shadow-css/overflow-y-auto": {
+    "scope": "clojure",
+    "prefix": "overflow-y-auto",
+    "body": [
+      ":overflow-y-auto"
+    ],
+    "description": "shadow-css: :overflow-y-auto (overflow-y: auto)"
+  },
+  "shadow-css/grid-cols-9": {
+    "scope": "clojure",
+    "prefix": "grid-cols-9",
+    "body": [
+      ":grid-cols-9"
+    ],
+    "description": "shadow-css: :grid-cols-9 (9 column grid)"
+  },
+  "shadow-css/grid-cols-3": {
+    "scope": "clojure",
+    "prefix": "grid-cols-3",
+    "body": [
+      ":grid-cols-3"
+    ],
+    "description": "shadow-css: :grid-cols-3 (3 column grid)"
+  },
+  "shadow-css/rounded-t-none": {
+    "scope": "clojure",
+    "prefix": "rounded-t-none",
+    "body": [
+      ":rounded-t-none"
+    ],
+    "description": "shadow-css: :rounded-t-none (top border-radius: 0px)"
+  },
+  "shadow-css/cursor-crosshair": {
+    "scope": "clojure",
+    "prefix": "cursor-crosshair",
+    "body": [
+      ":cursor-crosshair"
+    ],
+    "description": "shadow-css: :cursor-crosshair (cursor: crosshair)"
+  },
+  "shadow-css/cursor-nesw-resize": {
+    "scope": "clojure",
+    "prefix": "cursor-nesw-resize",
+    "body": [
+      ":cursor-nesw-resize"
+    ],
+    "description": "shadow-css: :cursor-nesw-resize (cursor: nesw-resize)"
+  },
+  "shadow-css/mt-auto": {
+    "scope": "clojure",
+    "prefix": "mt-auto",
+    "body": [
+      ":mt-auto"
+    ],
+    "description": "shadow-css: :mt-auto (margin-top: auto)"
+  },
+  "shadow-css/w-2of4": {
+    "scope": "clojure",
+    "prefix": "w-2of4",
+    "body": [
+      ":w-2of4"
+    ],
+    "description": "shadow-css: :w-2of4 (width: 50%)"
+  },
+  "shadow-css/outline-red-700": {
+    "scope": "clojure",
+    "prefix": "outline-red-700",
+    "body": [
+      ":outline-red-700"
+    ],
+    "description": "shadow-css: :outline-red-700"
+  },
+  "shadow-css/bg-black-500": {
+    "scope": "clojure",
+    "prefix": "bg-black-500",
+    "body": [
+      ":bg-black-500"
+    ],
+    "description": "shadow-css: :bg-black-500"
+  },
+  "shadow-css/outline-green-400": {
+    "scope": "clojure",
+    "prefix": "outline-green-400",
+    "body": [
+      ":outline-green-400"
+    ],
+    "description": "shadow-css: :outline-green-400"
+  },
+  "shadow-css/mx-2": {
+    "scope": "clojure",
+    "prefix": "mx-2",
+    "body": [
+      ":mx-2"
+    ],
+    "description": "shadow-css: :mx-2"
+  },
+  "shadow-css/whitespace-pre-line": {
+    "scope": "clojure",
+    "prefix": "whitespace-pre-line",
+    "body": [
+      ":whitespace-pre-line"
+    ],
+    "description": "shadow-css: :whitespace-pre-line (white-space: pre-line)"
+  },
+  "shadow-css/rounded-3xl": {
+    "scope": "clojure",
+    "prefix": "rounded-3xl",
+    "body": [
+      ":rounded-3xl"
+    ],
+    "description": "shadow-css: :rounded-3xl (border-radius: 1.5rem)"
+  },
+  "shadow-css/gap-x-7": {
+    "scope": "clojure",
+    "prefix": "gap-x-7",
+    "body": [
+      ":gap-x-7"
+    ],
+    "description": "shadow-css: :gap-x-7"
+  },
+  "shadow-css/text-gray-700": {
+    "scope": "clojure",
+    "prefix": "text-gray-700",
+    "body": [
+      ":text-gray-700"
+    ],
+    "description": "shadow-css: :text-gray-700"
+  },
+  "shadow-css/cursor-ne-resize": {
+    "scope": "clojure",
+    "prefix": "cursor-ne-resize",
+    "body": [
+      ":cursor-ne-resize"
+    ],
+    "description": "shadow-css: :cursor-ne-resize (cursor: ne-resize)"
+  },
+  "shadow-css/rounded-r-none": {
+    "scope": "clojure",
+    "prefix": "rounded-r-none",
+    "body": [
+      ":rounded-r-none"
+    ],
+    "description": "shadow-css: :rounded-r-none (right border-radius: 0px)"
+  },
+  "shadow-css/gap-y-8": {
+    "scope": "clojure",
+    "prefix": "gap-y-8",
+    "body": [
+      ":gap-y-8"
+    ],
+    "description": "shadow-css: :gap-y-8"
+  },
+  "shadow-css/sticky": {
+    "scope": "clojure",
+    "prefix": "sticky",
+    "body": [
+      ":sticky"
+    ],
+    "description": "shadow-css: :sticky (position: sticky)"
+  },
+  "shadow-css/h-2of6": {
+    "scope": "clojure",
+    "prefix": "h-2of6",
+    "body": [
+      ":h-2of6"
+    ],
+    "description": "shadow-css: :h-2of6 (height: 33.333%)"
+  },
+  "shadow-css/justify-end": {
+    "scope": "clojure",
+    "prefix": "justify-end",
+    "body": [
+      ":justify-end"
+    ],
+    "description": "shadow-css: :justify-end (justify-content: flex-end)"
+  },
+  "shadow-css/bg-black-400": {
+    "scope": "clojure",
+    "prefix": "bg-black-400",
+    "body": [
+      ":bg-black-400"
+    ],
+    "description": "shadow-css: :bg-black-400"
+  },
+  "shadow-css/w-4of5": {
+    "scope": "clojure",
+    "prefix": "w-4of5",
+    "body": [
+      ":w-4of5"
+    ],
+    "description": "shadow-css: :w-4of5 (width: 80%)"
+  },
+  "shadow-css/outline-green-100": {
+    "scope": "clojure",
+    "prefix": "outline-green-100",
+    "body": [
+      ":outline-green-100"
+    ],
+    "description": "shadow-css: :outline-green-100"
+  },
+  "shadow-css/mb-8": {
+    "scope": "clojure",
+    "prefix": "mb-8",
+    "body": [
+      ":mb-8"
+    ],
+    "description": "shadow-css: :mb-8"
+  },
+  "shadow-css/border-8": {
+    "scope": "clojure",
+    "prefix": "border-8",
+    "body": [
+      ":border-8"
+    ],
+    "description": "shadow-css: :border-8 (border-width: 8px)"
+  },
+  "shadow-css/overflow-y-visible": {
+    "scope": "clojure",
+    "prefix": "overflow-y-visible",
+    "body": [
+      ":overflow-y-visible"
+    ],
+    "description": "shadow-css: :overflow-y-visible (overflow-y: visible)"
+  },
+  "shadow-css/odd": {
+    "scope": "clojure",
+    "prefix": "odd",
+    "body": [
+      ":odd"
+    ],
+    "description": "shadow-css: :odd (&:nth-child(odd))"
+  },
+  "shadow-css/max-w-full": {
+    "scope": "clojure",
+    "prefix": "max-w-full",
+    "body": [
+      ":max-w-full"
+    ],
+    "description": "shadow-css: :max-w-full (max-width: 100%)"
+  },
+  "shadow-css/rounded-b-3xl": {
+    "scope": "clojure",
+    "prefix": "rounded-b-3xl",
+    "body": [
+      ":rounded-b-3xl"
+    ],
+    "description": "shadow-css: :rounded-b-3xl (bottom border-radius: 1.5rem)"
+  },
+  "shadow-css/cursor-alias": {
+    "scope": "clojure",
+    "prefix": "cursor-alias",
+    "body": [
+      ":cursor-alias"
+    ],
+    "description": "shadow-css: :cursor-alias (cursor: alias)"
+  },
+  "shadow-css/cursor-auto": {
+    "scope": "clojure",
+    "prefix": "cursor-auto",
+    "body": [
+      ":cursor-auto"
+    ],
+    "description": "shadow-css: :cursor-auto (cursor: auto)"
+  },
+  "shadow-css/overflow-hidden": {
+    "scope": "clojure",
+    "prefix": "overflow-hidden",
+    "body": [
+      ":overflow-hidden"
+    ],
+    "description": "shadow-css: :overflow-hidden (overflow: hidden)"
+  },
+  "shadow-css/flex-nowrap": {
+    "scope": "clojure",
+    "prefix": "flex-nowrap",
+    "body": [
+      ":flex-nowrap"
+    ],
+    "description": "shadow-css: :flex-nowrap (flex-wrap: nowrap)"
+  },
+  "shadow-css/border-blue-100": {
+    "scope": "clojure",
+    "prefix": "border-blue-100",
+    "body": [
+      ":border-blue-100"
+    ],
+    "description": "shadow-css: :border-blue-100"
+  },
+  "shadow-css/z-0": {
+    "scope": "clojure",
+    "prefix": "z-0",
+    "body": [
+      ":z-0"
+    ],
+    "description": "shadow-css: :z-0 (z-index: 0)"
+  },
+  "shadow-css/mr-auto": {
+    "scope": "clojure",
+    "prefix": "mr-auto",
+    "body": [
+      ":mr-auto"
+    ],
+    "description": "shadow-css: :mr-auto (margin-right: auto)"
+  },
+  "shadow-css/text-gray-200": {
+    "scope": "clojure",
+    "prefix": "text-gray-200",
+    "body": [
+      ":text-gray-200"
+    ],
+    "description": "shadow-css: :text-gray-200"
+  },
+  "shadow-css/m-7": {
+    "scope": "clojure",
+    "prefix": "m-7",
+    "body": [
+      ":m-7"
+    ],
+    "description": "shadow-css: :m-7"
+  },
+  "shadow-css/p-3": {
+    "scope": "clojure",
+    "prefix": "p-3",
+    "body": [
+      ":p-3"
+    ],
+    "description": "shadow-css: :p-3"
+  },
+  "shadow-css/divide-y-4": {
+    "scope": "clojure",
+    "prefix": "divide-y-4",
+    "body": [
+      ":divide-y-4"
+    ],
+    "description": "shadow-css: :divide-y-4 (4px vertical dividers)"
+  },
+  "shadow-css/outline-gray-100": {
+    "scope": "clojure",
+    "prefix": "outline-gray-100",
+    "body": [
+      ":outline-gray-100"
+    ],
+    "description": "shadow-css: :outline-gray-100"
+  },
+  "shadow-css/border-y-0": {
+    "scope": "clojure",
+    "prefix": "border-y-0",
+    "body": [
+      ":border-y-0"
+    ],
+    "description": "shadow-css: :border-y-0 (vertical border: 0px)"
+  },
+  "shadow-css/text-blue-200": {
+    "scope": "clojure",
+    "prefix": "text-blue-200",
+    "body": [
+      ":text-blue-200"
+    ],
+    "description": "shadow-css: :text-blue-200"
+  },
+  "shadow-css/px-1": {
+    "scope": "clojure",
+    "prefix": "px-1",
+    "body": [
+      ":px-1"
+    ],
+    "description": "shadow-css: :px-1"
+  },
+  "shadow-css/outline-blue-100": {
+    "scope": "clojure",
+    "prefix": "outline-blue-100",
+    "body": [
+      ":outline-blue-100"
+    ],
+    "description": "shadow-css: :outline-blue-100"
+  },
+  "shadow-css/border-r": {
+    "scope": "clojure",
+    "prefix": "border-r",
+    "body": [
+      ":border-r"
+    ],
+    "description": "shadow-css: :border-r (border-right-width: 1px)"
+  },
+  "shadow-css/text-blue-600": {
+    "scope": "clojure",
+    "prefix": "text-blue-600",
+    "body": [
+      ":text-blue-600"
+    ],
+    "description": "shadow-css: :text-blue-600"
+  },
+  "shadow-css/border-r-2": {
+    "scope": "clojure",
+    "prefix": "border-r-2",
+    "body": [
+      ":border-r-2"
+    ],
+    "description": "shadow-css: :border-r-2 (border-right-width: 2px)"
+  },
+  "shadow-css/h-4of5": {
+    "scope": "clojure",
+    "prefix": "h-4of5",
+    "body": [
+      ":h-4of5"
+    ],
+    "description": "shadow-css: :h-4of5 (height: 80%)"
+  },
+  "shadow-css/text-black-500": {
+    "scope": "clojure",
+    "prefix": "text-black-500",
+    "body": [
+      ":text-black-500"
+    ],
+    "description": "shadow-css: :text-black-500"
+  },
+  "shadow-css/origin-bottom": {
+    "scope": "clojure",
+    "prefix": "origin-bottom",
+    "body": [
+      ":origin-bottom"
+    ],
+    "description": "shadow-css: :origin-bottom (transform-origin: bottom)"
+  },
+  "shadow-css/bg-gray-400": {
+    "scope": "clojure",
+    "prefix": "bg-gray-400",
+    "body": [
+      ":bg-gray-400"
+    ],
+    "description": "shadow-css: :bg-gray-400"
+  },
+  "shadow-css/hidden": {
+    "scope": "clojure",
+    "prefix": "hidden",
+    "body": [
+      ":hidden"
+    ],
+    "description": "shadow-css: :hidden (display: none)"
+  },
+  "shadow-css/cursor-ns-resize": {
+    "scope": "clojure",
+    "prefix": "cursor-ns-resize",
+    "body": [
+      ":cursor-ns-resize"
+    ],
+    "description": "shadow-css: :cursor-ns-resize (cursor: ns-resize)"
+  },
+  "shadow-css/h-full": {
+    "scope": "clojure",
+    "prefix": "h-full",
+    "body": [
+      ":h-full"
+    ],
+    "description": "shadow-css: :h-full (height: 100%)"
+  },
+  "shadow-css/border-gray-900": {
+    "scope": "clojure",
+    "prefix": "border-gray-900",
+    "body": [
+      ":border-gray-900"
+    ],
+    "description": "shadow-css: :border-gray-900"
+  },
+  "shadow-css/shrink": {
+    "scope": "clojure",
+    "prefix": "shrink",
+    "body": [
+      ":shrink"
+    ],
+    "description": "shadow-css: :shrink (flex-shrink: 1)"
+  },
+  "shadow-css/cursor-all-scroll": {
+    "scope": "clojure",
+    "prefix": "cursor-all-scroll",
+    "body": [
+      ":cursor-all-scroll"
+    ],
+    "description": "shadow-css: :cursor-all-scroll (cursor: all-scroll)"
+  },
+  "shadow-css/border-gray-600": {
+    "scope": "clojure",
+    "prefix": "border-gray-600",
+    "body": [
+      ":border-gray-600"
+    ],
+    "description": "shadow-css: :border-gray-600"
+  },
+  "shadow-css/border-x": {
+    "scope": "clojure",
+    "prefix": "border-x",
+    "body": [
+      ":border-x"
+    ],
+    "description": "shadow-css: :border-x (horizontal border: 1px)"
+  },
+  "shadow-css/w-10of12": {
+    "scope": "clojure",
+    "prefix": "w-10of12",
+    "body": [
+      ":w-10of12"
+    ],
+    "description": "shadow-css: :w-10of12 (width: 83.333%)"
+  },
+  "shadow-css/self-stretch": {
+    "scope": "clojure",
+    "prefix": "self-stretch",
+    "body": [
+      ":self-stretch"
+    ],
+    "description": "shadow-css: :self-stretch (align-self: stretch)"
+  },
+  "shadow-css/rounded-tl": {
+    "scope": "clojure",
+    "prefix": "rounded-tl",
+    "body": [
+      ":rounded-tl"
+    ],
+    "description": "shadow-css: :rounded-tl (top-left border-radius: 0.25rem)"
+  },
+  "shadow-css/even": {
+    "scope": "clojure",
+    "prefix": "even",
+    "body": [
+      ":even"
+    ],
+    "description": "shadow-css: :even (&:nth-child(even))"
+  },
+  "shadow-css/grid-cols-6": {
+    "scope": "clojure",
+    "prefix": "grid-cols-6",
+    "body": [
+      ":grid-cols-6"
+    ],
+    "description": "shadow-css: :grid-cols-6 (6 column grid)"
+  },
+  "shadow-css/rounded-xl": {
+    "scope": "clojure",
+    "prefix": "rounded-xl",
+    "body": [
+      ":rounded-xl"
+    ],
+    "description": "shadow-css: :rounded-xl (border-radius: 0.75rem)"
+  },
+  "shadow-css/pr-4": {
+    "scope": "clojure",
+    "prefix": "pr-4",
+    "body": [
+      ":pr-4"
+    ],
+    "description": "shadow-css: :pr-4"
+  },
+  "shadow-css/gap-2": {
+    "scope": "clojure",
+    "prefix": "gap-2",
+    "body": [
+      ":gap-2"
+    ],
+    "description": "shadow-css: :gap-2"
+  },
+  "shadow-css/opacity-80": {
+    "scope": "clojure",
+    "prefix": "opacity-80",
+    "body": [
+      ":opacity-80"
+    ],
+    "description": "shadow-css: :opacity-80 (opacity: 0.8)"
+  },
+  "shadow-css/justify-center": {
+    "scope": "clojure",
+    "prefix": "justify-center",
+    "body": [
+      ":justify-center"
+    ],
+    "description": "shadow-css: :justify-center (justify-content: center)"
+  },
+  "shadow-css/transition-transform": {
+    "scope": "clojure",
+    "prefix": "transition-transform",
+    "body": [
+      ":transition-transform"
+    ],
+    "description": "shadow-css: :transition-transform (transition transform)"
+  },
+  "shadow-css/min-h-max": {
+    "scope": "clojure",
+    "prefix": "min-h-max",
+    "body": [
+      ":min-h-max"
+    ],
+    "description": "shadow-css: :min-h-max (min-height: max-content)"
+  },
+  "shadow-css/first": {
+    "scope": "clojure",
+    "prefix": "first",
+    "body": [
+      ":first"
+    ],
+    "description": "shadow-css: :first (&:first-child)"
+  },
+  "shadow-css/line-through": {
+    "scope": "clojure",
+    "prefix": "line-through",
+    "body": [
+      ":line-through"
+    ],
+    "description": "shadow-css: :line-through (text-decoration-line: line-through)"
+  },
+  "shadow-css/text-white-300": {
+    "scope": "clojure",
+    "prefix": "text-white-300",
+    "body": [
+      ":text-white-300"
+    ],
+    "description": "shadow-css: :text-white-300"
+  },
+  "shadow-css/bg-red-700": {
+    "scope": "clojure",
+    "prefix": "bg-red-700",
+    "body": [
+      ":bg-red-700"
+    ],
+    "description": "shadow-css: :bg-red-700"
+  },
+  "shadow-css/bg-gray-300": {
+    "scope": "clojure",
+    "prefix": "bg-gray-300",
+    "body": [
+      ":bg-gray-300"
+    ],
+    "description": "shadow-css: :bg-gray-300"
+  },
+  "shadow-css/last": {
+    "scope": "clojure",
+    "prefix": "last",
+    "body": [
+      ":last"
+    ],
+    "description": "shadow-css: :last (&:last-child)"
+  },
+  "shadow-css/px-7": {
+    "scope": "clojure",
+    "prefix": "px-7",
+    "body": [
+      ":px-7"
+    ],
+    "description": "shadow-css: :px-7"
+  },
+  "shadow-css/px-3": {
+    "scope": "clojure",
+    "prefix": "px-3",
+    "body": [
+      ":px-3"
+    ],
+    "description": "shadow-css: :px-3"
+  },
+  "shadow-css/rounded-sm": {
+    "scope": "clojure",
+    "prefix": "rounded-sm",
+    "body": [
+      ":rounded-sm"
+    ],
+    "description": "shadow-css: :rounded-sm (border-radius: 0.125rem)"
+  },
+  "shadow-css/rounded-r-3xl": {
+    "scope": "clojure",
+    "prefix": "rounded-r-3xl",
+    "body": [
+      ":rounded-r-3xl"
+    ],
+    "description": "shadow-css: :rounded-r-3xl (right border-radius: 1.5rem)"
+  },
+  "shadow-css/m-8": {
+    "scope": "clojure",
+    "prefix": "m-8",
+    "body": [
+      ":m-8"
+    ],
+    "description": "shadow-css: :m-8"
+  },
+  "shadow-css/divide-y-2": {
+    "scope": "clojure",
+    "prefix": "divide-y-2",
+    "body": [
+      ":divide-y-2"
+    ],
+    "description": "shadow-css: :divide-y-2 (2px vertical dividers)"
+  },
+  "shadow-css/rounded-r-lg": {
+    "scope": "clojure",
+    "prefix": "rounded-r-lg",
+    "body": [
+      ":rounded-r-lg"
+    ],
+    "description": "shadow-css: :rounded-r-lg (right border-radius: 0.5rem)"
+  },
+  "shadow-css/rounded-tl-sm": {
+    "scope": "clojure",
+    "prefix": "rounded-tl-sm",
+    "body": [
+      ":rounded-tl-sm"
+    ],
+    "description": "shadow-css: :rounded-tl-sm (top-left border-radius: 0.125rem)"
+  },
+  "shadow-css/justify-items-stretch": {
+    "scope": "clojure",
+    "prefix": "justify-items-stretch",
+    "body": [
+      ":justify-items-stretch"
+    ],
+    "description": "shadow-css: :justify-items-stretch (justify-items: stretch)"
+  },
+  "shadow-css/aspect-video": {
+    "scope": "clojure",
+    "prefix": "aspect-video",
+    "body": [
+      ":aspect-video"
+    ],
+    "description": "shadow-css: :aspect-video (aspect-ratio: 16 / 9)"
+  },
+  "shadow-css/gap-y-0.5": {
+    "scope": "clojure",
+    "prefix": "gap-y-0.5",
+    "body": [
+      ":gap-y-0.5"
+    ],
+    "description": "shadow-css: :gap-y-0.5"
+  },
+  "shadow-css/border-t-0": {
+    "scope": "clojure",
+    "prefix": "border-t-0",
+    "body": [
+      ":border-t-0"
+    ],
+    "description": "shadow-css: :border-t-0 (border-top-width: 0px)"
+  },
+  "shadow-css/mt-2": {
+    "scope": "clojure",
+    "prefix": "mt-2",
+    "body": [
+      ":mt-2"
+    ],
+    "description": "shadow-css: :mt-2"
+  },
+  "shadow-css/overflow-y-scroll": {
+    "scope": "clojure",
+    "prefix": "overflow-y-scroll",
+    "body": [
+      ":overflow-y-scroll"
+    ],
+    "description": "shadow-css: :overflow-y-scroll (overflow-y: scroll)"
+  },
+  "shadow-css/rounded-r-xl": {
+    "scope": "clojure",
+    "prefix": "rounded-r-xl",
+    "body": [
+      ":rounded-r-xl"
+    ],
+    "description": "shadow-css: :rounded-r-xl (right border-radius: 0.75rem)"
+  },
+  "shadow-css/rounded-tr-none": {
+    "scope": "clojure",
+    "prefix": "rounded-tr-none",
+    "body": [
+      ":rounded-tr-none"
+    ],
+    "description": "shadow-css: :rounded-tr-none (top-right border-radius: 0px)"
+  },
+  "shadow-css/cursor-grabbing": {
+    "scope": "clojure",
+    "prefix": "cursor-grabbing",
+    "body": [
+      ":cursor-grabbing"
+    ],
+    "description": "shadow-css: :cursor-grabbing (cursor: grabbing)"
+  },
+  "shadow-css/delay-150": {
+    "scope": "clojure",
+    "prefix": "delay-150",
+    "body": [
+      ":delay-150"
+    ],
+    "description": "shadow-css: :delay-150 (transition-delay: 150ms)"
+  },
+  "shadow-css/gap-3": {
+    "scope": "clojure",
+    "prefix": "gap-3",
+    "body": [
+      ":gap-3"
+    ],
+    "description": "shadow-css: :gap-3"
+  },
+  "shadow-css/m-auto": {
+    "scope": "clojure",
+    "prefix": "m-auto",
+    "body": [
+      ":m-auto"
+    ],
+    "description": "shadow-css: :m-auto (margin: auto)"
+  },
+  "shadow-css/self-center": {
+    "scope": "clojure",
+    "prefix": "self-center",
+    "body": [
+      ":self-center"
+    ],
+    "description": "shadow-css: :self-center (align-self: center)"
+  },
+  "shadow-css/rounded-tr-3xl": {
+    "scope": "clojure",
+    "prefix": "rounded-tr-3xl",
+    "body": [
+      ":rounded-tr-3xl"
+    ],
+    "description": "shadow-css: :rounded-tr-3xl (top-right border-radius: 1.5rem)"
+  },
+  "shadow-css/text-blue-500": {
+    "scope": "clojure",
+    "prefix": "text-blue-500",
+    "body": [
+      ":text-blue-500"
+    ],
+    "description": "shadow-css: :text-blue-500"
+  },
+  "shadow-css/h-1of3": {
+    "scope": "clojure",
+    "prefix": "h-1of3",
+    "body": [
+      ":h-1of3"
+    ],
+    "description": "shadow-css: :h-1of3 (height: 33.333%)"
+  },
+  "shadow-css/border-black-400": {
+    "scope": "clojure",
+    "prefix": "border-black-400",
+    "body": [
+      ":border-black-400"
+    ],
+    "description": "shadow-css: :border-black-400"
+  },
+  "shadow-css/rounded-tr-md": {
+    "scope": "clojure",
+    "prefix": "rounded-tr-md",
+    "body": [
+      ":rounded-tr-md"
+    ],
+    "description": "shadow-css: :rounded-tr-md (top-right border-radius: 0.375rem)"
+  },
+  "shadow-css/gap-x-8": {
+    "scope": "clojure",
+    "prefix": "gap-x-8",
+    "body": [
+      ":gap-x-8"
+    ],
+    "description": "shadow-css: :gap-x-8"
+  },
+  "shadow-css/pb-5": {
+    "scope": "clojure",
+    "prefix": "pb-5",
+    "body": [
+      ":pb-5"
+    ],
+    "description": "shadow-css: :pb-5"
+  },
+  "shadow-css/my-auto": {
+    "scope": "clojure",
+    "prefix": "my-auto",
+    "body": [
+      ":my-auto"
+    ],
+    "description": "shadow-css: :my-auto (vertical margin: auto)"
+  },
+  "shadow-css/rounded-br-lg": {
+    "scope": "clojure",
+    "prefix": "rounded-br-lg",
+    "body": [
+      ":rounded-br-lg"
+    ],
+    "description": "shadow-css: :rounded-br-lg (bottom-right border-radius: 0.5rem)"
+  },
+  "shadow-css/outline-white-100": {
+    "scope": "clojure",
+    "prefix": "outline-white-100",
+    "body": [
+      ":outline-white-100"
+    ],
+    "description": "shadow-css: :outline-white-100"
+  },
+  "shadow-css/grid-cols-none": {
+    "scope": "clojure",
+    "prefix": "grid-cols-none",
+    "body": [
+      ":grid-cols-none"
+    ],
+    "description": "shadow-css: :grid-cols-none (no grid columns)"
+  },
+  "shadow-css/divide-x-2": {
+    "scope": "clojure",
+    "prefix": "divide-x-2",
+    "body": [
+      ":divide-x-2"
+    ],
+    "description": "shadow-css: :divide-x-2 (2px horizontal dividers)"
+  },
+  "shadow-css/w-5of12": {
+    "scope": "clojure",
+    "prefix": "w-5of12",
+    "body": [
+      ":w-5of12"
+    ],
+    "description": "shadow-css: :w-5of12 (width: 41.667%)"
+  },
+  "shadow-css/border-red-100": {
+    "scope": "clojure",
+    "prefix": "border-red-100",
+    "body": [
+      ":border-red-100"
+    ],
+    "description": "shadow-css: :border-red-100"
+  },
+  "shadow-css/w-max": {
+    "scope": "clojure",
+    "prefix": "w-max",
+    "body": [
+      ":w-max"
+    ],
+    "description": "shadow-css: :w-max (width: max-content)"
+  },
+  "shadow-css/text-blue-700": {
+    "scope": "clojure",
+    "prefix": "text-blue-700",
+    "body": [
+      ":text-blue-700"
+    ],
+    "description": "shadow-css: :text-blue-700"
+  },
+  "shadow-css/rounded-t-full": {
+    "scope": "clojure",
+    "prefix": "rounded-t-full",
+    "body": [
+      ":rounded-t-full"
+    ],
+    "description": "shadow-css: :rounded-t-full (top border-radius: 9999px)"
+  },
+  "shadow-css/max-w-screen": {
+    "scope": "clojure",
+    "prefix": "max-w-screen",
+    "body": [
+      ":max-w-screen"
+    ],
+    "description": "shadow-css: :max-w-screen (max-width: 100vw)"
+  },
+  "shadow-css/delay-100": {
+    "scope": "clojure",
+    "prefix": "delay-100",
+    "body": [
+      ":delay-100"
+    ],
+    "description": "shadow-css: :delay-100 (transition-delay: 100ms)"
+  },
+  "shadow-css/mt-7": {
+    "scope": "clojure",
+    "prefix": "mt-7",
+    "body": [
+      ":mt-7"
+    ],
+    "description": "shadow-css: :mt-7"
+  },
+  "shadow-css/min-w-screen": {
+    "scope": "clojure",
+    "prefix": "min-w-screen",
+    "body": [
+      ":min-w-screen"
+    ],
+    "description": "shadow-css: :min-w-screen (min-width: 100vw)"
+  },
+  "shadow-css/outline-blue-200": {
+    "scope": "clojure",
+    "prefix": "outline-blue-200",
+    "body": [
+      ":outline-blue-200"
+    ],
+    "description": "shadow-css: :outline-blue-200"
+  },
+  "shadow-css/justify-self-center": {
+    "scope": "clojure",
+    "prefix": "justify-self-center",
+    "body": [
+      ":justify-self-center"
+    ],
+    "description": "shadow-css: :justify-self-center (justify-self: center)"
+  },
+  "shadow-css/items-start": {
+    "scope": "clojure",
+    "prefix": "items-start",
+    "body": [
+      ":items-start"
+    ],
+    "description": "shadow-css: :items-start (align-items: flex-start)"
+  },
+  "shadow-css/rounded-bl-xl": {
+    "scope": "clojure",
+    "prefix": "rounded-bl-xl",
+    "body": [
+      ":rounded-bl-xl"
+    ],
+    "description": "shadow-css: :rounded-bl-xl (bottom-left border-radius: 0.75rem)"
+  },
+  "shadow-css/grid-cols-8": {
+    "scope": "clojure",
+    "prefix": "grid-cols-8",
+    "body": [
+      ":grid-cols-8"
+    ],
+    "description": "shadow-css: :grid-cols-8 (8 column grid)"
+  },
+  "shadow-css/gap-x-4": {
+    "scope": "clojure",
+    "prefix": "gap-x-4",
+    "body": [
+      ":gap-x-4"
+    ],
+    "description": "shadow-css: :gap-x-4"
+  },
+  "shadow-css/m-0.5": {
+    "scope": "clojure",
+    "prefix": "m-0.5",
+    "body": [
+      ":m-0.5"
+    ],
+    "description": "shadow-css: :m-0.5"
+  },
+  "shadow-css/mt-6": {
+    "scope": "clojure",
+    "prefix": "mt-6",
+    "body": [
+      ":mt-6"
+    ],
+    "description": "shadow-css: :mt-6"
+  },
+  "shadow-css/cursor-nw-resize": {
+    "scope": "clojure",
+    "prefix": "cursor-nw-resize",
+    "body": [
+      ":cursor-nw-resize"
+    ],
+    "description": "shadow-css: :cursor-nw-resize (cursor: nw-resize)"
+  },
+  "shadow-css/w-1of5": {
+    "scope": "clojure",
+    "prefix": "w-1of5",
+    "body": [
+      ":w-1of5"
+    ],
+    "description": "shadow-css: :w-1of5 (width: 20%)"
   }
 }
