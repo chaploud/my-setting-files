@@ -6,7 +6,7 @@
 	<array>
 		<dict>
 			<key>Origin</key>
-			<string>{0, 1055}</string>
+			<string>{-0, 1055}</string>
 			<key>ScrollerStyle</key>
 			<integer>1</integer>
 			<key>ShowsTabBar</key>
@@ -23,7 +23,7 @@
 					<key>Tab Scrollback Restorable</key>
 					<true/>
 					<key>Tab Session Class ID</key>
-					<string>998F1F28-DF81-49A2-8343-976B1F7AF291</string>
+					<string>3EDA8005-131F-4DE2-BD90-F360F41BF799</string>
 					<key>Tab Settings</key>
 					<dict>
 						<key>ProfileCurrentVersion</key>
@@ -50,7 +50,7 @@
 					<key>Tab Scrollback Restorable</key>
 					<true/>
 					<key>Tab Session Class ID</key>
-					<string>B47F77ED-C02B-49A2-8F74-123E3525D081</string>
+					<string>7CBDAAC3-6CED-44AA-AA5B-88E5A4800A74</string>
 					<key>Tab Settings</key>
 					<dict>
 						<key>ProfileCurrentVersion</key>
@@ -72,48 +72,6 @@
 			</array>
 			<key>WindowNumber</key>
 			<integer>4</integer>
-		</dict>
-		<dict>
-			<key>Origin</key>
-			<string>{1043, 748}</string>
-			<key>ScrollerStyle</key>
-			<integer>0</integer>
-			<key>ShowsTabBar</key>
-			<false/>
-			<key>ShowsTabBarInFullScreen</key>
-			<false/>
-			<key>Window Settings</key>
-			<array/>
-			<key>WindowNumber</key>
-			<integer>1</integer>
-		</dict>
-		<dict>
-			<key>Origin</key>
-			<string>{1043, 748}</string>
-			<key>ScrollerStyle</key>
-			<integer>0</integer>
-			<key>ShowsTabBar</key>
-			<false/>
-			<key>ShowsTabBarInFullScreen</key>
-			<false/>
-			<key>Window Settings</key>
-			<array/>
-			<key>WindowNumber</key>
-			<integer>1</integer>
-		</dict>
-		<dict>
-			<key>Origin</key>
-			<string>{1043, 748}</string>
-			<key>ScrollerStyle</key>
-			<integer>0</integer>
-			<key>ShowsTabBar</key>
-			<false/>
-			<key>ShowsTabBarInFullScreen</key>
-			<false/>
-			<key>Window Settings</key>
-			<array/>
-			<key>WindowNumber</key>
-			<integer>1</integer>
 		</dict>
 	</array>
 	<key>name</key>
