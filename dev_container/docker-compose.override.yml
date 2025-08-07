@@ -4,7 +4,8 @@ x-private-volumes: &private-volumes
   - ~/.claude.json.backup:/root/.claude.json.backup
   - ./setup-private.sh:/tmp/setup-private.sh:ro
   # VSCodeを使用している場合は拡張機能のインストールをキャッシュできる(以下とvolumesをコメントイン)
-  # - vscode-data:/root/.vscode-server
+  - vscode-data:/root/.vscode-server
+  - localbin:/usr/local/bin
 
 services:
   server:
@@ -14,5 +15,6 @@ services:
     volumes: *private-volumes
     command: bash /tmp/setup-private.sh frontend
 
-# volumes:
-#   vscode-data:
+volumes:
+  vscode-data:
+  localbin:
