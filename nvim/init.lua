@@ -586,6 +586,12 @@ require("lazy").setup({
           function() call_vscode('calva.evaluateFiddleForSourceFile') end,
           desc = "Evaluate fiddle for source code"
         },
+        -- Copy Relative Path
+        {
+          "<leader>cp",
+          function() call_vscode('copyRelativeFilePath') end,
+          desc = "Copy Relative Path"
+        },
       }
     }
   },
