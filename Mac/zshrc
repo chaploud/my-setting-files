@@ -88,3 +88,7 @@ export PATH="/opt/homebrew/opt/postgresql@17/bin:$PATH"
 
 # teachme_web_duvelのteachme_webコンテナ起動がうまく行かないときのためのDBリセット
 alias tmbresetdb='docker compose exec teachme_web bundle exec rails db:reset_with_initial_data'
+alias tmbup='gf && docker compose down && docker compose up'
+
+# teachme_eboshigara
+alias myskillup='gf && docker compose down && docker compose up'
