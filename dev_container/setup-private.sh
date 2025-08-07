@@ -4,10 +4,13 @@
 SERVICE_TYPE=$1
 
 setup_tools() {
-    echo "[Private Setup]"
+    echo "[Private Setup]..."
     # 任意のコマンドをdocker compose up時に実行できる
-    # apt install -y tree jq ripgrep fzf neovim
-    # curl -sS https://starship.rs/install.sh | sh -s -- --yes
+    apt update
+    apt install -y tree jq ripgrep fzf neovim
+    if ! command -v starship > /dev/null 2>&1; then
+        curl -sS https://starship.rs/install.sh | sh -s -- --yes
+    fi
 }
 
 # serverサービス用のNode.jsセットアップ
@@ -16,7 +19,8 @@ setup_nodejs_for_server() {
         echo "[Claude Setup] Installing Node.js..."
         curl -fsSL https://deb.nodesource.com/setup_22.x -o /tmp/nodesource_setup.sh
         bash /tmp/nodesource_setup.sh
-        apt-get install -y nodejs
+        apt update
+        apt install -y nodejs
         rm /tmp/nodesource_setup.sh
     fi
 }
