@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>WindowList</key>
+	<array>
+		<dict>
+			<key>Origin</key>
+			<string>{0, 1055}</string>
+			<key>ScrollerStyle</key>
+			<integer>1</integer>
+			<key>ShowsTabBar</key>
+			<false/>
+			<key>ShowsTabBarInFullScreen</key>
+			<false/>
+			<key>Window Settings</key>
+			<array>
+				<dict>
+					<key>Tab Column Count</key>
+					<integer>238</integer>
+					<key>Tab Row Count</key>
+					<integer>58</integer>
+					<key>Tab Scrollback Restorable</key>
+					<true/>
+					<key>Tab Session Class ID</key>
+					<string>998F1F28-DF81-49A2-8343-976B1F7AF291</string>
+					<key>Tab Settings</key>
+					<dict>
+						<key>ProfileCurrentVersion</key>
+						<real>2.0699999999999998</real>
+						<key>name</key>
+						<string>web_duvel</string>
+						<key>type</key>
+						<string>Window Settings</string>
+					</dict>
+					<key>Tab Settings Name</key>
+					<string>web_duvel</string>
+					<key>Tab Working Directory URL</key>
+					<string>file://ST-M-FNM2CC6FYV/Users/shota.508/Studist/teachme_web_duvel/</string>
+					<key>Tab Working Directory URL String</key>
+					<string>file://ST-M-FNM2CC6FYV/Users/shota.508/Studist/teachme_web_duvel</string>
+					<key>TabSelected</key>
+					<true/>
+				</dict>
+				<dict>
+					<key>Tab Column Count</key>
+					<integer>238</integer>
+					<key>Tab Row Count</key>
+					<integer>58</integer>
+					<key>Tab Scrollback Restorable</key>
+					<true/>
+					<key>Tab Session Class ID</key>
+					<string>B47F77ED-C02B-49A2-8F74-123E3525D081</string>
+					<key>Tab Settings</key>
+					<dict>
+						<key>ProfileCurrentVersion</key>
+						<real>2.0699999999999998</real>
+						<key>name</key>
+						<string>eboshigara</string>
+						<key>type</key>
+						<string>Window Settings</string>
+					</dict>
+					<key>Tab Settings Name</key>
+					<string>eboshigara</string>
+					<key>Tab Working Directory URL</key>
+					<string>file://ST-M-FNM2CC6FYV/Users/shota.508/Studist/teachme_eboshigara/</string>
+					<key>Tab Working Directory URL String</key>
+					<string>file://ST-M-FNM2CC6FYV/Users/shota.508/Studist/teachme_eboshigara</string>
+					<key>TabSelected</key>
+					<false/>
+				</dict>
+			</array>
+			<key>WindowNumber</key>
+			<integer>4</integer>
+		</dict>
+		<dict>
+			<key>Origin</key>
+			<string>{1043, 748}</string>
+			<key>ScrollerStyle</key>
+			<integer>0</integer>
+			<key>ShowsTabBar</key>
+			<false/>
+			<key>ShowsTabBarInFullScreen</key>
+			<false/>
+			<key>Window Settings</key>
+			<array/>
+			<key>WindowNumber</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>Origin</key>
+			<string>{1043, 748}</string>
+			<key>ScrollerStyle</key>
+			<integer>0</integer>
+			<key>ShowsTabBar</key>
+			<false/>
+			<key>ShowsTabBarInFullScreen</key>
+			<false/>
+			<key>Window Settings</key>
+			<array/>
+			<key>WindowNumber</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>Origin</key>
+			<string>{1043, 748}</string>
+			<key>ScrollerStyle</key>
+			<integer>0</integer>
+			<key>ShowsTabBar</key>
+			<false/>
+			<key>ShowsTabBarInFullScreen</key>
+			<false/>
+			<key>Window Settings</key>
+			<array/>
+			<key>WindowNumber</key>
+			<integer>1</integer>
+		</dict>
+	</array>
+	<key>name</key>
+	<string>MySkill_Startup</string>
+	<key>type</key>
+	<string>Window Group</string>
+</dict>
+</plist>

@@ -104,6 +104,9 @@
   "files.trimTrailingWhitespace": true,
   // Emacsキーバインドをターミナルでも有効に使いたい
   "terminal.integrated.allowChords": false,
+  "terminal.integrated.commandsToSkipShell": [
+    "noop"
+  ],
   // ターミナルのスクロールバックをたくさんできるようにする
   "terminal.integrated.scrollback": 10000,
   // VSCodeを終了した後、前回のプロセスを復元しない
@@ -196,7 +199,7 @@
     "timonwong.shellcheck",
     "wtetsu.tempfile",
     "yandeu.five-server",
-    "yzhang.markdown-all-in-one"
+    "yzhang.markdown-all-in-one",
   ],
   // === GitHub Copilot
   // デフォルトでオフになっている言語も補完を効かせるようにする
@@ -328,7 +331,6 @@
   "calva.autoOpenInspector": false,
   // "calva.evaluationSendCodeToOutputWindow": true,
   "calva.autoOpenResultOutputDestination": true,
-  "calva.referencesCodeLens.enabled": true,
   "clojure.trace.server": "messages",
   // Calva Backseat Driver
   "calva-backseat-driver.enableMcpReplEvaluation": true,
@@ -423,5 +425,9 @@
       },
       "filters": {}
     }
-  ]
+  ],
+  "markdown.extension.print.theme": "dark",
+  "markdown-preview-enhanced.previewTheme": "atom-dark.css",
+  "markdown-preview-enhanced.liveUpdate": false,
+  "githubPullRequests.createOnPublishBranch": "never"
 }

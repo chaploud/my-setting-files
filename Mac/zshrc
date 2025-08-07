@@ -85,3 +85,6 @@ autoload -U compinit && compinit
 # 1password ssh-agent
 export SSH_AUTH_SOCK="$HOME/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
 export PATH="/opt/homebrew/opt/postgresql@17/bin:$PATH"
+
+# teachme_web_duvelのteachme_webコンテナ起動がうまく行かないときのためのDBリセット
+alias tmbresetdb='docker compose exec teachme_web bundle exec rails db:reset_with_initial_data'
