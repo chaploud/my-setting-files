@@ -96,7 +96,7 @@ alias myskillup='gf && docker compose down && docker compose up'
 # emacsclient
 e() {
   if emacsclient --eval "t" > /dev/null 2>&1; then
-    emacsclient --no-wait "$@"
+    emacsclient -n "$@"
   else
     emacs "$@" &
   fi
