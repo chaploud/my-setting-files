@@ -205,8 +205,8 @@ require("lazy").setup({
         },
         -- Focus Search in side bar
         {
-          "<leader>s",
-          function() call_vscode('workbench.view.search') end,
+          "<leader>ss",
+          function() call_vscode('search.action.openEditor') end,
           desc = "Search in Project"
         },
         -- Rename symbol under cursor (and all its references)
