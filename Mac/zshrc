@@ -51,10 +51,10 @@ export PATH="$PATH:$HOME/.local/bin"
 
 # === zsh-completions
 # === zsh-autosuggestions
-if type brew &>/dev/null; then
-  FPATH=$(brew --prefix)/share/zsh-completions:$FPATH
-  source $(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh
-fi
+# if type brew &>/dev/null; then
+#   FPATH=$(brew --prefix)/share/zsh-completions:$FPATH
+#   source $(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+# fi
 
 # === Open JDK
 # JDK (Eclipse Adoptium/temurin-21.jdk)
@@ -92,3 +92,14 @@ alias tmbup='gf && docker compose down && docker compose up'
 
 # teachme_eboshigara
 alias myskillup='gf && docker compose down && docker compose up'
+
+# emacsclient
+e() {
+  if emacsclient --eval "t" > /dev/null 2>&1; then
+    emacsclient --no-wait "$@"
+  else
+    emacs "$@" &
+  fi
+}
+
+export LANG=en_US.UTF-8

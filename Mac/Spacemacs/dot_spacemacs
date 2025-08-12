@@ -32,7 +32,13 @@ This function should only modify configuration layer settings."
 
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
-   '((clojure :variables
+   '((japanese :variables
+               migemo-dictionary "/opt/homebrew/share/migemo/utf-8/migemo-dict"
+               helm-migemo-mode 1
+               pangu-spacing-mode -1)
+     (neotree :variables
+              neo-theme 'nerd)
+     (clojure :variables
               clojure-enable-linters 'clj-kondo)
      ;; ----------------------------------------------------------------
      ;; Example of useful layers you may want to use right away.
@@ -46,7 +52,7 @@ This function should only modify configuration layer settings."
      helm
      lsp
      markdown
-     multiple-cursors
+     ;; multiple-cursors
      org
      (shell :variables
             shell-default-shell 'multi-vterm
@@ -54,9 +60,9 @@ This function should only modify configuration layer settings."
             shell-default-position 'bottom)
      ;; spell-checking
      syntax-checking
-     (version-control :variables
-                      version-control-diff-tool 'diff-hl)
-     treemacs)
+     version-control
+     ;; treemacs
+     )
 
    ;; List of additional packages that will be installed without being wrapped
    ;; in a layer (generally the packages are installed only and should still be
@@ -66,7 +72,7 @@ This function should only modify configuration layer settings."
    ;; `dotspacemacs/user-config'. To use a local version of a package, use the
    ;; `:location' property: '(your-package :location "~/path/to/your-package/")
    ;; Also include the dependencies as they will not be resolved automatically.
-   dotspacemacs-additional-packages '(ddskk)
+   dotspacemacs-additional-packages '()
 
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
@@ -221,7 +227,7 @@ It should only modify the values of Spacemacs settings."
    ;; refer to the DOCUMENTATION.org for more info on how to create your own
    ;; spaceline theme. Value can be a symbol or list with additional properties.
    ;; (default '(spacemacs :separator wave :separator-scale 1.5))
-   dotspacemacs-mode-line-theme '(spacemacs :separator wave :separator-scale 1.5)
+   dotspacemacs-mode-line-theme '(spacemacs :separator wave :separator-scale 1.2)
 
    ;; If non-nil the cursor color matches the state color in GUI Emacs.
    ;; (default t)
@@ -428,7 +434,7 @@ It should only modify the values of Spacemacs settings."
    ;; If non-nil and `dotspacemacs-activate-smartparens-mode' is also non-nil,
    ;; `smartparens-strict-mode' will be enabled in programming modes.
    ;; (default nil)
-   dotspacemacs-smartparens-strict-mode t
+   dotspacemacs-smartparens-strict-mode nil
 
    ;; If non-nil smartparens-mode will be enabled in programming modes.
    ;; (default t)
@@ -437,7 +443,7 @@ It should only modify the values of Spacemacs settings."
    ;; If non-nil pressing the closing parenthesis `)' key in insert mode passes
    ;; over any automatically added closing parenthesis, bracket, quote, etc...
    ;; This can be temporary disabled by pressing `C-q' before `)'. (default nil)
-   dotspacemacs-smart-closing-parenthesis t
+   dotspacemacs-smart-closing-parenthesis nil
 
    ;; Select a scope to highlight delimiters. Possible values are `any',
    ;; `current', `all' or `nil'. Default is `all' (highlight any scope and
@@ -446,7 +452,7 @@ It should only modify the values of Spacemacs settings."
 
    ;; If non-nil, start an Emacs server if one is not already running.
    ;; (default nil)
-   dotspacemacs-enable-server nil
+   dotspacemacs-enable-server t
 
    ;; Set the emacs server socket location.
    ;; If nil, uses whatever the Emacs default is, otherwise a directory path
@@ -543,7 +549,7 @@ It should only modify the values of Spacemacs settings."
    dotspacemacs-home-shorten-agenda-source nil
 
    ;; If non-nil then byte-compile some of Spacemacs files.
-   dotspacemacs-byte-compile nil))
+   dotspacemacs-byte-compile t))
 
 (defun dotspacemacs/user-env ()
   "Environment variables setup.
@@ -560,7 +566,8 @@ This function is called immediately after `dotspacemacs/init', before layer
 configuration.
 It is mostly for variables that should be set before packages are loaded.
 If you are unsure, try setting them in `dotspacemacs/user-config' first."
-  (setq evil-want-keybinding nil)
+  (setq warning-minimum-level :error)
+  (setq warning-minimum-log-level :error)
   )
 
 (defun dotspacemacs/user-config ()
@@ -569,50 +576,82 @@ This function is called at the very end of Spacemacs startup, after layer
 configuration.
 Put your configuration code here, except for variables that should be set
 before packages are loaded."
-  ;; === (Mac) CommandキーをMetaキーとして振る舞わせる
+  ;; === CommandキーをMetaキーとして振る舞わせる
   (setq mac-command-modifier 'meta)
 
-  ;; C-h
+  ;; === Powerlineのセパレータの色の問題解消
+  (setq powerline-image-apple-rgb nil)
+
+  ;; === eコマンドでEmacs内のバッファにファイルをpop
+  (setq server-window 'pop-to-buffer)
+
+  ;; === C-tで前に進む
+  (define-key evil-normal-state-map (kbd "C-t") 'evil-jump-forward)
+
+  ;; === C-hでBackspace
   (define-key key-translation-map (kbd "C-h") (kbd "DEL"))
 
-  ;; C-w
-  (define-key evil-hybrid-state-map (kbd "C-w") 'evil-delete-backward-word)
+  ;; === C-hのヘルプ関係キーバインドはC-;にマップする
+  (define-key key-translation-map (kbd "C-;") (kbd "C-h"))
+
+  ;; === C-wで色んな場所で単語削除
+  (defun my-c-w (arg)
+    (interactive "P")
+    (cond
+     ((eq major-mode 'vterm-mode)
+      (vterm--self-insert))
+     ((and (boundp 'helm-mode) helm-mode)
+      (call-interactively 'clean-aindent--bsunindent))
+     (t
+      (call-interactively 'evil-delete-backward-word))))
+  (define-key evil-hybrid-state-map (kbd "C-w") 'my-c-w)
   (with-eval-after-load 'company
-    (define-key company-active-map (kbd "C-w") 'backward-kill-word)
-    (define-key company-search-map (kbd "C-w") 'backward-kill-word))
+    (define-key company-active-map (kbd "C-w") 'my-c-w)
+    (define-key company-search-map (kbd "C-w") 'my-c-w))
+  (with-eval-after-load 'helm
+    (define-key helm-map (kbd "C-w") 'my-c-w))
+  (with-eval-after-load 'helm-swoop
+    (define-key helm-swoop-map (kbd "C-w") 'my-c-w))
 
   ;; === 日本語入力 ddskk の設定
   (defun switch-ime (input-source)
-    (call-process "macism" nil 0 nil last-input-source))
+    (call-process "macism" nil 0 nil input-source))
   (add-function :after after-focus-change-function
-                #'(lambda () (if (frame-focus-state)
-                                 (switch-ime "com.apple.keylayout.ABC")
-                               (switch-ime "net.mtgto.inputmethod.macSKK.hiragana"))))
+                (lambda ()
+                  (if (frame-focus-state)
+                      (switch-ime "com.apple.keylayout.ABC")
+                    (switch-ime "net.mtgto.inputmethod.macSKK.hiragana"))))
 
-  (bind-key* "C-x j" 'skk-mode)
   (setq skk-server-host "127.0.0.1")
   (setq skk-server-portnum 1178)
   (setq skk-dcomp-activate t)
   (setq skk-egg-like-newline t)
   (setq skk-delete-implies-kakutei nil)
-  (add-hook 'isearch-mode-hook
-            #'(lambda ()
-                (when (and (boundp 'skk-mode)
-                           skk-mode
-                           skk-isearch-mode-enable
-                           skk-latin-mode)
-                  (skk-isearch-mode-setup))))
-  (add-hook 'isearch-mode-end-hook
-            #'(lambda ()
-                (when (and (featurep 'skk-isearch)
-                           skk-isearch-mode-enable)
-                  (skk-isearch-mode-cleanup))))
-  (add-hook 'text-mode-hook #'(lambda ()
-                                (skk-mode)
-                                (skk-latin-mode-on)))
-  (add-hook 'prog-mode-hook #'(lambda ()
-                                (skk-mode)
-                                (skk-latin-mode-on))))
-
+  (add-hook 'text-mode-hook
+            (lambda ()
+              (skk-mode)
+              (skk-latin-mode-on)))
+  (add-hook 'prog-mode-hook
+            (lambda ()
+              (skk-mode)
+              (skk-latin-mode-on))))
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
+(defun dotspacemacs/emacs-custom-settings ()
+  "Emacs custom settings.
+This is an auto-generated function, do not modify its content directly, use
+Emacs customize menu instead.
+This function is called at the very end of Spacemacs initialization."
+  (custom-set-variables
+   ;; custom-set-variables was added by Custom.
+   ;; If you edit it by hand, you could mess it up, so be careful.
+   ;; Your init file should contain only one such instance.
+   ;; If there is more than one, they won't work right.
+   )
+  (custom-set-faces
+   ;; custom-set-faces was added by Custom.
+   ;; If you edit it by hand, you could mess it up, so be careful.
+   ;; Your init file should contain only one such instance.
+   ;; If there is more than one, they won't work right.
+   )
+  )
