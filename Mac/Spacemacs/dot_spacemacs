@@ -32,7 +32,10 @@ This function should only modify configuration layer settings."
 
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
-   '((neotree :variables
+   '(html
+     javascript
+     shell-scripts
+     (neotree :variables
               neo-theme 'nerd)
      (clojure :variables
               clojure-enable-linters 'clj-kondo)
@@ -494,7 +497,7 @@ It should only modify the values of Spacemacs settings."
    ;; performance issues, instead of calculating the frame title by
    ;; `spacemacs/title-prepare' all the time.
    ;; (default "%I@%S")
-   dotspacemacs-frame-title-format "%t"
+   dotspacemacs-frame-title-format "Spacemacs"
 
    ;; Format specification for setting the icon title format
    ;; (default nil - same as frame-title-format)
@@ -581,9 +584,6 @@ before packages are loaded."
   ;; === eコマンドでEmacs内のバッファにファイルをpop
   (setq server-window 'pop-to-buffer)
 
-  ;; === pangu-spacing-modeを実質的にオフ
-  (setq pangu-spacing-separator "")
-
   ;; === C-'でターミナルのトグル
   (define-key global-map (kbd "C-'") 'spacemacs/default-pop-shell)
 
@@ -597,14 +597,11 @@ before packages are loaded."
   (define-key key-translation-map (kbd "C-;") (kbd "C-h"))
 
   ;; === C-wで色んな場所で単語削除
-  (setq evil-backspace-join-lines t) ; 行頭でも削除を続ける
   (defun my-c-w (arg)
     (interactive "P")
     (cond
      ((eq major-mode 'vterm-mode)
       (vterm--self-insert))
-     ((and (boundp 'helm-mode) helm-mode)
-      (call-interactively 'clean-aindent--bsunindent))
      (t
       (call-interactively 'evil-delete-backward-word))))
   (define-key evil-hybrid-state-map (kbd "C-w") 'my-c-w)
@@ -612,52 +609,8 @@ before packages are loaded."
     (define-key company-active-map (kbd "C-w") 'my-c-w)
     (define-key company-search-map (kbd "C-w") 'my-c-w))
   (with-eval-after-load 'helm
-    (define-key helm-map (kbd "C-w") 'my-c-w))
+    (define-key helm-map (kbd "C-w") 'clean-aindent--bsunindent))
   (with-eval-after-load 'helm-swoop
-    (define-key helm-swoop-map (kbd "C-w") 'my-c-w))
+    (define-key helm-swoop-map (kbd "C-w") 'clean-aindent--bsunindent))
 
-  ;; === 日本語入力 ddskk の設定
-  (defun switch-ime (input-source)
-    (call-process "macism" nil 0 nil input-source))
-  (add-function :after after-focus-change-function
-                (lambda ()
-                  (if (frame-focus-state)
-                      (switch-ime "com.apple.keylayout.ABC")
-                    (switch-ime "net.mtgto.inputmethod.macSKK.hiragana"))))
-
-  (setq skk-server-host "127.0.0.1")
-  (setq skk-server-portnum 1178)
-  (setq skk-dcomp-activate t)
-  (setq skk-egg-like-newline t)
-  (setq skk-delete-implies-kakutei nil)
-
-  (global-set-key (kbd "C-x j") 'skk-mode)
-
-  (defun turn-on-skk ()
-    (skk-mode)
-    (skk-latin-mode-on))
-
-  (add-hook 'text-mode-hook 'turn-on-skk)
-  (add-hook 'prog-mode-hook 'turn-on-skk)
-  )
-
-;; Do not write anything past this comment. This is where Emacs will
-;; auto-generate custom variable definitions.
-(defun dotspacemacs/emacs-custom-settings ()
-  "Emacs custom settings.
-This is an auto-generated function, do not modify its content directly, use
-Emacs customize menu instead.
-This function is called at the very end of Spacemacs initialization."
-  (custom-set-variables
-   ;; custom-set-variables was added by Custom.
-   ;; If you edit it by hand, you could mess it up, so be careful.
-   ;; Your init file should contain only one such instance.
-   ;; If there is more than one, they won't work right.
-   )
-  (custom-set-faces
-   ;; custom-set-faces was added by Custom.
-   ;; If you edit it by hand, you could mess it up, so be careful.
-   ;; Your init file should contain only one such instance.
-   ;; If there is more than one, they won't work right.
-   )
   )

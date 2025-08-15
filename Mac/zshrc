@@ -103,3 +103,6 @@ e() {
 }
 
 export LANG=en_US.UTF-8
+
+# Doom Emacs
+export PATH="$HOME/.config/emacs/bin:$PATH"
