@@ -75,23 +75,44 @@
 ;; You can also try 'gd' (or 'C-c c d') to jump to their definition and see how
 ;; they are implemented.
 
-;; === quit時にy/nを聞かない
-(setq confirm-kill-emacs nil)
-
 ;; === コメントの色
 (custom-set-faces!
-  '(font-lock-comment-face :foreground "#2aa1ae"))
+  '(font-lock-comment-face :foreground "#2aa1ae")
+  )
+
+(custom-set-variables
+ '(which-key-idle-delay 0.2)
+ '(which-key-idle-secondary-delay 0)
+ '(which-key-use-C-h-commands t)
+ )
 
 ;; === Spacemacs風キーバインド
 (setq-default evil-escape-key-sequence "fd")
+(setq doom-localleader-key ",")
+;; evil-insert-state-mapはmap!では素直に上書きできない
+(define-key evil-insert-state-map (kbd "C-d") #'delete-char)
+(define-key evil-insert-state-map (kbd "C-k") #'kill-line)
+(define-key evil-insert-state-map (kbd "C-h") #'delete-backward-char)
+(map! :after vterm
+      :map vterm-mode-map
+      :i "C-h" #'vterm--self-insert)
 (map! :after corfu
       :map corfu-mode-map
       :i "C-p" #'previous-line
       :i "C-n" #'next-line)
-(define-key evil-insert-state-map (kbd "C-d") #'delete-char)
-(define-key evil-insert-state-map (kbd "C-k") #'kill-line)
-(define-key key-translation-map (kbd "C-h") (kbd "DEL"))
-(define-key key-translation-map (kbd "DEL") (kbd "C-h"))
+(map! :after vertico
+      :map vertico-map
+      "C-h" #'vertico-directory-delete-char)
+(map! "s-;" #'evilnc-comment-or-uncomment-lines) ; M-;
+
+;; corfu(補完)
+(after! corfu
+  (setq! corfu-preselect 'first))
+(after! corfu-popupinfo
+  (setq corfu-popupinfo-delay '(0.2 . 0.2)))
+
+;; === quit時にy/nを聞かない
+(setq confirm-kill-emacs nil)
 
 ;; === ddskk
 (defun switch-ime (input-source)
@@ -109,6 +130,7 @@
   (setq skk-dcomp-activate t)
   (setq skk-egg-like-newline t)
   (setq skk-delete-implies-kakutei nil)
+  (setq skk-use-color-cursor nil)
   (remove-hook 'doom-escape-hook #'skk-mode-exit)
   :hook
   (evil-normal-state-entry-hook
@@ -136,3 +158,7 @@
 
 ;; === 括弧の色づけ
 (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
+
+;; === markdown
+(map! :map markdown-mode-map
+      :n ",," #'markdown-toggle-gfm-checkbox)
