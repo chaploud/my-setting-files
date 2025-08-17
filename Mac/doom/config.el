@@ -32,7 +32,7 @@
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
-(setq doom-theme 'doom-one)
+(setq doom-theme 'spacemacs-dark)
 
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
@@ -75,41 +75,42 @@
 ;; You can also try 'gd' (or 'C-c c d') to jump to their definition and see how
 ;; they are implemented.
 
-;; === コメントの色
 (custom-set-faces!
-  '(font-lock-comment-face :foreground "#2aa1ae")
-  )
-
+  '(bold ((t (:weight semi-bold)))))
 (custom-set-variables
  '(which-key-idle-delay 0.2)
  '(which-key-idle-secondary-delay 0)
  '(which-key-use-C-h-commands t)
  )
 
+(setq fancy-splash-image "~/Documents/my-setting-files/Mac/doom/doomEmacsTokyoNight.svg")
+
 ;; === Spacemacs風キーバインド
 (setq-default evil-escape-key-sequence "fd")
 (setq doom-localleader-key ",")
-;; evil-insert-state-mapはmap!では素直に上書きできない
+(define-key key-translation-map (kbd "C-h") (kbd "<DEL>"))
 (define-key evil-insert-state-map (kbd "C-d") #'delete-char)
 (define-key evil-insert-state-map (kbd "C-k") #'kill-line)
-(define-key evil-insert-state-map (kbd "C-h") #'delete-backward-char)
-(map! :after vterm
-      :map vterm-mode-map
-      :i "C-h" #'vterm--self-insert)
 (map! :after corfu
       :map corfu-mode-map
       :i "C-p" #'previous-line
       :i "C-n" #'next-line)
-(map! :after vertico
-      :map vertico-map
-      "C-h" #'vertico-directory-delete-char)
+;; コメントイン/アウト
 (map! "s-;" #'evilnc-comment-or-uncomment-lines) ; M-;
 
 ;; corfu(補完)
 (after! corfu
-  (setq! corfu-preselect 'first))
+  (setq corfu-preselect 'first))
 (after! corfu-popupinfo
   (setq corfu-popupinfo-delay '(0.2 . 0.2)))
+(after! orderless
+  (setq orderless-matching-styles '(orderless-literal
+                                    orderless-regexp
+                                    orderless-flex))
+  (setq completion-styles '(orderless partial-completion basic))
+  (setq completion-category-defaults nil)
+  (setq completion-category-overrides '((file (styles partial-completion))))
+  )
 
 ;; === quit時にy/nを聞かない
 (setq confirm-kill-emacs nil)
@@ -131,6 +132,7 @@
   (setq skk-egg-like-newline t)
   (setq skk-delete-implies-kakutei nil)
   (setq skk-use-color-cursor nil)
+  (setq skk-show-candidates-nth-henkan-char 3)
   (remove-hook 'doom-escape-hook #'skk-mode-exit)
   :hook
   (evil-normal-state-entry-hook
@@ -161,4 +163,5 @@
 
 ;; === markdown
 (map! :map markdown-mode-map
-      :n ",," #'markdown-toggle-gfm-checkbox)
+      :n ",," #'markdown-toggle-gfm-checkbox
+      :i "C-d" #'delete-char)

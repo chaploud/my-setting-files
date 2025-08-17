@@ -53,3 +53,10 @@
 
 ;; === rainbow-delimiters
 (package! rainbow-delimiters)
+
+;; === GitHub Copilot
+(package! copilot
+  :recipe (:host github :repo "zerolfx/copilot.el" :files ("*.el" "dist")))
+
+;; === Spacemacs themes
+(package! spacemacs-theme)
