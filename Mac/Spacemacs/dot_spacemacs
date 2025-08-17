@@ -32,13 +32,16 @@ This function should only modify configuration layer settings."
 
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
-   '(html
+   '(
+     github-copilot
+     docker
+     (clojure :variables
+              clojure-enable-linters 'clj-kondo)
+     html
      javascript
      shell-scripts
      (neotree :variables
               neo-theme 'nerd)
-     (clojure :variables
-              clojure-enable-linters 'clj-kondo)
      ;; ----------------------------------------------------------------
      ;; Example of useful layers you may want to use right away.
      ;; Uncomment some layer names and press `SPC f e R' (Vim style) or
@@ -61,8 +64,8 @@ This function should only modify configuration layer settings."
      ;; spell-checking
      syntax-checking
      version-control
-     ;; treemacs
      )
+
 
    ;; List of additional packages that will be installed without being wrapped
    ;; in a layer (generally the packages are installed only and should still be
@@ -452,7 +455,7 @@ It should only modify the values of Spacemacs settings."
 
    ;; If non-nil, start an Emacs server if one is not already running.
    ;; (default nil)
-   dotspacemacs-enable-server t
+   dotspacemacs-enable-server nil
 
    ;; Set the emacs server socket location.
    ;; If nil, uses whatever the Emacs default is, otherwise a directory path
@@ -542,7 +545,7 @@ It should only modify the values of Spacemacs settings."
    ;; Run `spacemacs/prettify-org-buffer' when
    ;; visiting README.org files of Spacemacs.
    ;; (default nil)
-   dotspacemacs-pretty-docs t
+   dotspacemacs-pretty-docs nil
 
    ;; If nil the home buffer shows the full path of agenda items
    ;; and todos. If non-nil only the file name is shown.
@@ -566,6 +569,7 @@ This function is called immediately after `dotspacemacs/init', before layer
 configuration.
 It is mostly for variables that should be set before packages are loaded.
 If you are unsure, try setting them in `dotspacemacs/user-config' first."
+  ;;
   (setq evil-want-keybinding nil)
   )
 
@@ -613,4 +617,30 @@ before packages are loaded."
   (with-eval-after-load 'helm-swoop
     (define-key helm-swoop-map (kbd "C-w") 'clean-aindent--bsunindent))
 
+  ;; === ddskk
+  (defun switch-ime (input-source)
+    (call-process "macism" nil 0 nil input-source))
+  (add-function :after after-focus-change-function
+                (lambda ()
+                  (if (frame-focus-state)
+                      (switch-ime "com.apple.keylayout.ABC")
+                    (switch-ime "net.mtgto.inputmethod.macSKK.hiragana"))))
+
+  (define-key global-map (kbd "C-x j") 'skk-mode)
+  (setq skk-server-host "127.0.0.1")
+  (setq skk-server-portnum 1178)
+  (setq skk-dcomp-activate t)
+  (setq skk-egg-like-newline t)
+  (setq skk-delete-implies-kakutei nil)
+  (setq skk-use-color-cursor nil)
+  (setq skk-show-candidates-nth-henkan-char 3)
+  (defun turn-on-skk ()
+    (skk-mode)
+    (skk-latin-mode-on))
+
+  (add-hook 'text-mode-hook #'turn-on-skk)
+  (add-hook 'prog-mode-hook #'turn-on-skk)
   )
+
+;; Do not write anything past this comment. This is where Emacs will
+;; auto-generate custom variable definitions.

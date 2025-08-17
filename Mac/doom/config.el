@@ -74,9 +74,11 @@
 ;;
 ;; You can also try 'gd' (or 'C-c c d') to jump to their definition and see how
 ;; they are implemented.
+;;
 
 (custom-set-faces!
-  '(bold ((t (:weight semi-bold)))))
+  '(bold :weight semi-bold))
+
 (custom-set-variables
  '(which-key-idle-delay 0.2)
  '(which-key-idle-secondary-delay 0)
