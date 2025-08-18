@@ -67,13 +67,18 @@ if [[ -o interactive ]]; then
   # === 補完候補の読み込み
   autoload -Uz compinit
   # キャッシュ戦略
-  local now=$(date +"%s")
-  local updated=$(date -r ~/.zcompdump +"%s")
+  local now=$(date +%s)
   local threshold=$((60 * 60 * 24)) # 1日
-  if [ $((${now} - ${updated})) -gt ${threshold} ]; then
-    compinit
+
+  if [ -f ~/.zcompdump ]; then
+    local updated=$(date -r ~/.zcompdump +%s)
+    if [ $((${now} - ${updated})) -gt ${threshold} ]; then
+      compinit
+    else
+      compinit -C
+    fi
   else
-    compinit -C
+    compinit
   fi
 fi
 
