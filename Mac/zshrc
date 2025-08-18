@@ -12,6 +12,7 @@ chpwd() {
   ls
 }
 
+# grep
 alias grep='grep --color=auto'
 
 # Git
@@ -46,46 +47,6 @@ alias grmb='git_rmb'
 # === Starship
 eval "$(starship init zsh)"
 
-# === local bin
-export PATH="$PATH:$HOME/.local/bin"
-
-# === zsh-completions
-# === zsh-autosuggestions
-# if type brew &>/dev/null; then
-#   FPATH=$(brew --prefix)/share/zsh-completions:$FPATH
-#   source $(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh
-# fi
-
-# === Open JDK
-# JDK (Eclipse Adoptium/temurin-21.jdk)
-export JAVA_HOME=$(/usr/libexec/java_home -v 21)
-export PATH="$JAVA_HOME/bin:$PATH"
-
-# === pyenv
-# 2025-07-04: python 3.13.5
-# export PYENV_ROOT="$HOME/.pyenv"
-# [[ -d "$PYENV_ROOT/bin" ]] && export PATH="$PYENV_ROOT/bin:$PATH"
-# eval "$(pyenv init - zsh)"
-
-# === rbenv
-# 2025-07-04: ruby 3.3.8
-# FPATH="$HOME/.rbenv/completions:$FPATH"
-# export RBENV_ROOT="$HOME/.rbenv"
-# [[ -d "$RBENV_ROOT/bin" ]] && export PATH="$RBENV_ROOT/bin:$PATH"
-# eval "$(rbenv init -)"
-
-# === Zig
-# 2025-07-04: 0.14.1
-# ~/.local/share/zig/shell-completionsに補完用リポジトリをclone
-# FPATH="$HOME/.local/share/zig/shell-completions:$FPATH"
-
-# === 補完候補の読み込み(最後に1回実行でOK)
-autoload -U compinit && compinit
-
-# 1password ssh-agent
-export SSH_AUTH_SOCK="$HOME/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
-export PATH="/opt/homebrew/opt/postgresql@17/bin:$PATH"
-
 # teachme_web_duvelのteachme_webコンテナ起動がうまく行かないときのためのDBリセット
 alias tmbresetdb='docker compose exec teachme_web bundle exec rails db:reset_with_initial_data'
 alias tmbup='gf && docker compose down && docker compose up'
@@ -102,7 +63,15 @@ e() {
   fi
 }
 
-export LANG=en_US.UTF-8
+# === 補完候補の読み込み
+autoload -Uz compinit
+# キャッシュ戦略
+local now=$(date +"%s")
+local updated=$(date -r ~/.zcompdump +"%s")
+local threshold=$((60 * 60 * 24)) # 1日
+if [ $((${now} - ${updated})) -gt ${threshold} ]; then
+  compinit
+else
+  compinit -C
+fi
 
-# Doom Emacs
-export PATH="$HOME/.config/emacs/bin:$PATH"

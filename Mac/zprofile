@@ -4,3 +4,20 @@ eval "$(/opt/homebrew/bin/brew shellenv)"
 source ~/.orbstack/shell/init.zsh 2>/dev/null || :
 AQUA_GLOBAL_CONFIG=${AQUA_GLOBAL_CONFIG:-}:${XDG_CONFIG_HOME:-$HOME/.config}/aquaproj-aqua/aqua.yaml
 PATH="${AQUA_ROOT_DIR:-${XDG_DATA_HOME:-$HOME/.local/share}/aquaproj-aqua}/bin:$PATH"
+
+# === local bin
+export PATH="$PATH:$HOME/.local/bin"
+
+# === Open JDK
+# JDK (Eclipse Adoptium/temurin-21.jdk)
+export JAVA_HOME=$(/usr/libexec/java_home -v 21)
+export PATH="$JAVA_HOME/bin:$PATH"
+
+# 1password ssh-agent
+export SSH_AUTH_SOCK="$HOME/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
+
+# PostgreSQL
+export PATH="/opt/homebrew/opt/postgresql@17/bin:$PATH"
+
+export LANG=en_US.UTF-8
+export PROMPT_EOL_MARK=""
