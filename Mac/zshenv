@@ -1,0 +1,25 @@
+export VOLTA_HOME="$HOME/.volta"
+export PATH="$VOLTA_HOME/bin:$PATH"
+export PATH="$HOME/.cargo/bin:$PATH"
+
+# === local bin
+export PATH="$PATH:$HOME/.local/bin"
+
+# === Open JDK
+# JDK (Eclipse Adoptium/temurin-21.jdk)
+export JAVA_HOME=$(/usr/libexec/java_home -v 21)
+export PATH="$JAVA_HOME/bin:$PATH"
+
+# 1password ssh-agent
+export SSH_AUTH_SOCK="$HOME/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
+
+# PostgreSQL
+export PATH="/opt/homebrew/opt/postgresql@17/bin:$PATH"
+
+export LANG=en_US.UTF-8
+export PROMPT_EOL_MARK=""
+
+zmodload zsh/zprof
+if [ $? = 0 ]; then
+  zprof
+fi
