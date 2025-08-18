@@ -18,8 +18,3 @@ export PATH="/opt/homebrew/opt/postgresql@17/bin:$PATH"
 
 export LANG=en_US.UTF-8
 export PROMPT_EOL_MARK=""
-
-zmodload zsh/zprof
-if [ $? = 0 ]; then
-  zprof
-fi

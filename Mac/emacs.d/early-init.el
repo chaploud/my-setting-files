@@ -1,4 +1,10 @@
 ;;; early-init.el --- Emacsの早期初期化設定 -*- lexical-binding: t; -*-
+(setenv "LIBRARY_PATH"
+        (string-join
+         '("/opt/homebrew/opt/gcc/lib/gcc/15"
+           "/opt/homebrew/opt/libgccjit/lib/gcc/15"
+           "/opt/homebrew/opt/gcc/lib/gcc/current/gcc/aarch64-apple-darwin24/15")
+         ":"))
 
 ;; === GCを抑制し、起動を高速化する
 (setq gc-cons-threshold most-positive-fixnum)
@@ -20,9 +26,6 @@
 ;; スタートアップ画面を無効化
 (setq inhibit-startup-screen t)
 
-;; scratchの初期メッセージ
-(setq initial-scratch-message "*scratch buffer*")
-
 ;; ファイル選択ウィンドウを表示しない
 (setq use-file-dialog nil)
 ;; Xリソースを使用しない
@@ -37,7 +40,7 @@
 (setq package-enable-at-startup t)
 
 ;; ネイティブコンパイルの警告を抑制
-(setq native-comp-async-report-warnings-errors nil)
+(setq native-comp-async-report-warnings-errors 'silent)
 
 ;; ファイル名が対応する.elcファイルより新しい場合、.elファイルを優先的に読み込む
 (setq load-prefer-newer t)

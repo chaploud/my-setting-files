@@ -71,17 +71,15 @@
 ;; === 行間を少し広げる
 (setq-default line-spacing 0.07)
 
-;; === 行番号を常に表示
-(global-display-line-numbers-mode +1)
+;; === 行番号を表示
+(add-hook 'prog-mode-hook 'display-line-numbers-mode)
+(add-hook 'text-mode-hook 'display-line-numbers-mode)
 
 ;; === カーソル位置の列番号をモードラインに表示
 (column-number-mode +1)
 
 ;; === 削除したファイルをゴミ箱に移動
 (setq delete-by-moving-to-trash t)
-
-;; === native-compの警告を表示しない
-(setq native-comp-async-report-warnings-errors 'silent)
 
 ;; === インデントの基本をスペースに変更
 (setq-default indent-tabs-mode nil)
@@ -99,13 +97,6 @@
 (which-key-mode +1)
 (setq which-key-idle-delay 0.3
       which-key-idle-secondary-delay 0)
-
-;; === マッチするバッファ名は、分割して開く
-(add-to-list 'display-buffer-alist
-             '("^magit"
-               (display-buffer-reuse-window display-buffer-in-side-window)
-               (side . right)
-               (window-width . 0.5)))
 
 ;; === GNU版のlsを使う
 (setq insert-directory-program "gls")
@@ -165,6 +156,9 @@
           ("XXX" error bold)))
   (global-hl-todo-mode +1)
   )
+
+(use-package rainbow-delimiters
+  :hook (prog-mode . rainbow-delimiters-mode))
 
 ;====================================================================
 ; EvilによるVimキーバインド
@@ -259,7 +253,6 @@
   (setq skk-delete-implies-kakutei nil)
   (setq skk-use-color-cursor nil)
   (setq skk-show-candidates-nth-henkan-char 3)
-  (remove-hook 'doom-escape-hook #'skk-mode-exit)
   :hook
   (evil-normal-state-entry-hook
    . (lambda ()
@@ -340,11 +333,6 @@
   :config
   (add-to-list 'completion-at-point-functions #'cape-file)
   (add-to-list 'completion-at-point-functions #'cape-dabbrev)
-  (add-to-list 'completion-at-point-functions #'cape-elisp-block)
-
-  (defun my-cape-tempel ()
-    (cape-wrap-super #'tempel-expand #'capedabbrev))
-  (add-to-list 'completion-at-point-functions #'my-cape-tempel)
   )
 
 ;; === 補完のアイコン
@@ -358,6 +346,8 @@
 ;====================================================================
 
 ;; === lsp (eglot)
+;; TODO 特定のメジャーモードでeglotをonにする
+;; TODO 特定のメジャーモードでflymakeをonにする
 
 ;; === vterm
 (use-package vterm
@@ -365,14 +355,12 @@
   :config
   (setq vterm-max-scrollback 10000))
 
+(use-package vterm-toggle
+  :config
+  (define-key global-map (kbd "C-'") #'vterm-toggle))
+
 ;; === magit
 (use-package magit)
-
-;; === GitHub連携
-;(use-package forge
-;  :after magit
-;  :config
-;  (setq forge-topic-list-limit '(100 . -10)))
 
 ;; === フリンジに差分を強調表示
 (use-package diff-hl
@@ -383,13 +371,42 @@
   )
 
 ;====================================================================
+; ワークスペース (perspective.el)
+;====================================================================
+(use-package perspective
+  :init
+  (setq persp-suppress-no-prefix-key-warning t)
+  (persp-mode))
+
+;====================================================================
+; Swipe検索 (consult)
+;====================================================================
+(use-package consult
+  :hook (completion-list-mode . consult-preview-at-point-mode)
+  )
+
+;====================================================================
+; Clojure/ClojureScript/ClojureDart
+;====================================================================
+(use-package clojure-ts-mode)
+(use-package cider
+  :hook (clojure-ts-mode . cider-mode))
+
+;====================================================================
 ; キーバインド (general.el)
 ;====================================================================
 
-;; === キーバインド定義のユーティリティ (general)
+;; === ユーティリティ関数
+(defun open-user-init ()
+  (interactive)
+  (find-file user-init-file))
+
+;; use-packageと:generalの組み合わせで色々できる
 (use-package general
+  :after evil
   :config
-  (general-evil-setup t)
+  (general-evil-setup)
+  (general-auto-unbind-keys)
 
   ;; SPC リーダーキー定義
   (general-create-definer leader-def
@@ -397,48 +414,86 @@
     :keymap 'override
     :prefix "SPC")
 
-  ;; メジャーモード用の SPC m ローカルリーダーを作成
+  ;; メジャーモード用のローカルリーダーを作成
   (general-create-definer local-leader-def
     :states '(normal visual)
-    :keymaps 'override
+    :keymap 'override
     :prefix ",")
+
+  ;; モーション系(g)
+  (general-create-definer motion-leader-def
+    :states '(normal visual)
+    :keymap 'override
+    :prefix "g")
 
   ;; 基本的なSPCキーバインド
   (leader-def
-   "" nil
-   "SPC" '(execute-extended-command :wk "M-x")
+    "SPC" '(execute-extended-command :wk "M-x")
 
-   ;; (q) 終了操作
-   "q" '(:ignore t :wk "Quit")
-   "qq" '(save-buffers-kill-terminal :wk "quit")
-   "qr" '(restart-emacs :wk "restart")
+    ;; (q) 終了操作
+    "q" '(:ignore t :wk "Quit")
+    "qq" '(save-buffers-kill-terminal :wk "quit")
+    "qr" '(restart-emacs :wk "restart")
 
-   ;; (f) ファイル操作
-   "f" '(:ignore t :wk "Files")
-   "ff" '(find-file :wk "file find")
-   "fr" '(recentf-open :wk "file recent")
-   "fs" '(save-buffer :wk "file save")
+    ;; (f) ファイル操作
+    "f" '(:ignore t :wk "Files")
+    "ff" '(find-file :wk "file find")
+    "fr" '(recentf-open :wk "file recent")
+    "fs" '(save-buffer :wk "file save")
+    "fi" '(open-user-init :wk "init.el")
+    "ft" '(project-dired :wk "dired")
 
-   ;; (b) バッファ操作
-   "b" '(:ignore t :wk "Buffers")
-   "bb" '(switch-to-buffer :wk "buffer switch")
-   "bd" '(kill-current-buffer :wk "buffer delete")
-   "bh" '(dashboard-open :wk "dashboard")
+    ;; (b) バッファ操作
+    "b" '(:ignore t :wk "Buffers")
+    "bb" '(switch-to-buffer :wk "buffer switch")
+    "bd" '(kill-current-buffer :wk "buffer delete")
+    "bh" '(dashboard-open :wk "dashboard")
 
-   ;; (g) Git操作
-   "g" '(:ignore t :wk "Git")
-   "gs" '(magit-status-quick :wk "git status")
-   "gl" '(magit-log-current :wk "git log")
-   "gd" '(magit-diff-buffer-file :wk "git diff")
+    ;; (g) Git/GoTo
+    "g" '(:ignore t :wk "Git/GoTo")
+    "gs" '(magit-status-quick :wk "git status")
+    "gl" '(magit-log-current :wk "git log")
+    "gd" '(vc-diff :wk "git diff")
+    "gn" '(flymake-goto-next-error :wk "goto next error")
+    "gp" '(flymake-goto-prev-error :wk "goto prev error")
 
-   ;; (p) プロジェクト管理
-   "p" '(:ignore t :wk "Project")
-   "pp" '(project-switch-project :wk "project switch")
-   "pf" '(project-find-file :wk "project find")
+    ;; (d) diff, debug
+    "d" '(:ignore t :wk "Diff/Debug")
+    "dd" '(diff-hl-show-hunk :wk "diff")
 
-   ;; (;) コメント
-   ";" '(evil-commentary-line :wk "comment")
-   )
+    ;; (p) プロジェクト管理
+    "p" '(:ignore t :wk "Project")
+    "pp" '(project-switch-project :wk "project switch")
+    "pf" '(project-find-file :wk "project find")
+
+    ;; (s) 検索
+    "s" '(:ignore t :wk "Search")
+    "ss" '(consult-line :wk "search in buffer")
+    "sp" '(consult-ripgrep :wk "search in project")
+
+    ;; (w) ワークスペース
+    "w" '(:ignore t :wk "Workspace")
+    "ww" '(persp-switch :wk "workspace switch")
+    "wr" '(persp-rename :wk "workspace rename")
+    "wd" '(persp-kill :wk "workspace kill")
+
+    ;; (;) コメント
+    ";" '(evil-commentary-line :wk "comment")
+    )
+
+  ;; メジャーモード
+  ;; (local-leader-def
+  ;;   :keymap 'override
+  ;;   "d" 'diff-hl-show-hunk
+  ;;   )
+
+  ;; モーション
+  (motion-leader-def
+    "n" '(diff-hl-next-hunk :wk "next change")
+    "p" '(diff-hl-previous-hunk :wk "prev change")
+    "t" '(persp-next :wk "next workspace")
+    "T" '(persp-prev :wk "prev workspace")
+    )
   )
 
 (custom-set-variables

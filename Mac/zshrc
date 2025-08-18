@@ -72,18 +72,10 @@
  if [ -f ~/.zcompdump ]; then
    local updated=$(date -r ~/.zcompdump +%s)
    if [ $((${now} - ${updated})) -gt ${threshold} ]; then
-     echo "[Compinit] regenerate"
      compinit
    else
      compinit -C
-     echo "[Compinit] load cache"
    fi
  else
    compinit
-   echo "[Compinit] no cache, init"
- fi
-
- type zprof > /dev/null 2>&1
- if [ $? = 0 ]; then
-   zprof
  fi
