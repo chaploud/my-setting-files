@@ -358,7 +358,10 @@
   (define-key global-map (kbd "C-'") #'vterm-toggle))
 
 ;; === magit
-(use-package magit)
+(use-package magit
+  :config
+  (setq magit-diff-refine-hunk t)
+  )
 
 ;; === フリンジに差分を強調表示
 (use-package diff-hl
