@@ -5,10 +5,10 @@
 ;====================================================================
 
 ;; package.elの初期化とアーカイブ設定
+(setq package-check-signature nil)
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 (add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/") t)
-(add-to-list 'package-archives '("elpa" . "https://elpa.gnu.org/packages/") t)
 (package-initialize)
 
 (unless package-archive-contents
@@ -19,8 +19,6 @@
   (package-install 'use-package))
 (require 'use-package)
 (setq use-package-always-ensure t)
-
-(use-package gnu-elpa-keyring-update)
 
 ;====================================================================
 ; Emacs標準機能の設定
@@ -388,9 +386,20 @@
 ;====================================================================
 ; Clojure/ClojureScript/ClojureDart
 ;====================================================================
-(use-package clojure-ts-mode)
+(use-package enhanced-evil-paredit
+  :config
+  :hook ((paredit-mode . enhanced-evil-paredit-mode)
+         (emacs-lisp-mode . paredit-mode)
+         (clojure-ts-mode . paredit-mode)))
+(use-package clojure-ts-mode
+  :mode (("\\.clj[csd]?\\." . clojure-ts-mode)
+         ("\\.edn\\'" . clojure-ts-mode)
+         ("\\.bb\\'" . clojure-ts-mode)))
 (use-package cider
   :hook (clojure-ts-mode . cider-mode))
+
+(setq eglot-connect-timeout 1000)
+(add-hook 'clojure-ts-mode-hook #'eglot-ensure)
 
 ;====================================================================
 ; キーバインド (general.el)
@@ -482,10 +491,13 @@
     )
 
   ;; メジャーモード
-  ;; (local-leader-def
-  ;;   :keymap 'override
-  ;;   "d" 'diff-hl-show-hunk
-  ;;   )
+  (local-leader-def
+    :keymap 'clojure-ts-mode
+    "s" 'paredit-forward-slurp-sexp
+    "S" 'paredit-backward-slurp-sexp
+    "b" 'paredit-forward-barf-sexp
+    "B" 'paredit-backward-barf-sexp
+    )
 
   ;; モーション
   (motion-leader-def

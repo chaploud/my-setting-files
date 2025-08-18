@@ -8,3 +8,4 @@ tramp
 transient/
 forge-database.sqlite
 projects
+tree-sitter/
