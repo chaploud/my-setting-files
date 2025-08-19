@@ -200,6 +200,7 @@
   (setq evil-want-integration t)
   (setq evil-want-keybinding nil)
   (setq evil-want-C-u-scroll t)
+  (setq evil-undo-system 'undo-redo)
 
   :config
   (evil-mode +1)
@@ -470,67 +471,52 @@
 ;; Format On Save設定の集約
 ;;====================================================================
 
-;; === 非同期プロセスの実行
-;; センチネル = 完了時コールバック
-(defun my-run-async-shell-command (command args success-callback)
-  (let* ((process-name (file-name-nondirectory command))
-         (sentinel
-          (lambda (process event)
-            (when (string-match-p "finished" event)
-              (with-current-buffer (process-buffer process)
-                (funcall success-callback))))))
-    (let ((process (apply #'start-process process-name (current-buffer) command args)))
-      (set-process-sentinel process sentinel))))
-
 ;; === Emacs Lisp
-(defun my-emacs-lisp-format ()
+(defun my-format-emacs-lisp ()
   (interactive)
   (save-excursion
     (indent-region (point-min) (point-max)))
   (message "[elisp] formatted."))
 
 ;; === Clojure
-(defun my-clojure-format ()
+(defun my-format-clojure ()
   (interactive)
-  (when-let ((filename (buffer-file-name))
-             (cljfmt-path (executable-find "cljfmt")))
-    (save-excursion
-      (save-buffer)
-      (my-run-async-shell-command
-       cljfmt-path
-       (list "fix" filename)
-       (lambda ()
-         (revert-buffer nil t)
-         (message "[cljfmt] formatted."))))))
+  ;; プロジェクトルートでのcljfmtの実行
+  ;; バッファを消して再度挿入なのでsave-excursionは使えない
+  (when-let* ((cljfmt-path (executable-find "cljfmt"))
+              (project-root-path (project-root (project-current))))
+    (let ((p-current (point))
+          (default-directory project-root-path))
+      (call-process-region (point-min) (point-max) cljfmt-path t t nil "fix" "-" "--quiet")
+      (goto-char p-current)
+      (message "[cljfmt] Formatted."))))
 
 ;; === フォーマッタの適用方法をここにまとめる
+;; 左: メジャーモード, 右: 優先順位をつけたフォーマット方法のリスト
 (defvar my-format-rules
-  '((lsp . (clojure-ts-mode))
-    (custom . ((emacs-lisp-mode . my-emacs-lisp-format)
-               (clojure-ts-mode . my-clojure-format)))))
+  '((emacs-lisp-mode . (my-format-emacs-lisp))
+    (clojure-ts-mode . (:lsp my-format-clojure))))
 
-;; 以下の関数は、eglotが有効かつlspキーの配列に今のメジャーモードが合致していたらeglotのフォーマットを行い
-;; そうでなければ、customの中に今のメジャーモードが存在すればカスタム関数を呼び出す
+(defun my-format-try (formatter)
+  (pcase formatter
+    (:lsp
+     (when (bound-and-true-p eglot--managed-mode)
+       (message "[eglot] Formatting via LSP...")
+       (call-interactively #'eglot-format-buffer)
+       t))
+
+    ((and (pred fboundp) fn)
+     (funcall fn)
+     t)
+
+    (_ nil)))
+
 (defun my-format-buffer ()
   "現在のメジャーモードに応じたフォーマッタを実行する"
   (interactive)
-  (let ((lsp-modes (cdr (assoc 'lsp my-format-rules)))
-        (custom-formatters (cdr (assoc 'custom my-format-rules))))
-    (cond
-     ((and (bound-and-true-p eglot--managed-mode)
-           (memq major-mode lsp-modes))
-      (save-excursion
-        (call-interactively #'eglot-format-buffer)))
-
-     ((let ((formatter (cdr (assoc major-mode custom-formatters))))
-        (when (and formatter (fboundp formatter))
-          (funcall formatter)
-          t)))
-
-     (t
-      (message "No formatter configured for %s" major-mode))
-     ))
-  )
+  (let ((formatters (cdr (assoc major-mode my-format-rules))))
+    (if (not (cl-some #'my-format-try formatters))
+        (message "No suitable formatter found for %s" major-mode))))
 
 ;;(add-hook 'before-save-hook #'my-format-buffer)
 
@@ -705,6 +691,6 @@
  '(font-lock-comment-delimiter-face ((t (:foreground "#5ab5b0"))))
  '(font-lock-comment-face ((t (:foreground "#5ab5b0"))))
  '(match ((t (:background "#eed49f" :foreground "#1e2030"))))
- '(show-paren-match ((t (:background "#eed49f" :foreground "#1e2030" :weight bold))))
+ '(show-paren-match ((t (:background "#8aadf4" :foreground "#1e2030" :weight bold))))
  '(show-paren-mismatch ((t (:background "#ed8796" :foreground "#1e2030" :weight bold))))
  '(trailing-whitespace ((t (:background "#ed8796" :foreground "#ed8796")))))
