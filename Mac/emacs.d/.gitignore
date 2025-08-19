@@ -1,11 +1,11 @@
 auto-save-list/
 eln-cache/
 elpa/
+forge-database.sqlite
 history
 persp-confs/
+projects
 recentf
 tramp
 transient/
-forge-database.sqlite
-projects
 tree-sitter/

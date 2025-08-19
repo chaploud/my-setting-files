@@ -16,9 +16,9 @@
 	    (setq gc-cons-percentage 0.3
 		  gc-cons-threshold (* 256 1024 1024) ; 256MB
                   read-process-output-max (* 2 1024 1024) ; 2MB
-		  garbage-collection-messages t)
+                  )
 	    (add-hook 'focus-out-hook #'garbage-collect)
-            (run-with-idle-timer 5 t #'garbage-collect)))
+            (run-with-idle-timer 30 t #'garbage-collect)))
 
 ;; GUIをスッキリさせる
 (menu-bar-mode -1)

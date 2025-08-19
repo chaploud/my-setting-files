@@ -40,9 +40,6 @@
 (setq backup-inhibited t)
 (setq create-lockfiles nil)
 
-;; === ビープ音無効化
-(setq ring-bell-function 'ignore)
-
 ;; === フレームのタイトル
 (setq-default frame-title-format "Emacs")
 (setq-default ns-use-proxy-icon nil)
@@ -247,13 +244,14 @@
 (use-package evil-goggles
   :after evil
   :init
+  ;; 削除系はハイライトせずとも分かるし反映が遅れるとストレスなのでオフ
   (setq evil-goggles-enable-delete nil)
   (setq evil-goggles-enable-change nil)
 
   :config
   (evil-goggles-mode +1)
   (evil-goggles-use-diff-refine-faces)
-  (setq evil-goggles-duration 0.100))
+  (setq evil-goggles-duration 0.200))
 
 ;; === 検索ヒット件数を表示
 (use-package evil-anzu
@@ -404,8 +402,15 @@
 ;; === lsp (eglot)
 ;; TODO 特定のメジャーモードでeglotをonにする
 ;; TODO 特定のメジャーモードでflymakeをonにする
+;; TODO eglotのステータスが有効な時特有のキーバインドを行う
+;; TODO (xref, flymake, eldoc, eglot-rename, eglot-code-actions)
 ;; TODO flymake-consultを活用する
-(use-package eglot)
+;; TODO .lsp/config.ednとの連携
+(use-package eglot
+  :hook (clojure-ts-mode . eglot-ensure)
+  :config
+  (setq eglot-connect-timeout 120) ; lspの解析タイムアウト時間(秒)
+  )
 
 ;;====================================================================
 ;; Clojure/ClojureScript/ClojureDart
@@ -423,7 +428,11 @@
 ;; (.clj,.cljc,.cljs,.cljd,.edn自動認識)
 (use-package clojure-ts-mode)
 (use-package cider
-  :hook (clojure-ts-mode . cider-mode))
+  :hook (clojure-ts-mode . cider-mode)
+  :config
+  (setq cider-eldoc-display-for-symbol-at-point nil))
+
+;; TODO: ciderとclojure-lsp(eglot)の補完は使いながら調整
 
 ;; 構造的編集(Paredit)
 (use-package paredit
@@ -456,6 +465,74 @@
 ;;====================================================================
 ;; TODO Dockerコンテナ内開発ワークフロー
 ;;====================================================================
+
+;;====================================================================
+;; Format On Save設定の集約
+;;====================================================================
+
+;; === 非同期プロセスの実行
+;; センチネル = 完了時コールバック
+(defun my-run-async-shell-command (command args success-callback)
+  (let* ((process-name (file-name-nondirectory command))
+         (sentinel
+          (lambda (process event)
+            (when (string-match-p "finished" event)
+              (with-current-buffer (process-buffer process)
+                (funcall success-callback))))))
+    (let ((process (apply #'start-process process-name (current-buffer) command args)))
+      (set-process-sentinel process sentinel))))
+
+;; === Emacs Lisp
+(defun my-emacs-lisp-format ()
+  (interactive)
+  (save-excursion
+    (indent-region (point-min) (point-max)))
+  (message "[elisp] formatted."))
+
+;; === Clojure
+(defun my-clojure-format ()
+  (interactive)
+  (when-let ((filename (buffer-file-name))
+             (cljfmt-path (executable-find "cljfmt")))
+    (save-excursion
+      (save-buffer)
+      (my-run-async-shell-command
+       cljfmt-path
+       (list "fix" filename)
+       (lambda ()
+         (revert-buffer nil t)
+         (message "[cljfmt] formatted."))))))
+
+;; === フォーマッタの適用方法をここにまとめる
+(defvar my-format-rules
+  '((lsp . (clojure-ts-mode))
+    (custom . ((emacs-lisp-mode . my-emacs-lisp-format)
+               (clojure-ts-mode . my-clojure-format)))))
+
+;; 以下の関数は、eglotが有効かつlspキーの配列に今のメジャーモードが合致していたらeglotのフォーマットを行い
+;; そうでなければ、customの中に今のメジャーモードが存在すればカスタム関数を呼び出す
+(defun my-format-buffer ()
+  "現在のメジャーモードに応じたフォーマッタを実行する"
+  (interactive)
+  (let ((lsp-modes (cdr (assoc 'lsp my-format-rules)))
+        (custom-formatters (cdr (assoc 'custom my-format-rules))))
+    (cond
+     ((and (bound-and-true-p eglot--managed-mode)
+           (memq major-mode lsp-modes))
+      (save-excursion
+        (call-interactively #'eglot-format-buffer)))
+
+     ((let ((formatter (cdr (assoc major-mode custom-formatters))))
+        (when (and formatter (fboundp formatter))
+          (funcall formatter)
+          t)))
+
+     (t
+      (message "No formatter configured for %s" major-mode))
+     ))
+  )
+
+;;(add-hook 'before-save-hook #'my-format-buffer)
 
 ;;====================================================================
 ;; キーバインド (general.el)
@@ -497,65 +574,82 @@
 
     ;; (q) 終了操作
     "q" '(:ignore t :wk "Quit")
-    "qq" '(save-buffers-kill-terminal :wk "quit")
-    "qr" '(restart-emacs :wk "restart")
+    "q q" '(save-buffers-kill-terminal :wk "quit")
+    "q r" '(restart-emacs :wk "restart")
 
     ;; (f) ファイル操作
     "f" '(:ignore t :wk "Files")
-    "ff" '(find-file :wk "file find")
-    "fr" '(recentf-open :wk "file recent")
-    "fp" '(project-find-file :wk "find in project")
-    "fs" '(save-buffer :wk "file save")
-    "fi" '(my-open-user-init :wk "init.el")
-    "ft" '(project-dired :wk "dired")
+    "f f" '(find-file :wk "file find")
+    "f r" '(recentf-open :wk "file recent")
+    "f p" '(project-find-file :wk "find in project")
+    "f s" '(save-buffer :wk "file save")
+    "f i" '(my-open-user-init :wk "init.el")
+    "f t" '(project-dired :wk "dired")
 
     ;; (b) バッファ操作
     "b" '(:ignore t :wk "Buffers")
-    "bb" '(switch-to-buffer :wk "buffer switch")
-    "bd" '(kill-current-buffer :wk "buffer delete")
-    "bh" '(dashboard-open :wk "dashboard")
+    "b b" '(switch-to-buffer :wk "buffer switch")
+    "b d" '(kill-current-buffer :wk "buffer delete")
+    "b h" '(dashboard-open :wk "dashboard")
 
     ;; (m) ブックマーク
     "m" '(:ignore t :wk "Bookmark")
-    "mm" '(consult-bookmark :wk "bookmark list")
-    "ms" '(bookmark-set :wk "bookmark set")
-    "md" '(bookmark-delete :wk "bookmark delete")
-    "mr" '(bookmark-rename :wk "bookmark rename")
+    "m m" '(consult-bookmark :wk "bookmark list")
+    "m s" '(bookmark-set :wk "bookmark set")
+    "m d" '(bookmark-delete :wk "bookmark delete")
+    "m r" '(bookmark-rename :wk "bookmark rename")
 
     ;; (g) Git/ジャンプ
     "g" '(:ignore t :wk "Git/GoTo")
-    "gs" '(magit-status-quick :wk "git status")
-    "gl" '(magit-log-current :wk "git log")
-    "gd" '(vc-diff :wk "git diff")
-    "gn" '(flymake-goto-next-error :wk "goto next error")
-    "gp" '(flymake-goto-prev-error :wk "goto prev error")
+    "g s" '(magit-status-quick :wk "git status")
+    "g l" '(magit-log-current :wk "git log")
+    "g d" '(vc-diff :wk "git diff")
+    "g n" '(flymake-goto-next-error :wk "goto next error")
+    "g p" '(flymake-goto-prev-error :wk "goto prev error")
 
     ;; (d) 差分/デバッグ
     "d" '(:ignore t :wk "Diff/Debug")
-    "dd" '(diff-hl-show-hunk :wk "diff")
+    "d d" '(diff-hl-show-hunk :wk "diff")
 
     ;; (p) プロジェクト管理
     "p" '(:ignore t :wk "Project")
-    "pp" '(project-switch-project :wk "project switch")
+    "p p" '(project-switch-project :wk "project switch")
 
     ;; (s) 検索
     "s" '(:ignore t :wk "Search")
-    "ss" '(consult-line :wk "search in buffer")
-    "sp" '(consult-ripgrep :wk "search in project")
+    "s s" '(consult-line :wk "search in buffer")
+    "s p" '(consult-ripgrep :wk "search in project")
 
     ;; (w) ワークスペース/ウィンドウ操作
     "w" '(:ignore t :wk "Workspace/Window")
-    "ww" '(persp-switch :wk "workspace switch")
-    "wr" '(persp-rename :wk "workspace rename")
-    "wd" '(persp-kill :wk "workspace kill")
-    "wu" '(winner-undo :wk "window undo")
+    "w w" '(persp-switch :wk "workspace switch")
+    "w r" '(persp-rename :wk "workspace rename")
+    "w d" '(persp-kill :wk "workspace kill")
+    "w u" '(winner-undo :wk "window undo")
 
     ;; (;) コメント
     ";" '(evil-commentary-line :wk "comment")
 
     ;; (t) トグル
     "t" '(:ignore t :wk "Toggle")
-    "tl" '(toggle-truncate-lines :wk "truncate line")
+    "t l" '(toggle-truncate-lines :wk "truncate line")
+    )
+
+  ;; === ジャンプなど
+  (my-motion-leader-def
+    "n" '(diff-hl-next-hunk :wk "next change")
+    "p" '(diff-hl-previous-hunk :wk "prev change")
+    "t" '(persp-next :wk "next workspace")
+    "T" '(persp-prev :wk "prev workspace")
+    )
+
+  ;; === LSP (eglot) 操作
+  (my-local-leader-def
+    :keymaps '(eglot-mode-map)
+    "l" '(:ignore t :wk "LSP")
+    "l r" '(eglot-rename :wk "rename symbol")
+    "l a" '(eglot-code-actions :wk "code actions")
+    "l f" '(eglot-format :wk "format")
     )
 
   ;; === Lisp系の編集操作
@@ -563,31 +657,23 @@
     :keymaps '(emacs-lisp-mode-map
                lisp-interaction-mode-map
                clojure-ts-mode-map)
-    "s" 'paredit-forward-slurp-sexp
-    "S" 'paredit-backward-slurp-sexp
-    "b" 'paredit-forward-barf-sexp
-    "B" 'paredit-backward-barf-sexp
-    "r" 'paredit-raise-sexp
+    "s" '(paredit-forward-slurp-sexp :wk "slurp forward")
+    "S" '(paredit-backward-slurp-sexp :wk "slurp backward")
+    "b" '(paredit-forward-barf-sexp :wk "barf forward")
+    "B" '(paredit-backward-barf-sexp :wk "barf backward")
+    "r" '(paredit-raise-sexp :wk "raise sexp")
     "w" '(:ignore t :wk "wrap")
-    "w(" '(paredit-wrap-round :wk "wrap ()")
-    "w[" '(paredit-wrap-square :wk "wrap []")
-    "w{" '(paredit-wrap-curly :wk "wrap {}")
-    "w\"" '(paredit-meta-doublequote :wk "wrap \"\"")
+    "w (" '(paredit-wrap-round :wk "wrap ()")
+    "w [" '(paredit-wrap-square :wk "wrap []")
+    "w {" '(paredit-wrap-curly :wk "wrap {}")
+    "w \"" '(paredit-meta-doublequote :wk "wrap \"\"")
     )
 
   ;; === Emacs Lisp
   (my-local-leader-def
     :keymaps '(emacs-lisp-mode-map
                lisp-interaction-mode-map)
-    "e" 'eval-defun)
-
-  ;; ジャンプ
-  (my-motion-leader-def
-    "n" '(diff-hl-next-hunk :wk "next change")
-    "p" '(diff-hl-previous-hunk :wk "prev change")
-    "t" '(persp-next :wk "next workspace")
-    "T" '(persp-prev :wk "prev workspace")
-    )
+    "e" '(eval-defun :wk "eval defun"))
   )
 
 (custom-set-variables
@@ -595,7 +681,15 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages nil))
+ '(package-selected-packages
+   '(cape catppuccin-theme cider clojure-ts-mode consult corfu dashboard
+          ddskk diff-hl dired-subtree doom-modeline eldoc-box
+          elisp-autofmt enhanced-evil-paredit evil-anzu
+          evil-collection evil-commentary evil-escape evil-goggles
+          evil-surround exec-path-from-shell general hl-todo
+          magit-delta marginalia markdown-mode nerd-icons-corfu
+          orderless perspective rainbow-delimiters reformatter tempel
+          vertico vterm-toggle)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -610,4 +704,7 @@
  '(evil-goggles-yank-face ((t (:inherit diff-refine-changed))))
  '(font-lock-comment-delimiter-face ((t (:foreground "#5ab5b0"))))
  '(font-lock-comment-face ((t (:foreground "#5ab5b0"))))
+ '(match ((t (:background "#eed49f" :foreground "#1e2030"))))
+ '(show-paren-match ((t (:background "#eed49f" :foreground "#1e2030" :weight bold))))
+ '(show-paren-mismatch ((t (:background "#ed8796" :foreground "#1e2030" :weight bold))))
  '(trailing-whitespace ((t (:background "#ed8796" :foreground "#ed8796")))))
