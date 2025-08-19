@@ -39,7 +39,7 @@
 (push '(fullscreen . maximized) default-frame-alist)
 
 ;; パッケージシステムを有効化
-(setq package-enable-at-startup t)
+(setq package-enable-at-startup nil)
 
 ;; ネイティブコンパイルの警告を抑制
 (setq native-comp-async-report-warnings-errors 'silent)

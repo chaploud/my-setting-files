@@ -434,6 +434,7 @@
   (setq cider-eldoc-display-for-symbol-at-point nil))
 
 ;; TODO: ciderとclojure-lsp(eglot)の補完は使いながら調整
+;; TODO: ciderの便利機能や設定も使いながら獲得(portalなども)
 
 ;; 構造的編集(Paredit)
 (use-package paredit
@@ -458,11 +459,38 @@
               ("C-c C-e" . markdown-do)))
 
 ;;====================================================================
-;; TODO Claude Code連携
+;; Claude Code連携
 ;;====================================================================
+
+(use-package claude-code-ide
+  :vc (:url "http://github.com/manzaltu/claude-code-ide.el" :rev :newest)
+  :bind ("C-c C-'" . claude-code-ide-menu)
+  :config
+  (claude-code-ide-emacs-tools-setup))
+
 ;;====================================================================
-;; TODO GitHub Copilot連携
+;; GitHub Copilot連携
 ;;====================================================================
+
+(use-package copilot
+  :vc (:url "https://github.com/copilot-emacs/copilot.el" :rev :newest :branch "main")
+  :hook (prog-mode . copilot-mode)
+  :bind (:map copilot-completion-map
+              ("C-<tab>" . copilot-accept-completion))
+  :config
+  (add-to-list 'copilot-indentation-alist '(prog-mode  2))
+  (add-to-list 'copilot-indentation-alist '(org-mode  2))
+  (add-to-list 'copilot-indentation-alist '(text-mode  2))
+  (add-to-list 'copilot-indentation-alist '(closure-mode  2))
+  (add-to-list 'copilot-indentation-alist '(emacs-lisp-mode  2))
+  )
+;; TODO copilot-completeをバインドすると便利かも
+
+(use-package copilot-chat
+  :after (markdown-mode)
+  :custom (copilot-chat-frontend 'markdown)
+  )
+
 ;;====================================================================
 ;; TODO Dockerコンテナ内開発ワークフロー
 ;;====================================================================
@@ -667,15 +695,10 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages
-   '(cape catppuccin-theme cider clojure-ts-mode consult corfu dashboard
-          ddskk diff-hl dired-subtree doom-modeline eldoc-box
-          elisp-autofmt enhanced-evil-paredit evil-anzu
-          evil-collection evil-commentary evil-escape evil-goggles
-          evil-surround exec-path-from-shell general hl-todo
-          magit-delta marginalia markdown-mode nerd-icons-corfu
-          orderless perspective rainbow-delimiters reformatter tempel
-          vertico vterm-toggle)))
+ '(package-selected-packages nil)
+ '(package-vc-selected-packages
+   '((claude-code-ide :url
+                      "http://github.com/manzaltu/claude-code-ide.el"))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
