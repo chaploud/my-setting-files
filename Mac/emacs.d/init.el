@@ -92,10 +92,10 @@
 (global-so-long-mode +1)
 
 ;; === 末尾のスペースやタブを可視化
-(defun turn-on-show-trailing-ws ()
+(defun my-turn-on-show-trailing-ws ()
   (setq-local show-trailing-whitespace t))
-(add-hook 'prog-mode-hook #'turn-on-show-trailing-ws)
-(add-hook 'text-mode-hook #'turn-on-show-trailing-ws)
+(add-hook 'prog-mode-hook #'my-turn-on-show-trailing-ws)
+(add-hook 'text-mode-hook #'my-turn-on-show-trailing-ws)
 
 ;; === which-keyのディレイ
 (which-key-mode +1)
@@ -156,11 +156,42 @@
           ("XXX" error bold)))
   (global-hl-todo-mode +1))
 
-;; === diredをサブツリー対応
-(use-package dired-subtree)
-(setq insert-directory-program "gls") ;; GNU版lsを使う
-(setq dired-dwim-target t)
-(setq dired-listing-switches "-alhG --time-style=long-iso")
+;;====================================================================
+;; 日本語入力
+;;====================================================================
+
+;; === ddskk
+(defun my-switch-ime (input-source)
+  (call-process "macism" nil 0 nil input-source))
+(add-function :after after-focus-change-function
+              (lambda ()
+                (if (frame-focus-state)
+                    (my-switch-ime "com.apple.keylayout.ABC")
+                  (my-switch-ime "net.mtgto.inputmethod.macSKK.hiragana"))))
+
+(use-package ddskk
+  :config
+  (setq skk-server-host "127.0.0.1")
+  (setq skk-server-portnum 1178)
+  (setq skk-dcomp-activate t)
+  (setq skk-egg-like-newline t)
+  (setq skk-delete-implies-kakutei nil)
+  (setq skk-use-color-cursor nil)
+  (setq skk-show-candidates-nth-henkan-char 3)
+
+  :hook
+  (evil-normal-state-entry-hook
+   . (lambda ()
+       (when (bound-and-true-p skk-mode)
+         (skk-latin-mode-on))))
+  )
+
+(defun my-turn-on-skk ()
+  (skk-mode +1)
+  (skk-latin-mode-on))
+
+(add-hook 'text-mode-hook #'my-turn-on-skk)
+(add-hook 'prog-mode-hook #'my-turn-on-skk)
 
 ;;====================================================================
 ;; EvilによるVimキーバインド
@@ -234,46 +265,21 @@
   (evil-commentary-mode +1))
 
 ;;====================================================================
-;; 日本語入力
+;; ファイルツリー (dired-subtree)
 ;;====================================================================
 
-;; === ddskk
-(defun switch-ime (input-source)
-  (call-process "macism" nil 0 nil input-source))
-(add-function :after after-focus-change-function
-              (lambda ()
-                (if (frame-focus-state)
-                    (switch-ime "com.apple.keylayout.ABC")
-                  (switch-ime "net.mtgto.inputmethod.macSKK.hiragana"))))
-
-(define-key global-map (kbd "C-j") nil)
-(use-package ddskk
-  :config
-  (setq skk-server-host "127.0.0.1")
-  (setq skk-server-portnum 1178)
-  (setq skk-dcomp-activate t)
-  (setq skk-egg-like-newline t)
-  (setq skk-delete-implies-kakutei nil)
-  (setq skk-use-color-cursor nil)
-  (setq skk-show-candidates-nth-henkan-char 3)
-
-  :hook
-  (evil-normal-state-entry-hook
-   . (lambda ()
-       (when (bound-and-true-p skk-mode)
-         (skk-latin-mode-on))))
-  )
-
-(defun turn-on-skk ()
-  (skk-mode +1)
-  (skk-latin-mode-on))
-
-(add-hook 'text-mode-hook #'turn-on-skk)
-(add-hook 'prog-mode-hook #'turn-on-skk)
+(use-package dired-subtree)
+(setq insert-directory-program "gls") ;; GNU版lsを使う
+(setq dired-dwim-target t)
+(setq dired-listing-switches "-alhG --time-style=long-iso")
 
 ;;====================================================================
-;; 補完システム(ミニバッファ)
+;; ミニバッファ内での検索・候補選択
 ;;====================================================================
+
+;; === 便利な統合コマンドの提供 (consult)
+(use-package consult
+  :hook (completion-list-mode . consult-preview-at-point-mode))
 
 ;; === 補完候補を垂直に表示するUI (vertico)
 (use-package vertico
@@ -281,8 +287,8 @@
   (vertico-mode +1)
 
   :custom
-  (vertico-cycle t) ; 末尾から先頭の候補にサイクル
-  (vertico-count 12) ; 表示する候補の最大数 & 固定高さ
+  (vertico-cycle t)                  ; 末尾から先頭の候補にサイクル
+  (vertico-count 12)                 ; 表示する候補の最大数 & 固定高さ
 
   :config
   (setq vertico-resize nil))
@@ -300,7 +306,7 @@
   (marginalia-mode +1))
 
 ;;====================================================================
-;; 補完システム(バッファ内)
+;; バッファ(エディタ)内のポップアップ補完
 ;;====================================================================
 
 ;; === バッファ内補完のUIフロントエンド (corfu)
@@ -322,17 +328,21 @@
   :config
   (setq tab-always-indent 'complete))
 
+;; === 補完のアイコン
+(use-package nerd-icons-corfu
+  :after (corfu nerd-icons)
+  :config
+  (add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter))
+
 ;; === スニペット・テンプレート (tmpel)
 (use-package tempel
   :init
-  (defun tempel-setup-capf ()
+  (defun my-tempel-setup-capf ()
     (setq-local completion-at-point-functions
-                (cons #'tempel-expand
-                      completion-at-point-functions)))
+                (cons #'tempel-expand completion-at-point-functions)))
   :hook
-  ((conf-mode . tempel-setup-capf)
-   (prog-mode . tempel-setup-capf)
-   (text-mode . tempel-setup-capf)))
+  ((prog-mode .my-tempel-setup-capf)
+   (text-mode . my-tempel-setup-capf)))
 
 ;; === 補完ソースの拡張 (cape)
 (use-package cape
@@ -340,23 +350,9 @@
   (add-to-list 'completion-at-point-functions #'cape-file)
   (add-to-list 'completion-at-point-functions #'cape-dabbrev))
 
-;; === 補完のアイコン
-(use-package nerd-icons-corfu
-  :after (corfu nerd-icons)
-  :config
-  (add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter))
-
 ;;====================================================================
-;; 開発ツール (LSP, ターミナル, Git)
+;; ターミナル (vterm)
 ;;====================================================================
-
-;; === lsp (eglot)
-;; TODO 特定のメジャーモードでeglotをonにする
-;; TODO 特定のメジャーモードでflymakeをonにする
-;; (use-package eglot
-;;   :hook
-;;   ()
-;;   )
 
 ;; === vterm
 (use-package vterm
@@ -364,9 +360,14 @@
   :config
   (setq vterm-max-scrollback 10000))
 
+;; === 賢くvtermをトグル
 (use-package vterm-toggle
   :config
   (define-key global-map (kbd "C-'") #'vterm-toggle))
+
+;;====================================================================
+;; Git操作 (magit・diff-hl・vc)
+;;====================================================================
 
 ;; === magit
 (use-package magit
@@ -374,7 +375,7 @@
   (setq magit-diff-refine-hunk t)
   (setq magit-diff-refine-ignore-whitespace nil))
 
-;; === フリンジに差分を強調表示
+;; === フリンジに差分を強調表示 (diff-hl)
 (use-package diff-hl
   :config
   (global-diff-hl-mode)
@@ -392,11 +393,14 @@
   (persp-mode))
 
 ;;====================================================================
-;; Swipe検索 (consult)
+;; LSP (eglot)
 ;;====================================================================
 
-(use-package consult
-  :hook (completion-list-mode . consult-preview-at-point-mode))
+;; === lsp (eglot)
+;; TODO 特定のメジャーモードでeglotをonにする
+;; TODO 特定のメジャーモードでflymakeをonにする
+;; TODO flymake-consultを活用する
+(use-package eglot)
 
 ;;====================================================================
 ;; Clojure/ClojureScript/ClojureDart
@@ -425,11 +429,21 @@
          (clojure-ts-mode . paredit-mode)))
 
 ;;====================================================================
+;; TODO Claude Code連携
+;;====================================================================
+;;====================================================================
+;; TODO GitHub Copilot連携
+;;====================================================================
+;;====================================================================
+;; TODO Dockerコンテナ内開発ワークフロー
+;;====================================================================
+
+;;====================================================================
 ;; キーバインド (general.el)
 ;;====================================================================
 
 ;; === ユーティリティ関数
-(defun open-user-init ()
+(defun my-open-user-init ()
   (interactive)
   (find-file user-init-file))
 
@@ -473,7 +487,7 @@
     "fr" '(recentf-open :wk "file recent")
     "fp" '(project-find-file :wk "find in project")
     "fs" '(save-buffer :wk "file save")
-    "fi" '(open-user-init :wk "init.el")
+    "fi" '(my-open-user-init :wk "init.el")
     "ft" '(project-dired :wk "dired")
 
     ;; (b) バッファ操作
