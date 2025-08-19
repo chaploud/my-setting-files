@@ -487,9 +487,7 @@
 ;; TODO copilot-completeをバインドすると便利かも
 
 (use-package copilot-chat
-  :after (markdown-mode)
-  :custom (copilot-chat-frontend 'markdown)
-  )
+  :after (markdown-mode))
 
 ;;====================================================================
 ;; TODO Dockerコンテナ内開発ワークフロー
