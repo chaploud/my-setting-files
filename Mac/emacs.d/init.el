@@ -103,6 +103,43 @@
       which-key-idle-secondary-delay 0)
 
 ;;====================================================================
+;; 日本語入力
+;;====================================================================
+
+;; === ddskk
+(defun my-switch-ime (input-source)
+  (call-process "macism" nil 0 nil input-source))
+(add-function :after after-focus-change-function
+              (lambda ()
+                (if (frame-focus-state)
+                    (my-switch-ime "com.apple.keylayout.ABC")
+                  (my-switch-ime "net.mtgto.inputmethod.macSKK.hiragana"))))
+
+(use-package ddskk
+  :config
+  (setq skk-server-host "127.0.0.1")
+  (setq skk-server-portnum 1178)
+  (setq skk-dcomp-activate t)
+  (setq skk-egg-like-newline t)
+  (setq skk-delete-implies-kakutei nil)
+  (setq skk-use-color-cursor nil)
+  (setq skk-show-candidates-nth-henkan-char 3)
+
+  :hook
+  (evil-normal-state-entry-hook
+   . (lambda ()
+       (when (bound-and-true-p skk-mode)
+         (skk-latin-mode-on))))
+  )
+
+(defun my-turn-on-skk ()
+  (skk-mode +1)
+  (skk-latin-mode-on))
+
+(add-hook 'text-mode-hook #'my-turn-on-skk)
+(add-hook 'prog-mode-hook #'my-turn-on-skk)
+
+;;====================================================================
 ;; UIと外観 (フォントとテーマ)
 ;;====================================================================
 
@@ -155,43 +192,6 @@
           ("NOTE" ansi-color-cyan bold)
           ("XXX" error bold)))
   (global-hl-todo-mode +1))
-
-;;====================================================================
-;; 日本語入力
-;;====================================================================
-
-;; === ddskk
-(defun my-switch-ime (input-source)
-  (call-process "macism" nil 0 nil input-source))
-(add-function :after after-focus-change-function
-              (lambda ()
-                (if (frame-focus-state)
-                    (my-switch-ime "com.apple.keylayout.ABC")
-                  (my-switch-ime "net.mtgto.inputmethod.macSKK.hiragana"))))
-
-(use-package ddskk
-  :config
-  (setq skk-server-host "127.0.0.1")
-  (setq skk-server-portnum 1178)
-  (setq skk-dcomp-activate t)
-  (setq skk-egg-like-newline t)
-  (setq skk-delete-implies-kakutei nil)
-  (setq skk-use-color-cursor nil)
-  (setq skk-show-candidates-nth-henkan-char 3)
-
-  :hook
-  (evil-normal-state-entry-hook
-   . (lambda ()
-       (when (bound-and-true-p skk-mode)
-         (skk-latin-mode-on))))
-  )
-
-(defun my-turn-on-skk ()
-  (skk-mode +1)
-  (skk-latin-mode-on))
-
-(add-hook 'text-mode-hook #'my-turn-on-skk)
-(add-hook 'prog-mode-hook #'my-turn-on-skk)
 
 ;;====================================================================
 ;; EvilによるVimキーバインド
@@ -247,6 +247,7 @@
   :after evil
   :init
   (setq evil-goggles-enable-delete nil)
+  (setq evil-goggles-enable-change nil)
 
   :config
   (evil-goggles-mode +1)
@@ -274,7 +275,7 @@
 (setq dired-listing-switches "-alhG --time-style=long-iso")
 
 ;;====================================================================
-;; ミニバッファ内での検索・候補選択 
+;; ミニバッファ内での検索・候補選択
 ;;====================================================================
 
 ;; === 便利な統合コマンドの提供 (consult)
@@ -297,8 +298,7 @@
 (use-package orderless
   :custom
   (completion-styles '(orderless basic partial-completion))
-  (completio-category-override '((file (styles basic partial-completion))
-                                 (eglot (styles orderless)))))
+  (completio-category-override '((file (styles basic partial-completion)))))
 
 ;; === 補完候補に注釈を追加 (marginalia)
 (use-package marginalia
@@ -337,26 +337,22 @@
 
 ;; === スニペット・テンプレート (tmpel)
 (use-package tempel
-  :config
-  (defun my-tempel-setup-capf ()
-    (setq-local completion-at-point-functions
-                (cons #'tempel-expand completion-at-point-functions)))
-  :hook
-  ((prog-mode . my-tempel-setup-capf)
-   (text-mode . my-tempel-setup-capf)))
-
+  :bind (("C-s" . tempel-complete)))
 ;; === 補完ソースの統合・拡張 (cape)
-(use-package cape
-  :config
-  (defun my-super-capf-with-lsp ()
-    (setq-local completion-at-point-functions
-                (list (cape-capf-super
-                       #'eglot-completion-at-point
-                       #'tempel-expand
-                       #'cape-dabbrev
-                       #'cape-file))))
-  :hook
-  ((eglot-managed-mode . my-super-capf-with-lsp)))
+;; TODO すでに完成度の高い補完をつぶしてしまう
+;; (use-package cape
+;;   :config
+;;   (defun my-setup-cape ()
+;;     (add-to-list 'completion-at-point-functions #'tempel-expand)
+;;     (add-to-list 'completion-at-point-functions #'cape-dabbrev)
+;;     (add-to-list 'completion-at-point-functions #'cape-file)
+
+;;     (when (and (bound-and-true-p eglot--managed-mode)
+;;              (fboundp 'eglot-completion-at-point))
+;;       (add-to-list 'completion-at-point-functions #'eglot-completion-at-point)))
+
+;;   (add-hook 'prog-mode-hook #'my-setup-cape)
+;;   (add-hook 'text-mode-hook #'my-setup-cape))
 
 ;;====================================================================
 ;; ターミナル (vterm)
@@ -534,6 +530,10 @@
 
     ;; (;) コメント
     ";" '(evil-commentary-line :wk "comment")
+
+    ;; (t) トグル
+    "t" '(:ignore t :wk "Toggle")
+    "tl" '(toggle-truncate-lines :wk "truncate line")
     )
 
   ;; === Lisp系の編集操作
@@ -587,4 +587,6 @@
  '(evil-goggles-undo-redo-remove-face ((t (:inherit diff-refine-removed))))
  '(evil-goggles-yank-face ((t (:inherit diff-refine-changed))))
  '(font-lock-comment-delimiter-face ((t (:foreground "#5ab5b0"))))
- '(font-lock-comment-face ((t (:foreground "#5ab5b0")))))
+ '(font-lock-comment-face ((t (:foreground "#5ab5b0"))))
+ '(trailing-whitespace ((t (:background "#ed8796" :foreground "#ed8796")))))
+
