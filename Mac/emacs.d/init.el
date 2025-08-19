@@ -102,9 +102,6 @@
 (setq which-key-idle-delay 0.3
       which-key-idle-secondary-delay 0)
 
-;; === 日付フォーマット
-;; (setq-default calendar-date-style 'iso)
-
 ;;====================================================================
 ;; UIと外観 (フォントとテーマ)
 ;;====================================================================
@@ -374,6 +371,7 @@
 (use-package magit
   :config
   (setq magit-diff-refine-hunk t)
+  (setq magit-diff-refine-ignore-whitespace nil)
   )
 
 ;; === フリンジに差分を強調表示
@@ -382,6 +380,7 @@
   (global-diff-hl-mode)
   (add-hook 'magit-pre-refresh-hook #'diff-hl-magit-pre-refresh)
   (add-hook 'magit-post-refresh-hook #'diff-hl-magit-post-refresh)
+  (diff-hl-flydiff-mode +1)
   )
 
 ;;====================================================================
@@ -436,26 +435,26 @@
   (general-evil-setup)
   (general-auto-unbind-keys)
 
-  ;; SPC リーダーキー定義
-  (general-create-definer my-leader-def
+  ;; === SPC リーダーキー定義
+  (general-create-definer my-global-leader-def
     :states '(normal visual)
-    :keymap 'override
+    :keymaps 'override
     :prefix "SPC")
 
-  ;; メジャーモード用のローカルリーダーを作成
+  ;; === メジャーモード用のローカルリーダーを作成
   (general-create-definer my-local-leader-def
-    :states '(normal visual)
-    :keymap 'override
+    :states '(normal)
+    :keymaps 'override
     :prefix ",")
 
-  ;; モーション系(g)
+  ;; === モーション系(g)
   (general-create-definer my-motion-leader-def
     :states '(normal visual)
-    :keymap 'override
+    :keymaps 'override
     :prefix "g")
 
-  ;; 基本的なSPCキーバインド
-  (my-leader-def
+  ;; === グローバルなSPCキーバインド
+  (my-global-leader-def
     "SPC" '(execute-extended-command :wk "M-x")
 
     ;; (q) 終了操作
@@ -486,7 +485,7 @@
     "gn" '(flymake-goto-next-error :wk "goto next error")
     "gp" '(flymake-goto-prev-error :wk "goto prev error")
 
-    ;; (d) diff, debug
+    ;; (d) 差分/デバッグ
     "d" '(:ignore t :wk "Diff/Debug")
     "dd" '(diff-hl-show-hunk :wk "diff")
 
@@ -510,25 +509,30 @@
     ";" '(evil-commentary-line :wk "comment")
     )
 
-  ;; メジャーモード
+  ;; === Lisp系の編集操作
   (my-local-leader-def
-    :keymaps '(emacs-lisp-mode
-               clojure-ts-mode)
+    :keymaps '(emacs-lisp-mode-map
+               lisp-interaction-mode-map
+               clojure-ts-mode-map)
     "s" 'paredit-forward-slurp-sexp
     "S" 'paredit-backward-slurp-sexp
     "b" 'paredit-forward-barf-sexp
     "B" 'paredit-backward-barf-sexp
-    "w(" 'paredit-wrap-round
-    "w[" 'paredit-wrap-square
-    "w{" 'paredit-wrap-curly
-    "w\"" 'paredit-meta-doublequote
+    "r" 'paredit-raise-sexp
+    "w" '(:ignore t :wk "wrap")
+    "w(" '(paredit-wrap-round :wk "wrap ()")
+    "w[" '(paredit-wrap-square :wk "wrap []")
+    "w{" '(paredit-wrap-curly :wk "wrap {}")
+    "w\"" '(paredit-meta-doublequote :wk "wrap \"\"")
     )
 
+  ;; === Emacs Lisp
   (my-local-leader-def
-    :keymaps 'emacs-lisp-mode
+    :keymaps '(emacs-lisp-mode-map
+               lisp-interaction-mode-map)
     "e" 'eval-defun)
 
-  ;; モーション
+  ;; ジャンプ
   (my-motion-leader-def
     "n" '(diff-hl-next-hunk :wk "next change")
     "p" '(diff-hl-previous-hunk :wk "prev change")
