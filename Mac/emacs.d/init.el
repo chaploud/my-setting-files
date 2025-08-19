@@ -225,6 +225,7 @@
 ;; === evilの便利なキーバインド追加
 (use-package evil-collection
   :after evil
+  :custom (evil-collection-setup-minibuffer t)
   :config
   (evil-collection-init)
   (setq evil-collection-key-blacklist '("C-j" "C-k"))
@@ -433,6 +434,20 @@
          (clojure-ts-mode . paredit-mode)))
 
 ;;====================================================================
+;; Markdown
+;;====================================================================
+(use-package markdown-mode
+  :mode ("\\.md\\'" . gfm-mode)
+  :init
+  (setq markdown-command '("pandoc" "--from=markdown" "--to=html5"))
+
+  :config
+  (setq markdown-fontify-code-blocks-natively t)
+
+  :bind (:map markdown-mode-map
+              ("C-c C-e" . markdown-do)))
+
+;;====================================================================
 ;; TODO Claude Code連携
 ;;====================================================================
 ;;====================================================================
@@ -499,6 +514,13 @@
     "bb" '(switch-to-buffer :wk "buffer switch")
     "bd" '(kill-current-buffer :wk "buffer delete")
     "bh" '(dashboard-open :wk "dashboard")
+
+    ;; (m) ブックマーク
+    "m" '(:ignore t :wk "Bookmark")
+    "mm" '(consult-bookmark :wk "bookmark list")
+    "ms" '(bookmark-set :wk "bookmark set")
+    "md" '(bookmark-delete :wk "bookmark delete")
+    "mr" '(bookmark-rename :wk "bookmark rename")
 
     ;; (g) Git/ジャンプ
     "g" '(:ignore t :wk "Git/GoTo")
@@ -573,7 +595,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(package-selected-packages nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -589,4 +611,3 @@
  '(font-lock-comment-delimiter-face ((t (:foreground "#5ab5b0"))))
  '(font-lock-comment-face ((t (:foreground "#5ab5b0"))))
  '(trailing-whitespace ((t (:background "#ed8796" :foreground "#ed8796")))))
-
