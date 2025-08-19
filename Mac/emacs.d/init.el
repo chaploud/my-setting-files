@@ -1,8 +1,8 @@
 ;;; init.el --- メイン設定ファイル -*- lexical-binding: t; -*-
 
-;====================================================================
-; パッケージ管理 (use-packageのブートストラップ)
-;====================================================================
+;;====================================================================
+;; パッケージ管理 (use-packageのブートストラップ)
+;;====================================================================
 
 ;; package.elの初期化とアーカイブ設定
 (setq package-check-signature nil)
@@ -20,9 +20,15 @@
 (require 'use-package)
 (setq use-package-always-ensure t)
 
-;====================================================================
-; Emacs標準機能の設定
-;====================================================================
+;; === シェル環境変数をDockからの起動でも利用する
+(use-package exec-path-from-shell
+  :config
+  (exec-path-from-shell-initialize))
+
+;;====================================================================
+;; Emacs標準機能の設定
+;;====================================================================
+
 ;; === MacのCommandをMetaキーに
 (setq mac-command-modifier 'meta)
 
@@ -31,7 +37,7 @@
 
 ;; === バックアップファイルを作成しない
 (setq make-backup-files nil)
-(setq backup-inhibited nil)
+(setq backup-inhibited t)
 (setq create-lockfiles nil)
 
 ;; === ビープ音無効化
@@ -96,34 +102,20 @@
 (setq which-key-idle-delay 0.3
       which-key-idle-secondary-delay 0)
 
-;; === GNU版のlsを使う
-(setq insert-directory-program "gls")
+;; === 日付フォーマット
+;; (setq-default calendar-date-style 'iso)
 
-;====================================================================
-; UIと外観 (フォントとテーマ)
-;====================================================================
-(use-package dashboard
-  :config
-  (dashboard-setup-startup-hook)
-  (setq dashboard-startup-banner 'logo)
-  (setq dashboard-center-content t)
-  (setq dashboard-vertically-center-content t)
-  (setq dashboard-items '((recents . 5)
-                          (bookmarks . 5)
-                          (projects . 5))))
-
-;; === シェル環境変数をDockからの起動でも利用する
-(use-package exec-path-from-shell
-  :config
-  (exec-path-from-shell-initialize))
-
-;; === nerd iconsを利用
-(use-package nerd-icons)
+;;====================================================================
+;; UIと外観 (フォントとテーマ)
+;;====================================================================
 
 ;; === フォント設定
 (set-face-attribute 'default nil :font "Source Han Code JP-14")
 (set-face-attribute 'fixed-pitch nil :font "Source Han Code JP-14")
 (set-face-attribute 'variable-pitch nil :font "Source Han Code JP-14")
+
+;; === nerd iconsを利用
+(use-package nerd-icons)
 
 ;; === カラーテーマ
 (use-package catppuccin-theme
@@ -132,6 +124,10 @@
   :config
   (load-theme 'catppuccin t)
   )
+
+;; === 対応カッコを色付け表示
+(use-package rainbow-delimiters
+  :hook (prog-mode . rainbow-delimiters-mode))
 
 ;; === doom-modeline
 (use-package doom-modeline
@@ -142,8 +138,16 @@
   (setq doom-modeline-major-mode-icon nil)
   )
 
-;; === フォントキャッシュ最適化
-(setq inhibit-compacting-font-caches t)
+;; === ダッシュボード
+(use-package dashboard
+  :config
+  (dashboard-setup-startup-hook)
+  (setq dashboard-startup-banner 'logo)
+  (setq dashboard-center-content t)
+  (setq dashboard-vertically-center-content t)
+  (setq dashboard-items '((recents . 5)
+                          (bookmarks . 5)
+                          (projects . 5))))
 
 ;; === TODOハイライト
 (use-package hl-todo
@@ -155,12 +159,15 @@
   (global-hl-todo-mode +1)
   )
 
-(use-package rainbow-delimiters
-  :hook (prog-mode . rainbow-delimiters-mode))
+;; === diredをサブツリー対応
+(use-package dired-subtree)
+(setq insert-directory-program "gls") ;; GNU版lsを使う
+(setq dired-dwim-target t)
+(setq dired-listing-switches "-alhG --time-style=long-iso")
 
-;====================================================================
-; EvilによるVimキーバインド
-;====================================================================
+;;====================================================================
+;; EvilによるVimキーバインド
+;;====================================================================
 
 ;; === evilによるVimキーバインドのエミュレート
 (use-package evil
@@ -183,6 +190,8 @@
   (define-key evil-insert-state-map (kbd "C-y") nil)
   (define-key key-translation-map (kbd "C-h") (kbd "DEL"))
   (define-key key-translation-map (kbd "C-;") (kbd "C-h"))
+  (define-key evil-motion-state-map (kbd ",") nil)
+  (setq evil-symbol-word-search t) ; ひとかたまりで検索
   )
 
 ;; === evilの便利なキーバインド追加
@@ -228,9 +237,9 @@
   :config
   (evil-commentary-mode +1))
 
-;====================================================================
-; 日本語入力
-;====================================================================
+;;====================================================================
+;; 日本語入力
+;;====================================================================
 
 ;; === ddskk
 (defun switch-ime (input-source)
@@ -265,9 +274,9 @@
 (add-hook 'text-mode-hook #'turn-on-skk)
 (add-hook 'prog-mode-hook #'turn-on-skk)
 
-;====================================================================
-; 補完システム(ミニバッファ)
-;====================================================================
+;;====================================================================
+;; 補完システム(ミニバッファ)
+;;====================================================================
 
 ;; === 補完候補を垂直に表示するUI (vertico)
 (use-package vertico
@@ -292,9 +301,9 @@
   :init
   (marginalia-mode +1))
 
-;====================================================================
-; 補完システム(バッファ内)
-;====================================================================
+;;====================================================================
+;; 補完システム(バッファ内)
+;;====================================================================
 
 ;; === バッファ内補完のUIフロントエンド (corfu)
 (use-package corfu
@@ -339,13 +348,17 @@
   :config
   (add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter))
 
-;====================================================================
-; 開発ツール (LSP, ターミナル, Git)
-;====================================================================
+;;====================================================================
+;; 開発ツール (LSP, ターミナル, Git)
+;;====================================================================
 
 ;; === lsp (eglot)
 ;; TODO 特定のメジャーモードでeglotをonにする
 ;; TODO 特定のメジャーモードでflymakeをonにする
+;; (use-package eglot
+;;   :hook
+;;   ()
+;;   )
 
 ;; === vterm
 (use-package vterm
@@ -371,29 +384,27 @@
   (add-hook 'magit-post-refresh-hook #'diff-hl-magit-post-refresh)
   )
 
-;====================================================================
-; ワークスペース (perspective.el)
-;====================================================================
+;;====================================================================
+;; ワークスペース (perspective.el)
+;;====================================================================
+
 (use-package perspective
   :init
   (setq persp-suppress-no-prefix-key-warning t)
   (persp-mode))
 
-;====================================================================
-; Swipe検索 (consult)
-;====================================================================
+;;====================================================================
+;; Swipe検索 (consult)
+;;====================================================================
+
 (use-package consult
   :hook (completion-list-mode . consult-preview-at-point-mode)
   )
 
-;====================================================================
-; Clojure/ClojureScript/ClojureDart
-;====================================================================
-(use-package enhanced-evil-paredit
-  :config
-  :hook ((paredit-mode . enhanced-evil-paredit-mode)
-         (emacs-lisp-mode . paredit-mode)
-         (clojure-ts-mode . paredit-mode)))
+;;====================================================================
+;; Clojure/ClojureScript/ClojureDart
+;;====================================================================
+
 (use-package clojure-ts-mode
   :mode (("\\.clj[csd]?\\." . clojure-ts-mode)
          ("\\.edn\\'" . clojure-ts-mode)
@@ -401,12 +412,17 @@
 (use-package cider
   :hook (clojure-ts-mode . cider-mode))
 
-(setq eglot-connect-timeout 1000)
-(add-hook 'clojure-ts-mode-hook #'eglot-ensure)
+;; 構造的編集(Paredit)
+(use-package enhanced-evil-paredit
+  :bind (:map paredit-mode-map
+              ("C-j" . nil))
+  :hook ((paredit-mode . enhanced-evil-paredit-mode)
+         (emacs-lisp-mode . paredit-mode)
+         (clojure-ts-mode . paredit-mode)))
 
-;====================================================================
-; キーバインド (general.el)
-;====================================================================
+;;====================================================================
+;; キーバインド (general.el)
+;;====================================================================
 
 ;; === ユーティリティ関数
 (defun open-user-init ()
@@ -415,31 +431,31 @@
 
 ;; use-packageと:generalの組み合わせで色々できる
 (use-package general
-  :after evil
+  :after (evil evil-collection)
   :config
   (general-evil-setup)
   (general-auto-unbind-keys)
 
   ;; SPC リーダーキー定義
-  (general-create-definer leader-def
+  (general-create-definer my-leader-def
     :states '(normal visual)
     :keymap 'override
     :prefix "SPC")
 
   ;; メジャーモード用のローカルリーダーを作成
-  (general-create-definer local-leader-def
+  (general-create-definer my-local-leader-def
     :states '(normal visual)
     :keymap 'override
     :prefix ",")
 
   ;; モーション系(g)
-  (general-create-definer motion-leader-def
+  (general-create-definer my-motion-leader-def
     :states '(normal visual)
     :keymap 'override
     :prefix "g")
 
   ;; 基本的なSPCキーバインド
-  (leader-def
+  (my-leader-def
     "SPC" '(execute-extended-command :wk "M-x")
 
     ;; (q) 終了操作
@@ -451,6 +467,7 @@
     "f" '(:ignore t :wk "Files")
     "ff" '(find-file :wk "file find")
     "fr" '(recentf-open :wk "file recent")
+    "fp" '(project-find-file :wk "find in project")
     "fs" '(save-buffer :wk "file save")
     "fi" '(open-user-init :wk "init.el")
     "ft" '(project-dired :wk "dired")
@@ -461,7 +478,7 @@
     "bd" '(kill-current-buffer :wk "buffer delete")
     "bh" '(dashboard-open :wk "dashboard")
 
-    ;; (g) Git/GoTo
+    ;; (g) Git/ジャンプ
     "g" '(:ignore t :wk "Git/GoTo")
     "gs" '(magit-status-quick :wk "git status")
     "gl" '(magit-log-current :wk "git log")
@@ -476,34 +493,43 @@
     ;; (p) プロジェクト管理
     "p" '(:ignore t :wk "Project")
     "pp" '(project-switch-project :wk "project switch")
-    "pf" '(project-find-file :wk "project find")
 
     ;; (s) 検索
     "s" '(:ignore t :wk "Search")
     "ss" '(consult-line :wk "search in buffer")
     "sp" '(consult-ripgrep :wk "search in project")
 
-    ;; (w) ワークスペース
-    "w" '(:ignore t :wk "Workspace")
+    ;; (w) ワークスペース/ウィンドウ操作
+    "w" '(:ignore t :wk "Workspace/Window")
     "ww" '(persp-switch :wk "workspace switch")
     "wr" '(persp-rename :wk "workspace rename")
     "wd" '(persp-kill :wk "workspace kill")
+    "wu" '(winner-undo :wk "window undo")
 
     ;; (;) コメント
     ";" '(evil-commentary-line :wk "comment")
     )
 
   ;; メジャーモード
-  (local-leader-def
-    :keymap 'clojure-ts-mode
+  (my-local-leader-def
+    :keymaps '(emacs-lisp-mode
+               clojure-ts-mode)
     "s" 'paredit-forward-slurp-sexp
     "S" 'paredit-backward-slurp-sexp
     "b" 'paredit-forward-barf-sexp
     "B" 'paredit-backward-barf-sexp
+    "w(" 'paredit-wrap-round
+    "w[" 'paredit-wrap-square
+    "w{" 'paredit-wrap-curly
+    "w\"" 'paredit-meta-doublequote
     )
 
+  (my-local-leader-def
+    :keymaps 'emacs-lisp-mode
+    "e" 'eval-defun)
+
   ;; モーション
-  (motion-leader-def
+  (my-motion-leader-def
     "n" '(diff-hl-next-hunk :wk "next change")
     "p" '(diff-hl-previous-hunk :wk "prev change")
     "t" '(persp-next :wk "next workspace")
@@ -516,7 +542,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages nil))
+ )
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

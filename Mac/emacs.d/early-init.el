@@ -7,16 +7,18 @@
          ":"))
 
 ;; === GCを抑制し、起動を高速化する
-(setq gc-cons-threshold most-positive-fixnum)
+(setq gc-cons-threshold most-positive-fixnum
+      gc-cons-percentage 0.6)
 
 ;; === 起動後に適切なGC設定に戻す
 (add-hook 'emacs-startup-hook
 	  (lambda ()
-	    (setq gc-cons-percentage 0.2
-		  gc-cons-threshold (* 128 1024 1024) ; 128MB
-                  read-process-output-max (* 1024 1024) ; 1MB
+	    (setq gc-cons-percentage 0.3
+		  gc-cons-threshold (* 256 1024 1024) ; 256MB
+                  read-process-output-max (* 2 1024 1024) ; 2MB
 		  garbage-collection-messages t)
-	    (add-hook 'focus-out-hook #'garbage-collect)))
+	    (add-hook 'focus-out-hook #'garbage-collect)
+            (run-with-idle-timer 5 t #'garbage-collect)))
 
 ;; GUIをスッキリさせる
 (menu-bar-mode -1)
