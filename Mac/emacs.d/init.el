@@ -274,7 +274,7 @@
 (setq dired-listing-switches "-alhG --time-style=long-iso")
 
 ;;====================================================================
-;; ミニバッファ内での検索・候補選択
+;; ミニバッファ内での検索・候補選択 
 ;;====================================================================
 
 ;; === 便利な統合コマンドの提供 (consult)
@@ -297,7 +297,8 @@
 (use-package orderless
   :custom
   (completion-styles '(orderless basic partial-completion))
-  (completio--category-override '((file (styles basic partial-completion)))))
+  (completio-category-override '((file (styles basic partial-completion))
+                                 (eglot (styles orderless)))))
 
 ;; === 補完候補に注釈を追加 (marginalia)
 (use-package marginalia
@@ -336,19 +337,26 @@
 
 ;; === スニペット・テンプレート (tmpel)
 (use-package tempel
-  :init
+  :config
   (defun my-tempel-setup-capf ()
     (setq-local completion-at-point-functions
                 (cons #'tempel-expand completion-at-point-functions)))
   :hook
-  ((prog-mode .my-tempel-setup-capf)
+  ((prog-mode . my-tempel-setup-capf)
    (text-mode . my-tempel-setup-capf)))
 
-;; === 補完ソースの拡張 (cape)
+;; === 補完ソースの統合・拡張 (cape)
 (use-package cape
   :config
-  (add-to-list 'completion-at-point-functions #'cape-file)
-  (add-to-list 'completion-at-point-functions #'cape-dabbrev))
+  (defun my-super-capf-with-lsp ()
+    (setq-local completion-at-point-functions
+                (list (cape-capf-super
+                       #'eglot-completion-at-point
+                       #'tempel-expand
+                       #'cape-dabbrev
+                       #'cape-file))))
+  :hook
+  ((eglot-managed-mode . my-super-capf-with-lsp)))
 
 ;;====================================================================
 ;; ターミナル (vterm)
