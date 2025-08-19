@@ -118,22 +118,23 @@
 (use-package catppuccin-theme
   :init
   (setq catppuccin-flavor 'macchiato) ; latte/frappe/macchiato
+
   :config
-  (load-theme 'catppuccin t)
-  )
+  (load-theme 'catppuccin t))
 
 ;; === 対応カッコを色付け表示
 (use-package rainbow-delimiters
-  :hook (prog-mode . rainbow-delimiters-mode))
+  :hook
+  (prog-mode . rainbow-delimiters-mode))
 
 ;; === doom-modeline
 (use-package doom-modeline
   :init
   (doom-modeline-mode +1)
+
   :config
   (setq doom-modeline-modal t)
-  (setq doom-modeline-major-mode-icon nil)
-  )
+  (setq doom-modeline-major-mode-icon nil))
 
 ;; === ダッシュボード
 (use-package dashboard
@@ -153,8 +154,7 @@
         `(("TODO" warning bold)
           ("NOTE" ansi-color-cyan bold)
           ("XXX" error bold)))
-  (global-hl-todo-mode +1)
-  )
+  (global-hl-todo-mode +1))
 
 ;; === diredをサブツリー対応
 (use-package dired-subtree)
@@ -203,21 +203,20 @@
 (use-package evil-escape
   :after evil
   :config
-  (evil-escape-mode +1)
-  )
+  (evil-escape-mode +1))
 
 ;; === 囲み系の操作
 (use-package evil-surround
   :after evil
   :config
-  (global-evil-surround-mode +1)
-  )
+  (global-evil-surround-mode +1))
 
 ;; === 編集操作をハイライト
 (use-package evil-goggles
   :after evil
   :init
   (setq evil-goggles-enable-delete nil)
+
   :config
   (evil-goggles-mode +1)
   (evil-goggles-use-diff-refine-faces)
@@ -257,6 +256,7 @@
   (setq skk-delete-implies-kakutei nil)
   (setq skk-use-color-cursor nil)
   (setq skk-show-candidates-nth-henkan-char 3)
+
   :hook
   (evil-normal-state-entry-hook
    . (lambda ()
@@ -279,12 +279,13 @@
 (use-package vertico
   :init
   (vertico-mode +1)
+
   :custom
   (vertico-cycle t) ; 末尾から先頭の候補にサイクル
   (vertico-count 12) ; 表示する候補の最大数 & 固定高さ
+
   :config
-  (setq vertico-resize nil)
-  )
+  (setq vertico-resize nil))
 
 ;; === 柔軟な絞り込みスタイル (orderless)
 (use-package orderless
@@ -308,6 +309,7 @@
   (global-corfu-mode +1)
   (corfu-popupinfo-mode +1)
   (corfu-history-mode +1)
+
   :custom
   (corfu-auto t)
   (corfu-auto-delay 0)
@@ -316,9 +318,9 @@
   (corfu-cycle t)
   (corfu-preselect 'prompt)
   (corfu-quit-no-match 'separator)
+
   :config
-  (setq tab-always-indent 'complete)
-  )
+  (setq tab-always-indent 'complete))
 
 ;; === スニペット・テンプレート (tmpel)
 (use-package tempel
@@ -336,8 +338,7 @@
 (use-package cape
   :config
   (add-to-list 'completion-at-point-functions #'cape-file)
-  (add-to-list 'completion-at-point-functions #'cape-dabbrev)
-  )
+  (add-to-list 'completion-at-point-functions #'cape-dabbrev))
 
 ;; === 補完のアイコン
 (use-package nerd-icons-corfu
@@ -371,8 +372,7 @@
 (use-package magit
   :config
   (setq magit-diff-refine-hunk t)
-  (setq magit-diff-refine-ignore-whitespace nil)
-  )
+  (setq magit-diff-refine-ignore-whitespace nil))
 
 ;; === フリンジに差分を強調表示
 (use-package diff-hl
@@ -380,8 +380,7 @@
   (global-diff-hl-mode)
   (add-hook 'magit-pre-refresh-hook #'diff-hl-magit-pre-refresh)
   (add-hook 'magit-post-refresh-hook #'diff-hl-magit-post-refresh)
-  (diff-hl-flydiff-mode +1)
-  )
+  (diff-hl-flydiff-mode +1))
 
 ;;====================================================================
 ;; ワークスペース (perspective.el)
@@ -397,26 +396,32 @@
 ;;====================================================================
 
 (use-package consult
-  :hook (completion-list-mode . consult-preview-at-point-mode)
-  )
+  :hook (completion-list-mode . consult-preview-at-point-mode))
 
 ;;====================================================================
 ;; Clojure/ClojureScript/ClojureDart
+;;
+;; [依存関係]
+;; (1) JDK: `brew install --cask temurin21`
+;; (2) Clojure CLI: `brew install clojure/tools/clojure`
+;; (3) clojure-lsp: `brew install clojure-lsp/brew/clojure-lsp-native`
+;; (4) docker/orbstack
+;; (5) Tree-sitterをコンパイルできるもの: `xcode-select --install`
 ;;====================================================================
 
-(use-package clojure-ts-mode
-  :mode (("\\.clj[csd]?\\." . clojure-ts-mode)
-         ("\\.edn\\'" . clojure-ts-mode)
-         ("\\.bb\\'" . clojure-ts-mode)))
+;; === clojure-ts-mode
+;; 従来のclojure-modeではなくclojure-ts-modeで置き換える
+;; (.clj,.cljc,.cljs,.cljd,.edn自動認識)
+(use-package clojure-ts-mode)
 (use-package cider
   :hook (clojure-ts-mode . cider-mode))
 
 ;; 構造的編集(Paredit)
-(use-package enhanced-evil-paredit
+(use-package paredit
   :bind (:map paredit-mode-map
               ("C-j" . nil))
-  :hook ((paredit-mode . enhanced-evil-paredit-mode)
-         (emacs-lisp-mode . paredit-mode)
+  :hook ((emacs-lisp-mode . paredit-mode)
+         (lisp-interaction-mode . paredit-mode)
          (clojure-ts-mode . paredit-mode)))
 
 ;;====================================================================
