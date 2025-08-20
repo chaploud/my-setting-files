@@ -22,12 +22,17 @@
 
 ;; === シェル環境変数をDockからの起動でも利用する
 (use-package exec-path-from-shell
+  ;; NOTE: PATH以外も欲しい場合はcustomで指定
   :config
   (exec-path-from-shell-initialize))
 
 ;;====================================================================
 ;; Emacs標準機能の設定
 ;;====================================================================
+
+;; === 自分で配置したEmacsのソースコードへの参照を追加
+(setq find-function-C-source-directory
+      (concat "~/Documents/OSS/emacs/emacs-" emacs-version "/src"))
 
 ;; === MacのCommandをMetaキーに
 (setq mac-command-modifier 'meta)
@@ -83,7 +88,9 @@
 (setq delete-by-moving-to-trash t)
 
 ;; === インデントの基本をスペースに変更
-(setq-default indent-tabs-mode nil)
+(setq-default indent-tabs-mode nil
+              tab-width 2
+              standard-indent 2)
 
 ;; === 長い行を含むファイルの最適化
 (global-so-long-mode +1)
@@ -218,6 +225,7 @@
   (define-key key-translation-map (kbd "C-;") (kbd "C-h"))
   (define-key evil-motion-state-map (kbd ",") nil)
   (setq evil-symbol-word-search t) ; ひとかたまりで検索
+  (setq evil-shift-width 2)
   )
 
 ;; === evilの便利なキーバインド追加
@@ -297,8 +305,9 @@
 ;; === 柔軟な絞り込みスタイル (orderless)
 (use-package orderless
   :custom
-  (completion-styles '(orderless basic partial-completion))
-  (completio-category-override '((file (styles basic partial-completion)))))
+  (completion-styles '(orderless))
+  (completion-category-defaults nil)
+  (completion-category-overrides '((file (styles partial-completion)))))
 
 ;; === 補完候補に注釈を追加 (marginalia)
 (use-package marginalia
@@ -306,8 +315,12 @@
   :init
   (marginalia-mode +1))
 
+;; === 候補に対するアクション (embark)
+(use-package embark
+  :bind (("C-." . embark-act)))
+
 ;;====================================================================
-;; バッファ(エディタ)内のポップアップ補完
+;; バッファ内のインライン/ポップアップ補完
 ;;====================================================================
 
 ;; === バッファ内補完のUIフロントエンド (corfu)
@@ -325,11 +338,10 @@
   (corfu-cycle t)
   (corfu-preselect 'prompt)
   (corfu-quit-no-match 'separator)
+  (tab-always-indent 'complete)
+  (corfu-separator ?\s))
 
-  :config
-  (setq tab-always-indent 'complete))
-
-;; === 補完のアイコン
+;; === 補完ポップアップ内のアイコン
 (use-package nerd-icons-corfu
   :after (corfu nerd-icons)
   :config
@@ -338,21 +350,32 @@
 ;; === スニペット・テンプレート (tmpel)
 (use-package tempel
   :bind (("C-s" . tempel-complete)))
+
 ;; === 補完ソースの統合・拡張 (cape)
-;; TODO すでに完成度の高い補完をつぶしてしまう
-;; (use-package cape
-;;   :config
-;;   (defun my-setup-cape ()
-;;     (add-to-list 'completion-at-point-functions #'tempel-expand)
-;;     (add-to-list 'completion-at-point-functions #'cape-dabbrev)
-;;     (add-to-list 'completion-at-point-functions #'cape-file)
-
-;;     (when (and (bound-and-true-p eglot--managed-mode)
-;;              (fboundp 'eglot-completion-at-point))
-;;       (add-to-list 'completion-at-point-functions #'eglot-completion-at-point)))
-
-;;   (add-hook 'prog-mode-hook #'my-setup-cape)
-;;   (add-hook 'text-mode-hook #'my-setup-cape))
+(use-package cape
+  :hook
+  (((prog-mode
+     text-mode
+     conf-mode) . my-set-super-capf))
+  :config
+  (defun my-set-super-capf (&optional arg)
+    (setq-local completion-at-point-functions
+                (list (cape-capf-noninterruptible
+                       (cape-capf-buster
+                        (cape-capf-properties
+                         (cape-capf-super
+                          (if arg
+                              arg
+                            (car completion-at-point-functions))
+                          #'tempel-complete
+                          #'cape-dabbrev
+                          #'cape-file)
+                         :sort t
+                         :exclusive 'no))))))
+  (add-to-list 'completion-at-point-functions #'tempel-complete)
+  (add-to-list 'completion-at-point-functions #'cape-file t)
+  (add-to-list 'completion-at-point-functions #'cape-dabbrev t)
+  (add-to-list 'completion-at-point-functions #'cape-keyword t))
 
 ;;====================================================================
 ;; ターミナル (vterm)
@@ -411,7 +434,32 @@
   :hook (clojure-ts-mode . eglot-ensure)
   :config
   (setq eglot-connect-timeout 120) ; lspの解析タイムアウト時間(秒)
-  )
+
+  (setq-default eglot-workspace-configuration
+                '((clojure-lsp (completion (maxCompletions . 100)))))
+
+  (defun my-set-eglot-capf ()
+    (setq-local completion-at-point-functions
+                (list (cape-capf-noninterruptible
+                       (cape-capf-buster
+                        (cape-capf-super
+                         #'eglot-completion-at-point
+                         #'tempel-complete
+                         #'cape-file)
+                        ;; orderless対応の有効性チェック
+                        (lambda (old new)
+                          (let ((space-pos (cl-position ?\s new)))
+                            (if space-pos
+                                (string= (substring old 0 (min (length old) space-pos))
+                                         (substring new 0 space-pos))
+                              (string-prefix-p old new)))))))))
+  (add-hook 'eglot-managed-mode-hook #'my-set-eglot-capf))
+
+;; cargo install emacs-lsp-booster をしている環境なら
+(use-package eglot-booster
+  :vc (:url "https://github.com/jdtsmith/eglot-booster" :rev :newest)
+  :after eglot
+  :config (eglot-booster-mode))
 
 ;;====================================================================
 ;; Clojure/ClojureScript/ClojureDart
@@ -464,7 +512,6 @@
 
 (use-package claude-code-ide
   :vc (:url "http://github.com/manzaltu/claude-code-ide.el" :rev :newest)
-  :bind ("C-c C-'" . claude-code-ide-menu)
   :config
   (claude-code-ide-emacs-tools-setup))
 
@@ -481,13 +528,10 @@
   (add-to-list 'copilot-indentation-alist '(prog-mode  2))
   (add-to-list 'copilot-indentation-alist '(org-mode  2))
   (add-to-list 'copilot-indentation-alist '(text-mode  2))
-  (add-to-list 'copilot-indentation-alist '(closure-mode  2))
   (add-to-list 'copilot-indentation-alist '(emacs-lisp-mode  2))
   )
-;; TODO copilot-completeをバインドすると便利かも
 
-(use-package copilot-chat
-  :after (markdown-mode))
+(use-package copilot-chat)
 
 ;;====================================================================
 ;; TODO Dockerコンテナ内開発ワークフロー
@@ -645,6 +689,12 @@
     ;; (t) トグル
     "t" '(:ignore t :wk "Toggle")
     "t l" '(toggle-truncate-lines :wk "truncate line")
+
+    ;; (a) 生成AI系
+    "a" '(:ignore t :wk "AI")
+    "a i" '(claude-code-ide-menu :wk "Claude Code IDE")
+    "a s" '(copilot-complete :wk "Copilot suggest")
+    "a c" '(copilot-chat :wk "Copilot chat")
     )
 
   ;; === ジャンプなど
