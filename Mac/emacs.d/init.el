@@ -156,67 +156,12 @@
 (use-package nerd-icons)
 
 ;; === カラーテーマ
-;; (use-package catppuccin-theme
-;;   :init
-;;   (setq catppuccin-flavor 'macchiato) ; latte/frappe/macchiato
+(use-package catppuccin-theme
+  :init
+  (setq catppuccin-flavor 'macchiato) ; latte/frappe/macchiato
 
-;;   :config
-;;   (load-theme 'catppuccin t))
-
-(use-package ef-themes
   :config
-  (setq ef-themes-common-palette-overrides
-        '(;; ------------------------------------------------------------------
-          ;; コアとなる背景色と前景色 (Catppuccin Base, Text, etc.)
-          ;; ------------------------------------------------------------------
-          (bg-main                "#303446") ; Base
-          (bg-dim                 "#292c3c") ; Mantle
-          (bg-alt                 "#414559") ; Surface0
-          (fg-main                "#c6d0f5") ; Text
-          (fg-dim                 "#a5adce") ; Subtext0
-
-          ;; ------------------------------------------------------------------
-          ;; 構文ハイライトの基本色
-          ;; ------------------------------------------------------------------
-          (comment                "#5ab5b0") ; Overlay0
-          (constant               "#f5a97f") ; Peach
-          (string                 "#a6d189") ; Green
-          (function-name          "#8caaee") ; Blue
-          (keyword                "#c6a0f6") ; Mauve
-          (type                   "#e5c890") ; Yellow
-          (variable               "#c6d0f5") ; Text (前景と同じ)
-          (builtin                "#babbf1") ; Lavender
-          (preprocessor           "#ed8796") ; Red
-
-          ;; ------------------------------------------------------------------
-          ;; 意味論的な状態を示す色 (エラー、警告など)
-          ;; ------------------------------------------------------------------
-          (error                  "#ed8796") ; Red
-          (warning                "#f5a97f") ; Peach
-          (success                "#a6d189") ; Green
-          (info                   "#8caaee") ; Blue
-
-          ;; ------------------------------------------------------------------
-          ;; UI要素 (カーソル、選択範囲、境界線など)
-          ;; ------------------------------------------------------------------
-          (cursor                 "#f4dbd6") ; Rosewater
-          (border                 "#626880") ; Surface2
-          (bg-region              "#51576d") ; Surface1
-          (fg-region              "#c6d0f5") ; Text
-
-          ;; ------------------------------------------------------------------
-          ;; モードライン
-          ;; ------------------------------------------------------------------
-          (bg-mode-line           "#232634") ; Crust
-          (fg-mode-line           "#c6d0f5") ; Text
-          (bg-mode-line-inactive  "#303446") ; Base
-          (fg-mode-line-inactive  "#838ba7") ; Overlay1
-          ))
-
-  ;; 既存のテーマを無効化し、上書き設定を適用したテーマを読み込む
-  ;; ベーステーマとして ef-dark を使用するが、色は上記で完全に上書きされる
-  (load-theme 'ef-dark t)
-  )
+  (load-theme 'catppuccin t))
 
 ;; === 対応カッコを色付け表示
 (use-package rainbow-delimiters
@@ -381,7 +326,11 @@
 ;; === 候補に対するアクション (embark-consult)
 (use-package embark-consult
   :hook
-  (embark-collect-mode . consult-preview-at-point-mode))
+  (embark-collect-mode . consult-preview-at-point-mode)
+  :bind
+  (("C-." . embark-act)
+   ("C-," . embark-dwim)
+   ("C-h B" . embark-bindings)))
 
 ;;====================================================================
 ;; バッファ内のインライン/ポップアップ補完
@@ -841,17 +790,4 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- ;; '(evil-goggles-change-face ((t (:inherit diff-refine-removed))))
- ;; '(evil-goggles-delete-face ((t (:inherit diff-refine-removed))))
- ;; '(evil-goggles-paste-face ((t (:inherit diff-refine-added))))
- ;; '(evil-goggles-undo-redo-add-face ((t (:inherit diff-refine-added))))
- ;; '(evil-goggles-undo-redo-change-face ((t (:inherit diff-refine-changed))))
- ;; '(evil-goggles-undo-redo-remove-face ((t (:inherit diff-refine-removed))))
- ;; '(evil-goggles-yank-face ((t (:inherit diff-refine-changed))))
- ;; '(font-lock-comment-delimiter-face ((t (:foreground "#5ab5b0"))))
- ;; '(font-lock-comment-face ((t (:foreground "#5ab5b0"))))
- ;; '(match ((t (:background "#eed49f" :foreground "#1e2030"))))
- ;; '(show-paren-match ((t (:background "#8aadf4" :foreground "#1e2030" :weight bold))))
- ;; '(show-paren-mismatch ((t (:background "#ed8796" :foreground "#1e2030" :weight bold))))
- ;; '(trailing-whitespace ((t (:background "#ed8796" :foreground "#ed8796"))))
  )
