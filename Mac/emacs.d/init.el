@@ -789,5 +789,17 @@
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
+ '(evil-goggles-change-face ((t (:inherit diff-refine-removed))))
+ '(evil-goggles-delete-face ((t (:inherit diff-refine-removed))))
+ '(evil-goggles-paste-face ((t (:inherit diff-refine-added))))
+ '(evil-goggles-undo-redo-add-face ((t (:inherit diff-refine-added))))
+ '(evil-goggles-undo-redo-change-face ((t (:inherit diff-refine-changed))))
+ '(evil-goggles-undo-redo-remove-face ((t (:inherit diff-refine-removed))))
+ '(evil-goggles-yank-face ((t (:inherit diff-refine-changed))))
+ '(font-lock-comment-delimiter-face ((t (:foreground "#5ab5b0"))))
+ '(font-lock-comment-face ((t (:foreground "#5ab5b0"))))
+ '(match ((t (:background "#eed49f" :foreground "#1e2030"))))
+ '(show-paren-match ((t (:background "#8aadf4" :foreground "#1e2030" :weight bold))))
+ '(show-paren-mismatch ((t (:background "#ed8796" :foreground "#1e2030" :weight bold))))
+ '(trailing-whitespace ((t (:background "#ed8796" :foreground "#ed8796"))));; If there is more than one, they won't work right.
  )
