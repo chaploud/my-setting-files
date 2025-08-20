@@ -224,6 +224,7 @@
   (define-key key-translation-map (kbd "C-h") (kbd "DEL"))
   (define-key key-translation-map (kbd "C-;") (kbd "C-h"))
   (define-key evil-motion-state-map (kbd ",") nil)
+  (define-key evil-insert-state-map (kbd "C-S-w") #'backward-kill-sexp)
   (setq evil-symbol-word-search t) ; ひとかたまりで検索
   (setq evil-shift-width 2)
   )
@@ -281,6 +282,13 @@
 (setq insert-directory-program "gls") ;; GNU版lsを使う
 (setq dired-dwim-target t)
 (setq dired-listing-switches "-alhG --time-style=long-iso")
+(add-to-list 'display-buffer-alist
+             '((derived-mode . dired-mode)
+               (display-buffer-pop-up-window
+                display-buffer-use-some-window)
+               (side . right)
+               (window-width . 0.5)
+               (dedicated . t)))
 
 ;;====================================================================
 ;; ミニバッファ内での検索・候補選択
@@ -417,7 +425,9 @@
 (use-package perspective
   :init
   (setq persp-suppress-no-prefix-key-warning t)
-  (persp-mode))
+  (persp-mode)
+  :custom
+  (persp-state-default-file "~/.cache/emacs/workspace-default"))
 
 ;;====================================================================
 ;; LSP (eglot)
@@ -614,6 +624,11 @@
   (general-evil-setup)
   (general-auto-unbind-keys)
 
+  (general-define-key
+   :states '(insert)
+   :keymaps 'minibuffer-mode-map
+   "C-w" 'backward-kill-sexp)
+
   ;; === SPC リーダーキー定義
   (general-create-definer my-global-leader-def
     :states '(normal visual)
@@ -689,6 +704,8 @@
     "w w" '(persp-switch :wk "workspace switch")
     "w r" '(persp-rename :wk "workspace rename")
     "w d" '(persp-kill :wk "workspace kill")
+    "w s" '(persp-state-save :wk "workspace save")
+    "w l" '(persp-state-load :wk "workspace load")
     "w u" '(winner-undo :wk "window undo")
 
     ;; (;) コメント
