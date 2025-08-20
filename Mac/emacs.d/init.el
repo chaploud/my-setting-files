@@ -156,12 +156,67 @@
 (use-package nerd-icons)
 
 ;; === カラーテーマ
-(use-package catppuccin-theme
-  :init
-  (setq catppuccin-flavor 'macchiato) ; latte/frappe/macchiato
+;; (use-package catppuccin-theme
+;;   :init
+;;   (setq catppuccin-flavor 'macchiato) ; latte/frappe/macchiato
 
+;;   :config
+;;   (load-theme 'catppuccin t))
+
+(use-package ef-themes
   :config
-  (load-theme 'catppuccin t))
+  (setq ef-themes-common-palette-overrides
+        '(;; ------------------------------------------------------------------
+          ;; コアとなる背景色と前景色 (Catppuccin Base, Text, etc.)
+          ;; ------------------------------------------------------------------
+          (bg-main                "#303446") ; Base
+          (bg-dim                 "#292c3c") ; Mantle
+          (bg-alt                 "#414559") ; Surface0
+          (fg-main                "#c6d0f5") ; Text
+          (fg-dim                 "#a5adce") ; Subtext0
+
+          ;; ------------------------------------------------------------------
+          ;; 構文ハイライトの基本色
+          ;; ------------------------------------------------------------------
+          (comment                "#5ab5b0") ; Overlay0
+          (constant               "#f5a97f") ; Peach
+          (string                 "#a6d189") ; Green
+          (function-name          "#8caaee") ; Blue
+          (keyword                "#c6a0f6") ; Mauve
+          (type                   "#e5c890") ; Yellow
+          (variable               "#c6d0f5") ; Text (前景と同じ)
+          (builtin                "#babbf1") ; Lavender
+          (preprocessor           "#ed8796") ; Red
+
+          ;; ------------------------------------------------------------------
+          ;; 意味論的な状態を示す色 (エラー、警告など)
+          ;; ------------------------------------------------------------------
+          (error                  "#ed8796") ; Red
+          (warning                "#f5a97f") ; Peach
+          (success                "#a6d189") ; Green
+          (info                   "#8caaee") ; Blue
+
+          ;; ------------------------------------------------------------------
+          ;; UI要素 (カーソル、選択範囲、境界線など)
+          ;; ------------------------------------------------------------------
+          (cursor                 "#f4dbd6") ; Rosewater
+          (border                 "#626880") ; Surface2
+          (bg-region              "#51576d") ; Surface1
+          (fg-region              "#c6d0f5") ; Text
+
+          ;; ------------------------------------------------------------------
+          ;; モードライン
+          ;; ------------------------------------------------------------------
+          (bg-mode-line           "#232634") ; Crust
+          (fg-mode-line           "#c6d0f5") ; Text
+          (bg-mode-line-inactive  "#303446") ; Base
+          (fg-mode-line-inactive  "#838ba7") ; Overlay1
+          ))
+
+  ;; 既存のテーマを無効化し、上書き設定を適用したテーマを読み込む
+  ;; ベーステーマとして ef-dark を使用するが、色は上記で完全に上書きされる
+  (load-theme 'ef-dark t)
+  )
 
 ;; === 対応カッコを色付け表示
 (use-package rainbow-delimiters
@@ -260,7 +315,7 @@
 
   :config
   (evil-goggles-mode +1)
-  (evil-goggles-use-diff-refine-faces)
+  ;; (evil-goggles-use-diff-refine-faces)
   (setq evil-goggles-duration 0.200))
 
 ;; === 検索ヒット件数を表示
@@ -313,7 +368,7 @@
 ;; === 柔軟な絞り込みスタイル (orderless)
 (use-package orderless
   :custom
-  (completion-styles '(orderless))
+  (completion-styles '(orderless partial-completion basic))
   (completion-category-defaults nil)
   (completion-category-overrides '((file (styles partial-completion)))))
 
@@ -323,9 +378,10 @@
   :init
   (marginalia-mode +1))
 
-;; === 候補に対するアクション (embark)
-(use-package embark
-  :bind (("C-." . embark-act)))
+;; === 候補に対するアクション (embark-consult)
+(use-package embark-consult
+  :hook
+  (embark-collect-mode . consult-preview-at-point-mode))
 
 ;;====================================================================
 ;; バッファ内のインライン/ポップアップ補完
@@ -440,11 +496,20 @@
 ;; TODO (xref, flymake, eldoc, eglot-rename, eglot-code-actions)
 ;; TODO flymake-consultを活用する
 ;; TODO .lsp/config.ednとの連携
+;; === 柔軟な絞り込みスタイル (orderless)
+(use-package orderless
+  :custom
+  (completion-styles '(orderless partial-completion basic))
+  (completion-category-defaults nil)
+  (completion-category-overrides '((file (styles partial-completion)))))
+
 (use-package eglot
   :ensure nil
   :hook (clojure-ts-mode . eglot-ensure)
   :config
-  (setq eglot-connect-timeout 120) ; lspの解析タイムアウト時間(秒)
+  (setq eglot-events-buffer-config '(:size nil :format full)
+        eglot-autoshutdown t
+        eglot-connect-timeout 120)
 
   (setq-default eglot-workspace-configuration
                 '((clojure-lsp (completion (maxCompletions . 100)))))
@@ -488,9 +553,7 @@
 ;; (.clj,.cljc,.cljs,.cljd,.edn自動認識)
 (use-package clojure-ts-mode)
 (use-package cider
-  :hook (clojure-ts-mode . cider-mode)
-  :config
-  (setq cider-eldoc-display-for-symbol-at-point nil))
+  :hook (clojure-ts-mode . cider-mode))
 
 ;; TODO: ciderとclojure-lsp(eglot)の補完は使いながら調整
 ;; TODO: ciderの便利機能や設定も使いながら獲得(portalなども)
@@ -778,16 +841,17 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(evil-goggles-change-face ((t (:inherit diff-refine-removed))))
- '(evil-goggles-delete-face ((t (:inherit diff-refine-removed))))
- '(evil-goggles-paste-face ((t (:inherit diff-refine-added))))
- '(evil-goggles-undo-redo-add-face ((t (:inherit diff-refine-added))))
- '(evil-goggles-undo-redo-change-face ((t (:inherit diff-refine-changed))))
- '(evil-goggles-undo-redo-remove-face ((t (:inherit diff-refine-removed))))
- '(evil-goggles-yank-face ((t (:inherit diff-refine-changed))))
- '(font-lock-comment-delimiter-face ((t (:foreground "#5ab5b0"))))
- '(font-lock-comment-face ((t (:foreground "#5ab5b0"))))
- '(match ((t (:background "#eed49f" :foreground "#1e2030"))))
- '(show-paren-match ((t (:background "#8aadf4" :foreground "#1e2030" :weight bold))))
- '(show-paren-mismatch ((t (:background "#ed8796" :foreground "#1e2030" :weight bold))))
- '(trailing-whitespace ((t (:background "#ed8796" :foreground "#ed8796")))))
+ ;; '(evil-goggles-change-face ((t (:inherit diff-refine-removed))))
+ ;; '(evil-goggles-delete-face ((t (:inherit diff-refine-removed))))
+ ;; '(evil-goggles-paste-face ((t (:inherit diff-refine-added))))
+ ;; '(evil-goggles-undo-redo-add-face ((t (:inherit diff-refine-added))))
+ ;; '(evil-goggles-undo-redo-change-face ((t (:inherit diff-refine-changed))))
+ ;; '(evil-goggles-undo-redo-remove-face ((t (:inherit diff-refine-removed))))
+ ;; '(evil-goggles-yank-face ((t (:inherit diff-refine-changed))))
+ ;; '(font-lock-comment-delimiter-face ((t (:foreground "#5ab5b0"))))
+ ;; '(font-lock-comment-face ((t (:foreground "#5ab5b0"))))
+ ;; '(match ((t (:background "#eed49f" :foreground "#1e2030"))))
+ ;; '(show-paren-match ((t (:background "#8aadf4" :foreground "#1e2030" :weight bold))))
+ ;; '(show-paren-mismatch ((t (:background "#ed8796" :foreground "#1e2030" :weight bold))))
+ ;; '(trailing-whitespace ((t (:background "#ed8796" :foreground "#ed8796"))))
+ )
