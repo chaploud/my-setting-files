@@ -544,7 +544,7 @@
     (if (not (cl-some #'my-format-try formatters))
         (message "No suitable formatter found for %s" major-mode))))
 
-;;(add-hook 'before-save-hook #'my-format-buffer)
+(add-hook 'before-save-hook #'my-format-buffer)
 
 ;;====================================================================
 ;; キーバインド (general.el)
