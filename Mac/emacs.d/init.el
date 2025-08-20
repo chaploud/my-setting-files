@@ -431,6 +431,7 @@
 ;; TODO flymake-consultを活用する
 ;; TODO .lsp/config.ednとの連携
 (use-package eglot
+  :ensure nil
   :hook (clojure-ts-mode . eglot-ensure)
   :config
   (setq eglot-connect-timeout 120) ; lspの解析タイムアウト時間(秒)
@@ -492,6 +493,13 @@
          (lisp-interaction-mode . paredit-mode)
          (clojure-ts-mode . paredit-mode)))
 
+;; Javaライブラリのジャンプ時などに
+(use-package jarchive
+  :after eglot
+  :config
+  (jarchive-setup)
+  (setq eglot-extend-to-xref t))
+
 ;;====================================================================
 ;; Markdown
 ;;====================================================================
@@ -501,7 +509,7 @@
   (setq markdown-command '("pandoc" "--from=markdown" "--to=html5"))
 
   :config
-  (setq markdown-fontify-code-blocks-natively t)
+  (setq-default markdown-fontify-code-blocks-natively t)
 
   :bind (:map markdown-mode-map
               ("C-c C-e" . markdown-do)))
@@ -644,7 +652,7 @@
 
     ;; (b) バッファ操作
     "b" '(:ignore t :wk "Buffers")
-    "b b" '(switch-to-buffer :wk "buffer switch")
+    "b b" '(persp-switch-to-buffer :wk "buffer switch")
     "b d" '(kill-current-buffer :wk "buffer delete")
     "b h" '(dashboard-open :wk "dashboard")
 
@@ -743,6 +751,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(copilot-max-char 1000000)
  '(package-selected-packages nil)
  '(package-vc-selected-packages
    '((claude-code-ide :url
