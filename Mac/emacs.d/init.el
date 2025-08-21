@@ -362,8 +362,7 @@
 (use-package embark
   :bind
   (("C-." . embark-act)
-   ("C-," . embark-export)
-   ("?" . embark-bindings)))
+   ("C-," . embark-export)))
 
 ;; === 候補に対するアクション (embark-consult)
 (use-package embark-consult
@@ -566,6 +565,7 @@
   :hook (prog-mode . copilot-mode)
   :bind (:map copilot-completion-map
               ("C-<tab>" . copilot-accept-completion))
+  :custom (copilot-max-char 1000000) ; 最大文字数を増やす
   :config
   (add-to-list 'copilot-indentation-alist '(prog-mode  2))
   (add-to-list 'copilot-indentation-alist '(org-mode  2))
@@ -576,8 +576,31 @@
 (use-package copilot-chat)
 
 ;;====================================================================
-;; TODO Dockerコンテナ内開発ワークフロー
+;; Dockerコンテナ内開発ワークフロー
 ;;====================================================================
+
+(use-package dockerfile-mode
+  :mode ("Dockerfile\\'" . dockerfile-mode))
+
+(use-package yaml-mode
+  :mode ("\\.ya?ml\\'" . yaml-mode))
+
+(use-package docker
+  :custom
+  (docker-container-columns
+   '(
+     (:name "Names" :width 30 :template "{{ json .Names }}" :sort nil :format nil)
+     (:name "Status" :width 30 :template "{{ json .Status }}" :sort nil :format nil)
+     (:name "Ports" :width 30 :template "{{ json .Ports }}" :sort nil :format nil)
+     ))
+  (docker-container-default-sort-key '("Names"))
+  )
+
+(add-to-list 'tramp-remote-path 'tramp-own-remote-path)
+(setq tramp-default-method "docker")
+(setq tramp-verbose 6) ; 初期デバッグ用(デフォルトは3)
+;; コンテナをシェルで起動しておく
+;; あとは、find-fileから/docker:コンテナ名:/path/to/fileで接続すればlspもうまく動作
 
 ;;====================================================================
 ;; Format On Save設定の集約
@@ -653,11 +676,6 @@
    :keymaps 'minibuffer-mode-map
    "C-w" 'backward-kill-sexp)
 
-  (general-define-key
-   :states '(normal)
-   :keymaps 'clojure-ts-mode-map
-   "K" 'eldoc)
-
   ;; === SPC リーダーキー定義
   (general-create-definer my-global-leader-def
     :states '(normal visual)
@@ -715,9 +733,10 @@
     "g n" '(flymake-goto-next-error :wk "goto next error")
     "g p" '(flymake-goto-prev-error :wk "goto prev error")
 
-    ;; (d) 差分/デバッグ
-    "d" '(:ignore t :wk "Diff/Debug")
+    ;; (d) 差分/デバッグ/Docker
+    "d" '(:ignore t :wk "Diff/Debug/Docker")
     "d d" '(diff-hl-show-hunk :wk "diff")
+    "d c" '(docker-containers :wk "docker containers")
 
     ;; (p) プロジェクト管理
     "p" '(:ignore t :wk "Project")
@@ -783,6 +802,7 @@
     "w [" '(paredit-wrap-square :wk "wrap []")
     "w {" '(paredit-wrap-curly :wk "wrap {}")
     "w \"" '(paredit-meta-doublequote :wk "wrap \"\"")
+    "h" '(eldoc :wk "eldoc")
     )
 
   ;; === Emacs Lisp
@@ -790,6 +810,11 @@
     :keymaps '(emacs-lisp-mode-map
                lisp-interaction-mode-map)
     "e" '(eval-defun :wk "eval defun"))
+
+  ;; === Markdown
+  (my-local-leader-def
+    :keymaps '(gfm-mode-map)
+    "," '(markdown-toggle-gfm-checkbox :wk "toggle checkbox"))
   )
 
 (custom-set-variables
@@ -797,19 +822,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(copilot-max-char 1000000)
- '(package-selected-packages
-   '(cape catppuccin-theme cider claude-code-ide clojure-ts-mode copilot
-          copilot-chat corfu dashboard ddskk diff-hl dired-subtree
-          doom-modeline eglot-booster eglot-tempel embark-consult
-          evil-anzu evil-collection evil-commentary evil-escape
-          evil-goggles evil-surround exec-path-from-shell general
-          hl-todo jarchive magit marginalia nerd-icons-corfu orderless
-          paredit perspective rainbow-delimiters undo-fu
-          undo-fu-session vertico vterm-toggle wgrep yasnippet-capf))
- '(package-vc-selected-packages
-   '((claude-code-ide :url
-                      "http://github.com/manzaltu/claude-code-ide.el"))))
+ )
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
