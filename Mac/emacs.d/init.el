@@ -416,6 +416,8 @@
 ;; TODO .lsp/config.ednとの連携
 (use-package eglot
   :ensure nil
+  :hook
+  (clojure-ts-mode . eglot-ensure)
   :custom
   (eglot-events-buffer-config '(:size nil :format full))
   (eglot-autoshutdown t)
@@ -515,9 +517,7 @@
 ;; === clojure-ts-mode
 ;; 従来のclojure-modeではなくclojure-ts-modeで置き換える
 ;; (.clj,.cljc,.cljs,.cljd,.edn自動認識)
-(use-package clojure-ts-mode
-  :hook
-  (clojure-ts-mode . eglot-ensure))
+(use-package clojure-ts-mode)
 
 (use-package cider
   :hook (clojure-ts-mode . cider-mode)
@@ -618,6 +618,27 @@
 ;;====================================================================
 ;; DB接続
 ;;====================================================================
+(use-package sql
+  :ensure nil
+  (setq sql-mode-hook
+        `(lambda ()
+           (sql-indent-enable)
+           (sql-highlight-postgres-keywords)))
+
+  (setq sql-connection-alist
+        `((eboshigara-postgres (sql-product 'postgres)
+                               (sql-server "localhost")
+                               (sql-port 5432)
+                               (sql-user "root")
+                               (sql-password "DXASyzK5rCRkqAN")
+                               (sql-database "eboshigara_dev")))))
+
+(defun my-sql-connect (connection)
+  (interactive
+   (list (completing-read "Connection: "
+                          (mapcar 'car sql-connection-alist))))
+  (setq sql-product (cadr (assoc-string connection sql-connection-alist)))
+  (sql-connect connection))
 
 ;;====================================================================
 ;; Format On Save設定の集約
@@ -756,10 +777,11 @@
     "g n" '(flymake-goto-next-error :wk "goto next error")
     "g p" '(flymake-goto-prev-error :wk "goto prev error")
 
-    ;; (d) 差分/デバッグ/Docker
-    "d" '(:ignore t :wk "Diff/Debug/Docker")
+    ;; (d) 差分/デバッグ/Docker/DB
+    "d" '(:ignore t :wk "Diff/Debug/Docker/DB")
     "d d" '(diff-hl-show-hunk :wk "diff")
     "d c" '(docker-containers :wk "docker containers")
+    "d p" '(my-sql-connect :wk "db connect")
 
     ;; (p) プロジェクト管理
     "p" '(:ignore t :wk "Project")
@@ -827,6 +849,17 @@
     "w \"" '(paredit-meta-doublequote :wk "wrap \"\"")
     "k" '(my-paredit-kill-to-end :wk "kill to sexp end")
     "h" '(eldoc :wk "eldoc")
+    )
+
+  ;; === Clojure
+  (my-global-leader-def
+    :keymaps '(clojure-ts-mode-map)
+    "m" '(:ignore t :wk "Clojure")
+    "mi" '(cider-juck-in :wk "cider juck-in")
+    "mc" '(cider-connect :wk "cider connect" )
+    "md" '(cider-quit :wk "cider disconnect")
+    "me" '(cider-eval-dwim :wk "cider eval dwim")
+    "mr"  '(cider-ns-refresh :wk "cider ns refresh")
     )
 
   ;; === Emacs Lisp
