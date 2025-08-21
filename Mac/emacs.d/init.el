@@ -2,7 +2,7 @@
 
 ;;====================================================================
 ;; パッケージ管理 (use-packageのブートストラップ)
-;;====================================================================
+;;===================================================================
 
 ;; package.elの初期化とアーカイブ設定
 (setq package-check-signature nil)
@@ -120,21 +120,27 @@
                   (my-switch-ime "net.mtgto.inputmethod.macSKK.hiragana"))))
 
 (use-package ddskk
-  :config
-  (setq skk-server-host "127.0.0.1")
-  (setq skk-server-portnum 1178)
-  (setq skk-dcomp-activate t)
-  (setq skk-egg-like-newline t)
-  (setq skk-delete-implies-kakutei nil)
-  (setq skk-use-color-cursor nil)
-  (setq skk-show-candidates-nth-henkan-char 3)
-
+  :custom
+  (skk-server-host "127.0.0.1")
+  (skk-server-portnum 1178)
+  (skk-dcomp-activate t)
+  (skk-egg-like-newline t)
+  (skk-delete-implies-kakutei nil)
+  (skk-use-color-cursor nil)
+  (skk-show-candidates-nth-henkan-char 3)
+  (skk-isearch-mode-enable 'always)
+  (skk-isearch-mode-string-alist '((hiragana . "")
+                                   (katakana . "")
+                                   (jisx0208-latin . "")
+                                   (latin . "")
+                                   (abbrev . "")
+                                   (nil . "")))
   :hook
   (evil-normal-state-entry-hook
    . (lambda ()
-       (when (bound-and-true-p skk-mode)
-         (skk-latin-mode-on))))
-  )
+       (when (bound-and-true-p skk-mode))))
+  (isearch-mode-hook . skk-isearch-mode-setup)
+  (isearch-mode-end-hook . skk-isearch-mode-cleanup))
 
 (defun my-turn-on-skk ()
   (skk-mode +1)
@@ -162,6 +168,9 @@
 
   :config
   (load-theme 'catppuccin t))
+
+;; === カーソルの色をオーバーライド
+(set-cursor-color "#a6da95")
 
 ;; === 対応カッコを色付け表示
 (use-package rainbow-delimiters
@@ -315,6 +324,10 @@
 ;; ミニバッファ内での検索・候補選択
 ;;====================================================================
 
+(use-package wgrep
+  :config
+  (setq wgrep-auto-save-buffer t))
+
 ;; === 便利な統合コマンドの提供 (consult)
 (use-package consult
   :hook (completion-list-mode . consult-preview-at-point-mode))
@@ -345,14 +358,17 @@
   :init
   (marginalia-mode +1))
 
-;; === 候補に対するアクション (embark-consult)
-(use-package embark-consult
-  :hook
-  (embark-collect-mode . consult-preview-at-point-mode)
+(use-package embark
   :bind
   (("C-." . embark-act)
-   ("C-," . embark-dwim)
-   ("C-h B" . embark-bindings)))
+   ("C-," . embark-export)
+   ("?" . embark-bindings)))
+
+;; === 候補に対するアクション (embark-consult)
+(use-package embark-consult
+  :after (embark consult)
+  :hook
+  (embark-collect-mode . consult-preview-at-point-mode))
 
 ;;====================================================================
 ;; バッファ内のインライン/ポップアップ補完
@@ -402,8 +418,7 @@
         eglot-connect-timeout 120))
 
 ;; === スニペット・テンプレート (tmpel)
-(use-package tempel
-  :bind (("C-s" . tempel-complete)))
+(use-package tempel)
 
 (use-package eglot-tempel
   :init (eglot-tempel-mode +1))
@@ -782,7 +797,15 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(copilot-max-char 1000000)
- '(package-selected-packages nil)
+ '(package-selected-packages
+   '(cape catppuccin-theme cider claude-code-ide clojure-ts-mode copilot
+          copilot-chat corfu dashboard ddskk diff-hl dired-subtree
+          doom-modeline eglot-booster eglot-tempel embark-consult
+          evil-anzu evil-collection evil-commentary evil-escape
+          evil-goggles evil-surround exec-path-from-shell general
+          hl-todo jarchive magit marginalia nerd-icons-corfu orderless
+          paredit perspective rainbow-delimiters undo-fu
+          undo-fu-session vertico vterm-toggle wgrep yasnippet-capf))
  '(package-vc-selected-packages
    '((claude-code-ide :url
                       "http://github.com/manzaltu/claude-code-ide.el"))))
