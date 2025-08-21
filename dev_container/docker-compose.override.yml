@@ -5,6 +5,7 @@ x-private-volumes: &private-volumes
   - ./setup-private.sh:/tmp/setup-private.sh:ro
   # VSCodeを使用している場合は拡張機能のインストールをキャッシュできる(以下とvolumesをコメントイン)
   - vscode-data:/root/.vscode-server
+  # clojure-lspなどのツールがインストールされる場所
   - localbin:/usr/local/bin
 
 services:

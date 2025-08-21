@@ -10,7 +10,6 @@ DEV=$DOT/dev_container
 # apt install -y tree jq ripgrep fzf neovim
 
 # starship
-# curl -sS https://starship.rs/install.sh | sh -s -- --yes
 mkdir -p $HOME/.config
 cp $DOT/starship/starship.toml $HOME/.config/starship.toml
 

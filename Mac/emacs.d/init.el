@@ -259,7 +259,9 @@
 (use-package evil-escape
   :after evil
   :config
-  (evil-escape-mode +1))
+  (evil-escape-mode +1)
+  (add-to-list 'evil-escape-inhibit-functions
+               (lambda () isearch-mode)))
 
 ;; === 囲み系の操作
 (use-package evil-surround
@@ -598,6 +600,7 @@
 
 (add-to-list 'tramp-remote-path 'tramp-own-remote-path)
 (setq tramp-default-method "docker")
+(setq tramp-default-remote-shell "/bin/bash")
 (setq tramp-verbose 6) ; 初期デバッグ用(デフォルトは3)
 ;; コンテナをシェルで起動しておく
 ;; あとは、find-fileから/docker:コンテナ名:/path/to/fileで接続すればlspもうまく動作
