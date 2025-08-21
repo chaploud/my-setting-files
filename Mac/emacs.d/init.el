@@ -106,6 +106,9 @@
 (setq which-key-idle-delay 0.3
       which-key-idle-secondary-delay 0)
 
+;; === tree-sittterによる色付けmax
+(setq treesit-font-lock-level 4)
+
 ;;====================================================================
 ;; 日本語入力
 ;;====================================================================
@@ -413,11 +416,10 @@
 ;; TODO .lsp/config.ednとの連携
 (use-package eglot
   :ensure nil
-  :hook (clojure-ts-mode . eglot-ensure)
-  :config
-  (setq eglot-events-buffer-config '(:size nil :format full)
-        eglot-autoshutdown t
-        eglot-connect-timeout 120))
+  :custom
+  (eglot-events-buffer-config '(:size nil :format full))
+  (eglot-autoshutdown t)
+  (eglot-connect-timeout 120))
 
 ;; === スニペット・テンプレート (tmpel)
 (use-package tempel)
@@ -513,9 +515,16 @@
 ;; === clojure-ts-mode
 ;; 従来のclojure-modeではなくclojure-ts-modeで置き換える
 ;; (.clj,.cljc,.cljs,.cljd,.edn自動認識)
-(use-package clojure-ts-mode)
+(use-package clojure-ts-mode
+  :hook
+  (clojure-ts-mode . eglot-ensure))
+
 (use-package cider
-  :hook (clojure-ts-mode . cider-mode))
+  :hook (clojure-ts-mode . cider-mode)
+  :custom
+  (cider-repl-buffer-size-limit 10000)
+  (cider-font-lock-dynamically '(macro core function var deprecated))
+  )
 
 ;; TODO: ciderとclojure-lsp(eglot)の補完は使いながら調整
 ;; TODO: ciderの便利機能や設定も使いながら獲得(portalなども)
@@ -601,7 +610,8 @@
 (add-to-list 'tramp-remote-path 'tramp-own-remote-path)
 (setq tramp-default-method "docker")
 (setq tramp-default-remote-shell "/bin/bash")
-(setq tramp-verbose 6) ; 初期デバッグ用(デフォルトは3)
+(setq vterm-tramp-shells '(("docker" login-shell "/bin/bash")
+                           (t login-shell)))
 ;; コンテナをシェルで起動しておく
 ;; あとは、find-fileから/docker:コンテナ名:/path/to/fileで接続すればlspもうまく動作
 
@@ -666,6 +676,12 @@
 (defun my-open-user-init ()
   (interactive)
   (find-file user-init-file))
+
+(defun my-paredit-kill-to-end ()
+  "Kill to the end of the current sexp."
+  (interactive)
+  (let ((end (save-excursion (paredit-close-parenthesis) (point))))
+    (kill-region (point) end)))
 
 ;; use-packageと:generalの組み合わせで色々できる
 (use-package general
@@ -805,6 +821,7 @@
     "w [" '(paredit-wrap-square :wk "wrap []")
     "w {" '(paredit-wrap-curly :wk "wrap {}")
     "w \"" '(paredit-meta-doublequote :wk "wrap \"\"")
+    "k" '(my-paredit-kill-to-end :wk "kill to sexp end")
     "h" '(eldoc :wk "eldoc")
     )
 
@@ -831,6 +848,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+
  '(evil-goggles-change-face ((t (:inherit diff-refine-removed))))
  '(evil-goggles-delete-face ((t (:inherit diff-refine-removed))))
  '(evil-goggles-paste-face ((t (:inherit diff-refine-added))))
@@ -843,4 +861,5 @@
  '(match ((t (:background "#eed49f" :foreground "#1e2030"))))
  '(show-paren-match ((t (:background "#8aadf4" :foreground "#1e2030" :weight bold))))
  '(show-paren-mismatch ((t (:background "#ed8796" :foreground "#1e2030" :weight bold))))
- '(trailing-whitespace ((t (:background "#ed8796" :foreground "#ed8796")))))
+ '(trailing-whitespace ((t (:background "#ed8796" :foreground "#ed8796"))))
+ )

@@ -9,7 +9,7 @@
  alias l="ls"
 
  chpwd() {
-   ls
+   ls -a
  }
 
  # grep
