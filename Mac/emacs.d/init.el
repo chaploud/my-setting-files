@@ -201,13 +201,20 @@
 ;; EvilによるVimキーバインド
 ;;====================================================================
 
+(use-package undo-fu)
+(use-package undo-fu-session
+  :after undo-fu
+  :config
+  (undo-fu-session-global-mode +1))
+
 ;; === evilによるVimキーバインドのエミュレート
 (use-package evil
+  :after (undo-fu undo-fu-session)
   :init
   (setq evil-want-integration t)
   (setq evil-want-keybinding nil)
   (setq evil-want-C-u-scroll t)
-  (setq evil-undo-system 'undo-redo)
+  (setq evil-undo-system 'undo-fu)
 
   :config
   (evil-mode +1)
@@ -225,7 +232,7 @@
   (define-key key-translation-map (kbd "C-;") (kbd "C-h"))
   (define-key evil-motion-state-map (kbd ",") nil)
   (define-key evil-insert-state-map (kbd "C-S-w") #'backward-kill-sexp)
-  (setq evil-symbol-word-search t) ; ひとかたまりで検索
+  (setq evil-symbol-word-search t)      ; ひとかたまりで検索
   (setq evil-shift-width 2)
   )
 
@@ -282,13 +289,27 @@
 (setq insert-directory-program "gls") ;; GNU版lsを使う
 (setq dired-dwim-target t)
 (setq dired-listing-switches "-alhG --time-style=long-iso")
+
+;;====================================================================
+;; バッファの表示方法についての設定 (display-buffer-alist)
+;;====================================================================
+
+;; === 後で追加したものが優先される
+
 (add-to-list 'display-buffer-alist
              '((derived-mode . dired-mode)
                (display-buffer-pop-up-window
                 display-buffer-use-some-window)
                (side . right)
-               (window-width . 0.5)
-               (dedicated . t)))
+               (window-width . 0.5)))
+
+(add-to-list 'display-buffer-alist
+             '((lambda (buffer-name action)
+                 (and (with-current-buffer buffer-name (derived-mode-p 'dired-mode))
+                      (with-current-buffer (window-buffer (selected-window))
+                        (derived-mode-p 'dired-mode))))
+               (display-buffer-same-window)))
+;; RETでその場で、S-RETで別のウィンドウで開く
 
 ;;====================================================================
 ;; ミニバッファ内での検索・候補選択
@@ -305,7 +326,7 @@
 
   :custom
   (vertico-cycle t)                  ; 末尾から先頭の候補にサイクル
-  (vertico-count 12)                 ; 表示する候補の最大数 & 固定高さ
+  (vertico-count 15)                 ; 表示する候補の最大数 & 固定高さ
 
   :config
   (setq vertico-resize nil))
@@ -313,9 +334,10 @@
 ;; === 柔軟な絞り込みスタイル (orderless)
 (use-package orderless
   :custom
-  (completion-styles '(orderless partial-completion basic))
+  (completion-styles '(orderless basic partial-completion))
   (completion-category-defaults nil)
-  (completion-category-overrides '((file (styles partial-completion)))))
+  (completion-category-overrides '((file (styles partial-completion))))
+  (orderless-matching-styles '(orderless-literal orderless-flex orderless-regexp)))
 
 ;; === 補完候補に注釈を追加 (marginalia)
 (use-package marginalia
@@ -360,35 +382,61 @@
   :config
   (add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter))
 
+;;====================================================================
+;; LSP (eglot)
+;;====================================================================
+
+;; === lsp (eglot)
+;; TODO 特定のメジャーモードでeglotをonにする
+;; TODO 特定のメジャーモードでflymakeをonにする
+;; TODO eglotのステータスが有効な時特有のキーバインドを行う
+;; TODO (xref, flymake, eldoc, eglot-rename, eglot-code-actions)
+;; TODO flymake-consultを活用する
+;; TODO .lsp/config.ednとの連携
+(use-package eglot
+  :ensure nil
+  :hook (clojure-ts-mode . eglot-ensure)
+  :config
+  (setq eglot-events-buffer-config '(:size nil :format full)
+        eglot-autoshutdown t
+        eglot-connect-timeout 120))
+
 ;; === スニペット・テンプレート (tmpel)
 (use-package tempel
   :bind (("C-s" . tempel-complete)))
 
+(use-package eglot-tempel
+  :init (eglot-tempel-mode +1))
+
 ;; === 補完ソースの統合・拡張 (cape)
 (use-package cape
   :hook
-  (((prog-mode
-     text-mode
-     conf-mode) . my-set-super-capf))
+  (prog-mode . my-prog-capf)
+  (text-mode . my-text-capf)
   :config
-  (defun my-set-super-capf (&optional arg)
-    (setq-local completion-at-point-functions
-                (list (cape-capf-noninterruptible
-                       (cape-capf-buster
-                        (cape-capf-properties
-                         (cape-capf-super
-                          (if arg
-                              arg
-                            (car completion-at-point-functions))
-                          #'tempel-complete
-                          #'cape-dabbrev
-                          #'cape-file)
-                         :sort t
-                         :exclusive 'no))))))
-  (add-to-list 'completion-at-point-functions #'tempel-complete)
-  (add-to-list 'completion-at-point-functions #'cape-file t)
-  (add-to-list 'completion-at-point-functions #'cape-dabbrev t)
-  (add-to-list 'completion-at-point-functions #'cape-keyword t))
+  (defun my-prog-capf ()
+    (unless (local-variable-p 'my-prog-capf-configured)
+      (if (bound-and-true-p eglot--managed-mode)
+          (setq-local completion-at-point-functions
+                      (cons (cape-capf-super #'eglot-completion-at-point
+                                             #'tempel-expand
+                                             #'cape-file)
+                            completion-at-point-functions))
+        (setq-local completion-at-point-functions
+                    (cons (cape-capf-super #'tempel-complete
+                                           #'cape-file)
+                          completion-at-point-functions))))
+    (setq-local my-prog-capf-configured t))
+
+  (defun my-text-capf ()
+    (unless (local-variable-p 'my-text-capf-configured)
+      (setq-local completion-at-point-functions
+                  (cons (cape-capf-super #'tempel-complete
+                                         #'cape-dabbrev
+                                         #'cape-file)
+                        completion-at-point-functions)))
+    (setq-local my-text-capf-configured t))
+  )
 
 ;;====================================================================
 ;; ターミナル (vterm)
@@ -433,58 +481,6 @@
   (persp-mode)
   :custom
   (persp-state-default-file "~/.cache/emacs/workspace-default"))
-
-;;====================================================================
-;; LSP (eglot)
-;;====================================================================
-
-;; === lsp (eglot)
-;; TODO 特定のメジャーモードでeglotをonにする
-;; TODO 特定のメジャーモードでflymakeをonにする
-;; TODO eglotのステータスが有効な時特有のキーバインドを行う
-;; TODO (xref, flymake, eldoc, eglot-rename, eglot-code-actions)
-;; TODO flymake-consultを活用する
-;; TODO .lsp/config.ednとの連携
-;; === 柔軟な絞り込みスタイル (orderless)
-(use-package orderless
-  :custom
-  (completion-styles '(orderless partial-completion basic))
-  (completion-category-defaults nil)
-  (completion-category-overrides '((file (styles partial-completion)))))
-
-(use-package eglot
-  :ensure nil
-  :hook (clojure-ts-mode . eglot-ensure)
-  :config
-  (setq eglot-events-buffer-config '(:size nil :format full)
-        eglot-autoshutdown t
-        eglot-connect-timeout 120)
-
-  (setq-default eglot-workspace-configuration
-                '((clojure-lsp (completion (maxCompletions . 100)))))
-
-  (defun my-set-eglot-capf ()
-    (setq-local completion-at-point-functions
-                (list (cape-capf-noninterruptible
-                       (cape-capf-buster
-                        (cape-capf-super
-                         #'eglot-completion-at-point
-                         #'tempel-complete
-                         #'cape-file)
-                        ;; orderless対応の有効性チェック
-                        (lambda (old new)
-                          (let ((space-pos (cl-position ?\s new)))
-                            (if space-pos
-                                (string= (substring old 0 (min (length old) space-pos))
-                                         (substring new 0 space-pos))
-                              (string-prefix-p old new)))))))))
-  (add-hook 'eglot-managed-mode-hook #'my-set-eglot-capf))
-
-;; cargo install emacs-lsp-booster をしている環境なら
-(use-package eglot-booster
-  :vc (:url "https://github.com/jdtsmith/eglot-booster" :rev :newest)
-  :after eglot
-  :config (eglot-booster-mode))
 
 ;;====================================================================
 ;; Clojure/ClojureScript/ClojureDart
@@ -641,6 +637,11 @@
    :keymaps 'minibuffer-mode-map
    "C-w" 'backward-kill-sexp)
 
+  (general-define-key
+   :states '(normal)
+   :keymaps 'clojure-ts-mode-map
+   "K" 'eldoc)
+
   ;; === SPC リーダーキー定義
   (general-create-definer my-global-leader-def
     :states '(normal visual)
@@ -789,6 +790,7 @@
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
  '(evil-goggles-change-face ((t (:inherit diff-refine-removed))))
  '(evil-goggles-delete-face ((t (:inherit diff-refine-removed))))
  '(evil-goggles-paste-face ((t (:inherit diff-refine-added))))
@@ -801,5 +803,4 @@
  '(match ((t (:background "#eed49f" :foreground "#1e2030"))))
  '(show-paren-match ((t (:background "#8aadf4" :foreground "#1e2030" :weight bold))))
  '(show-paren-mismatch ((t (:background "#ed8796" :foreground "#1e2030" :weight bold))))
- '(trailing-whitespace ((t (:background "#ed8796" :foreground "#ed8796"))));; If there is more than one, they won't work right.
- )
+ '(trailing-whitespace ((t (:background "#ed8796" :foreground "#ed8796")))))
