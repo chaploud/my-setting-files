@@ -140,7 +140,8 @@
    . (lambda ()
        (when (bound-and-true-p skk-mode))))
   (isearch-mode-hook . skk-isearch-mode-setup)
-  (isearch-mode-end-hook . skk-isearch-mode-cleanup))
+  (isearch-mode-end-hook . skk-isearch-mode-cleanup)
+  :bind ("C-j" . skk-kakutei))
 
 (defun my-turn-on-skk ()
   (skk-mode +1)
@@ -170,7 +171,7 @@
   (load-theme 'catppuccin t))
 
 ;; === カーソルの色をオーバーライド
-(set-cursor-color "#a6da95")
+(set-cursor-color "#cad3f5")
 
 ;; === 対応カッコを色付け表示
 (use-package rainbow-delimiters
