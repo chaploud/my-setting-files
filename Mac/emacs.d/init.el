@@ -110,6 +110,18 @@
 (setq treesit-font-lock-level 4)
 
 ;;====================================================================
+;; Emacs Lisp用の便利なHelp
+;;====================================================================
+
+(use-package helpful
+  :bind
+  (("C-h f" . helpful-callable)
+   ("C-h v" . helpful-variable)
+   ("C-h k" . helpful-key)
+   ("C-h x" . helpful-command)
+   ("C-h ." . helpful-at-point)))
+
+;;====================================================================
 ;; 日本語入力
 ;;====================================================================
 
@@ -151,6 +163,7 @@
 
 (add-hook 'text-mode-hook #'my-turn-on-skk)
 (add-hook 'prog-mode-hook #'my-turn-on-skk)
+(add-hook 'vterm-mode-hook #'my-turn-on-skk)
 
 ;;====================================================================
 ;; UIと外観 (フォントとテーマ)
@@ -466,7 +479,10 @@
 (use-package vterm
   :commands vterm
   :config
-  (setq vterm-max-scrollback 10000))
+  (setq vterm-max-scrollback 10000)
+  :bind
+  (:map vterm-mode-map
+        ("C-j" . skk-kakutei)))
 
 ;; === 賢くvtermをトグル
 (use-package vterm-toggle
@@ -500,7 +516,9 @@
   (setq persp-suppress-no-prefix-key-warning t)
   (persp-mode)
   :custom
-  (persp-state-default-file "~/.cache/emacs/workspace-default"))
+  (persp-state-default-file "~/.cache/emacs/workspace-default")
+  (persp-sort 'created)
+  )
 
 ;;====================================================================
 ;; Clojure/ClojureScript/ClojureDart
@@ -551,8 +569,9 @@
   :init
   (setq markdown-command '("pandoc" "--from=markdown" "--to=html5"))
 
-  :config
-  (setq-default markdown-fontify-code-blocks-natively t)
+  :custom
+  (markdown-fontify-code-blocks-natively t)
+  (markdown-indent-on-enter 'indent-and-new-line)
 
   :bind (:map markdown-mode-map
               ("C-c C-e" . markdown-do)))
@@ -724,6 +743,11 @@
    :keymaps 'minibuffer-mode-map
    "C-w" 'backward-kill-sexp)
 
+  (general-define-key
+   :keymaps 'emacs-lisp-mode-map
+   :states '(normal)
+   "K" 'helpful-at-point)
+
   ;; === SPC リーダーキー定義
   (general-create-definer my-global-leader-def
     :states '(normal visual)
@@ -882,7 +906,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(package-selected-packages nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
