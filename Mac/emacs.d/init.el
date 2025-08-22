@@ -118,9 +118,8 @@
   (call-process "macism" nil 0 nil input-source))
 (add-function :after after-focus-change-function
               (lambda ()
-                (if (frame-focus-state)
-                    (my-switch-ime "com.apple.keylayout.ABC")
-                  (my-switch-ime "net.mtgto.inputmethod.macSKK.hiragana"))))
+                (when (frame-focus-state)
+                  (my-switch-ime "com.apple.keylayout.ABC"))))
 
 (use-package ddskk
   :custom
@@ -574,8 +573,11 @@
 (use-package copilot
   :vc (:url "https://github.com/copilot-emacs/copilot.el" :rev :newest :branch "main")
   :hook (prog-mode . copilot-mode)
-  :bind (:map copilot-completion-map
-              ("C-<tab>" . copilot-accept-completion))
+  :bind
+  (:map copilot-completion-map
+        ("C-<tab>" . copilot-accept-completion))
+  (:map prog-mode-map
+        ("M-/" . copilot-complete))
   :custom (copilot-max-char 1000000) ; 最大文字数を増やす
   :config
   (add-to-list 'copilot-indentation-alist '(prog-mode  2))
@@ -620,25 +622,27 @@
 ;;====================================================================
 (use-package sql
   :ensure nil
+  :config
   (setq sql-mode-hook
         `(lambda ()
            (sql-indent-enable)
            (sql-highlight-postgres-keywords)))
 
+  (setq sql-postgres-login-params nil)
   (setq sql-connection-alist
-        `((eboshigara-postgres (sql-product 'postgres)
-                               (sql-server "localhost")
-                               (sql-port 5432)
-                               (sql-user "root")
-                               (sql-password "DXASyzK5rCRkqAN")
-                               (sql-database "eboshigara_dev")))))
-
-(defun my-sql-connect (connection)
-  (interactive
-   (list (completing-read "Connection: "
-                          (mapcar 'car sql-connection-alist))))
-  (setq sql-product (cadr (assoc-string connection sql-connection-alist)))
-  (sql-connect connection))
+        '((eboshigara-postgres (sql-product 'postgres)
+                               (sql-database (concat "postgresql://"
+                                                     "root"
+                                                     ":" (my-read-1password "eboshigara_dev_db")
+                                                     "@localhost"
+                                                     ":54320"
+                                                     "/eboshigara_dev")))))
+  (defun my-read-1password (name)
+    "1Passwordからパスワードを取得する"
+    (let ((password (shell-command-to-string
+                     (format "op read op://Private/%s/password" name))))
+      (string-trim password)))
+  )
 
 ;;====================================================================
 ;; Format On Save設定の集約
@@ -781,7 +785,7 @@
     "d" '(:ignore t :wk "Diff/Debug/Docker/DB")
     "d d" '(diff-hl-show-hunk :wk "diff")
     "d c" '(docker-containers :wk "docker containers")
-    "d p" '(my-sql-connect :wk "db connect")
+    "d b" '(sql-connect :wk "db connect")
 
     ;; (p) プロジェクト管理
     "p" '(:ignore t :wk "Project")
@@ -811,8 +815,8 @@
     ;; (a) 生成AI系
     "a" '(:ignore t :wk "AI")
     "a i" '(claude-code-ide-menu :wk "Claude Code IDE")
-    "a s" '(copilot-complete :wk "Copilot suggest")
     "a c" '(copilot-chat :wk "Copilot chat")
+    ;; Copilotの任意のタイミングでのサジェストはM-/に割り当て
     )
 
   ;; === ジャンプなど
@@ -852,14 +856,13 @@
     )
 
   ;; === Clojure
-  (my-global-leader-def
+  (my-local-leader-def
     :keymaps '(clojure-ts-mode-map)
-    "m" '(:ignore t :wk "Clojure")
-    "mi" '(cider-juck-in :wk "cider juck-in")
-    "mc" '(cider-connect :wk "cider connect" )
-    "md" '(cider-quit :wk "cider disconnect")
-    "me" '(cider-eval-dwim :wk "cider eval dwim")
-    "mr"  '(cider-ns-refresh :wk "cider ns refresh")
+    ", i" '(cider-juck-in :wk "cider juck-in")
+    ", c" '(cider-connect :wk "cider connect" )
+    ", q" '(cider-quit :wk "cider quit")
+    ", e" '(cider-eval-dwim :wk "cider eval dwim")
+    ", r" '(cider-ns-refresh :wk "cider ns refresh")
     )
 
   ;; === Emacs Lisp
