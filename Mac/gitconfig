@@ -1,0 +1,12 @@
+[user]
+	email = shota.508@studist.jp
+	name = Shota Kudo (chaploud)
+	signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIA1HOMruIV4ftc7jQcM2mZBXMBgZv9VsRGtWFqvN7o6m
+[core]
+	editor = nvim
+	pager = delta
+[include]
+	path = /Users/shota.508/.config/delta/catppuccin.gitconfig
+[delta]
+	features = catppuccin-macchiato
+	line-numbers = true

@@ -131,7 +131,7 @@
 (add-function :after after-focus-change-function
               (lambda ()
                 (when (frame-focus-state)
-                  (my-switch-ime "com.apple.keylayout.ABC"))))
+                  (my-switch-ime "net.mtgto.inputmethod.macSKK.ascii"))))
 
 (use-package ddskk
   :custom
@@ -192,6 +192,13 @@
 (use-package rainbow-delimiters
   :hook
   (prog-mode . rainbow-delimiters-mode))
+
+;; === カラーコードを色付け
+(use-package colorful-mode
+  :custom
+  (colorful-use-prefix t)
+  :config
+  (global-colorful-mode 1))
 
 ;; === doom-modeline
 (use-package doom-modeline
@@ -494,10 +501,8 @@
 ;;====================================================================
 
 ;; === magit
-(use-package magit
-  :config
-  (setq magit-diff-refine-hunk t)
-  (setq magit-diff-refine-ignore-whitespace nil))
+(use-package magit)
+(setq split-width-threshold 140)
 
 ;; === フリンジに差分を強調表示 (diff-hl)
 (use-package diff-hl
@@ -506,6 +511,14 @@
   (add-hook 'magit-pre-refresh-hook #'diff-hl-magit-pre-refresh)
   (add-hook 'magit-post-refresh-hook #'diff-hl-magit-post-refresh)
   (diff-hl-flydiff-mode +1))
+
+;; === magitをgit-deltaを使って高速化しつつ見やすくする
+;; bat, deltaのインストール
+;; catppuccinのbat, delta用のテーマ設定がそれぞれ必要
+(use-package magit-delta
+  :hook (magit-mode . magit-delta-mode)
+  :custom
+  (magit-delta-default-dark-theme "Catppuccin Macchiato"))
 
 ;;====================================================================
 ;; ワークスペース (perspective.el)
@@ -571,7 +584,7 @@
 
   :custom
   (markdown-fontify-code-blocks-natively t)
-  (markdown-indent-on-enter 'indent-and-new-line)
+  (markdown-indent-on-enter 'indent-and-new-item)
 
   :bind (:map markdown-mode-map
               ("C-c C-e" . markdown-do)))
@@ -729,7 +742,7 @@
   "Kill to the end of the current sexp."
   (interactive)
   (let ((end (save-excursion (paredit-close-parenthesis) (point))))
-    (kill-region (point) end)))
+    (kill-region (point) (- end 1))))
 
 ;; use-packageと:generalの組み合わせで色々できる
 (use-package general
@@ -912,6 +925,10 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(diff-added ((t (:background "#4b5d55"))))
+ '(diff-refine-added ((t (:background "#658168"))))
+ '(diff-refine-removed ((t (:background "#895768"))))
+ '(diff-removed ((t (:background "#604456"))))
  '(evil-goggles-change-face ((t (:inherit diff-refine-removed))))
  '(evil-goggles-delete-face ((t (:inherit diff-refine-removed))))
  '(evil-goggles-paste-face ((t (:inherit diff-refine-added))))
