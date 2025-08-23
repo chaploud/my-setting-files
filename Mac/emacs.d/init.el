@@ -23,12 +23,12 @@
 (message "[%s] %s" (my-display-time) "init.el loading...")
 
 ;;=== TIPS / Rules of use-package ====================================
+;; 空行は入れないように統一する
 ;; :after 依存関係, 1行でOK。これ以外は基本キーワード後に開業
 ;; :init パッケージのロード前に実行
-;; :custom costomize可能な変数はこちらで設定 (setq x y)のsetqを除いた形式
+;; :custom defcustom変数はこちらで設定 (setq x y)のsetqを除いた形式
 ;; :hook パッケージに関連するフックをコンスセル形式で設定 (x . y)
-;; 末尾が-hookならそのまま、そうでなければ-hookを付けたものが使われる
-;; 関数側は#'をつけない
+;; 末尾が-hookならそのまま、そうでなければ-hookを付けたものが使われる。関数側は#'をつけない
 ;; :config 通常通りの処理をまとめる意味(グローバルスコープになる)
 ;; :vc GitHubやCodebergなどから直接インストールする場合に利用
 ;;====================================================================
@@ -96,27 +96,6 @@
 ;; === 長い行を含むファイルの最適化
 (global-so-long-mode t)
 
-;; ===== UI・外観
-;; === フレームのタイトル
-(setq-default frame-title-format "Emacs") ; シンプルに
-(setq-default ns-use-proxy-icon nil) ; アイコンも不要
-
-;; === 現在行を強調表示
-(global-hl-line-mode t)
-
-;; === 行間を少し広げる
-(setq-default line-spacing 0.07)
-
-;; === 行番号を表示
-(add-hook 'prog-mode-hook #'display-line-numbers-mode)
-(add-hook 'text-mode-hook #'display-line-numbers-mode)
-
-;; === カーソル位置の列番号をモードラインに表示
-(column-number-mode t)
-
-;; === tree-sittterによる色付けmax
-(setq treesit-font-lock-level 4)
-
 ;; ===== 編集体験の向上
 ;; === ミニバッファでのyes/noの聞かれ方をy/nにする
 (setq use-short-answers t)
@@ -156,6 +135,37 @@
 (add-to-list 'auto-mode-alist '("\\zshrc\\'" . shell-script-mode))
 (add-to-list 'auto-mode-alist '("\\zprofile\\'" . shell-script-mode))
 (add-to-list 'auto-mode-alist '("\\zshenv\\'" . shell-script-mode))
+
+;;====================================================================
+;; バッファの表示方法についての設定 (display-buffer-alist)
+;;====================================================================
+
+;; === 後で追加したものが優先される
+
+;; diredを開くときは分割して表示される
+(add-to-list 'display-buffer-alist
+             '((derived-mode . dired-mode)
+               (display-buffer-pop-up-window
+                display-buffer-use-some-window)
+               (side . right)
+               (window-width . 0.5)))
+
+;; dired上でdiredを開くときは同じウィンドウで開く
+;; RETでその場で、S-RETで別のウィンドウで開く
+(add-to-list 'display-buffer-alist
+             '((lambda (buffer-name action)
+                 (and (with-current-buffer buffer-name (derived-mode-p 'dired-mode))
+                      (with-current-buffer (window-buffer (selected-window))
+                        (derived-mode-p 'dired-mode))))
+               (display-buffer-same-window)))
+
+;; ielmは分割して開く
+(add-to-list 'display-buffer-alist
+             '("\\*ielm\\*"
+               (display-buffer-pop-up-window
+                display-buffer-use-some-window)
+               (side . right)
+               (window-width . 0.5)))
 
 ;;====================================================================
 ;; Emacs Lisp用の便利なHelp
@@ -209,16 +219,32 @@
   (eat-mode-hook . my-turn-on-skk)
   :bind
   ("C-x j" . skk-mode)
-  ("C-j" . skk-kakutei))
-
-(defun my-turn-on-skk ()
-  "skk-modeを有効にして、英字モードにする"
-  (skk-mode t)
-  (skk-latin-mode-on))
+  ("C-j" . skk-kakutei)
+  :config
+  (defun my-turn-on-skk ()
+    "skk-modeを有効にして、英字モードにする"
+    (skk-mode t)
+    (skk-latin-mode-on)))
 
 ;;====================================================================
 ;; UIと外観 (フォントとテーマ)
 ;;====================================================================
+
+;; === 現在行を強調表示
+(global-hl-line-mode t)
+
+;; === 行間を少し広げる
+(setq-default line-spacing 0.07)
+
+;; === 行番号を表示
+(add-hook 'prog-mode-hook #'display-line-numbers-mode)
+(add-hook 'text-mode-hook #'display-line-numbers-mode)
+
+;; === カーソル位置の列番号をモードラインに表示
+(column-number-mode t)
+
+;; === tree-sittterによる色付けmax
+(setq treesit-font-lock-level 4)
 
 ;; === フォント設定
 (set-face-attribute 'default nil :font "Source Han Code JP-14")
@@ -310,15 +336,10 @@
         ("C-d" . nil)
         ("C-k" . nil)
         ("C-y" . nil)
-        ;;      ("C-S-h" . #'backward-kill-sexp)
-        )
-  ;;   (:map evil-normal-state-map
-  ;;       ("C-a" . #'evil-numbers/inc-at-pt)
-  ;;         )
+        ("C-S-h" . #'backward-kill-sexp))
+  (:map evil-motion-state-map
+        ("," . nil)))
 
-  ;; (:map evil-motion-state-map
-  ;;       ("," nil)))
-  )
 ;; === evilの便利なキーバインド追加
 (use-package evil-collection
   :after evil
@@ -331,34 +352,32 @@
 ;; === fdでESCできるように
 (use-package evil-escape
   :after evil
-  :config
+  :custom
   (evil-escape-mode t)
+  :config
+  ;; 0引数要件があるのでlambdaでラップ
   (add-to-list 'evil-escape-inhibit-functions
                (lambda () isearch-mode)))
 
 ;; === 囲み系の操作
 (use-package evil-surround
   :after evil
-  :config
+  :custom
   (global-evil-surround-mode t))
 
 ;; === 編集操作をハイライト
 (use-package evil-goggles
   :after evil
-  :init
-  ;; 削除系はハイライトせずとも分かるし反映が遅れるとストレスなのでオフ
-  (setq evil-goggles-enable-delete nil)
-  (setq evil-goggles-enable-change nil)
-
-  :config
+  :custom
   (evil-goggles-mode t)
-  ;; (evil-goggles-use-diff-refine-faces)
-  (setq evil-goggles-duration 0.200))
+  ;; 削除系はハイライトせずとも分かる & 反映が遅れるとストレスなのでオフ
+  (evil-goggles-enable-delete nil)
+  (evil-goggles-enable-change nil))
 
 ;; === 検索ヒット件数を表示
 (use-package evil-anzu
   :after evil
-  :config
+  :custom
   (global-anzu-mode t))
 
 ;; === コメントアウト
@@ -366,51 +385,22 @@
   :config
   (evil-commentary-mode t))
 
-;; === 数値のインクリメン・デクリメント
+;; === 数値のインクリメント
 (use-package evil-numbers
   :after evil
-  :bind (:map evil-normal-state-map
-              ("C-a" . evil-numbers/inc-at-pt)))
+  :bind
+  (:map evil-normal-state-map
+        ("C-a" . evil-numbers/inc-at-pt)))
 
 ;;====================================================================
 ;; ファイルツリー (dired-subtree)
 ;;====================================================================
 
-(use-package dired-subtree)
-(setq insert-directory-program "gls") ;; GNU版lsを使う
-(setq dired-dwim-target t)
-(setq dired-listing-switches "-alhG --time-style=long-iso")
-
-;;====================================================================
-;; バッファの表示方法についての設定 (display-buffer-alist)
-;;====================================================================
-
-;; === 後で追加したものが優先される
-
-;; diredを開くときは分割して表示される
-(add-to-list 'display-buffer-alist
-             '((derived-mode . dired-mode)
-               (display-buffer-pop-up-window
-                display-buffer-use-some-window)
-               (side . right)
-               (window-width . 0.5)))
-
-;; dired上でdiredを開くときは同じウィンドウで開く
-;; RETでその場で、S-RETで別のウィンドウで開く
-(add-to-list 'display-buffer-alist
-             '((lambda (buffer-name action)
-                 (and (with-current-buffer buffer-name (derived-mode-p 'dired-mode))
-                      (with-current-buffer (window-buffer (selected-window))
-                        (derived-mode-p 'dired-mode))))
-               (display-buffer-same-window)))
-
-;; ielmは分割して開く
-(add-to-list 'display-buffer-alist
-             '("\\*ielm\\*"
-               (display-buffer-pop-up-window
-                display-buffer-use-some-window)
-               (side . right)
-               (window-width . 0.5)))
+;; === dired上でTABでサブディレクトリを展開できる
+(use-package dired-subtree
+  :custom
+  ;; diredのオプションだがここに書く
+  (dired-listing-switches "-alhG --time-style=long-iso"))
 
 ;;====================================================================
 ;; ミニバッファ内での検索・候補選択
@@ -425,15 +415,11 @@
 
 ;; === 補完候補を垂直に表示するUI (vertico)
 (use-package vertico
-  :init
-  (vertico-mode t)
-
   :custom
-  (vertico-cycle t)                  ; 末尾から先頭の候補にサイクル
-  (vertico-count 15)                 ; 表示する候補の最大数 & 固定高さ
-
-  :config
-  (setq vertico-resize nil))
+  (vertico-mode t)
+  (vertico-cycle t)
+  (vertico-count 15)
+  (vertico-resize nil))
 
 ;; === 柔軟な絞り込みスタイル (orderless)
 ;; = leteralスタイル: 完全一致
@@ -1048,13 +1034,6 @@
  '(diff-refine-added ((t (:background "#658168"))))
  '(diff-refine-removed ((t (:background "#895768"))))
  '(diff-removed ((t (:background "#604456"))))
- '(evil-goggles-change-face ((t (:inherit diff-refine-removed))))
- '(evil-goggles-delete-face ((t (:inherit diff-refine-removed))))
- '(evil-goggles-paste-face ((t (:inherit diff-refine-added))))
- '(evil-goggles-undo-redo-add-face ((t (:inherit diff-refine-added))))
- '(evil-goggles-undo-redo-change-face ((t (:inherit diff-refine-changed))))
- '(evil-goggles-undo-redo-remove-face ((t (:inherit diff-refine-removed))))
- '(evil-goggles-yank-face ((t (:inherit diff-refine-changed))))
  '(font-lock-comment-delimiter-face ((t (:foreground "#5ab5b0"))))
  '(font-lock-comment-face ((t (:foreground "#5ab5b0"))))
  '(match ((t (:background "#eed49f" :foreground "#1e2030"))))
