@@ -5,47 +5,45 @@
 ;;===================================================================
 ;; init.elの各処理時間を計測したい場合に利用
 
+(defvar my-time-tmp (current-time))
+
 (defun my-display-time ()
-  (format-time-string "%Y-%m-%d %H:%M:%S.%6N"))
+  "現在時刻と前回呼び出しからの経過時間を表示"
+  (let* ((now (current-time))
+         (diff (float-time (time-subtract now my-time-tmp))))
+    (setq my-time-tmp now)
+    (format "%s dt=%.6f"
+            (format-time-string "%Y-%m-%d %H:%M:%S.%6N" now) diff)))
 
 (defun my-insert-time ()
+  "カーソル位置に計測用の処理を挿入"
   (interactive)
   (insert "(message \"[%s] %s\" (my-display-time) \"\")"))
 
-(defmacro my-with-measure-time (msg &rest body)
-  "囲んだ部分の開始・終了時刻をメッセージとして表示する"
-  `(progn
-     (message "[%s] [Start] %s..." (my-display-time) ,msg)
-     ,@body
-     (message "[%s] [Done] %s." (my-display-time) ,msg)))
-
-(defun my-wrap-with-measure-time (description)
-  "次のS式をmy-with-meassure-timeでラップする"
-  (interactive "sMeasure message: ")
-  (insert (format "(my-with-measure-time \"%s\")" description))
-  (backward-char 1)
-  (paredit-forward-slurp-sexp))
+(message "[%s] %s" (my-display-time) "init.el loading...")
 
 ;;====================================================================
-;; パッケージ管理 (use-packageのブートストラップ)
+;; パッケージ管理のセットアップ
 ;;===================================================================
 
-;; === MelpaとOrgを追加 (gnu, nongnu ELPAはデフォルトで登録済み)
+;; === packageの設定
 (require 'package)
-(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
-(add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/") t)
-
-;; 署名チェックを無効化 (本来はtが望ましいが、署名されていないパッケージもあるため)
-(setq package-check-signature nil)
-
-;; パッケージのキャッシュを利用するようにする(package-initialize高速化)
-;; パッケージを追加・更新した場合はM-x package-quickstarts-refreshを実行すること
-;; (setq package-quickstart t)
-
+(setq package-archives '(("gnu" . "https://elpa.gnu.org/packages/")
+                         ("nongnu" . "https://elpa.nongnu.org/nongnu/")
+                         ("melpa" . "https://melpa.org/packages/")))
+(setq package-archive-priorities '(("melpa" . 3)
+                                   ("nongnu" . 2)
+                                   ("gnu" . 1)))
+(setq package-check-signature nil) ; 本来はnon-nilが望ましい
 (package-initialize)
+;; NOTE: 安定してきたら、package-quickstartを検討する
 
-(unless package-archive-contents
-  (package-refresh-contents))
+;; === use-packageの設定
+(unless (package-installed-p 'use-package)
+  (package-install 'use-package))
+(require 'use-package)
+(setq use-package-always-ensure t) ; :ensure t を省略可能に
+;; これ以降にuse-packageが使える
 
 ;; === シェル環境変数をDockからの起動でも利用する
 (use-package exec-path-from-shell
@@ -56,17 +54,22 @@
 ;;====================================================================
 ;; Emacs標準機能の設定
 ;;====================================================================
-(message "[%s] %s" (my-display-time) "ここ1")
+
+;; ===== キーバインド
+;; === C-hをBackspaceに、C-;をC-hに割り当て
+(define-key key-translation-map (kbd "C-h") (kbd "DEL"))
+(define-key key-translation-map (kbd "C-;") (kbd "C-h"))
+
 ;; ===== システム・Emacsコア連携
+;; === 自分で配置したEmacsのソースコードへの参照を追加
+;; 利用しているEmacsバージョンによって適宜ソースコードはダウンロード必要
+(setq find-function-C-source-directory
+      (concat "~/Documents/OSS/emacs/emacs-" emacs-version "/src"))
+
 ;; === MacのCommandをMetaキーに
 (setq mac-command-modifier 'meta)
 
 ;; === デーモン起動 (シェルの`e'コマンドから使う)
-(use-package server
-  :config
-  (unless (server-running-p)
-    (server-start)))
-
 ;; === `e'コマンド (~/.zshrcなどに追加)
 ;; # emacsclient
 ;; e() {
@@ -76,11 +79,10 @@
 ;;     emacs "$@" &
 ;;   fi
 ;; }
-
-;; === 自分で配置したEmacsのソースコードへの参照を追加
-;; 利用しているEmacsバージョンによって適宜ソースコードはダウンロード必要
-(setq find-function-C-source-directory
-      (concat "~/Documents/OSS/emacs/emacs-" emacs-version "/src"))
+(use-package server
+  :config
+  (unless (server-running-p)
+    (server-start)))
 
 ;; ===== ファイル管理
 ;; === バックアップファイルを作成しない
@@ -167,7 +169,7 @@
 ;; Emacs Lisp用の便利なHelp
 ;;====================================================================
 
-(message "[%s] %s" (my-display-time) "ここ2")
+;; === helpful
 (use-package helpful
   :bind
   (("C-h f" . helpful-callable)
@@ -182,7 +184,9 @@
 
 ;; === ddskk
 (defun my-switch-ime (input-source)
+  "Emacsにフォーカスが当たったときにmacSKK.asciiに切り替える(macismコマンド必要)"
   (call-process "macism" nil 0 nil input-source))
+
 (add-function :after after-focus-change-function
               (lambda ()
                 (when (frame-focus-state)
@@ -207,7 +211,9 @@
   :hook
   (isearch-mode-hook . skk-isearch-mode-setup)
   (isearch-mode-end-hook . skk-isearch-mode-cleanup)
-  :bind ("C-j" . skk-kakutei))
+  :bind
+  ("C-x j" . skk-mode)
+  ("C-j" . skk-kakutei))
 
 (defun my-turn-on-skk ()
   (skk-mode +1)
@@ -222,7 +228,6 @@
 ;; UIと外観 (フォントとテーマ)
 ;;====================================================================
 
-(message "[%s] %s" (my-display-time) "ここ3")
 ;; === フォント設定
 (set-face-attribute 'default nil :font "Source Han Code JP-14")
 (set-face-attribute 'fixed-pitch nil :font "Source Han Code JP-14")
@@ -233,8 +238,8 @@
 
 ;; === カラーテーマ
 (use-package catppuccin-theme
-  :init
-  (setq catppuccin-flavor 'macchiato) ; latte/frappe/macchiato
+  :custom
+  (catppuccin-flavor 'macchiato)
 
   :config
   (load-theme 'catppuccin t))
@@ -251,48 +256,45 @@
 (use-package colorful-mode
   :custom
   (colorful-use-prefix t)
-  :config
-  (global-colorful-mode 1))
+  (global-colorful-mode t))
 
 ;; === doom-modeline
 (use-package doom-modeline
-  :init
-  (doom-modeline-mode +1)
-
-  :config
-  (setq doom-modeline-modal t)
-  (setq doom-modeline-major-mode-icon nil))
+  :custom
+  (doom-modeline-mode t)
+  (doom-modeline-modeal t)
+  (doom-modeline-major-mode-icon nil))
 
 ;; === ダッシュボード
 (use-package dashboard
+  :custom
+  (dashboard-startup-banner 'logo)
+  (dashboard-center-content t)
+  (dashboard-vertically-center-content t)
+  (dashboard-items '((recents . 5)
+                     (bookmarks . 5)
+                     (projects . 5)))
   :config
-  (dashboard-setup-startup-hook)
-  (setq dashboard-startup-banner 'logo)
-  (setq dashboard-center-content t)
-  (setq dashboard-vertically-center-content t)
-  (setq dashboard-items '((recents . 5)
-                          (bookmarks . 5)
-                          (projects . 5))))
+  (dashboard-setup-startup-hook))
 
 ;; === TODOハイライト
 (use-package hl-todo
-  :config
-  (setq hl-todo-keyword-faces
-        `(("TODO" warning bold)
-          ("NOTE" ansi-color-cyan bold)
-          ("XXX" error bold)))
-  (global-hl-todo-mode +1))
+  :custom
+  (hl-todo-keyword-faces
+   `(("TODO" warning bold)
+     ("NOTE" ansi-color-cyan bold)
+     ("XXX" error bold)))
+  (global-hl-todo-mode t))
 
 ;;====================================================================
 ;; EvilによるVimキーバインド
 ;;====================================================================
 
-(message "[%s] %s" (my-display-time) "ここ4")
 (use-package undo-fu)
 (use-package undo-fu-session
   :after undo-fu
-  :config
-  (undo-fu-session-global-mode +1))
+  :custom
+  (undo-fu-session-global-mode t))
 
 ;; === evilによるVimキーバインドのエミュレート
 (use-package evil
@@ -315,8 +317,6 @@
   (define-key evil-insert-state-map (kbd "C-k") nil)
   (define-key evil-insert-state-map (kbd "C-d") nil)
   (define-key evil-insert-state-map (kbd "C-y") nil)
-  (define-key key-translation-map (kbd "C-h") (kbd "DEL"))
-  (define-key key-translation-map (kbd "C-;") (kbd "C-h"))
   (define-key evil-motion-state-map (kbd ",") nil)
   (define-key evil-insert-state-map (kbd "C-S-w") #'backward-kill-sexp)
   (setq evil-symbol-word-search t)      ; ひとかたまりで検索
@@ -379,7 +379,6 @@
 ;;====================================================================
 ;; ファイルツリー (dired-subtree)
 ;;====================================================================
-(message "[%s] %s" (my-display-time) "ここ4")
 
 (use-package dired-subtree)
 (setq insert-directory-program "gls") ;; GNU版lsを使う
@@ -465,8 +464,9 @@
 
 ;; === embark-exportしたバッファを直接編集して一括置換などを実現する (wgrep)
 (use-package wgrep
-  :config
-  (setq wgrep-auto-save-buffer t))
+  :custom
+  (wgrep-auto-save-buffer t)
+  (wgrep-change-readonly-file t))
 
 ;;====================================================================
 ;; バッファ内のインライン/ポップアップ補完
@@ -592,6 +592,7 @@
 ;; ワークスペース (perspective.el)
 ;;====================================================================
 
+
 (use-package perspective
   :init
   (setq persp-suppress-no-prefix-key-warning t)
@@ -611,6 +612,7 @@
 ;; (4) docker/orbstack
 ;; (5) Tree-sitterをコンパイルできるもの: `xcode-select --install`
 ;;====================================================================
+
 
 ;; === clojure-ts-mode
 ;; 従来のclojure-modeではなくclojure-ts-modeで置き換える
@@ -645,6 +647,7 @@
 ;;====================================================================
 ;; Markdown
 ;;====================================================================
+
 (use-package markdown-mode
   :mode ("\\.md\\'" . gfm-mode)
   :init
@@ -660,6 +663,7 @@
 ;;====================================================================
 ;; Claude Code連携
 ;;====================================================================
+
 
 (use-package claude-code-ide
   :vc (:url "http://github.com/manzaltu/claude-code-ide.el" :rev :newest)
@@ -697,6 +701,7 @@
 ;; Dockerコンテナ内開発ワークフロー
 ;;====================================================================
 
+
 (use-package dockerfile-mode
   :mode ("Dockerfile\\'" . dockerfile-mode))
 
@@ -724,6 +729,7 @@
 ;;====================================================================
 ;; DB接続
 ;;====================================================================
+
 (use-package sql
   :ensure nil
   :config
@@ -751,6 +757,7 @@
 ;;====================================================================
 ;; Format On Save設定の集約
 ;;====================================================================
+
 
 ;; === Emacs Lisp
 (defun my-format-emacs-lisp ()
@@ -804,6 +811,7 @@
 ;;====================================================================
 ;; キーバインド (general.el)
 ;;====================================================================
+
 
 ;; === ユーティリティ関数
 (defun my-open-user-init ()
@@ -969,10 +977,7 @@
     "e e" '(eval-last-sexp :wk "eval last sexp")
     "e f" '(eval-defun :wk "eval defun")
     "e b" '(eval-buffer :wk "eval buffer")
-    "m" '(:ignore t :wk "Measure time")
-    "m w" '(my-wrap-with-measure-time :wk "wrap with meassure-time")
-    "m i" '(my-insert-time :wk "insert time")
-    ;; "m r" '(package-quickstart-refresh :wk "package refresh")
+    "i" '(my-insert-time :wk "insert time")
     )
 
   ;; === Markdown
@@ -998,8 +1003,6 @@
    "S-<return>" 'copilot-chat-prompt-send)
   )
 
-(message "[%s] Emacs loaded." (current-time-string))
-
 ;;====================================================================
 ;; 設定・色の細かいカスタマイズ
 ;;====================================================================
@@ -1014,8 +1017,12 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages nil)
- '(package-vc-selected-packages '((eat :url "http://codeberg.org/akib/emacs-eat")))
- )
+ '(package-vc-selected-packages
+   '((copilot :url "https://github.com/copilot-emacs/copilot.el" :branch
+              "main")
+     (claude-code-ide :url
+                      "http://github.com/manzaltu/claude-code-ide.el")
+     (eat :url "http://codeberg.org/akib/emacs-eat"))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -1038,3 +1045,5 @@
  '(show-paren-match ((t (:background "#8aadf4" :foreground "#1e2030" :weight bold))))
  '(show-paren-mismatch ((t (:background "#ed8796" :foreground "#1e2030" :weight bold))))
  '(trailing-whitespace ((t (:background "#ed8796" :foreground "#ed8796")))))
+
+(message "[%s] %s" (my-display-time) "init.el loaded!")

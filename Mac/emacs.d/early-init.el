@@ -1,5 +1,4 @@
 ;;; early-init.el --- Emacsの早期初期化設定 -*- lexical-binding: t; -*-
-(message "[%s] Loading emacs..." (current-time-string))
 
 ;; === ネイティブコンパイルをMacで動作させるためパスを通す
 (setenv "LIBRARY_PATH"
