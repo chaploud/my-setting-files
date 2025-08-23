@@ -97,13 +97,13 @@
 (setq delete-by-moving-to-trash t)
 
 ;; === 他プロセスの編集をバッファに反映
-(global-auto-revert-mode +1)
+(global-auto-revert-mode t)
 
 ;; === シンボリックリンクを常に質問なしで開く
 (setq vc-follow-symlinks t)
 
 ;; === 長い行を含むファイルの最適化
-(global-so-long-mode +1)
+(global-so-long-mode t)
 
 ;; ===== UI・外観
 ;; === フレームのタイトル
@@ -111,7 +111,7 @@
 (setq-default ns-use-proxy-icon nil) ; アイコンも不要
 
 ;; === 現在行を強調表示
-(global-hl-line-mode +1)
+(global-hl-line-mode t)
 
 ;; === 行間を少し広げる
 (setq-default line-spacing 0.07)
@@ -121,7 +121,7 @@
 (add-hook 'text-mode-hook 'display-line-numbers-mode)
 
 ;; === カーソル位置の列番号をモードラインに表示
-(column-number-mode +1)
+(column-number-mode t)
 
 ;; === tree-sittterによる色付けmax
 (setq treesit-font-lock-level 4)
@@ -136,26 +136,27 @@
               standard-indent 2)
 
 ;; === 対応括弧を補完
-(electric-pair-mode +1)
+(electric-pair-mode t)
 
 ;; === ファイル履歴を保存
 (setq recentf-max-saved-items 50)
-(recentf-mode +1)
+(recentf-mode t)
 
 ;; === コマンドの履歴を保存
-(savehist-mode +1)
+(savehist-mode t)
 
 ;; === ウィンドウの状態を保持
-(winner-mode +1)
+(winner-mode t)
 
 ;; === 末尾のスペースやタブを可視化
 (defun my-turn-on-show-trailing-ws ()
+  "バッファローカルで末尾のスペースを可視化する"
   (setq-local show-trailing-whitespace t))
 (add-hook 'prog-mode-hook #'my-turn-on-show-trailing-ws)
 (add-hook 'text-mode-hook #'my-turn-on-show-trailing-ws)
 
 ;; === which-keyのディレイ
-(which-key-mode +1)
+(which-key-mode t)
 (setq which-key-idle-delay 0.3
       which-key-idle-secondary-delay 0)
 
@@ -216,7 +217,8 @@
   ("C-j" . skk-kakutei))
 
 (defun my-turn-on-skk ()
-  (skk-mode +1)
+  "skk-modeを有効にして、英字モードにする"
+  (skk-mode t)
   (skk-latin-mode-on))
 
 (add-hook 'evil-normal-state-entry-hook #'my-turn-on-skk)
@@ -306,7 +308,7 @@
   (setq evil-undo-system 'undo-fu)
 
   :config
-  (evil-mode +1)
+  (evil-mode t)
   ;; Emacsキーバインドも一部使う
   (define-key evil-insert-state-map (kbd "C-f") nil)
   (define-key evil-insert-state-map (kbd "C-b") nil)
@@ -336,7 +338,7 @@
 (use-package evil-escape
   :after evil
   :config
-  (evil-escape-mode +1)
+  (evil-escape-mode t)
   (add-to-list 'evil-escape-inhibit-functions
                (lambda () isearch-mode)))
 
@@ -344,7 +346,7 @@
 (use-package evil-surround
   :after evil
   :config
-  (global-evil-surround-mode +1))
+  (global-evil-surround-mode t))
 
 ;; === 編集操作をハイライト
 (use-package evil-goggles
@@ -355,7 +357,7 @@
   (setq evil-goggles-enable-change nil)
 
   :config
-  (evil-goggles-mode +1)
+  (evil-goggles-mode t)
   ;; (evil-goggles-use-diff-refine-faces)
   (setq evil-goggles-duration 0.200))
 
@@ -363,12 +365,12 @@
 (use-package evil-anzu
   :after evil
   :config
-  (global-anzu-mode +1))
+  (global-anzu-mode t))
 
 ;; === コメントアウト
 (use-package evil-commentary
   :config
-  (evil-commentary-mode +1))
+  (evil-commentary-mode t))
 
 ;; === 数値のインクリメン・デクリメント
 (use-package evil-numbers
@@ -422,12 +424,15 @@
 
 ;; === 便利な統合コマンドの提供 (consult)
 (use-package consult
-  :hook (completion-list-mode . consult-preview-at-point-mode))
+  :custom
+  (consult-async-min-input 2)
+  :hook
+  (completion-list-mode . consult-preview-at-point-mode))
 
 ;; === 補完候補を垂直に表示するUI (vertico)
 (use-package vertico
   :init
-  (vertico-mode +1)
+  (vertico-mode t)
 
   :custom
   (vertico-cycle t)                  ; 末尾から先頭の候補にサイクル
@@ -437,6 +442,9 @@
   (setq vertico-resize nil))
 
 ;; === 柔軟な絞り込みスタイル (orderless)
+;; = leteralスタイル: 完全一致
+;; ~ flexスタイル: あいまい検索
+;; ! withoutスタイル: 以外
 (use-package orderless
   :custom
   (completion-styles '(orderless basic partial-completion))
@@ -448,10 +456,13 @@
 (use-package marginalia
   :after vertico
   :init
-  (marginalia-mode +1))
+  (marginalia-mode t))
 
 ;; === 候補に対するアクション (embark)
 (use-package embark
+  ;; :hook
+  ;; (grep-mode . my-embark-export-hook)
+  ;; (occur-mode . my-embark-export-hook)
   :bind
   (("C-." . embark-act)
    ("C-," . embark-export)))
@@ -468,6 +479,18 @@
   (wgrep-auto-save-buffer t)
   (wgrep-change-readonly-file t))
 
+;; (defun my-embark-export-hook ()
+;;   "embark-exportで表示されたバッファを編集可能にするフック関数"
+;;   (when (string-match-p "\\*Embark Export:" (buffer-name))
+;;     (cond
+;;      ;; consult-lineなどはOccurモードで編集可能にする
+;;      ((derived-mode-p 'occur-mode)
+;;       (occur-edit-mode))
+
+;;      ;; consult-ripgrepなどはwgrepモードで編集可能にする
+;;      ((derived-mode-p 'grep-mode)
+;;       (wgrep-change-to-wgrep-mode)))))
+
 ;;====================================================================
 ;; バッファ内のインライン/ポップアップ補完
 ;;====================================================================
@@ -475,9 +498,9 @@
 ;; === バッファ内補完のUIフロントエンド (corfu)
 (use-package corfu
   :init
-  (global-corfu-mode +1)
-  (corfu-popupinfo-mode +1)
-  (corfu-history-mode +1)
+  (global-corfu-mode t)
+  (corfu-popupinfo-mode t)
+  (corfu-history-mode t)
 
   :custom
   (corfu-auto t)
@@ -514,7 +537,7 @@
 (use-package tempel)
 
 (use-package eglot-tempel
-  :init (eglot-tempel-mode +1))
+  :init (eglot-tempel-mode t))
 
 ;; === 補完ソースの統合・拡張 (cape)
 (use-package cape
@@ -578,7 +601,7 @@
   (global-diff-hl-mode)
   (add-hook 'magit-pre-refresh-hook #'diff-hl-magit-pre-refresh)
   (add-hook 'magit-post-refresh-hook #'diff-hl-magit-post-refresh)
-  (diff-hl-flydiff-mode +1))
+  (diff-hl-flydiff-mode t))
 
 ;; === magitをgit-deltaを使って高速化しつつ見やすくする
 ;; bat, deltaのインストール
@@ -1047,3 +1070,5 @@
  '(trailing-whitespace ((t (:background "#ed8796" :foreground "#ed8796")))))
 
 (message "[%s] %s" (my-display-time) "init.el loaded!")
+
+;; TODO: poppoerの導入
