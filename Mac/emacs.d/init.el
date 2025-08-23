@@ -1,14 +1,18 @@
 ;;; init.el --- メイン設定ファイル -*- lexical-binding: t; -*-
 
-;;====================================================================
-;; 実行時間計測用ツール
-;;===================================================================
-;; init.elの各処理時間を計測したい場合に利用
+;;; Commentary:
+;; Emacsの設定ファイル
 
+;;; Code:
+
+;;====================================================================
+;; ユーティリティ関数
+;;===================================================================
+;; === 時間計測
 (defvar my-time-tmp (current-time))
 
 (defun my-display-time ()
-  "現在時刻と前回呼び出しからの経過時間を表示"
+  "Displays the current time and the elapsed time since the last call."
   (let* ((now (current-time))
          (diff (float-time (time-subtract now my-time-tmp))))
     (setq my-time-tmp now)
@@ -16,14 +20,36 @@
             (format-time-string "%Y-%m-%d %H:%M:%S.%6N" now) diff)))
 
 (defun my-insert-time ()
-  "カーソル位置に計測用の処理を挿入"
+  "Insert measurement template at point."
   (interactive)
   (insert "(message \"[%s] %s\" (my-display-time) \"\")"))
 
+;; === init.elを開く
+(defun my-open-user-init ()
+  "Open the user's init file."
+  (interactive)
+  (find-file user-init-file))
+
+;; === pareditでカーソル以降をそのレベルで閉じるまで削除
+(defun my-paredit-kill-to-end ()
+  "Kill to the end of the current sexp."
+  (interactive)
+  (let ((end (save-excursion (paredit-close-parenthesis) (point))))
+    (kill-region (point) (- end 1))))
+
+;; === カーソル下のシンボルが組み込みのパッケージかどうかチェック
+(defun my-package-built-in-p (symbol)
+  "Check if SYMBOL is a built-in package."
+  (interactive (list (or (symbol-at-point)
+                         (intern (read-string "Package: ")))))
+  (message "[%s] built-in: %s" symbol (when (package-built-in-p symbol) t)))
+
+;;====================================================================
 (message "[%s] %s" (my-display-time) "init.el loading...")
 
-;;=== TIPS / Rules of use-package ====================================
+;;===== TIPS / Rules of use-package ==================================
 ;; 空行は入れないように統一する
+;; 組み込みは:ensure nil, 外部は:ensure t
 ;; :after 依存関係, 1行でOK。これ以外は基本キーワード後に開業
 ;; :init パッケージのロード前に実行
 ;; :custom defcustom変数はこちらで設定 (setq x y)のsetqを除いた形式
@@ -38,6 +64,7 @@
 ;;====================================================================
 
 (use-package exec-path-from-shell
+  :ensure t
   ;; NOTE: PATH以外も欲しい場合はcustomで指定
   :config
   (exec-path-from-shell-initialize))
@@ -47,6 +74,9 @@
 ;;====================================================================
 
 ;; ===== キーバインド
+;; === MacのCommandをMetaキーに
+(setq mac-command-modifier 'meta)
+
 ;; === C-hをBackspaceに、C-;をC-hに割り当て
 (define-key key-translation-map (kbd "C-h") (kbd "DEL"))
 (define-key key-translation-map (kbd "C-;") (kbd "C-h"))
@@ -54,11 +84,11 @@
 ;; ===== システム・Emacsコア連携
 ;; === 自分で配置したEmacsのソースコードへの参照を追加
 ;; 利用しているEmacsバージョンによって適宜ソースコードはダウンロード必要
-(setq find-function-C-source-directory
-      (concat "~/Documents/OSS/emacs/emacs-" emacs-version "/src"))
-
-;; === MacのCommandをMetaキーに
-(setq mac-command-modifier 'meta)
+(use-package find-func
+  :ensure nil
+  :config
+  (setq find-function-C-source-directory
+        (concat "~/Documents/OSS/emacs/emacs-" emacs-version "/src")))
 
 ;; === デーモン起動 (シェルの`e'コマンドから使う)
 ;; === `e'コマンド (~/.zshrcなどに追加)
@@ -71,6 +101,7 @@
 ;;   fi
 ;; }
 (use-package server
+  :ensure nil
   :config
   (unless (server-running-p)
     (server-start)))
@@ -109,8 +140,11 @@
 (electric-pair-mode t)
 
 ;; === ファイル履歴を保存
-(setq recentf-max-saved-items 50)
-(recentf-mode t)
+(use-package recentf
+  :ensure nil
+  :custom
+  (recentf-max-saved-items 50)
+  (recentf-mode t))
 
 ;; === コマンドの履歴を保存
 (savehist-mode t)
@@ -118,17 +152,23 @@
 ;; === ウィンドウの状態を保持
 (winner-mode t)
 
+;; === ウィンドウの分割方向の閾値を広げる
+(setq split-width-threshold 140)
+
 ;; === 末尾のスペースやタブを可視化
 (defun my-turn-on-show-trailing-ws ()
-  "バッファローカルで末尾のスペースを可視化する"
+  "Visualize trailing whitespace buffer-locally."
   (setq-local show-trailing-whitespace t))
 (add-hook 'prog-mode-hook #'my-turn-on-show-trailing-ws)
 (add-hook 'text-mode-hook #'my-turn-on-show-trailing-ws)
 
 ;; === which-keyのディレイ
-(which-key-mode t)
-(setq which-key-idle-delay 0.3
-      which-key-idle-secondary-delay 0)
+(use-package which-key
+  :ensure nil
+  :custom
+  (which-key-mode t)
+  (which-key-idle-delay 0.3)
+  (which-key-idle-secondary-delay 0))
 
 ;; ==== モード別設定
 ;; === zshファイルを開いたときにshell-script-modeを有効に
@@ -173,6 +213,7 @@
 
 ;; === helpful
 (use-package helpful
+  :ensure t
   :bind
   (("C-h f" . helpful-callable)
    ("C-h v" . helpful-variable)
@@ -195,6 +236,7 @@
                   (my-switch-ime "net.mtgto.inputmethod.macSKK.ascii"))))
 
 (use-package ddskk
+  :ensure t
   :custom
   (skk-server-host "127.0.0.1")
   (skk-server-portnum 1178)
@@ -213,7 +255,7 @@
   :hook
   (isearch-mode-hook . skk-isearch-mode-setup)
   (isearch-mode-end-hook . skk-isearch-mode-cleanup)
-  (evil-normal-state-entry-hook . my-turn-on-skk)
+  (evil-normal-state-entry-hook . skk-latin-mode-on)
   (text-mode-hook . my-turn-on-skk)
   (prog-mode-hook . my-turn-on-skk)
   (eat-mode-hook . my-turn-on-skk)
@@ -244,7 +286,10 @@
 (column-number-mode t)
 
 ;; === tree-sittterによる色付けmax
-(setq treesit-font-lock-level 4)
+(use-package treesit
+  :ensure nil
+  :custom
+  (treesit-font-lock-level 4))
 
 ;; === フォント設定
 (set-face-attribute 'default nil :font "Source Han Code JP-14")
@@ -252,10 +297,12 @@
 (set-face-attribute 'variable-pitch nil :font "Source Han Code JP-14")
 
 ;; === nerd iconsを利用
-(use-package nerd-icons)
+(use-package nerd-icons
+  :ensure t)
 
 ;; === カラーテーマ
 (use-package catppuccin-theme
+  :ensure t
   :custom
   (catppuccin-flavor 'macchiato)
   :config
@@ -266,17 +313,20 @@
 
 ;; === 対応カッコを色付け表示
 (use-package rainbow-delimiters
+  :ensure t
   :hook
   (prog-mode . rainbow-delimiters-mode))
 
 ;; === カラーコードを色付け
 (use-package colorful-mode
+  :ensure t
   :custom
   (colorful-use-prefix t)
   (global-colorful-mode t))
 
 ;; === doom-modeline
 (use-package doom-modeline
+  :ensure t
   :custom
   (doom-modeline-mode t)
   (doom-modeline-modeal t)
@@ -284,6 +334,7 @@
 
 ;; === ダッシュボード
 (use-package dashboard
+  :ensure t
   :custom
   (dashboard-startup-banner 'logo)
   (dashboard-center-content t)
@@ -296,6 +347,7 @@
 
 ;; === TODOハイライト
 (use-package hl-todo
+  :ensure t
   :custom
   (hl-todo-keyword-faces
    `(("TODO" warning bold)
@@ -307,14 +359,17 @@
 ;; EvilによるVimキーバインド
 ;;====================================================================
 
-(use-package undo-fu)
+(use-package undo-fu
+  :ensure t)
 (use-package undo-fu-session
+  :ensure t
   :after undo-fu
   :custom
   (undo-fu-session-global-mode t))
 
 ;; === evilによるVimキーバインドのエミュレート
 (use-package evil
+  :ensure t
   :after (undo-fu undo-fu-session)
   :custom
   (evil-want-integration t)
@@ -342,6 +397,7 @@
 
 ;; === evilの便利なキーバインド追加
 (use-package evil-collection
+  :ensure t
   :after evil
   :custom
   (evil-collection-setup-minibuffer t)
@@ -351,6 +407,7 @@
 
 ;; === fdでESCできるように
 (use-package evil-escape
+  :ensure t
   :after evil
   :custom
   (evil-escape-mode t)
@@ -361,12 +418,14 @@
 
 ;; === 囲み系の操作
 (use-package evil-surround
+  :ensure t
   :after evil
   :custom
   (global-evil-surround-mode t))
 
 ;; === 編集操作をハイライト
 (use-package evil-goggles
+  :ensure t
   :after evil
   :custom
   (evil-goggles-mode t)
@@ -376,17 +435,20 @@
 
 ;; === 検索ヒット件数を表示
 (use-package evil-anzu
+  :ensure t
   :after evil
   :custom
   (global-anzu-mode t))
 
 ;; === コメントアウト
 (use-package evil-commentary
+  :ensure t
   :config
   (evil-commentary-mode t))
 
 ;; === 数値のインクリメント
 (use-package evil-numbers
+  :ensure t
   :after evil
   :bind
   (:map evil-normal-state-map
@@ -398,6 +460,7 @@
 
 ;; === dired上でTABでサブディレクトリを展開できる
 (use-package dired-subtree
+  :ensure t
   :custom
   ;; diredのオプションだがここに書く
   (dired-listing-switches "-alhG --time-style=long-iso"))
@@ -408,6 +471,7 @@
 
 ;; === 便利な統合コマンドの提供 (consult)
 (use-package consult
+  :ensure t
   :custom
   (consult-async-min-input 2)
   :hook
@@ -415,6 +479,7 @@
 
 ;; === 補完候補を垂直に表示するUI (vertico)
 (use-package vertico
+  :ensure t
   :custom
   (vertico-mode t)
   (vertico-cycle t)
@@ -422,54 +487,54 @@
   (vertico-resize nil))
 
 ;; === 柔軟な絞り込みスタイル (orderless)
-;; = leteralスタイル: 完全一致
-;; ~ flexスタイル: あいまい検索
-;; ! withoutスタイル: 以外
 (use-package orderless
+  :ensure t
   :custom
   (completion-styles '(orderless basic partial-completion))
   (completion-category-defaults nil)
-  (completion-category-overrides '((file (styles partial-completion))))
-  (orderless-matching-styles '(orderless-literal orderless-flex orderless-regexp)))
+  (completion-category-overrides '((file (styles partial-completion))
+                                   (corfu (styles basic partial-completion orderless))))
+  ;; 正規表現とあいまい検索もデフォルトで有効に
+  ;; 完全一致(literal)を優先させたいときは先頭に`='をつける
+  (orderless-matching-styles '(orderless-literal
+                               orderless-flex
+                               orderless-regexp)))
 
 ;; === 補完候補に注釈を追加 (marginalia)
 (use-package marginalia
+  :ensure t
   :after vertico
-  :init
+  :custom
   (marginalia-mode t))
 
 ;; === 候補に対するアクション (embark)
 (use-package embark
-  ;; :hook
-  ;; (grep-mode . my-embark-export-hook)
-  ;; (occur-mode . my-embark-export-hook)
+  :ensure t
   :bind
   (("C-." . embark-act)
    ("C-," . embark-export)))
 
 ;; === embarkをconsultから使う (embark-consult)
 (use-package embark-consult
+  :ensure t
   :after (embark consult)
   :hook
   (embark-collect-mode . consult-preview-at-point-mode))
 
 ;; === embark-exportしたバッファを直接編集して一括置換などを実現する (wgrep)
 (use-package wgrep
+  :ensure t
   :custom
   (wgrep-auto-save-buffer t)
   (wgrep-change-readonly-file t))
 
-;; (defun my-embark-export-hook ()
-;;   "embark-exportで表示されたバッファを編集可能にするフック関数"
-;;   (when (string-match-p "\\*Embark Export:" (buffer-name))
-;;     (cond
-;;      ;; consult-lineなどはOccurモードで編集可能にする
-;;      ((derived-mode-p 'occur-mode)
-;;       (occur-edit-mode))
-
-;;      ;; consult-ripgrepなどはwgrepモードで編集可能にする
-;;      ((derived-mode-p 'grep-mode)
-;;       (wgrep-change-to-wgrep-mode)))))
+;;===== Workflow of Replace =========================================
+;; 1. `SPC s s' (consult-line)や `SPC s p' (consult-ripgrep)で候補表示
+;; 2. `C-,' (embark-export)でembark-collect-modeに
+;; 3. OccurやWgrepの違いはあるが, `i'で編集モードに入る
+;; 4. `:%s;xxx;yyy;g' などで一括置換 (普通に編集してもいい)
+;; 5. `ESC'で編集モードを抜ける (この際に変更を保存するか聞かれることもある)
+;;====================================================================
 
 ;;====================================================================
 ;; バッファ内のインライン/ポップアップ補完
@@ -477,12 +542,11 @@
 
 ;; === バッファ内補完のUIフロントエンド (corfu)
 (use-package corfu
-  :init
+  :ensure t
+  :custom
   (global-corfu-mode t)
   (corfu-popupinfo-mode t)
   (corfu-history-mode t)
-
-  :custom
   (corfu-auto t)
   (corfu-auto-delay 0)
   (corfu-popupinfo-delay 0)
@@ -495,6 +559,7 @@
 
 ;; === 補完ポップアップ内のアイコン
 (use-package nerd-icons-corfu
+  :ensure t
   :after (corfu nerd-icons)
   :config
   (add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter))
@@ -514,13 +579,16 @@
   (eglot-connect-timeout 120))
 
 ;; === スニペット・テンプレート (tmpel)
-(use-package tempel)
+(use-package tempel
+  :ensure t)
 
 (use-package eglot-tempel
+  :ensure t
   :init (eglot-tempel-mode t))
 
 ;; === 補完ソースの統合・拡張 (cape)
 (use-package cape
+  :ensure t
   :hook
   (prog-mode . my-prog-capf)
   (text-mode . my-text-capf)
@@ -555,6 +623,7 @@
 
 ;; === eat
 (use-package eat
+  :ensure t
   :vc (:url "http://codeberg.org/akib/emacs-eat" :rev :newest)
   :custom
   (eat-enable-shell-prompt-annotation nil)
@@ -569,11 +638,12 @@
 ;;====================================================================
 
 ;; === magit
-(use-package magit)
-(setq split-width-threshold 140)
+(use-package magit
+  :ensure t)
 
 ;; === フリンジに差分を強調表示 (diff-hl)
 (use-package diff-hl
+  :ensure t
   :custom
   (global-diff-hl-mode t)
   :config
@@ -586,6 +656,7 @@
 ;; bat, deltaのインストール
 ;; catppuccinのbat, delta用のテーマ設定がそれぞれ必要
 (use-package magit-delta
+  :ensure t
   :hook (magit-mode . magit-delta-mode)
   :custom
   (magit-delta-default-dark-theme "Catppuccin Macchiato"))
@@ -594,8 +665,8 @@
 ;; ワークスペース (perspective.el)
 ;;====================================================================
 
-
 (use-package perspective
+  :ensure t
   :init
   (setq persp-suppress-no-prefix-key-warning t)
   (persp-mode)
@@ -615,13 +686,14 @@
 ;; (5) Tree-sitterをコンパイルできるもの: `xcode-select --install`
 ;;====================================================================
 
-
 ;; === clojure-ts-mode
 ;; 従来のclojure-modeではなくclojure-ts-modeで置き換える
 ;; (.clj,.cljc,.cljs,.cljd,.edn自動認識)
-(use-package clojure-ts-mode)
+(use-package clojure-ts-mode
+  :ensure t)
 
 (use-package cider
+  :ensure t
   :hook (clojure-ts-mode . cider-mode)
   :custom
   (cider-repl-buffer-size-limit 10000)
@@ -633,6 +705,7 @@
 
 ;; 構造的編集(Paredit)
 (use-package paredit
+  :ensure t
   :bind (:map paredit-mode-map
               ("C-j" . nil))
   :hook ((emacs-lisp-mode . paredit-mode)
@@ -641,6 +714,7 @@
 
 ;; Javaライブラリのジャンプ時などに
 (use-package jarchive
+  :ensure t
   :after eglot
   :config
   (jarchive-setup)
@@ -651,6 +725,7 @@
 ;;====================================================================
 
 (use-package markdown-mode
+  :ensure t
   :mode ("\\.md\\'" . gfm-mode)
   :init
   (setq markdown-command '("pandoc" "--from=markdown" "--to=html5"))
@@ -666,8 +741,8 @@
 ;; Claude Code連携
 ;;====================================================================
 
-
 (use-package claude-code-ide
+  :ensure t
   :vc (:url "http://github.com/manzaltu/claude-code-ide.el" :rev :newest)
   :custom
   ;; skkとの相性の関係からvtermではなくeatを使用
@@ -680,6 +755,7 @@
 ;;====================================================================
 
 (use-package copilot
+  :ensure t
   :vc (:url "https://github.com/copilot-emacs/copilot.el" :rev :newest :branch "main")
   :hook
   (prog-mode . copilot-mode)
@@ -697,20 +773,23 @@
   (add-to-list 'copilot-indentation-alist '(emacs-lisp-mode  2))
   )
 
-(use-package copilot-chat)
+(use-package copilot-chat
+  :ensure t)
 
 ;;====================================================================
 ;; Dockerコンテナ内開発ワークフロー
 ;;====================================================================
 
-
 (use-package dockerfile-mode
+  :ensure t
   :mode ("Dockerfile\\'" . dockerfile-mode))
 
 (use-package yaml-mode
+  :ensure t
   :mode ("\\.ya?ml\\'" . yaml-mode))
 
 (use-package docker
+  :ensure t
   :custom
   (docker-container-columns
    '(
@@ -718,8 +797,7 @@
      (:name "Status" :width 30 :template "{{ json .Status }}" :sort nil :format nil)
      (:name "Ports" :width 30 :template "{{ json .Ports }}" :sort nil :format nil)
      ))
-  (docker-container-default-sort-key '("Names"))
-  )
+  (docker-container-default-sort-key '("Names")))
 
 (add-to-list 'tramp-remote-path 'tramp-own-remote-path)
 (setq tramp-default-method "docker")
@@ -759,7 +837,6 @@
 ;;====================================================================
 ;; Format On Save設定の集約
 ;;====================================================================
-
 
 ;; === Emacs Lisp
 (defun my-format-emacs-lisp ()
@@ -814,20 +891,9 @@
 ;; キーバインド (general.el)
 ;;====================================================================
 
-
-;; === ユーティリティ関数
-(defun my-open-user-init ()
-  (interactive)
-  (find-file user-init-file))
-
-(defun my-paredit-kill-to-end ()
-  "Kill to the end of the current sexp."
-  (interactive)
-  (let ((end (save-excursion (paredit-close-parenthesis) (point))))
-    (kill-region (point) (- end 1))))
-
 ;; use-packageと:generalの組み合わせで色々できる
 (use-package general
+  :ensure t
   :after (evil evil-collection)
   :config
   (general-evil-setup)
@@ -862,6 +928,7 @@
     ;; (t) トグル
     "t" '(:ignore t :wk "Toggle")
     "t l" '(toggle-truncate-lines :wk "truncate line")
+    "t f" '(flymake-mode :wk "toggle flymake")
 
     ;; (q) 終了操作
     "q" '(:ignore t :wk "Quit")
@@ -884,11 +951,13 @@
     "b h" '(dashboard-open :wk "dashboard")
     "b l" '(consult-bookmark :wk "bookmark list")
     "b s" '(bookmark-set :wk "bookmark set")
+    "b d" '(bookmark-delete :wk "bookmark delete")
 
     ;; (s) 検索
     "s" '(:ignore t :wk "Search")
     "s s" '(consult-line :wk "search in buffer")
     "s p" '(consult-ripgrep :wk "search in project")
+    "s f" '(consult-flymake :wk "search flymake")
 
     ;; (p) プロジェクト管理
     "p" '(:ignore t :wk "Project/Package")
@@ -908,8 +977,6 @@
     "g s" '(magit-status-quick :wk "git status")
     "g l" '(magit-log-current :wk "git log")
     "g d" '(vc-diff :wk "git diff")
-    "g n" '(flymake-goto-next-error :wk "goto next error")
-    "g p" '(flymake-goto-prev-error :wk "goto prev error")
 
     ;; (d) 差分/デバッグ/Docker/DB
     "d" '(:ignore t :wk "Diff/Debug/Docker/DB")
@@ -980,7 +1047,7 @@
     "e f" '(eval-defun :wk "eval defun")
     "e b" '(eval-buffer :wk "eval buffer")
     "i" '(my-insert-time :wk "insert time")
-    )
+    "p" '(my-package-built-in-p :wk "check package built-in"))
 
   ;; === Markdown
   (my-local-leader-def
@@ -999,11 +1066,16 @@
    :states '(normal)
    "K" 'helpful-at-point)
 
+  ;; === Flymakeのエラージャンプ
+  (general-define-key
+   :states '(normal)
+   "] ]" '(flymake-goto-next-error :wk "goto next error")
+   "[ [" '(flymake-goto-prev-error :wk "goto prev error"))
+
   ;; === Copilot Chatでshift+enterで送信
   (general-define-key
    :keymaps 'copilot-chat-org-prompt-mode-map
-   "S-<return>" 'copilot-chat-prompt-send)
-  )
+   "S-<return>" 'copilot-chat-prompt-send))
 
 ;;====================================================================
 ;; 設定・色の細かいカスタマイズ
@@ -1018,13 +1090,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages nil)
- '(package-vc-selected-packages
-   '((copilot :url "https://github.com/copilot-emacs/copilot.el" :branch
-              "main")
-     (claude-code-ide :url
-                      "http://github.com/manzaltu/claude-code-ide.el")
-     (eat :url "http://codeberg.org/akib/emacs-eat"))))
+ )
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
