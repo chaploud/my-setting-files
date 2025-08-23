@@ -1,7 +1,7 @@
 ;;; init.el --- メイン設定ファイル -*- lexical-binding: t; -*-
 
 ;;====================================================================
-;; 実行時間計測用マクロ
+;; 実行時間計測用ツール
 ;;===================================================================
 ;; init.elの各処理時間を計測したい場合に利用
 
@@ -40,7 +40,7 @@
 
 ;; パッケージのキャッシュを利用するようにする(package-initialize高速化)
 ;; パッケージを追加・更新した場合はM-x package-quickstarts-refreshを実行すること
-(setq package-quickstart t)
+;; (setq package-quickstart t)
 
 (package-initialize)
 
@@ -51,13 +51,12 @@
 (use-package exec-path-from-shell
   ;; NOTE: PATH以外も欲しい場合はcustomで指定
   :config
-  (with-measure-time "exec-path-from-shell-initialize"
-                     (exec-path-from-shell-initialize)))
+  (exec-path-from-shell-initialize))
 
 ;;====================================================================
 ;; Emacs標準機能の設定
 ;;====================================================================
-
+(message "[%s] %s" (my-display-time) "ここ1")
 ;; ===== システム・Emacsコア連携
 ;; === MacのCommandをMetaキーに
 (setq mac-command-modifier 'meta)
@@ -168,6 +167,7 @@
 ;; Emacs Lisp用の便利なHelp
 ;;====================================================================
 
+(message "[%s] %s" (my-display-time) "ここ2")
 (use-package helpful
   :bind
   (("C-h f" . helpful-callable)
@@ -222,6 +222,7 @@
 ;; UIと外観 (フォントとテーマ)
 ;;====================================================================
 
+(message "[%s] %s" (my-display-time) "ここ3")
 ;; === フォント設定
 (set-face-attribute 'default nil :font "Source Han Code JP-14")
 (set-face-attribute 'fixed-pitch nil :font "Source Han Code JP-14")
@@ -286,6 +287,7 @@
 ;; EvilによるVimキーバインド
 ;;====================================================================
 
+(message "[%s] %s" (my-display-time) "ここ4")
 (use-package undo-fu)
 (use-package undo-fu-session
   :after undo-fu
@@ -368,9 +370,16 @@
   :config
   (evil-commentary-mode +1))
 
+;; === 数値のインクリメン・デクリメント
+(use-package evil-numbers
+  :after evil
+  :bind (:map evil-normal-state-map
+              ("C-a" . evil-numbers/inc-at-pt)))
+
 ;;====================================================================
 ;; ファイルツリー (dired-subtree)
 ;;====================================================================
+(message "[%s] %s" (my-display-time) "ここ4")
 
 (use-package dired-subtree)
 (setq insert-directory-program "gls") ;; GNU版lsを使う
@@ -871,10 +880,9 @@
     "s s" '(consult-line :wk "search in buffer")
     "s p" '(consult-ripgrep :wk "search in project")
 
-    ;; (p) プロジェクト管理/パッケージ管理
+    ;; (p) プロジェクト管理
     "p" '(:ignore t :wk "Project/Package")
     "p p" '(project-switch-project :wk "project switch")
-    "p r" '(package-quickstart-refresh :wk "package refresh")
 
     ;; (w) ワークスペース/ウィンドウ操作
     "w" '(:ignore t :wk "Workspace/Window")
@@ -964,6 +972,7 @@
     "m" '(:ignore t :wk "Measure time")
     "m w" '(my-wrap-with-measure-time :wk "wrap with meassure-time")
     "m i" '(my-insert-time :wk "insert time")
+    ;; "m r" '(package-quickstart-refresh :wk "package refresh")
     )
 
   ;; === Markdown
