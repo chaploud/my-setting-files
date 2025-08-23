@@ -22,30 +22,21 @@
 
 (message "[%s] %s" (my-display-time) "init.el loading...")
 
+;;=== TIPS / Rules of use-package ====================================
+;; :after 依存関係, 1行でOK。これ以外は基本キーワード後に開業
+;; :init パッケージのロード前に実行
+;; :custom costomize可能な変数はこちらで設定 (setq x y)のsetqを除いた形式
+;; :hook パッケージに関連するフックをコンスセル形式で設定 (x . y)
+;; 末尾が-hookならそのまま、そうでなければ-hookを付けたものが使われる
+;; 関数側は#'をつけない
+;; :config 通常通りの処理をまとめる意味(グローバルスコープになる)
+;; :vc GitHubやCodebergなどから直接インストールする場合に利用
 ;;====================================================================
-;; パッケージ管理のセットアップ
-;;===================================================================
 
-;; === packageの設定
-(require 'package)
-(setq package-archives '(("gnu" . "https://elpa.gnu.org/packages/")
-                         ("nongnu" . "https://elpa.nongnu.org/nongnu/")
-                         ("melpa" . "https://melpa.org/packages/")))
-(setq package-archive-priorities '(("melpa" . 3)
-                                   ("nongnu" . 2)
-                                   ("gnu" . 1)))
-(setq package-check-signature nil) ; 本来はnon-nilが望ましい
-(package-initialize)
-;; NOTE: 安定してきたら、package-quickstartを検討する
+;;====================================================================
+;; シェル環境変数をDockからの起動でも利用する
+;;====================================================================
 
-;; === use-packageの設定
-(unless (package-installed-p 'use-package)
-  (package-install 'use-package))
-(require 'use-package)
-(setq use-package-always-ensure t) ; :ensure t を省略可能に
-;; これ以降にuse-packageが使える
-
-;; === シェル環境変数をDockからの起動でも利用する
 (use-package exec-path-from-shell
   ;; NOTE: PATH以外も欲しい場合はcustomで指定
   :config
@@ -117,8 +108,8 @@
 (setq-default line-spacing 0.07)
 
 ;; === 行番号を表示
-(add-hook 'prog-mode-hook 'display-line-numbers-mode)
-(add-hook 'text-mode-hook 'display-line-numbers-mode)
+(add-hook 'prog-mode-hook #'display-line-numbers-mode)
+(add-hook 'text-mode-hook #'display-line-numbers-mode)
 
 ;; === カーソル位置の列番号をモードラインに表示
 (column-number-mode t)
@@ -212,6 +203,10 @@
   :hook
   (isearch-mode-hook . skk-isearch-mode-setup)
   (isearch-mode-end-hook . skk-isearch-mode-cleanup)
+  (evil-normal-state-entry-hook . my-turn-on-skk)
+  (text-mode-hook . my-turn-on-skk)
+  (prog-mode-hook . my-turn-on-skk)
+  (eat-mode-hook . my-turn-on-skk)
   :bind
   ("C-x j" . skk-mode)
   ("C-j" . skk-kakutei))
@@ -220,11 +215,6 @@
   "skk-modeを有効にして、英字モードにする"
   (skk-mode t)
   (skk-latin-mode-on))
-
-(add-hook 'evil-normal-state-entry-hook #'my-turn-on-skk)
-(add-hook 'text-mode-hook #'my-turn-on-skk)
-(add-hook 'prog-mode-hook #'my-turn-on-skk)
-(add-hook 'eat-mode-hook #'my-turn-on-skk)
 
 ;;====================================================================
 ;; UIと外観 (フォントとテーマ)
@@ -242,7 +232,6 @@
 (use-package catppuccin-theme
   :custom
   (catppuccin-flavor 'macchiato)
-
   :config
   (load-theme 'catppuccin t))
 
@@ -301,38 +290,43 @@
 ;; === evilによるVimキーバインドのエミュレート
 (use-package evil
   :after (undo-fu undo-fu-session)
-  :init
-  (setq evil-want-integration t)
-  (setq evil-want-keybinding nil)
-  (setq evil-want-C-u-scroll t)
-  (setq evil-undo-system 'undo-fu)
-
-  :config
+  :custom
+  (evil-want-integration t)
+  (evil-want-keybinding nil)
+  (evil-want-C-u-scroll t)
+  (evil-undo-system 'undo-fu)
+  (evil-symbol-word-search t) ; ひとかたまりで検索
+  (evil-shift-width 2)
   (evil-mode t)
+  :bind
   ;; Emacsキーバインドも一部使う
-  (define-key evil-insert-state-map (kbd "C-f") nil)
-  (define-key evil-insert-state-map (kbd "C-b") nil)
-  (define-key evil-insert-state-map (kbd "C-n") nil)
-  (define-key evil-insert-state-map (kbd "C-p") nil)
-  (define-key evil-insert-state-map (kbd "C-a") nil)
-  (define-key evil-insert-state-map (kbd "C-e") nil)
-  (define-key evil-insert-state-map (kbd "C-k") nil)
-  (define-key evil-insert-state-map (kbd "C-d") nil)
-  (define-key evil-insert-state-map (kbd "C-y") nil)
-  (define-key evil-motion-state-map (kbd ",") nil)
-  (define-key evil-insert-state-map (kbd "C-S-w") #'backward-kill-sexp)
-  (setq evil-symbol-word-search t)      ; ひとかたまりで検索
-  (setq evil-shift-width 2)
-  )
+  (:map evil-insert-state-map
+        ("C-f" . nil)
+        ("C-b" . nil)
+        ("C-n" . nil)
+        ("C-p" . nil)
+        ("C-a" . nil)
+        ("C-e" . nil)
+        ("C-d" . nil)
+        ("C-k" . nil)
+        ("C-y" . nil)
+        ;;      ("C-S-h" . #'backward-kill-sexp)
+        )
+  ;;   (:map evil-normal-state-map
+  ;;       ("C-a" . #'evil-numbers/inc-at-pt)
+  ;;         )
 
+  ;; (:map evil-motion-state-map
+  ;;       ("," nil)))
+  )
 ;; === evilの便利なキーバインド追加
 (use-package evil-collection
   :after evil
-  :custom (evil-collection-setup-minibuffer t)
+  :custom
+  (evil-collection-setup-minibuffer t)
+  (evil-collection-key-blacklist '("C-j" "C-k"))
   :config
-  (evil-collection-init)
-  (setq evil-collection-key-blacklist '("C-j" "C-k"))
-  )
+  (evil-collection-init))
 
 ;; === fdでESCできるように
 (use-package evil-escape
@@ -581,11 +575,8 @@
   :config
   (setq process-adaptive-read-buffering nil)
   )
-
-;; === 賢くvtermをトグル
-;; (use-package vterm-toggle
-;;   :config
-;;   (define-key global-map (kbd "C-'") #'vterm-toggle))
+;; TODO: SKKのread-only問題解消
+;; TODO: poppoerの導入
 
 ;;====================================================================
 ;; Git操作 (magit・diff-hl・vc)
@@ -597,6 +588,8 @@
 
 ;; === フリンジに差分を強調表示 (diff-hl)
 (use-package diff-hl
+  :custom
+  (global-diff-hl-mode t)
   :config
   (global-diff-hl-mode)
   (add-hook 'magit-pre-refresh-hook #'diff-hl-magit-pre-refresh)
@@ -1070,5 +1063,3 @@
  '(trailing-whitespace ((t (:background "#ed8796" :foreground "#ed8796")))))
 
 (message "[%s] %s" (my-display-time) "init.el loaded!")
-
-;; TODO: poppoerの導入
