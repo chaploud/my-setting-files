@@ -655,13 +655,15 @@
 ;; C-c C-l: eat-line-mode, C-c C-j: eat-semi-char-modeで日本語入力などを制御しよう
 (use-package eat
   :ensure t
+  :demand t
   :vc (:url "http://codeberg.org/akib/emacs-eat" :rev :newest)
   :custom
   (eat-enable-shell-prompt-annotation nil)
   :bind
   ("C-'" . my-toggle-eat)
   :hook
-  (eat--line-mode . my-turn-on-skk)
+  ;; (eat-mode . my-eat-startup) ; NOTE: 残す
+  (eat-line-mode . my-turn-on-skk)
   :config
   (setq process-adaptive-read-buffering nil)
   (defun my-toggle-eat ()
@@ -671,7 +673,17 @@
       (if (and eat-window (eq (selected-window) eat-window))
           (quit-window)
         (eat))))
+
+  ;; NOTE: Claude Codeはターミナルでやることにしたので未使用
+  (defun my-eat-startup ()
+    (run-with-timer
+     1.0 nil
+     (lambda ()
+       (with-current-buffer (get-buffer "*eat*")
+         (eat-line-mode))
+       )))
   )
+
 ;; TODO: SKKのread-only問題解消
 ;; TODO: tramp
 
@@ -1016,7 +1028,6 @@
     ;; (a) 生成AI系
     "a" '(:ignore t :wk "AI")
     "a c" '(copilot-chat :wk "Copilot chat") ; 補完はM-/でサジェスト
-    "a i" '(claude-code-ide-menu :wk "Claude Code IDE")
     )
 
   ;; === ジャンプなど (g系)
@@ -1125,22 +1136,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages
-   '(cape catppuccin-theme cider claude-code-ide clojure-ts-mode
-          colorful-mode copilot copilot-chat corfu dashboard ddskk
-          diff-hl dired-subtree docker dockerfile-mode doom-modeline
-          eat eglot-tempel embark-consult evil-anzu evil-collection
-          evil-commentary evil-escape evil-goggles evil-numbers
-          evil-surround exec-path-from-shell general helpful hl-todo
-          jarchive magit-delta marginalia nerd-icons-corfu orderless
-          paredit perspective popper rainbow-delimiters shackle
-          ultra-scroll undo-fu undo-fu-session vertico wgrep yaml-mode))
- '(package-vc-selected-packages
-   '((copilot :url "https://github.com/copilot-emacs/copilot.el" :branch
-              "main")
-     (claude-code-ide :url
-                      "http://github.com/manzaltu/claude-code-ide.el")
-     (eat :url "http://codeberg.org/akib/emacs-eat"))))
+ )
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
