@@ -1,78 +1,103 @@
 ;;; init.el --- メイン設定ファイル -*- lexical-binding: t; -*-
 
 ;;====================================================================
+;; 実行時間計測用マクロ
+;;===================================================================
+;; init.elの各処理時間を計測したい場合に利用
+(defmacro with-measure-time (msg &rest body)
+  "囲んだ部分の開始・終了時刻をメッセージとして表示する"
+  `(progn
+     (message "[%s] [Start] %s..." (current-time-string) ,msg)
+     ,@body
+     (message "[%s] [Done] %s." (current-time-string) ,msg)))
+
+;;====================================================================
 ;; パッケージ管理 (use-packageのブートストラップ)
 ;;===================================================================
 
-;; package.elの初期化とアーカイブ設定
-(setq package-check-signature nil)
+;; === MelpaとOrgを追加 (gnu, nongnu ELPAはデフォルトで登録済み)
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 (add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/") t)
-(package-initialize)
 
-(unless package-archive-contents
-  (package-refresh-contents))
+;; 署名チェックを無効化 (本来はtが望ましいが、署名されていないパッケージもあるため)
+(setq package-check-signature nil)
 
-;; === use-packageのensureは必ず行う
-(unless (package-installed-p 'use-package)
-  (package-install 'use-package))
-(require 'use-package)
-(setq use-package-always-ensure t)
+;; パッケージのキャッシュを利用するようにする(package-initialize高速化)
+;; パッケージを追加・更新した場合はM-x package-quickstarts-refreshを実行すること
+(setq package-quickstart t)
+
+(with-measure-time "package-initialize"
+                   (package-initialize))
+
+(with-measure-time "package-refresh-contents"
+                   (unless package-archive-contents
+                     (package-refresh-contents)))
 
 ;; === シェル環境変数をDockからの起動でも利用する
 (use-package exec-path-from-shell
   ;; NOTE: PATH以外も欲しい場合はcustomで指定
   :config
-  (exec-path-from-shell-initialize))
+  (with-measure-time "exec-path-from-shell-initialize"
+                     (exec-path-from-shell-initialize)))
 
 ;;====================================================================
 ;; Emacs標準機能の設定
 ;;====================================================================
 
-;; === 自分で配置したEmacsのソースコードへの参照を追加
-(setq find-function-C-source-directory
-      (concat "~/Documents/OSS/emacs/emacs-" emacs-version "/src"))
-
+;; ===== システム・Emacsコア連携
 ;; === MacのCommandをMetaキーに
 (setq mac-command-modifier 'meta)
 
-;; === y/nにする
-(setq use-short-answers t)
-
-;; === バックアップファイルを作成しない
-(setq make-backup-files nil)
-(setq backup-inhibited t)
-(setq create-lockfiles nil)
-
-;; === フレームのタイトル
-(setq-default frame-title-format "Emacs")
-(setq-default ns-use-proxy-icon nil)
-
-;; === デーモン起動
+;; === デーモン起動 (シェルの`e'コマンドから使う)
 (use-package server
   :config
   (unless (server-running-p)
     (server-start)))
 
-;; === ファイル履歴を保存
-(setq recentf-max-saved-items 100)
-(recentf-mode +1)
+;; === `e'コマンド (~/.zshrcなどに追加)
+;; # emacsclient
+;; e() {
+;;   if emacsclient --eval "t" > /dev/null 2>&1; then
+;;     emacsclient -n "$@"
+;;   else
+;;     emacs "$@" &
+;;   fi
+;; }
 
-;; === コマンドの履歴を保存
-(savehist-mode +1)
+;; === 自分で配置したEmacsのソースコードへの参照を追加
+;; 利用しているEmacsバージョンによって適宜ソースコードはダウンロード必要
+(setq find-function-C-source-directory
+      (concat "~/Documents/OSS/emacs/emacs-" emacs-version "/src"))
 
-;; === ウィンドウの状態を保持
-(winner-mode +1)
+;; ===== ファイル管理
+;; === バックアップファイルを作成しない
+(setq make-backup-files nil)
+(setq backup-inhibited t)
+(setq create-lockfiles nil)
 
-;; === 対応括弧を補完
-(electric-pair-mode +1)
+;; === ダイアログでのファイルオープンは使わない
+(setq use-file-dialog nil)
 
-;; === 現在行を強調表示
-(global-hl-line-mode +1)
+;; === 削除したファイルをゴミ箱に移動
+(setq delete-by-moving-to-trash t)
 
 ;; === 他プロセスの編集をバッファに反映
 (global-auto-revert-mode +1)
+
+;; === シンボリックリンクを常に質問なしで開く
+(setq vc-follow-symlinks t)
+
+;; === 長い行を含むファイルの最適化
+(global-so-long-mode +1)
+
+;; ===== UI・外観
+;; === フレームのタイトル
+(setq-default frame-title-format "Emacs") ; シンプルに
+(setq-default ns-use-proxy-icon nil) ; アイコンも不要
+
+;; === 現在行を強調表示
+(global-hl-line-mode +1)
 
 ;; === 行間を少し広げる
 (setq-default line-spacing 0.07)
@@ -84,16 +109,30 @@
 ;; === カーソル位置の列番号をモードラインに表示
 (column-number-mode +1)
 
-;; === 削除したファイルをゴミ箱に移動
-(setq delete-by-moving-to-trash t)
+;; === tree-sittterによる色付けmax
+(setq treesit-font-lock-level 4)
+
+;; ===== 編集体験の向上
+;; === ミニバッファでのyes/noの聞かれ方をy/nにする
+(setq use-short-answers t)
 
 ;; === インデントの基本をスペースに変更
 (setq-default indent-tabs-mode nil
               tab-width 2
               standard-indent 2)
 
-;; === 長い行を含むファイルの最適化
-(global-so-long-mode +1)
+;; === 対応括弧を補完
+(electric-pair-mode +1)
+
+;; === ファイル履歴を保存
+(setq recentf-max-saved-items 50)
+(recentf-mode +1)
+
+;; === コマンドの履歴を保存
+(savehist-mode +1)
+
+;; === ウィンドウの状態を保持
+(winner-mode +1)
 
 ;; === 末尾のスペースやタブを可視化
 (defun my-turn-on-show-trailing-ws ()
@@ -106,8 +145,11 @@
 (setq which-key-idle-delay 0.3
       which-key-idle-secondary-delay 0)
 
-;; === tree-sittterによる色付けmax
-(setq treesit-font-lock-level 4)
+;; ==== モード別設定
+;; === zshファイルを開いたときにshell-script-modeを有効に
+(add-to-list 'auto-mode-alist '("\\zshrc\\'" . shell-script-mode))
+(add-to-list 'auto-mode-alist '("\\zprofile\\'" . shell-script-mode))
+(add-to-list 'auto-mode-alist '("\\zshenv\\'" . shell-script-mode))
 
 ;;====================================================================
 ;; Emacs Lisp用の便利なHelp
@@ -150,9 +192,6 @@
                                    (abbrev . "")
                                    (nil . "")))
   :hook
-  (evil-normal-state-entry-hook
-   . (lambda ()
-       (when (bound-and-true-p skk-mode))))
   (isearch-mode-hook . skk-isearch-mode-setup)
   (isearch-mode-end-hook . skk-isearch-mode-cleanup)
   :bind ("C-j" . skk-kakutei))
@@ -161,9 +200,10 @@
   (skk-mode +1)
   (skk-latin-mode-on))
 
+(add-hook 'evil-normal-state-entry-hook #'my-turn-on-skk)
 (add-hook 'text-mode-hook #'my-turn-on-skk)
 (add-hook 'prog-mode-hook #'my-turn-on-skk)
-(add-hook 'vterm-mode-hook #'my-turn-on-skk)
+(add-hook 'eat-mode-hook #'my-turn-on-skk)
 
 ;;====================================================================
 ;; UIと外観 (フォントとテーマ)
@@ -330,6 +370,7 @@
 
 ;; === 後で追加したものが優先される
 
+;; diredを開くときは分割して表示される
 (add-to-list 'display-buffer-alist
              '((derived-mode . dired-mode)
                (display-buffer-pop-up-window
@@ -337,21 +378,26 @@
                (side . right)
                (window-width . 0.5)))
 
+;; dired上でdiredを開くときは同じウィンドウで開く
+;; RETでその場で、S-RETで別のウィンドウで開く
 (add-to-list 'display-buffer-alist
              '((lambda (buffer-name action)
                  (and (with-current-buffer buffer-name (derived-mode-p 'dired-mode))
                       (with-current-buffer (window-buffer (selected-window))
                         (derived-mode-p 'dired-mode))))
                (display-buffer-same-window)))
-;; RETでその場で、S-RETで別のウィンドウで開く
+
+;; ielmは分割して開く
+(add-to-list 'display-buffer-alist
+             '("\\*ielm\\*"
+               (display-buffer-pop-up-window
+                display-buffer-use-some-window)
+               (side . right)
+               (window-width . 0.5)))
 
 ;;====================================================================
 ;; ミニバッファ内での検索・候補選択
 ;;====================================================================
-
-(use-package wgrep
-  :config
-  (setq wgrep-auto-save-buffer t))
 
 ;; === 便利な統合コマンドの提供 (consult)
 (use-package consult
@@ -383,16 +429,22 @@
   :init
   (marginalia-mode +1))
 
+;; === 候補に対するアクション (embark)
 (use-package embark
   :bind
   (("C-." . embark-act)
    ("C-," . embark-export)))
 
-;; === 候補に対するアクション (embark-consult)
+;; === embarkをconsultから使う (embark-consult)
 (use-package embark-consult
   :after (embark consult)
   :hook
   (embark-collect-mode . consult-preview-at-point-mode))
+
+;; === embark-exportしたバッファを直接編集して一括置換などを実現する (wgrep)
+(use-package wgrep
+  :config
+  (setq wgrep-auto-save-buffer t))
 
 ;;====================================================================
 ;; バッファ内のインライン/ポップアップ補完
@@ -427,12 +479,6 @@
 ;;====================================================================
 
 ;; === lsp (eglot)
-;; TODO 特定のメジャーモードでeglotをonにする
-;; TODO 特定のメジャーモードでflymakeをonにする
-;; TODO eglotのステータスが有効な時特有のキーバインドを行う
-;; TODO (xref, flymake, eldoc, eglot-rename, eglot-code-actions)
-;; TODO flymake-consultを活用する
-;; TODO .lsp/config.ednとの連携
 (use-package eglot
   :ensure nil
   :hook
@@ -479,22 +525,22 @@
   )
 
 ;;====================================================================
-;; ターミナル (vterm)
+;; ターミナル (eat)
 ;;====================================================================
 
-;; === vterm
-(use-package vterm
-  :commands vterm
+;; === eat
+(use-package eat
+  :vc (:url "http://codeberg.org/akib/emacs-eat" :rev :newest)
+  :custom
+  (eat-enable-shell-prompt-annotation nil)
   :config
-  (setq vterm-max-scrollback 10000)
-  :bind
-  (:map vterm-mode-map
-        ("C-j" . skk-kakutei)))
+  (setq process-adaptive-read-buffering nil)
+  )
 
 ;; === 賢くvtermをトグル
-(use-package vterm-toggle
-  :config
-  (define-key global-map (kbd "C-'") #'vterm-toggle))
+;; (use-package vterm-toggle
+;;   :config
+;;   (define-key global-map (kbd "C-'") #'vterm-toggle))
 
 ;;====================================================================
 ;; Git操作 (magit・diff-hl・vc)
@@ -595,6 +641,9 @@
 
 (use-package claude-code-ide
   :vc (:url "http://github.com/manzaltu/claude-code-ide.el" :rev :newest)
+  :custom
+  ;; skkとの相性の関係からvtermではなくeatを使用
+  (claude-code-ide-terminal-backend 'eat)
   :config
   (claude-code-ide-emacs-tools-setup))
 
@@ -604,13 +653,15 @@
 
 (use-package copilot
   :vc (:url "https://github.com/copilot-emacs/copilot.el" :rev :newest :branch "main")
-  :hook (prog-mode . copilot-mode)
+  :hook
+  (prog-mode . copilot-mode)
+  (copilot-chat-org-prompt-mode . copilot-mode) ; チャット内自体でも有効化
   :bind
   (:map copilot-completion-map
         ("C-<tab>" . copilot-accept-completion))
   (:map prog-mode-map
         ("M-/" . copilot-complete))
-  :custom (copilot-max-char 1000000) ; 最大文字数を増やす
+  :custom (copilot-max-char 1000000)    ; 最大文字数を増やす
   :config
   (add-to-list 'copilot-indentation-alist '(prog-mode  2))
   (add-to-list 'copilot-indentation-alist '(org-mode  2))
@@ -644,8 +695,7 @@
 (add-to-list 'tramp-remote-path 'tramp-own-remote-path)
 (setq tramp-default-method "docker")
 (setq tramp-default-remote-shell "/bin/bash")
-(setq vterm-tramp-shells '(("docker" login-shell "/bin/bash")
-                           (t login-shell)))
+
 ;; コンテナをシェルで起動しておく
 ;; あとは、find-fileから/docker:コンテナ名:/path/to/fileで接続すればlspもうまく動作
 
@@ -751,16 +801,6 @@
   (general-evil-setup)
   (general-auto-unbind-keys)
 
-  (general-define-key
-   :states '(insert)
-   :keymaps 'minibuffer-mode-map
-   "C-w" 'backward-kill-sexp)
-
-  (general-define-key
-   :keymaps 'emacs-lisp-mode-map
-   :states '(normal)
-   "K" 'helpful-at-point)
-
   ;; === SPC リーダーキー定義
   (general-create-definer my-global-leader-def
     :states '(normal visual)
@@ -781,7 +821,15 @@
 
   ;; === グローバルなSPCキーバインド
   (my-global-leader-def
+    ;; (SPC) M-x
     "SPC" '(execute-extended-command :wk "M-x")
+
+    ;; (;) コメント
+    ";" '(evil-commentary-line :wk "comment")
+
+    ;; (t) トグル
+    "t" '(:ignore t :wk "Toggle")
+    "t l" '(toggle-truncate-lines :wk "truncate line")
 
     ;; (q) 終了操作
     "q" '(:ignore t :wk "Quit")
@@ -797,18 +845,32 @@
     "f i" '(my-open-user-init :wk "init.el")
     "f t" '(project-dired :wk "dired")
 
-    ;; (b) バッファ操作
-    "b" '(:ignore t :wk "Buffers")
+    ;; (b) バッファ操作/ブックマーク
+    "b" '(:ignore t :wk "Buffers/Bookmark")
     "b b" '(persp-switch-to-buffer :wk "buffer switch")
     "b d" '(kill-current-buffer :wk "buffer delete")
     "b h" '(dashboard-open :wk "dashboard")
+    "b l" '(consult-bookmark :wk "bookmark list")
+    "b s" '(bookmark-set :wk "bookmark set")
 
-    ;; (m) ブックマーク
-    "m" '(:ignore t :wk "Bookmark")
-    "m m" '(consult-bookmark :wk "bookmark list")
-    "m s" '(bookmark-set :wk "bookmark set")
-    "m d" '(bookmark-delete :wk "bookmark delete")
-    "m r" '(bookmark-rename :wk "bookmark rename")
+    ;; (s) 検索
+    "s" '(:ignore t :wk "Search")
+    "s s" '(consult-line :wk "search in buffer")
+    "s p" '(consult-ripgrep :wk "search in project")
+
+    ;; (p) プロジェクト管理/パッケージ管理
+    "p" '(:ignore t :wk "Project/Package")
+    "p p" '(project-switch-project :wk "project switch")
+    "p r" '(package-quickstart-refresh :wk "package refresh")
+
+    ;; (w) ワークスペース/ウィンドウ操作
+    "w" '(:ignore t :wk "Workspace/Window")
+    "w w" '(persp-switch :wk "workspace switch")
+    "w r" '(persp-rename :wk "workspace rename")
+    "w d" '(persp-kill :wk "workspace kill")
+    "w s" '(persp-state-save :wk "workspace save")
+    "w l" '(persp-state-load :wk "workspace load")
+    "w u" '(winner-undo :wk "window undo")
 
     ;; (g) Git/ジャンプ
     "g" '(:ignore t :wk "Git/GoTo")
@@ -824,39 +886,13 @@
     "d c" '(docker-containers :wk "docker containers")
     "d b" '(sql-connect :wk "db connect")
 
-    ;; (p) プロジェクト管理
-    "p" '(:ignore t :wk "Project")
-    "p p" '(project-switch-project :wk "project switch")
-
-    ;; (s) 検索
-    "s" '(:ignore t :wk "Search")
-    "s s" '(consult-line :wk "search in buffer")
-    "s p" '(consult-ripgrep :wk "search in project")
-
-    ;; (w) ワークスペース/ウィンドウ操作
-    "w" '(:ignore t :wk "Workspace/Window")
-    "w w" '(persp-switch :wk "workspace switch")
-    "w r" '(persp-rename :wk "workspace rename")
-    "w d" '(persp-kill :wk "workspace kill")
-    "w s" '(persp-state-save :wk "workspace save")
-    "w l" '(persp-state-load :wk "workspace load")
-    "w u" '(winner-undo :wk "window undo")
-
-    ;; (;) コメント
-    ";" '(evil-commentary-line :wk "comment")
-
-    ;; (t) トグル
-    "t" '(:ignore t :wk "Toggle")
-    "t l" '(toggle-truncate-lines :wk "truncate line")
-
     ;; (a) 生成AI系
     "a" '(:ignore t :wk "AI")
+    "a c" '(copilot-chat :wk "Copilot chat") ; 補完はM-/でサジェスト
     "a i" '(claude-code-ide-menu :wk "Claude Code IDE")
-    "a c" '(copilot-chat :wk "Copilot chat")
-    ;; Copilotの任意のタイミングでのサジェストはM-/に割り当て
     )
 
-  ;; === ジャンプなど
+  ;; === ジャンプなど (g系)
   (my-motion-leader-def
     "n" '(diff-hl-next-hunk :wk "next change")
     "p" '(diff-hl-previous-hunk :wk "prev change")
@@ -906,20 +942,51 @@
   (my-local-leader-def
     :keymaps '(emacs-lisp-mode-map
                lisp-interaction-mode-map)
-    "e" '(eval-defun :wk "eval defun"))
+    "'" '(ielm :wk "ielm")
+    "e" '(:ignore t :wk "Eval")
+    "e e" '(eval-last-sexp :wk "eval last sexp")
+    "e f" '(eval-defun :wk "eval defun")
+    "e b" '(eval-buffer :wk "eval buffer"))
 
   ;; === Markdown
   (my-local-leader-def
     :keymaps '(gfm-mode-map)
     "," '(markdown-toggle-gfm-checkbox :wk "toggle checkbox"))
+
+  ;; === ミニバッファでパスならスラッシュまで削除
+  (general-define-key
+   :states '(insert)
+   :keymaps 'minibuffer-mode-map
+   "C-w" 'backward-kill-sexp)
+
+  ;; === Emacs Lispの便利ヘルプ
+  (general-define-key
+   :keymaps 'emacs-lisp-mode-map
+   :states '(normal)
+   "K" 'helpful-at-point)
+
+  ;; === Copilot Chatでshift+enterで送信
+  (general-define-key
+   :keymaps 'copilot-chat-org-prompt-mode-map
+   "S-<return>" 'copilot-chat-prompt-send)
   )
+
+;;====================================================================
+;; 設定・色の細かいカスタマイズ
+;;====================================================================
+
+;; customizeメニューから変更した場合自動で追記・更新される
+;; パッケージ固有の設定変数はuse-packageの:customで設定する方が宣言的で良い
+;; 色の調整はここにまとめておいた方が見通しが良い
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages nil))
+ '(package-selected-packages nil)
+ '(package-vc-selected-packages '((eat :url "http://codeberg.org/akib/emacs-eat")))
+ )
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

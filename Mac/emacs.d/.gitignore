@@ -11,3 +11,6 @@ transient/
 tree-sitter/
 request/
 undo-fu-session
+package-quickstart.el
+package-quickstart.elc
+eshell/
