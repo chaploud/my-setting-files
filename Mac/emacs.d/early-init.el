@@ -15,16 +15,15 @@
 
 ;; === 起動後に適切なGC設定に戻す
 (add-hook 'emacs-startup-hook
-	        (lambda ()
-	          (setq gc-cons-percentage 0.3
-		              gc-cons-threshold (* 256 1024 1024)     ; 256MB
+          (lambda ()
+            (setq gc-cons-percentage 0.3
+                  gc-cons-threshold (* 256 1024 1024)     ; 256MB
                   read-process-output-max (* 2 1024 1024) ; 2MB
                   )
-	          (add-hook 'focus-out-hook #'garbage-collect)
+            (add-hook 'focus-out-hook #'garbage-collect)
             (run-with-idle-timer 30 t #'garbage-collect)
             ;; 読み込み後、常に画面を最大化する
             (toggle-frame-maximized)
-            (message "[%s] Emacs loaded." (current-time-string))
             )
           )
 

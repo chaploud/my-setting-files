@@ -4,12 +4,27 @@
 ;; 実行時間計測用マクロ
 ;;===================================================================
 ;; init.elの各処理時間を計測したい場合に利用
-(defmacro with-measure-time (msg &rest body)
+
+(defun my-display-time ()
+  (format-time-string "%Y-%m-%d %H:%M:%S.%6N"))
+
+(defun my-insert-time ()
+  (interactive)
+  (insert "(message \"[%s] %s\" (my-display-time) \"\")"))
+
+(defmacro my-with-measure-time (msg &rest body)
   "囲んだ部分の開始・終了時刻をメッセージとして表示する"
   `(progn
-     (message "[%s] [Start] %s..." (current-time-string) ,msg)
+     (message "[%s] [Start] %s..." (my-display-time) ,msg)
      ,@body
-     (message "[%s] [Done] %s." (current-time-string) ,msg)))
+     (message "[%s] [Done] %s." (my-display-time) ,msg)))
+
+(defun my-wrap-with-measure-time (description)
+  "次のS式をmy-with-meassure-timeでラップする"
+  (interactive "sMeasure message: ")
+  (insert (format "(my-with-measure-time \"%s\")" description))
+  (backward-char 1)
+  (paredit-forward-slurp-sexp))
 
 ;;====================================================================
 ;; パッケージ管理 (use-packageのブートストラップ)
@@ -27,12 +42,10 @@
 ;; パッケージを追加・更新した場合はM-x package-quickstarts-refreshを実行すること
 (setq package-quickstart t)
 
-(with-measure-time "package-initialize"
-                   (package-initialize))
+(package-initialize)
 
-(with-measure-time "package-refresh-contents"
-                   (unless package-archive-contents
-                     (package-refresh-contents)))
+(unless package-archive-contents
+  (package-refresh-contents))
 
 ;; === シェル環境変数をDockからの起動でも利用する
 (use-package exec-path-from-shell
@@ -778,7 +791,7 @@
         (message "No suitable formatter found for %s" major-mode))))
 
 (add-hook 'before-save-hook #'my-format-buffer)
-
+(add-hook 'before-save-hook #'whitespace-cleanup) ;; trailing spacesの削除
 ;;====================================================================
 ;; キーバインド (general.el)
 ;;====================================================================
@@ -936,6 +949,7 @@
     ", q" '(cider-quit :wk "cider quit")
     ", e" '(cider-eval-dwim :wk "cider eval dwim")
     ", r" '(cider-ns-refresh :wk "cider ns refresh")
+    ;; ここはEmacs Lispとあわせるか
     )
 
   ;; === Emacs Lisp
@@ -946,7 +960,11 @@
     "e" '(:ignore t :wk "Eval")
     "e e" '(eval-last-sexp :wk "eval last sexp")
     "e f" '(eval-defun :wk "eval defun")
-    "e b" '(eval-buffer :wk "eval buffer"))
+    "e b" '(eval-buffer :wk "eval buffer")
+    "m" '(:ignore t :wk "Measure time")
+    "m w" '(my-wrap-with-measure-time :wk "wrap with meassure-time")
+    "m i" '(my-insert-time :wk "insert time")
+    )
 
   ;; === Markdown
   (my-local-leader-def
@@ -970,6 +988,8 @@
    :keymaps 'copilot-chat-org-prompt-mode-map
    "S-<return>" 'copilot-chat-prompt-send)
   )
+
+(message "[%s] Emacs loaded." (current-time-string))
 
 ;;====================================================================
 ;; 設定・色の細かいカスタマイズ
