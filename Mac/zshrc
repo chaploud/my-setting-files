@@ -80,5 +80,5 @@
    compinit
  fi
 
- # === emacs: eatシェルのための設定
- [ -n "$EAT_SHELL_INTEGRATION_DIR" ] && source "$EAT_SHELL_INTEGRATION_DIR/zsh"
+# === emacs: eatシェルのための設定
+[ -n "$EAT_SHELL_INTEGRATION_DIR" ] && source "$EAT_SHELL_INTEGRATION_DIR/zsh"

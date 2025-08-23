@@ -207,6 +207,15 @@
                (side . right)
                (window-width . 0.5)))
 
+;; eatは分割して開く
+(add-to-list 'display-buffer-alist
+             '("\\*eat\\*"
+               (display-buffer-pop-up-window
+                display-buffer-use-some-window)
+               (side . right)
+               (window-width . 0.5)
+               (window-parameters  . ((dedicated . t)))))
+
 ;;====================================================================
 ;; Emacs Lisp用の便利なHelp
 ;;====================================================================
@@ -258,13 +267,13 @@
   (evil-normal-state-entry-hook . skk-latin-mode-on)
   (text-mode-hook . my-turn-on-skk)
   (prog-mode-hook . my-turn-on-skk)
-  (eat-mode-hook . my-turn-on-skk)
   :bind
   ("C-x j" . skk-mode)
   ("C-j" . skk-kakutei)
   :config
   (defun my-turn-on-skk ()
     "skk-modeを有効にして、英字モードにする"
+    (interactive)
     (skk-mode t)
     (skk-latin-mode-on)))
 
@@ -354,6 +363,16 @@
      ("NOTE" ansi-color-cyan bold)
      ("XXX" error bold)))
   (global-hl-todo-mode t))
+
+(use-package ultra-scroll
+  :ensure t
+  :vc (:url "https://github.com/jdtsmith/ultra-scroll") ; if desired (emacs>=v30)
+  :init
+  (setq scroll-conservatively 3
+        scroll-margin 0)
+  :config
+  ;; :customでは適用されない
+  (ultra-scroll-mode t))
 
 ;;====================================================================
 ;; EvilによるVimキーバインド
@@ -463,6 +482,8 @@
   :ensure t
   :custom
   ;; diredのオプションだがここに書く
+  (dired-dwim-target t)
+  (insert-directory-program "gls")
   (dired-listing-switches "-alhG --time-style=long-iso"))
 
 ;;====================================================================
@@ -621,17 +642,38 @@
 ;; ターミナル (eat)
 ;;====================================================================
 
+;; === ポップアップ管理 (shackle)
+(use-package shackle
+  :ensure t
+  :custom
+  (shackle-rules '(("\\*eat\\*" :popup t :align 'right :size 0.5 :select t)))
+  :config
+  (shackle-mode t))
+
 ;; === eat
+;; インストール直後に `M-x eat-compile-terminfo' を実行する
+;; C-c C-l: eat-line-mode, C-c C-j: eat-semi-char-modeで日本語入力などを制御しよう
 (use-package eat
   :ensure t
   :vc (:url "http://codeberg.org/akib/emacs-eat" :rev :newest)
   :custom
   (eat-enable-shell-prompt-annotation nil)
+  :bind
+  ("C-'" . my-toggle-eat)
+  :hook
+  (eat--line-mode . my-turn-on-skk)
   :config
   (setq process-adaptive-read-buffering nil)
+  (defun my-toggle-eat ()
+    "Toggle eat terminal."
+    (interactive)
+    (let ((eat-window (get-buffer-window "*eat*")))
+      (if (and eat-window (eq (selected-window) eat-window))
+          (quit-window)
+        (eat))))
   )
 ;; TODO: SKKのread-only問題解消
-;; TODO: poppoerの導入
+;; TODO: tramp
 
 ;;====================================================================
 ;; Git操作 (magit・diff-hl・vc)
@@ -736,19 +778,6 @@
 
   :bind (:map markdown-mode-map
               ("C-c C-e" . markdown-do)))
-
-;;====================================================================
-;; Claude Code連携
-;;====================================================================
-
-(use-package claude-code-ide
-  :ensure t
-  :vc (:url "http://github.com/manzaltu/claude-code-ide.el" :rev :newest)
-  :custom
-  ;; skkとの相性の関係からvtermではなくeatを使用
-  (claude-code-ide-terminal-backend 'eat)
-  :config
-  (claude-code-ide-emacs-tools-setup))
 
 ;;====================================================================
 ;; GitHub Copilot連携
@@ -947,11 +976,11 @@
     ;; (b) バッファ操作/ブックマーク
     "b" '(:ignore t :wk "Buffers/Bookmark")
     "b b" '(persp-switch-to-buffer :wk "buffer switch")
-    "b d" '(kill-current-buffer :wk "buffer delete")
+    "b d" '(kill-current-buffer :wk "buffer kill")
     "b h" '(dashboard-open :wk "dashboard")
     "b l" '(consult-bookmark :wk "bookmark list")
     "b s" '(bookmark-set :wk "bookmark set")
-    "b d" '(bookmark-delete :wk "bookmark delete")
+    "b k" '(bookmark-delete :wk "bookmark delete")
 
     ;; (s) 検索
     "s" '(:ignore t :wk "Search")
@@ -1072,6 +1101,12 @@
    "] ]" '(flymake-goto-next-error :wk "goto next error")
    "[ [" '(flymake-goto-prev-error :wk "goto prev error"))
 
+  ;; === eatの調整
+  (general-define-key
+   :keymaps '(eat-line-mode-map)
+   :states '(insert)
+   "C-w" 'evil-delete-backward-word)
+
   ;; === Copilot Chatでshift+enterで送信
   (general-define-key
    :keymaps 'copilot-chat-org-prompt-mode-map
@@ -1090,7 +1125,22 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(package-selected-packages
+   '(cape catppuccin-theme cider claude-code-ide clojure-ts-mode
+          colorful-mode copilot copilot-chat corfu dashboard ddskk
+          diff-hl dired-subtree docker dockerfile-mode doom-modeline
+          eat eglot-tempel embark-consult evil-anzu evil-collection
+          evil-commentary evil-escape evil-goggles evil-numbers
+          evil-surround exec-path-from-shell general helpful hl-todo
+          jarchive magit-delta marginalia nerd-icons-corfu orderless
+          paredit perspective popper rainbow-delimiters shackle
+          ultra-scroll undo-fu undo-fu-session vertico wgrep yaml-mode))
+ '(package-vc-selected-packages
+   '((copilot :url "https://github.com/copilot-emacs/copilot.el" :branch
+              "main")
+     (claude-code-ide :url
+                      "http://github.com/manzaltu/claude-code-ide.el")
+     (eat :url "http://codeberg.org/akib/emacs-eat"))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
