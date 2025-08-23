@@ -597,7 +597,8 @@
   :custom
   (eglot-events-buffer-config '(:size nil :format full))
   (eglot-autoshutdown t)
-  (eglot-connect-timeout 120))
+  (eglot-connect-timeout 120)
+  (eglot-extend-to-xref t))
 
 ;; === スニペット・テンプレート (tmpel)
 (use-package tempel
@@ -647,7 +648,6 @@
   :ensure t
   :custom
   (shackle-rules '(("\\*eat\\*" :popup t :align 'right :size 0.5 :select t)))
-  :config
   (shackle-mode t))
 
 ;; === eat
@@ -684,9 +684,6 @@
        )))
   )
 
-;; TODO: SKKのread-only問題解消
-;; TODO: tramp
-
 ;;====================================================================
 ;; Git操作 (magit・diff-hl・vc)
 ;;====================================================================
@@ -700,11 +697,10 @@
   :ensure t
   :custom
   (global-diff-hl-mode t)
-  :config
-  (global-diff-hl-mode)
-  (add-hook 'magit-pre-refresh-hook #'diff-hl-magit-pre-refresh)
-  (add-hook 'magit-post-refresh-hook #'diff-hl-magit-post-refresh)
-  (diff-hl-flydiff-mode t))
+  (diff-hl-flydiff-mode t)
+  :hook
+  (magit-pre-refresh-hook  . diff-hl-magit-pre-refresh)
+  (magit-post-refresh-hook . diff-hl-magit-post-refresh))
 
 ;; === magitをgit-deltaを使って高速化しつつ見やすくする
 ;; bat, deltaのインストール
@@ -771,8 +767,7 @@
   :ensure t
   :after eglot
   :config
-  (jarchive-setup)
-  (setq eglot-extend-to-xref t))
+  (jarchive-setup))
 
 ;;====================================================================
 ;; Markdown
@@ -853,27 +848,29 @@
 
 (use-package sql
   :ensure nil
+  :custom
+  (sql-postgres-login-params nil)
+  (setq sql-connection-alist
+        '((eboshigara-postgres
+           (sql-product 'postgres)
+           (sql-database (concat
+                          "postgresql://"
+                          "root"
+                          ":" (my-read-1password "eboshigara_dev_db")
+                          "@localhost"
+                          ":54320"
+                          "/eboshigara_dev")))))
   :config
   (setq sql-mode-hook
         `(lambda ()
            (sql-indent-enable)
            (sql-highlight-postgres-keywords)))
 
-  (setq sql-postgres-login-params nil)
-  (setq sql-connection-alist
-        '((eboshigara-postgres (sql-product 'postgres)
-                               (sql-database (concat "postgresql://"
-                                                     "root"
-                                                     ":" (my-read-1password "eboshigara_dev_db")
-                                                     "@localhost"
-                                                     ":54320"
-                                                     "/eboshigara_dev")))))
   (defun my-read-1password (name)
     "1Passwordからパスワードを取得する"
     (let ((password (shell-command-to-string
                      (format "op read op://Private/%s/password" name))))
-      (string-trim password)))
-  )
+      (string-trim password))))
 
 ;;====================================================================
 ;; Format On Save設定の集約
