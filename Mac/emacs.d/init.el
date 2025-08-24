@@ -236,7 +236,7 @@
 
 ;; === ddskk
 (defun my-switch-ime (input-source)
-  "Emacsにフォーカスが当たったときにmacSKK.asciiに切り替える(macismコマンド必要)"
+  "Switch to INPUT-SOURCE when Emacs is focused (requires macism command)."
   (call-process "macism" nil 0 nil input-source))
 
 (add-function :after after-focus-change-function
@@ -284,9 +284,6 @@
 ;; === 現在行を強調表示
 (global-hl-line-mode t)
 
-;; === 行間を少し広げる
-(setq-default line-spacing 0.2)
-
 ;; === 行番号を表示
 (add-hook 'prog-mode-hook #'display-line-numbers-mode)
 (add-hook 'text-mode-hook #'display-line-numbers-mode)
@@ -301,7 +298,7 @@
   (treesit-font-lock-level 4))
 
 ;; === フォント設定
-(set-face-attribute 'default nil :font "UDEV Gothic 35NF" :height 150)
+(set-face-attribute 'default nil :font "Source Han Code JP" :height 140)
 
 ;; === nerd iconsを利用
 (use-package nerd-icons
@@ -659,6 +656,7 @@
   (eat-enable-shell-prompt-annotation nil)
   :bind
   ("C-'" . my-toggle-eat)
+  :hook
   (eat-line-mode . my-turn-on-skk)
   :config
   (setq process-adaptive-read-buffering nil)
@@ -888,6 +886,7 @@
 
 ;; === Emacs Lisp
 (defun my-format-emacs-lisp ()
+  "Format the current buffer as Emacs Lisp code."
   (interactive)
   (save-excursion
     (indent-region (point-min) (point-max)))
@@ -895,6 +894,7 @@
 
 ;; === Clojure
 (defun my-format-clojure ()
+  "Format the current buffer as Clojure code using cljfmt."
   (interactive)
   ;; プロジェクトルートでのcljfmtの実行
   ;; バッファを消して再度挿入なのでsave-excursionは使えない
@@ -913,6 +913,7 @@
     (clojure-ts-mode . (:lsp my-format-clojure))))
 
 (defun my-format-try (formatter)
+  "Try to format using FORMATTER."
   (pcase formatter
     (:lsp
      (when (bound-and-true-p eglot--managed-mode)
@@ -927,7 +928,7 @@
     (_ nil)))
 
 (defun my-format-buffer ()
-  "現在のメジャーモードに応じたフォーマッタを実行する"
+  "Format the current buffer based on its major mode."
   (interactive)
   (let ((formatters (cdr (assoc major-mode my-format-rules))))
     (if (not (cl-some #'my-format-try formatters))
@@ -1143,7 +1144,10 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(package-selected-packages nil)
+ '(package-vc-selected-packages
+   '((copilot :url "https://github.com/copilot-emacs/copilot.el" :branch
+              "main"))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
