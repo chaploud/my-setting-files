@@ -127,6 +127,9 @@
 ;; === 長い行を含むファイルの最適化
 (global-so-long-mode t)
 
+;; === 文字列を折り返さないのをデフォルトに
+(setq-default truncate-lines t)
+
 ;; ===== 編集体験の向上
 ;; === ミニバッファでのyes/noの聞かれ方をy/nにする
 (setq use-short-answers t)
@@ -151,9 +154,6 @@
 
 ;; === ウィンドウの状態を保持
 (winner-mode t)
-
-;; === ウィンドウの分割方向の閾値を広げる
-(setq split-width-threshold 140)
 
 ;; === 末尾のスペースやタブを可視化
 (defun my-turn-on-show-trailing-ws ()
@@ -285,7 +285,7 @@
 (global-hl-line-mode t)
 
 ;; === 行間を少し広げる
-(setq-default line-spacing 0.07)
+(setq-default line-spacing 0.2)
 
 ;; === 行番号を表示
 (add-hook 'prog-mode-hook #'display-line-numbers-mode)
@@ -301,9 +301,7 @@
   (treesit-font-lock-level 4))
 
 ;; === フォント設定
-(set-face-attribute 'default nil :font "Source Han Code JP-14")
-(set-face-attribute 'fixed-pitch nil :font "Source Han Code JP-14")
-(set-face-attribute 'variable-pitch nil :font "Source Han Code JP-14")
+(set-face-attribute 'default nil :font "UDEV Gothic 35NF" :height 150)
 
 ;; === nerd iconsを利用
 (use-package nerd-icons
@@ -661,8 +659,6 @@
   (eat-enable-shell-prompt-annotation nil)
   :bind
   ("C-'" . my-toggle-eat)
-  :hook
-  ;; (eat-mode . my-eat-startup) ; NOTE: 残す
   (eat-line-mode . my-turn-on-skk)
   :config
   (setq process-adaptive-read-buffering nil)
@@ -673,15 +669,6 @@
       (if (and eat-window (eq (selected-window) eat-window))
           (quit-window)
         (eat))))
-
-  ;; NOTE: Claude Codeはターミナルでやることにしたので未使用
-  (defun my-eat-startup ()
-    (run-with-timer
-     1.0 nil
-     (lambda ()
-       (with-current-buffer (get-buffer "*eat*")
-         (eat-line-mode))
-       )))
   )
 
 ;;====================================================================
@@ -790,6 +777,7 @@
 ;; GitHub Copilot連携
 ;;====================================================================
 
+;; npm install -g @github/copilot-language-server とGitHub連携が必要
 (use-package copilot
   :ensure t
   :vc (:url "https://github.com/copilot-emacs/copilot.el" :rev :newest :branch "main")
@@ -811,6 +799,28 @@
 
 (use-package copilot-chat
   :ensure t)
+
+;;====================================================================
+;; Claude Code (claude-code.el)
+;;====================================================================
+
+;; (use-package monet
+;;   :ensure t
+;;   :vc (:url "https://github.com/stevemolitor/monet" :rev :newest))
+
+;; ;; npm install -g @anthropic-ai/claude-code と契約が必要
+;; ;; install claude-code.el
+;; (use-package claude-code :ensure t
+;;   :vc (:url "https://github.com/stevemolitor/claude-code.el" :rev :newest)
+;;   :config
+;;   ;; optional IDE integration with Monet
+;;   (add-hook 'claude-code-process-environment-functions #'monet-start-server-function)
+;;   (monet-mode 1)
+;;   (claude-code-mode)
+;;   :bind-keymap ("C-c c" . claude-code-command-map)
+;;   ;; Optionally define a repeat map so that "M" will cycle thru Claude auto-accept/plan/confirm modes after invoking claude-code-cycle-mode / C-c M.
+;;   :bind
+;;   (:repeat-map my-claude-code-map ("M" . claude-code-cycle-mode)))
 
 ;;====================================================================
 ;; Dockerコンテナ内開発ワークフロー
