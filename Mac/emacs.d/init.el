@@ -30,12 +30,24 @@
   (interactive)
   (find-file user-init-file))
 
-;; === pareditでカーソル以降をそのレベルで閉じるまで削除
-(defun my-paredit-kill-to-end ()
+;; === puniでカーソル以降をそのレベルで閉じるまで削除
+(defun my-puni-kill-to-end ()
   "Kill to the end of the current sexp."
   (interactive)
-  (let ((end (save-excursion (paredit-close-parenthesis) (point))))
-    (kill-region (point) (- end 1))))
+  (let ((end (save-excursion (puni-end-of-sexp) (point))))
+    (kill-region (point) end)))
+
+;; === puniでシンボルを""で囲む
+(defun my-wrap-symbol-with-quotes ()
+  "Surround the current symbol with double quotes."
+  (interactive)
+  (let ((bounds (bounds-of-thing-at-point 'symbol)))
+    (when bounds
+      (save-excursion
+        (goto-char (cdr bounds))
+        (insert "\"")
+        (goto-char (car bounds))
+        (insert "\"")))))
 
 ;; === カーソル下のシンボルが組み込みのパッケージかどうかチェック
 (defun my-package-built-in-p (symbol)
@@ -43,6 +55,29 @@
   (interactive (list (or (symbol-at-point)
                          (intern (read-string "Package: ")))))
   (message "[%s] built-in: %s" symbol (when (package-built-in-p symbol) t)))
+
+;; === eglotによるLSP起動
+(defun my-eglot-start ()
+  "Start eglot for the current buffer if not already started."
+  (interactive)
+  (eglot-ensure))
+
+;; === clojure-lsp用キャッシュの削除 & 再起動
+(defun my-clojure-lsp-clear-cache-and-restart ()
+  "Clear clojure-lsp cache and restart the server."
+  (interactive)
+  (call-interactively #'eglot-shutdown)
+  (let* ((root-dir (project-root (project-current)))
+         (lsp-cache (file-name-concat root-dir ".lsp/.cache"))
+         (kondo-cache (file-name-concat root-dir ".clj-kondo/.cache")))
+    (when (file-directory-p lsp-cache)
+      (delete-directory lsp-cache t)
+      (message "[%s] Deleted clojure-lsp cache at %s" (my-display-time) lsp-cache))
+    (when (file-directory-p kondo-cache)
+      (delete-directory kondo-cache t)
+      (message "[%s] Deleted clj-kondo cache at %s" (my-display-time) kondo-cache))
+    )
+  (eglot-ensure))
 
 ;;====================================================================
 (message "[%s] %s" (my-display-time) "init.el loading...")
@@ -168,7 +203,8 @@
   :custom
   (which-key-mode t)
   (which-key-idle-delay 0.3)
-  (which-key-idle-secondary-delay 0))
+  (which-key-idle-secondary-delay 0)
+  (which-key-sort-order nil))
 
 ;; ==== モード別設定
 ;; === zshファイルを開いたときにshell-script-modeを有効に
@@ -215,6 +251,14 @@
                (side . right)
                (window-width . 0.5)
                (window-parameters  . ((dedicated . t)))))
+
+;; flymake-show-project-diagnosticsは右分割で開く
+(add-to-list 'display-buffer-alist
+             '("\\*Flymake diagnostics"
+               (display-buffer-pop-up-window
+                display-buffer-use-some-window)
+               (side . right)
+               (window-width . 0.5)))
 
 ;;====================================================================
 ;; Emacs Lisp用の便利なHelp
@@ -407,7 +451,15 @@
         ("C-y" . nil)
         ("C-S-h" . #'backward-kill-sexp))
   (:map evil-motion-state-map
-        ("," . nil)))
+        ("," . nil))
+  :config
+  ;; 折り返しがある行でgj/gkが面倒なので
+  (evil-global-set-key 'motion "j" 'evil-next-visual-line)
+  (evil-global-set-key 'motion "k" 'evil-previous-visual-line)
+  ;; 最初からnormalモードであってほしいバッファ
+  (evil-set-initial-state 'messages-buffer-mode 'normal)
+  (evil-set-initial-state 'dashboard-mode 'normal)
+  )
 
 ;; === evilの便利なキーバインド追加
 (use-package evil-collection
@@ -415,7 +467,9 @@
   :after evil
   :custom
   (evil-collection-setup-minibuffer t)
-  (evil-collection-key-blacklist '("C-j" "C-k"))
+  (evil-collection-setup-debugger-keys t)
+  (evil-collection-key-blacklist '("C-j" "C-k" "SPC"))
+  (evil-collection-magit-want-horizontal-movement t)
   :config
   (evil-collection-init))
 
@@ -506,7 +560,7 @@
 (use-package orderless
   :ensure t
   :custom
-  (completion-styles '(orderless basic partial-completion))
+  (completion-styles '(basic partial-completion orderless))
   (completion-category-defaults nil)
   (completion-category-overrides '((file (styles partial-completion))
                                    (corfu (styles basic partial-completion orderless))))
@@ -593,7 +647,8 @@
   (eglot-events-buffer-config '(:size nil :format full))
   (eglot-autoshutdown t)
   (eglot-connect-timeout 120)
-  (eglot-extend-to-xref t))
+  (eglot-extend-to-xref t)
+  (eglot-autoreconnect nil))
 
 ;; === スニペット・テンプレート (tmpel)
 (use-package tempel
@@ -675,7 +730,26 @@
 
 ;; === magit
 (use-package magit
-  :ensure t)
+  :ensure t
+  :custom
+  (magit-diff-refine-hunk 'all)
+  :config
+  ;; magit-diffのとき、vc-diffを使う
+  (defun my-magit-diff-dwim-with-vc-diff (orig-fun &rest args)
+    "Advice function to use `vc-diff` in `magit-status-mode`."
+    (if (and (derived-mode-p 'magit-status-mode)
+             (magit-file-at-point))
+        (let ((file (magit-file-at-point)))
+          (with-current-buffer (find-file-noselect file)
+            (call-interactively #'vc-diff)))
+      (apply orig-fun args)))
+
+  (advice-add 'magit-diff-dwim :around #'my-magit-diff-dwim-with-vc-diff)
+
+  ;; magit-diff-visit-fileは別ウィンドウで開く
+  (advice-add 'magit-diff-visit-file :around
+              (lambda (orig-fun &rest args)
+                (funcall orig-fun t))))
 
 ;; === フリンジに差分を強調表示 (diff-hl)
 (use-package diff-hl
@@ -686,15 +760,6 @@
   :hook
   (magit-pre-refresh-hook  . diff-hl-magit-pre-refresh)
   (magit-post-refresh-hook . diff-hl-magit-post-refresh))
-
-;; === magitをgit-deltaを使って高速化しつつ見やすくする
-;; bat, deltaのインストール
-;; catppuccinのbat, delta用のテーマ設定がそれぞれ必要
-(use-package magit-delta
-  :ensure t
-  :hook (magit-mode . magit-delta-mode)
-  :custom
-  (magit-delta-default-dark-theme "Catppuccin Macchiato"))
 
 ;;====================================================================
 ;; ワークスペース (perspective.el)
@@ -738,14 +803,14 @@
 ;; TODO: ciderとclojure-lsp(eglot)の補完は使いながら調整
 ;; TODO: ciderの便利機能や設定も使いながら獲得(portalなども)
 
-;; 構造的編集(Paredit)
-(use-package paredit
+;; 構造的編集 (puni)
+(use-package puni
   :ensure t
-  :bind (:map paredit-mode-map
-              ("C-j" . nil))
-  :hook ((emacs-lisp-mode . paredit-mode)
-         (lisp-interaction-mode . paredit-mode)
-         (clojure-ts-mode . paredit-mode)))
+  :hook
+  ((emacs-lisp-mode . puni-mode)
+   (lisp-interaction-mode . puni-mode)
+   (clojure-ts-mode . puni-mode))
+  )
 
 ;; Javaライブラリのジャンプ時などに
 (use-package jarchive
@@ -797,28 +862,6 @@
 
 (use-package copilot-chat
   :ensure t)
-
-;;====================================================================
-;; Claude Code (claude-code.el)
-;;====================================================================
-
-;; (use-package monet
-;;   :ensure t
-;;   :vc (:url "https://github.com/stevemolitor/monet" :rev :newest))
-
-;; ;; npm install -g @anthropic-ai/claude-code と契約が必要
-;; ;; install claude-code.el
-;; (use-package claude-code :ensure t
-;;   :vc (:url "https://github.com/stevemolitor/claude-code.el" :rev :newest)
-;;   :config
-;;   ;; optional IDE integration with Monet
-;;   (add-hook 'claude-code-process-environment-functions #'monet-start-server-function)
-;;   (monet-mode 1)
-;;   (claude-code-mode)
-;;   :bind-keymap ("C-c c" . claude-code-command-map)
-;;   ;; Optionally define a repeat map so that "M" will cycle thru Claude auto-accept/plan/confirm modes after invoking claude-code-cycle-mode / C-c M.
-;;   :bind
-;;   (:repeat-map my-claude-code-map ("M" . claude-code-cycle-mode)))
 
 ;;====================================================================
 ;; Dockerコンテナ内開発ワークフロー
@@ -1011,6 +1054,7 @@
     ;; (p) プロジェクト管理
     "p" '(:ignore t :wk "Project/Package")
     "p p" '(project-switch-project :wk "project switch")
+    "p f" '(flymake-show-project-diagnostics :wk "project flymake")
 
     ;; (w) ワークスペース/ウィンドウ操作
     "w" '(:ignore t :wk "Workspace/Window")
@@ -1036,6 +1080,20 @@
     ;; (a) 生成AI系
     "a" '(:ignore t :wk "AI")
     "a c" '(copilot-chat :wk "Copilot chat") ; 補完はM-/でサジェスト
+
+    ;; (l) LSP (eglot) 操作
+    "l" '(:ignore t :wk "LSP")
+    "l s" '(my-eglot-start :wk "lsp start")
+    )
+
+  ;; (l) LSP (eglot) 操作
+  (my-global-leader-def
+    :keymaps '(eglot-mode-map)
+    "l r" '(eglot-rename :wk "rename symbol")
+    "l a" '(eglot-code-actions :wk "code actions")
+    "l f" '(eglot-format :wk "format")
+    "l R" '(eglot-reconnect :wk "lsp reconnect")
+    "l q" '(eglot-shutdown :wk "lsp shutdown")
     )
 
   ;; === ジャンプなど (g系)
@@ -1046,44 +1104,45 @@
     "T" '(persp-prev :wk "prev workspace")
     )
 
-  ;; === LSP (eglot) 操作
-  (my-local-leader-def
-    :keymaps '(eglot-mode-map)
-    "l" '(:ignore t :wk "LSP")
-    "l r" '(eglot-rename :wk "rename symbol")
-    "l a" '(eglot-code-actions :wk "code actions")
-    "l f" '(eglot-format :wk "format")
-    )
-
   ;; === Lisp系の編集操作
   (my-local-leader-def
     :keymaps '(emacs-lisp-mode-map
                lisp-interaction-mode-map
                clojure-ts-mode-map)
-    "s" '(paredit-forward-slurp-sexp :wk "slurp forward")
-    "S" '(paredit-backward-slurp-sexp :wk "slurp backward")
-    "b" '(paredit-forward-barf-sexp :wk "barf forward")
-    "B" '(paredit-backward-barf-sexp :wk "barf backward")
-    "r" '(paredit-raise-sexp :wk "raise sexp")
+    "s" '(puni-slurp-forward :wk "slurp forward")
+    "S" '(puni-slurp-backward :wk "slurp backward")
+    "b" '(puni-barf-forward :wk "barf forward")
+    "B" '(puni-barf-backward :wk "barf backward")
+    "r" '(puni-raise :wk "raise sexp")
     "w" '(:ignore t :wk "wrap")
-    "w (" '(paredit-wrap-round :wk "wrap ()")
-    "w [" '(paredit-wrap-square :wk "wrap []")
-    "w {" '(paredit-wrap-curly :wk "wrap {}")
-    "w \"" '(paredit-meta-doublequote :wk "wrap \"\"")
-    "k" '(my-paredit-kill-to-end :wk "kill to sexp end")
+    "w (" '(puni-wrap-round :wk "wrap ()")
+    "w [" '(puni-wrap-square :wk "wrap []")
+    "w {" '(puni-wrap-curly :wk "wrap {}")
+    "w \"" '(my-wrap-symbol-with-quotes :wk "wrap \"\"")
+    "d w" '(puni-splice :wk "delete wrap")
+    "k" '(my-puni-kill-to-end :wk "kill to sexp end")
     "h" '(eldoc :wk "eldoc")
     )
 
   ;; === Clojure
+  (my-global-leader-def
+    :keymaps '(clojure-ts-mode-map)
+    "m" '(:ignore t :wk "Clojure")
+    "m i" '(cider-juck-in :wk "cider juck-in")
+    "m c" '(cider-connect :wk "cider connect")
+    "m q" '(cider-quit :wk "cider quit")
+    "m e" '(cider-eval-dwim :wk "cider eval")
+    "m r" '(cider-ns-refresh :wk "c")
+    "l F" '(my-clojure-lsp-clear-cache-and-restart :wk "lsp clear cache/restart"))
+
+  ;; === Clojure
   (my-local-leader-def
     :keymaps '(clojure-ts-mode-map)
-    ", i" '(cider-juck-in :wk "cider juck-in")
-    ", c" '(cider-connect :wk "cider connect" )
-    ", q" '(cider-quit :wk "cider quit")
-    ", e" '(cider-eval-dwim :wk "cider eval dwim")
-    ", r" '(cider-ns-refresh :wk "cider ns refresh")
-    ;; ここはEmacs Lispとあわせるか
-    )
+    "," '(:ignore t :wk "Clojure")
+    ", e" '(:ignore t :wk "Eval")
+    ", e e" '(cider-eval-last-sexp :wk "eval last sexp")
+    ", e f" '(cider-eval-dwim :wk "eval dwim")
+    ", e b" '(cider-eval-buffer :wk "eval bufer"))
 
   ;; === Emacs Lisp
   (my-local-leader-def
@@ -1147,16 +1206,17 @@
  '(package-selected-packages nil)
  '(package-vc-selected-packages
    '((copilot :url "https://github.com/copilot-emacs/copilot.el" :branch
-              "main"))))
+              "main")
+     (eat :url "http://codeberg.org/akib/emacs-eat"))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(diff-added ((t (:background "#4b5d55"))))
- '(diff-refine-added ((t (:background "#658168"))))
- '(diff-refine-removed ((t (:background "#895768"))))
- '(diff-removed ((t (:background "#604456"))))
+ '(diff-added ((t (:background "#3d4a3f"))))
+ '(diff-refine-added ((t (:background "#4e5e47"))))
+ '(diff-refine-removed ((t (:background "#6a434f"))))
+ '(diff-removed ((t (:background "#49353f"))))
  '(font-lock-comment-delimiter-face ((t (:foreground "#5ab5b0"))))
  '(font-lock-comment-face ((t (:foreground "#5ab5b0"))))
  '(match ((t (:background "#eed49f" :foreground "#1e2030"))))

@@ -9,7 +9,7 @@
          ":"))
 
 ;; === GCを抑制し、起動を高速化する
-(setq gc-cons-threshold (* 1024 1024 1024) ; 1GB
+(setq gc-cons-threshold most-positive-fixnum
       gc-cons-percentage 0.6)
 
 ;; === 起動後に適切なGC設定に戻す
