@@ -1,0 +1,38 @@
+[
+  {
+    "name": "lgtm",
+    "text": "![LGTM](https:\/\/img.shields.io\/badge\/review-LGTM-green)"
+  },
+  {
+    "name": "wip",
+    "text": "![WIP](https:\/\/img.shields.io\/badge\/review-WIP-purple)"
+  },
+  {
+    "name": "must",
+    "text": "![must](https:\/\/img.shields.io\/badge\/review-must-red)"
+  },
+  {
+    "name": "want",
+    "text": "![want](https:\/\/img.shields.io\/badge\/review-want-skyblue)"
+  },
+  {
+    "name": "imo",
+    "text": "![imo](https:\/\/img.shields.io\/badge\/review-imo-orange)"
+  },
+  {
+    "name": "nits",
+    "text": "![nits](https:\/\/img.shields.io\/badge\/review-nits-yellowgreen)"
+  },
+  {
+    "name": "ask",
+    "text": "![ask-badge](https:\/\/img.shields.io\/badge\/review-ask-yellowgreen.svg)"
+  },
+  {
+    "name": "memo",
+    "text": "![memo](https:\/\/img.shields.io\/badge\/review-memo-blue)"
+  },
+  {
+    "name": "todo",
+    "text": "![todo](https:\/\/img.shields.io\/badge\/todo-yellow)"
+  }
+]
