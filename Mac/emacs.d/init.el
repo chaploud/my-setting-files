@@ -1,4 +1,4 @@
-;;; init.el --- メイン設定ファイル -*- lexical-binding: t; -*-
+;;; init.el -- メイン設定ファイル -*- lexical-binding: t; -*-
 
 ;;; Commentary:
 ;; Emacsの設定ファイル
@@ -722,6 +722,8 @@
   :bind
   ("C-'" . my-toggle-eat)
   :hook
+  ;; Claude Codeなどでnbspが強調されて気になるので
+  (eat-mode . (lambda () (setq-local nobreak-char-display nil)))
   (eat-line-mode . my-turn-on-skk)
   :config
   (setq process-adaptive-read-buffering nil)
@@ -884,18 +886,84 @@
   :vc (:url "https://github.com/manzaltu/claude-code-ide.el" :rev :newest)
   :custom
   (claude-code-ide-terminal-backend 'eat)
-  (claude-code-ide-focus-on-open nil)
   (claude-code-ide-window-width 0.5)
   :config
   (claude-code-ide-emacs-tools-setup)
 
+  ;; 崩れないように*claude-code[...]*バッファのフォントを変更
   (defun my-set-font-for-claude-buffer ()
     "Set a specific font for Claude Code IDE buffers."
     (when (string-match-p "^\\*claude-code" (buffer-name))
-      (buffer-face-set :family "UDEV Gothic 35NF" :height 150)))
+      (buffer-face-set :family "UDEV Gothic 35NF" :height 140)))
   (add-hook 'buffer-list-update-hook #'my-set-font-for-claude-buffer)
-  )
 
+  ;; Claude Code IDE用スクラッチバッファ（init.el用・Evil対応）
+  (defun my-claude-scratch-open ()
+    "Claude Codeバッファの下に分割してスクラッチバッファを開く。"
+    (interactive)
+    (let* ((project-dir (claude-code-ide--get-working-directory))
+           (buffer-name (format "*claude-scratch[%s]*"
+                                (file-name-nondirectory (directory-file-name project-dir))))
+           (claude-buffer-name (claude-code-ide--get-buffer-name project-dir))
+           (claude-buffer (get-buffer claude-buffer-name))
+           (scratch-buffer (get-buffer-create buffer-name)))
+
+      (unless claude-buffer
+        (user-error "Claude Code IDEが起動していません"))
+
+      ;; バッファのセットアップ
+      (with-current-buffer scratch-buffer
+        (when (= (buffer-size) 0)
+          (insert "# Claude スクラッチバッファ\n\n"))
+        (setq-local claude-scratch-project-dir project-dir)
+        ;; キーバインド
+        (local-set-key (kbd "C-c C-c") #'my-claude-scratch-send-and-execute))
+
+      ;; 現在のウィンドウ（通常はファイルが開かれている）を下に分割
+      (let ((current-window (selected-window)))
+        ;; サイドウィンドウでない場合のみ分割
+        (if (and (not (window-parameter current-window 'window-side))
+                 (not (window-dedicated-p current-window)))
+            (let ((new-window (split-window-below -15))) ; 下15行を新ウィンドウに
+              (set-window-buffer new-window scratch-buffer)
+              (select-window new-window)
+              (goto-char (point-max)))
+          ;; 分割できない場合は新しいウィンドウで表示
+          (pop-to-buffer scratch-buffer)
+          (goto-char (point-max))))))
+
+  (defun my-claude-scratch-get-selection ()
+    "Evil visual選択またはEmacs region選択の範囲を取得。"
+    (cond
+     ;; Evil visual mode
+     ((and (bound-and-true-p evil-mode)
+           (bound-and-true-p evil-visual-state-p))
+      (cons (region-beginning) (region-end)))
+     ;; 通常のregion
+     ((use-region-p)
+      (cons (region-beginning) (region-end)))
+     (t nil)))
+
+  (defun my-claude-scratch-send-and-execute ()
+    "選択範囲をClaude Codeに送信して実行。"
+    (interactive)
+    (let ((selection (my-claude-scratch-get-selection)))
+      (unless selection
+        (user-error "範囲を選択してください"))
+      (let* ((start (car selection))
+             (end (cdr selection))
+             (text (buffer-substring-no-properties start end))
+             (project-dir claude-scratch-project-dir)
+             (claude-buffer-name (claude-code-ide--get-buffer-name project-dir))
+             (claude-buffer (get-buffer claude-buffer-name)))
+        (unless claude-buffer
+          (user-error "Claude Code IDEが起動していません"))
+        (with-current-buffer claude-buffer
+          (claude-code-ide--terminal-send-string text)
+          (sit-for 0.1)
+          (claude-code-ide--terminal-send-return))
+        (message "送信・実行しました"))))
+  )
 
 ;;====================================================================
 ;; Dockerコンテナ内開発ワークフロー
@@ -1117,8 +1185,11 @@
     ;; Claude Code IDE (M-RET: 改行, C-ESC: エスケープ)
     "a m" '(claude-code-ide-menu :wk "Claude menu")
     "a a" '(claude-code-ide :wk "Claude start")
-    "a s" '(claude-code-ide-send-prompt :wk "Claude send prompt")
-    "a i" '(claude-code-ide-insert-at-mentioned :wk "Claude send selected text")
+    "a b" '(my-claude-scratch-open :wk "Claude scratch buffer")
+    "a s" '(my-claude-scratch-send-and-execute :wk "Claude send region/line")
+    "a S" '(claude-code-ide-send-prompt :wk "Claude send prompt")
+    "a i" '(claude-code-ide-insert-at-mentioned :wk "Claude insert at mentioned")
+    "a n" '(claude-code-ide-insert-newline :wk "Claude insert newline")
     "a t" '(claude-code-ide-toggle :wk "Claude toggle window")
     "a T" '(claude-code-ide-switch-to-buffer :wk "Claude switch buffer")
     "a e" '(claude-code-ide-send-escape :wk "Claude send escape")
