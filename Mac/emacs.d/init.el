@@ -206,6 +206,10 @@
   (which-key-idle-secondary-delay 0)
   (which-key-sort-order nil))
 
+;; === *scratch*バッファのデフォルトをtext-modeに
+(setq initial-major-mode 'text-mode)
+(setq initial-scratch-message "*scratch* for temporal notes\n\n")
+
 ;; ==== モード別設定
 ;; === zshファイルを開いたときにshell-script-modeを有効に
 (add-to-list 'auto-mode-alist '("\\zshrc\\'" . shell-script-mode))
