@@ -877,6 +877,27 @@
   :ensure t)
 
 ;;====================================================================
+;; Claude Code IDE
+;;====================================================================
+(use-package claude-code-ide
+  :ensure t
+  :vc (:url "https://github.com/manzaltu/claude-code-ide.el" :rev :newest)
+  :custom
+  (claude-code-ide-terminal-backend 'eat)
+  (claude-code-ide-focus-on-open nil)
+  (claude-code-ide-window-width 0.5)
+  :config
+  (claude-code-ide-emacs-tools-setup)
+
+  (defun my-set-font-for-claude-buffer ()
+    "Set a specific font for Claude Code IDE buffers."
+    (when (string-match-p "^\\*claude-code" (buffer-name))
+      (buffer-face-set :family "UDEV Gothic 35NF" :height 150)))
+  (add-hook 'buffer-list-update-hook #'my-set-font-for-claude-buffer)
+  )
+
+
+;;====================================================================
 ;; Dockerコンテナ内開発ワークフロー
 ;;====================================================================
 
@@ -1092,7 +1113,19 @@
 
     ;; (a) 生成AI系
     "a" '(:ignore t :wk "AI")
-    "a c" '(copilot-chat :wk "Copilot chat") ; 補完はM-/でサジェスト
+    "a p" '(copilot-chat :wk "Copilot chat") ; 補完はM-/でサジェスト
+    ;; Claude Code IDE (M-RET: 改行, C-ESC: エスケープ)
+    "a m" '(claude-code-ide-menu :wk "Claude menu")
+    "a a" '(claude-code-ide :wk "Claude start")
+    "a s" '(claude-code-ide-send-prompt :wk "Claude send prompt")
+    "a i" '(claude-code-ide-insert-at-mentioned :wk "Claude send selected text")
+    "a t" '(claude-code-ide-toggle :wk "Claude toggle window")
+    "a T" '(claude-code-ide-switch-to-buffer :wk "Claude switch buffer")
+    "a e" '(claude-code-ide-send-escape :wk "Claude send escape")
+    "a q" '(claude-code-ide-stop :wk "Claude stop")
+    "a c" '(claude-code-ide-continue :wk "Claude continue")
+    "a r" '(claude-code-ide-resume :wk "Claude resume")
+    "a l" '(claude-code-ide-list-sessions :wk "Claude list sessions")
 
     ;; (l) LSP (eglot) 操作
     "l" '(:ignore t :wk "LSP")
@@ -1215,7 +1248,12 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(package-vc-selected-packages
+   '((claude-code-ide :url
+                      "https://github.com/manzaltu/claude-code-ide.el")
+     (copilot :url "https://github.com/copilot-emacs/copilot.el"
+              :branch "main")
+     (eat :url "http://codeberg.org/akib/emacs-eat"))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
