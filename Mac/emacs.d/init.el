@@ -347,6 +347,8 @@
   (treesit-font-lock-level 4))
 
 ;; === フォント設定
+(setq use-default-font-for-symbols nil)
+(set-fontset-font t 'unicode (font-spec :family "JuliaMono")) ; 様々なUnicode文字
 (set-face-attribute 'default nil :font "Source Han Code JP" :height 140)
 
 ;; === nerd iconsを利用
@@ -914,7 +916,7 @@
       ;; バッファのセットアップ
       (with-current-buffer scratch-buffer
         (when (= (buffer-size) 0)
-          (insert "# Claude スクラッチバッファ\n\n"))
+          (insert "*Claude Code IDE scratch* \n\n"))
         (setq-local claude-scratch-project-dir project-dir)
         ;; キーバインド
         (local-set-key (kbd "C-c C-c") #'my-claude-scratch-send-and-execute))
@@ -1055,7 +1057,8 @@
 ;; 左: メジャーモード, 右: 優先順位をつけたフォーマット方法のリスト
 (defvar my-format-rules
   '((emacs-lisp-mode . (my-format-emacs-lisp))
-    (clojure-ts-mode . (:lsp my-format-clojure))))
+    (clojure-ts-mode . (:lsp my-format-clojure))
+    (clojure-ts-clojurescript-mode . (:lsp my-format-clojure))))
 
 (defun my-format-try (formatter)
   "Try to format using FORMATTER."
@@ -1330,10 +1333,10 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(diff-added ((t (:background "#3d4a3f"))))
- '(diff-refine-added ((t (:background "#4e5e47"))))
- '(diff-refine-removed ((t (:background "#6a434f"))))
- '(diff-removed ((t (:background "#49353f"))))
+ '(diff-added ((t (:background "#3e4b4c"))))           ; 背景80% + 緑20%
+ '(diff-removed ((t (:background "#4c3a4c"))))         ; 背景80% + 赤20%
+ '(diff-refine-added ((t (:background "#586e5e"))))    ; 背景60% + 緑40%
+ '(diff-refine-removed ((t (:background "#744d5f"))))  ; 背景60% + 赤40%
  '(font-lock-comment-delimiter-face ((t (:foreground "#5ab5b0"))))
  '(font-lock-comment-face ((t (:foreground "#5ab5b0"))))
  '(match ((t (:background "#eed49f" :foreground "#1e2030"))))
