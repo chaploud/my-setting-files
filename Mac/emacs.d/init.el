@@ -302,6 +302,7 @@
   (skk-delete-implies-kakutei nil)
   (skk-use-color-cursor nil)
   (skk-show-candidates-nth-henkan-char 3)
+  (skk-status-indicator nil)
   (skk-isearch-mode-enable 'always)
   (skk-isearch-mode-string-alist '((hiragana . "")
                                    (katakana . "")
@@ -381,8 +382,12 @@
   :ensure t
   :custom
   (doom-modeline-mode t)
-  (doom-modeline-modeal t)
-  (doom-modeline-major-mode-icon nil))
+  (doom-modeline-major-mode-icon nil) ; アイコン不要
+  (doom-modeline-modal nil) ; evilのモード表示不要
+  (doom-modeline-buffer-file-name-style 'file-name) ; ファイル名のみ
+  (doom-modeline-percent-position nil) ; 位置の%表示不要
+  (doom-modeline-buffer-encoding nil) ; LF/UTF-8などの表示不要
+  )
 
 ;; === ダッシュボード
 (use-package dashboard
@@ -652,7 +657,7 @@
   (eglot-autoshutdown t)
   (eglot-connect-timeout 120)
   (eglot-extend-to-xref t)
-  (eglot-autoreconnect nil))
+  (eldoc-echo-area-use-multiline-p nil))
 
 ;; === スニペット・テンプレート (tmpel)
 (use-package tempel
@@ -713,6 +718,7 @@
   :vc (:url "http://codeberg.org/akib/emacs-eat" :rev :newest)
   :custom
   (eat-enable-shell-prompt-annotation nil)
+  (eat-enable-yank-to-terminal t)
   :bind
   ("C-'" . my-toggle-eat)
   :hook
@@ -738,22 +744,25 @@
   :custom
   (magit-diff-refine-hunk 'all)
   :config
-  ;; magit-diffのとき、vc-diffを使う
+  ;; magit-diff-visit-fileは別ウィンドウで開く
+  (advice-add 'magit-diff-visit-file :around
+              (lambda (orig-fun &rest args)
+                (funcall orig-fun t)))
+
+  ;; magit-diffのとき、vc-diffを使う。未追跡ファイルは単に開く
   (defun my-magit-diff-dwim-with-vc-diff (orig-fun &rest args)
     "Advice function to use `vc-diff` in `magit-status-mode`."
-    (if (and (derived-mode-p 'magit-status-mode)
-             (magit-file-at-point))
-        (let ((file (magit-file-at-point)))
+    (if-let (file (and (derived-mode-p 'magit-status-mode)
+                       (magit-file-at-point)))
+        (if (null (vc-state file))
+            (progn
+              (message "%s is untracked file." file)
+              (view-file-other-window file))
           (with-current-buffer (find-file-noselect file)
             (call-interactively #'vc-diff)))
       (apply orig-fun args)))
 
-  (advice-add 'magit-diff-dwim :around #'my-magit-diff-dwim-with-vc-diff)
-
-  ;; magit-diff-visit-fileは別ウィンドウで開く
-  (advice-add 'magit-diff-visit-file :around
-              (lambda (orig-fun &rest args)
-                (funcall orig-fun t))))
+  (advice-add 'magit-diff-dwim :around #'my-magit-diff-dwim-with-vc-diff))
 
 ;; === フリンジに差分を強調表示 (diff-hl)
 (use-package diff-hl
@@ -777,7 +786,7 @@
   :custom
   (persp-state-default-file "~/.cache/emacs/workspace-default")
   (persp-sort 'created)
-  )
+  (persp-modestring-short t))
 
 ;;====================================================================
 ;; Clojure/ClojureScript/ClojureDart
@@ -1136,17 +1145,16 @@
     "m c" '(cider-connect :wk "cider connect")
     "m q" '(cider-quit :wk "cider quit")
     "m e" '(cider-eval-dwim :wk "cider eval")
-    "m r" '(cider-ns-refresh :wk "c")
+    "m r" '(cider-ns-refresh :wk "cider refresh")
     "l F" '(my-clojure-lsp-clear-cache-and-restart :wk "lsp clear cache/restart"))
 
   ;; === Clojure
   (my-local-leader-def
     :keymaps '(clojure-ts-mode-map)
-    "," '(:ignore t :wk "Clojure")
-    ", e" '(:ignore t :wk "Eval")
-    ", e e" '(cider-eval-last-sexp :wk "eval last sexp")
-    ", e f" '(cider-eval-dwim :wk "eval dwim")
-    ", e b" '(cider-eval-buffer :wk "eval bufer"))
+    "e" '(:ignore t :wk "Eval")
+    "e e" '(cider-eval-last-sexp :wk "eval last sexp")
+    "e f" '(cider-eval-dwim :wk "eval dwim")
+    "e b" '(cider-eval-buffer :wk "eval bufer"))
 
   ;; === Emacs Lisp
   (my-local-leader-def
@@ -1207,11 +1215,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages nil)
- '(package-vc-selected-packages
-   '((copilot :url "https://github.com/copilot-emacs/copilot.el" :branch
-              "main")
-     (eat :url "http://codeberg.org/akib/emacs-eat"))))
+ )
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
