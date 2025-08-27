@@ -10,13 +10,22 @@
 
 ;; === 前提
 ;; macOS Sequoia 15.6
+;; emacs-plus@30 で利用 (https://github.com/d12frosted/homebrew-emacs-plus)
+
+;; === 依存関係
 ;; gcc@15 インストール済み (https://formulae.brew.sh/formula/gcc)
 ;; libgccjit@15 インストール済み (https://formulae.brew.sh/formula/libgccjit)
-;; emacs-plus@30 で利用 (https://github.com/d12frosted/homebrew-emacs-plus)
-;; 1Password CLI (SQLモードの項目でサンプルとして使っています)
+;; ripgrep インストール済み (https://formulae.brew.sh/formula/ripgrep)
+;; 1Password CLI ([任意] SQLモードの項目でDB接続時のパスワード参照として使っています)
+
+;; === 必要フォント
+;; Source Han Code JP (https://github.com/adobe-fonts/source-han-code-jp)
+;; UDEV Gothic 35NF (https://github.com/yuru7/udev-gothic)
+;; JuliaMono (https://github.com/cormullion/juliamono/releases)
 
 ;; === SKK
 ;; SKKを使いこなすと日本語入力が楽しくなります
+;; 以下をEmacs以前に動作するようにセットアップしておいてください(結構面倒です)
 ;; * macSKK
 ;;   * https://github.com/mtgto/macSKK
 ;;   * Emacs以外でもSKKを利用したい
@@ -27,11 +36,6 @@
 ;; * macism
 ;;   * https://github.com/laishulu/macism
 ;;   * Emacs以外とのIME切り替えの摩擦を減らすために必要
-
-;; === 必要フォント
-;; Source Han Code JP (https://github.com/adobe-fonts/source-han-code-jp)
-;; UDEV Gothic 35NF (https://github.com/yuru7/udev-gothic)
-;; JuliaMono (https://github.com/cormullion/juliamono/releases)
 
 ;; === ~/.zshrc にあらかじめ以下を追記しておく
 ;; # eコマンドでサっとEmacsでファイルを開く
@@ -53,7 +57,7 @@
 ;;; Code:
 
 ;;====================================================================
-;; (1) ユーティリティ関数
+;; ユーティリティ関数
 ;;===================================================================
 ;; === 時間計測
 (defvar my-time-tmp (current-time))
@@ -84,43 +88,20 @@
                          (intern (read-string "Package: ")))))
   (message "[%s] built-in: %s" symbol (when (package-built-in-p symbol) t)))
 
-;; === eglotによるLSP起動
-(defun my-eglot-start ()
-  "Start eglot for the current buffer if not already started."
-  (interactive)
-  (eglot-ensure))
-
-;; === clojure-lsp用キャッシュの削除 & 再起動
-(defun my-clojure-lsp-clear-cache-and-restart ()
-  "Clear clojure-lsp cache and restart the server."
-  (interactive)
-  (call-interactively #'eglot-shutdown)
-  (let* ((root-dir (project-root (project-current)))
-         (lsp-cache (file-name-concat root-dir ".lsp/.cache"))
-         (kondo-cache (file-name-concat root-dir ".clj-kondo/.cache")))
-    (when (file-directory-p lsp-cache)
-      (delete-directory lsp-cache t)
-      (message "[%s] Deleted clojure-lsp cache at %s" (my-display-time) lsp-cache))
-    (when (file-directory-p kondo-cache)
-      (delete-directory kondo-cache t)
-      (message "[%s] Deleted clj-kondo cache at %s" (my-display-time) kondo-cache))
-    )
-  (eglot-ensure))
-
-;;====================================================================
-(message "[%s] %s" (my-display-time) "init.el loading...")
-
 ;;===== TIPS / Rules of use-package ==================================
-;; 空行は入れないように統一する
-;; 組み込みは:ensure nil, 外部は:ensure t
-;; :after 依存関係, 1行でOK。これ以外は基本キーワード後に開業
-;; :init パッケージのロード前に実行
-;; :custom defcustom変数はこちらで設定 (setq x y)のsetqを除いた形式
-;; :hook パッケージに関連するフックをコンスセル形式で設定 (x . y)
-;; 末尾が-hookならそのまま、そうでなければ-hookを付けたものが使われる。関数側は#'をつけない
-;; :config 通常通りの処理をまとめる意味(グローバルスコープになる)
+;; :ensure 組み込みパッケージにはnil, 外部パッケージにはtを指定
 ;; :vc GitHubやCodebergなどから直接インストールする場合に利用
+;; :after 依存関係 (指定したパッケージのロード後に実行)
+;; :init パッケージのロード前に実行
+;; :custom defcustom変数はこちらで設定 (key value)の形式
+;; :hook パッケージに関連するフックをコンスセル形式で設定 (hook . function)
+;;   * 末尾が-hookならそのまま、そうでなければ-hookを付けたものが使われる。関数側は#'をつけない
+;; :config 通常通りの処理をまとめる意味 (グローバルスコープになる)
+;; 空行は入れないように統一する
 ;;====================================================================
+
+;; === ローディング開始メッセージ
+(message "[%s] %s" (my-display-time) "init.el loading...")
 
 ;;====================================================================
 ;; シェル環境変数をDockからの起動でも利用する
@@ -128,7 +109,6 @@
 
 (use-package exec-path-from-shell
   :ensure t
-  ;; NOTE: PATH以外も欲しい場合はcustomで指定
   :config
   (exec-path-from-shell-initialize))
 
@@ -434,6 +414,7 @@
      ("XXX" error bold)))
   (global-hl-todo-mode t))
 
+;; === なめらかなホイールスクロール
 (use-package ultra-scroll
   :ensure t
   :vc (:url "https://github.com/jdtsmith/ultra-scroll") ; if desired (emacs>=v30)
@@ -511,7 +492,7 @@
   :custom
   (evil-escape-mode t)
   :config
-  ;; 0引数要件があるのでlambdaでラップ
+  ;; isearch検索入力中にfキーの反応が遅れるのを防止
   (add-to-list 'evil-escape-inhibit-functions
                (lambda () isearch-mode)))
 
@@ -679,7 +660,13 @@
   (eglot-autoshutdown t)
   (eglot-connect-timeout 120)
   (eglot-extend-to-xref t)
-  (eldoc-echo-area-use-multiline-p nil))
+  (eldoc-echo-area-use-multiline-p nil)
+  :config
+  ;; === eglotによるLSP起動
+  (defun my-eglot-start ()
+    "Start eglot for the current buffer if not already started."
+    (interactive)
+    (eglot-ensure)))
 
 ;; === スニペット・テンプレート (tmpel)
 (use-package tempel
@@ -827,15 +814,31 @@
 ;; 従来のclojure-modeではなくclojure-ts-modeで置き換える
 ;; (.clj,.cljc,.cljs,.cljd,.edn自動認識)
 (use-package clojure-ts-mode
-  :ensure t)
+  :ensure t
+  :config
+  ;; === clojure-lsp用キャッシュの削除 & 再起動
+  (defun my-clojure-lsp-clear-cache-and-restart ()
+    "Clear clojure-lsp cache and restart the server."
+    (interactive)
+    (call-interactively #'eglot-shutdown)
+    (let* ((root-dir (project-root (project-current)))
+           (lsp-cache (file-name-concat root-dir ".lsp/.cache"))
+           (kondo-cache (file-name-concat root-dir ".clj-kondo/.cache")))
+      (when (file-directory-p lsp-cache)
+        (delete-directory lsp-cache t)
+        (message "[%s] Deleted clojure-lsp cache at %s" (my-display-time) lsp-cache))
+      (when (file-directory-p kondo-cache)
+        (delete-directory kondo-cache t)
+        (message "[%s] Deleted clj-kondo cache at %s" (my-display-time) kondo-cache))
+      )
+    (eglot-ensure)))
 
 (use-package cider
   :ensure t
   :hook (clojure-ts-mode . cider-mode)
   :custom
   (cider-repl-buffer-size-limit 10000)
-  (cider-font-lock-dynamically '(macro core function var deprecated))
-  )
+  (cider-font-lock-dynamically '(macro core function var deprecated)))
 
 ;; 構造的編集 (puni)
 (use-package puni
@@ -1132,25 +1135,25 @@
   (general-evil-setup)
   (general-auto-unbind-keys)
 
-  ;; === SPC リーダーキー定義
+  ;; === リーダーキー定義 (SPC)
   (general-create-definer my-global-leader-def
     :states '(normal visual)
     :keymaps 'override
     :prefix "SPC")
 
-  ;; === メジャーモード用のローカルリーダーを作成
+  ;; === ローカルリーダーキー定義 (,)
   (general-create-definer my-local-leader-def
     :states '(normal)
     :keymaps 'override
     :prefix ",")
 
-  ;; === モーション系(g)
+  ;; === モーション系 (g)
   (general-create-definer my-motion-leader-def
     :states '(normal visual)
     :keymaps 'override
     :prefix "g")
 
-  ;; === グローバルなSPCキーバインド
+  ;; === 全メジャーモード共通のキーバインド
   (my-global-leader-def
     ;; (SPC) M-x
     "SPC" '(execute-extended-command :wk "M-x")
@@ -1242,7 +1245,7 @@
     "l s" '(my-eglot-start :wk "lsp start")
     )
 
-  ;; (l) LSP (eglot) 操作
+  ;; LSP (eglot) 操作 (SPC l)
   (my-global-leader-def
     :keymaps '(eglot-mode-map)
     "l r" '(eglot-rename :wk "rename symbol")
@@ -1260,7 +1263,7 @@
     "T" '(persp-prev :wk "prev workspace")
     )
 
-  ;; === Lisp系の編集操作
+  ;; === Lisp系の編集操作 (,)
   (my-local-leader-def
     :keymaps '(emacs-lisp-mode-map
                lisp-interaction-mode-map
@@ -1280,7 +1283,7 @@
     "h" '(eldoc :wk "eldoc")
     )
 
-  ;; === Clojure
+  ;; === Clojure (SPC m)
   (my-global-leader-def
     :keymaps '(clojure-ts-mode-map)
     "m" '(:ignore t :wk "Clojure")
@@ -1289,17 +1292,19 @@
     "m q" '(cider-quit :wk "cider quit")
     "m e" '(cider-eval-dwim :wk "cider eval")
     "m r" '(cider-ns-refresh :wk "cider refresh")
-    "l F" '(my-clojure-lsp-clear-cache-and-restart :wk "lsp clear cache/restart"))
+    "l F" '(my-clojure-lsp-clear-cache-and-restart :wk "lsp clear cache/restart")
+    )
 
-  ;; === Clojure
+  ;; === Clojure (,)
   (my-local-leader-def
     :keymaps '(clojure-ts-mode-map)
     "e" '(:ignore t :wk "Eval")
     "e e" '(cider-eval-last-sexp :wk "eval last sexp")
     "e f" '(cider-eval-dwim :wk "eval dwim")
-    "e b" '(cider-eval-buffer :wk "eval bufer"))
+    "e b" '(cider-eval-buffer :wk "eval bufer")
+    )
 
-  ;; === Emacs Lisp
+  ;; === Emacs Lisp (,)
   (my-local-leader-def
     :keymaps '(emacs-lisp-mode-map
                lisp-interaction-mode-map)
@@ -1309,18 +1314,8 @@
     "e f" '(eval-defun :wk "eval defun")
     "e b" '(eval-buffer :wk "eval buffer")
     "i" '(my-insert-time :wk "insert time")
-    "p" '(my-package-built-in-p :wk "check package built-in"))
-
-  ;; === Markdown
-  (my-local-leader-def
-    :keymaps '(gfm-mode-map)
-    "," '(markdown-toggle-gfm-checkbox :wk "toggle checkbox"))
-
-  ;; === ミニバッファでパスならスラッシュまで削除
-  (general-define-key
-   :states '(insert)
-   :keymaps 'minibuffer-mode-map
-   "C-w" 'backward-kill-sexp)
+    "p" '(my-package-built-in-p :wk "check package built-in")
+    )
 
   ;; === Emacs Lispの便利ヘルプ
   (general-define-key
@@ -1328,13 +1323,27 @@
    :states '(normal)
    "K" 'helpful-at-point)
 
+  ;; === Markdown
+  (my-local-leader-def
+    :keymaps '(gfm-mode-map)
+    "," '(markdown-toggle-gfm-checkbox :wk "toggle checkbox"))
+
   ;; === Flymakeのエラージャンプ
   (general-define-key
    :states '(normal)
    "] ]" '(flymake-goto-next-error :wk "goto next error")
    "[ [" '(flymake-goto-prev-error :wk "goto prev error"))
 
-  ;; === eatの調整
+  ;; === ミニバッファでパスならスラッシュまで削除
+  (general-define-key
+   :states '(insert)
+   :keymaps '(minibuffer-mode-map)
+   "C-w" 'backward-kill-sexp)
+
+  ;; === isearch(C-sまたは/)中に単語削除はM-eの後にC-DELを押すしかない
+  ;; 基本はC-hで納得しよう
+
+  ;; === eatのline-modeでC-wを単語削除に
   (general-define-key
    :keymaps '(eat-line-mode-map)
    :states '(insert)
@@ -1351,7 +1360,7 @@
 
 ;; customizeメニューから変更した場合自動で追記・更新される
 ;; パッケージ固有の設定変数はuse-packageの:customで設定する方が宣言的で良い
-;; 色の調整はここにまとめておいた方が見通しが良い
+;; 色の調整はここにまとめておいた方が見通しが良い(現在： catppuccin-macchiato を前提に調整)
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -1380,4 +1389,5 @@
  '(show-paren-mismatch ((t (:background "#ed8796" :foreground "#1e2030" :weight bold))))
  '(trailing-whitespace ((t (:background "#ed8796" :foreground "#ed8796")))))
 
+;; === ローディング終了メッセージ
 (message "[%s] %s" (my-display-time) "init.el loaded!")
