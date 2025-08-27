@@ -817,6 +817,8 @@
 ;; (.clj,.cljc,.cljs,.cljd,.edn自動認識)
 (use-package clojure-ts-mode
   :ensure t
+  :custom
+  (clojure-ts-toplevel-inside-comment-form t)
   :config
   ;; === clojure-lsp用キャッシュの削除 & 再起動
   (defun my-clojure-lsp-clear-cache-and-restart ()
@@ -840,7 +842,8 @@
   :hook (clojure-ts-mode . cider-mode)
   :custom
   (cider-repl-buffer-size-limit 10000)
-  (cider-font-lock-dynamically '(macro core function var deprecated)))
+  (cider-font-lock-dynamically '(macro core function var deprecated))
+  (cider-repl-pop-to-buffer-on-connect nil))
 
 ;; 構造的編集 (puni)
 (use-package puni
@@ -1185,7 +1188,7 @@
 
     ;; (b) バッファ操作/ブックマーク
     "b" '(:ignore t :wk "Buffers/Bookmark")
-    "b b" '(persp-switch-to-buffer :wk "buffer switch")
+    "b b" '(consult-buffer :wk "buffer switch")
     "b d" '(kill-current-buffer :wk "buffer kill")
     "b h" '(dashboard-open :wk "dashboard")
     "b l" '(consult-bookmark :wk "bookmark list")
@@ -1281,6 +1284,7 @@
     "w [" '(puni-wrap-square :wk "wrap []")
     "w {" '(puni-wrap-curly :wk "wrap {}")
     "w \"" '(my-wrap-symbol-with-quotes :wk "wrap \"\"")
+    "d" '(:ignore t :wk "delete")
     "d w" '(puni-splice :wk "delete wrap")
     "k" '(my-puni-kill-to-end :wk "kill to sexp end")
     "h" '(eldoc :wk "eldoc")
@@ -1291,10 +1295,11 @@
     :keymaps '(clojure-ts-mode-map)
     "m" '(:ignore t :wk "Clojure")
     "m i" '(cider-juck-in :wk "cider juck-in")
-    "m c" '(cider-connect :wk "cider connect")
+    "m c" '(:ignore t :wk "cider connect")
+    "m c c" '(cider-connect-clj&cljs :wk "connect clj&cljs")
+    "m c j" '(cider-connect-clj :wk "connect clj")
+    "m c s" '(cider-connect-cljs :wk "connect cljs")
     "m q" '(cider-quit :wk "cider quit")
-    "m e" '(cider-eval-dwim :wk "cider eval")
-    "m r" '(cider-ns-refresh :wk "cider refresh")
     "l F" '(my-clojure-lsp-clear-cache-and-restart :wk "lsp clear cache/restart")
     )
 
@@ -1305,7 +1310,10 @@
     "e e" '(cider-eval-last-sexp :wk "eval last sexp")
     "e f" '(cider-eval-dwim :wk "eval dwim")
     "e b" '(cider-eval-buffer :wk "eval bufer")
-    )
+    "e n" '(cider-eval-ns-form :wk "eval ns form")
+    "i" '(cider-insert-defun-in-repl :wk "insert to repl")
+    "r" '(cider-ns-refresh :wk "cider refresh")
+    "t" '(cider-switch-to-repl-buffer :wk "cider switch to repl"))
 
   ;; === Emacs Lisp (,)
   (my-local-leader-def
@@ -1375,16 +1383,17 @@
                       "https://github.com/manzaltu/claude-code-ide.el")
      (copilot :url "https://github.com/copilot-emacs/copilot.el"
               :branch "main")
-     (eat :url "http://codeberg.org/akib/emacs-eat"))))
+     (eat :url "http://codeberg.org/akib/emacs-eat")))
+ '(safe-local-variable-directories '("/Users/shota.508/Studist/teachme_eboshigara/")))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(diff-added ((t (:background "#3e4b4c"))))           ; 背景80% + 緑20%
- '(diff-removed ((t (:background "#4c3a4c"))))         ; 背景80% + 赤20%
- '(diff-refine-added ((t (:background "#586e5e"))))    ; 背景60% + 緑40%
- '(diff-refine-removed ((t (:background "#744d5f"))))  ; 背景60% + 赤40%
+ '(diff-added ((t (:background "#3e4b4c"))))
+ '(diff-refine-added ((t (:background "#586e5e"))))
+ '(diff-refine-removed ((t (:background "#744d5f"))))
+ '(diff-removed ((t (:background "#4c3a4c"))))
  '(font-lock-comment-delimiter-face ((t (:foreground "#5ab5b0"))))
  '(font-lock-comment-face ((t (:foreground "#5ab5b0"))))
  '(match ((t (:background "#eed49f" :foreground "#1e2030"))))
