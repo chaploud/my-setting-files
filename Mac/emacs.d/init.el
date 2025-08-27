@@ -347,7 +347,9 @@
 
 ;; === フォント設定
 (setq use-default-font-for-symbols nil)
-(set-fontset-font t 'unicode (font-spec :family "JuliaMono")) ; 様々なUnicode文字
+;; Claude Codeの処理中の*マークのアニメーションでガタガタするのを防ぐ
+(dolist (char '(#x00B7 #x2722 #x2733 #x2736 #x273B #x273D))
+  (set-fontset-font t char (font-spec :family "JuliaMono")))
 (set-face-attribute 'default nil :font "Source Han Code JP" :height 140)
 
 ;; === nerd iconsを利用
@@ -934,6 +936,7 @@
   (defun my-set-font-for-claude-buffer ()
     "Set a specific font for Claude Code IDE buffers."
     (when (string-match-p "^\\*claude-code" (buffer-name))
+      ;; Source Han Code JPだと縦線の間に隙間が空いて見栄えが悪いのでUDEV Gothic 35NFに変更
       (buffer-face-set :family "UDEV Gothic 35NF" :height 140)))
   (add-hook 'buffer-list-update-hook #'my-set-font-for-claude-buffer)
 
