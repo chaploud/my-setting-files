@@ -926,7 +926,7 @@
   :vc (:url "https://github.com/manzaltu/claude-code-ide.el" :rev :newest)
   :custom
   (claude-code-ide-terminal-backend 'eat)
-  (claude-code-ide-window-width 0.5)
+  (claude-code-ide-window-width 0.4)
   :config
   (claude-code-ide-emacs-tools-setup)
 
