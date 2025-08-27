@@ -1,4 +1,13 @@
-;;; early-init.el --- Emacsの早期初期化設定 -*- lexical-binding: t; -*-
+;;; ~/.emacs.d/early-init.el
+
+;;; Commentary:
+;; EmacsのGUI起動前に実行される設定ファイル
+
+;; === 前提
+;; macOS Sequoia 15.6
+;; gcc@15 インストール済み (https://formulae.brew.sh/formula/gcc)
+;; libgccjit@15 インストール済み (https://formulae.brew.sh/formula/libgccjit)
+;; emacs-plus@30 で利用 (https://github.com/d12frosted/homebrew-emacs-plus)
 
 ;; === ネイティブコンパイルをMacで動作させるためパスを通す
 (setenv "LIBRARY_PATH"

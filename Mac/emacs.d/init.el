@@ -1,12 +1,59 @@
-;;; init.el -- メイン設定ファイル -*- lexical-binding: t; -*-
+;;; ~/.emacs.d/init.el
 
 ;;; Commentary:
-;; Emacsの設定ファイル
+;; Emacsのメイン設定ファイル
+
+;; === 対象者
+;; Clojure開発者を想定
+;; Vimキーバインドを利用
+;; 日本語入力はddskkを利用
+
+;; === 前提
+;; macOS Sequoia 15.6
+;; gcc@15 インストール済み (https://formulae.brew.sh/formula/gcc)
+;; libgccjit@15 インストール済み (https://formulae.brew.sh/formula/libgccjit)
+;; emacs-plus@30 で利用 (https://github.com/d12frosted/homebrew-emacs-plus)
+;; 1Password CLI (SQLモードの項目でサンプルとして使っています)
+
+;; === SKK
+;; SKKを使いこなすと日本語入力が楽しくなります
+;; * macSKK
+;;   * https://github.com/mtgto/macSKK
+;;   * Emacs以外でもSKKを利用したい
+;; * yaskkserv2
+;;   * https://github.com/wachikun/yaskkserv2
+;;   * SKK言語サーバー(自動でGoogle日本語入力連携)
+;;   * Rustのcargoが必要
+;; * macism
+;;   * https://github.com/laishulu/macism
+;;   * Emacs以外とのIME切り替えの摩擦を減らすために必要
+
+;; === 必要フォント
+;; Source Han Code JP (https://github.com/adobe-fonts/source-han-code-jp)
+;; UDEV Gothic 35NF (https://github.com/yuru7/udev-gothic)
+;; JuliaMono (https://github.com/cormullion/juliamono/releases)
+
+;; === ~/.zshrc にあらかじめ以下を追記しておく
+;; # eコマンドでサっとEmacsでファイルを開く
+;; e() {
+;;   if emacsclient --eval "t" > /dev/null 2>&1; then
+;;     emacsclient -n "$@"
+;;   else
+;;     emacs "$@" &
+;;   fi
+;; }
+;;
+;; # Emacsのeatターミナルのための設定
+;; [ -n "$EAT_SHELL_INTEGRATION_DIR" ] && source "$EAT_SHELL_INTEGRATION_DIR/zsh"
+
+;; === 初回のEmacs起動後に必要なコマンド
+;; M-x nerd-icons-install-fonts (nerd-iconsのフォントをインストール)
+;; M-x eat-compile-terminfo (Macでeatターミナルの操作不具合を防止)
 
 ;;; Code:
 
 ;;====================================================================
-;; ユーティリティ関数
+;; (1) ユーティリティ関数
 ;;===================================================================
 ;; === 時間計測
 (defvar my-time-tmp (current-time))
@@ -29,25 +76,6 @@
   "Open the user's init file."
   (interactive)
   (find-file user-init-file))
-
-;; === puniでカーソル以降をそのレベルで閉じるまで削除
-(defun my-puni-kill-to-end ()
-  "Kill to the end of the current sexp."
-  (interactive)
-  (let ((end (save-excursion (puni-end-of-sexp) (point))))
-    (kill-region (point) end)))
-
-;; === puniでシンボルを""で囲む
-(defun my-wrap-symbol-with-quotes ()
-  "Surround the current symbol with double quotes."
-  (interactive)
-  (let ((bounds (bounds-of-thing-at-point 'symbol)))
-    (when bounds
-      (save-excursion
-        (goto-char (cdr bounds))
-        (insert "\"")
-        (goto-char (car bounds))
-        (insert "\"")))))
 
 ;; === カーソル下のシンボルが組み込みのパッケージかどうかチェック
 (defun my-package-built-in-p (symbol)
@@ -126,15 +154,6 @@
         (concat "~/Documents/OSS/emacs/emacs-" emacs-version "/src")))
 
 ;; === デーモン起動 (シェルの`e'コマンドから使う)
-;; === `e'コマンド (~/.zshrcなどに追加)
-;; # emacsclient
-;; e() {
-;;   if emacsclient --eval "t" > /dev/null 2>&1; then
-;;     emacsclient -n "$@"
-;;   else
-;;     emacs "$@" &
-;;   fi
-;; }
 (use-package server
   :ensure nil
   :config
@@ -145,7 +164,6 @@
 ;; === バックアップファイルを作成しない
 (setq make-backup-files nil)
 (setq backup-inhibited t)
-(setq create-lockfiles nil)
 
 ;; === ダイアログでのファイルオープンは使わない
 (setq use-file-dialog nil)
@@ -283,6 +301,7 @@
 ;;====================================================================
 
 ;; === ddskk
+;; macism (https://github.com/laishulu/macism) のインストールが必要
 (defun my-switch-ime (input-source)
   "Switch to INPUT-SOURCE when Emacs is focused (requires macism command)."
   (call-process "macism" nil 0 nil input-source))
@@ -302,7 +321,6 @@
   (skk-delete-implies-kakutei nil)
   (skk-use-color-cursor nil)
   (skk-show-candidates-nth-henkan-char 3)
-  (skk-status-indicator nil)
   (skk-isearch-mode-enable 'always)
   (skk-isearch-mode-string-alist '((hiragana . "")
                                    (katakana . "")
@@ -312,6 +330,7 @@
                                    (nil . "")))
   :hook
   (isearch-mode-hook . skk-isearch-mode-setup)
+  (isearch-mode-hook . skk-latin-mode-on)
   (isearch-mode-end-hook . skk-isearch-mode-cleanup)
   (evil-normal-state-entry-hook . skk-latin-mode-on)
   (text-mode-hook . my-turn-on-skk)
@@ -352,6 +371,7 @@
 (set-face-attribute 'default nil :font "Source Han Code JP" :height 140)
 
 ;; === nerd iconsを利用
+;; 初回にM-x nerd-icons-install-fontsの実行が必要(既にインストールされていれば不要)
 (use-package nerd-icons
   :ensure t)
 
@@ -817,9 +837,6 @@
   (cider-font-lock-dynamically '(macro core function var deprecated))
   )
 
-;; TODO: ciderとclojure-lsp(eglot)の補完は使いながら調整
-;; TODO: ciderの便利機能や設定も使いながら獲得(portalなども)
-
 ;; 構造的編集 (puni)
 (use-package puni
   :ensure t
@@ -827,7 +844,25 @@
   ((emacs-lisp-mode . puni-mode)
    (lisp-interaction-mode . puni-mode)
    (clojure-ts-mode . puni-mode))
-  )
+  :config
+  ;; === puniでカーソル以降をそのレベルで閉じるまで削除
+  (defun my-puni-kill-to-end ()
+    "Kill to the end of the current sexp."
+    (interactive)
+    (let ((end (save-excursion (puni-end-of-sexp) (point))))
+      (kill-region (point) end)))
+
+  ;; === puniでシンボルを""で囲む
+  (defun my-wrap-symbol-with-quotes ()
+    "Surround the current symbol with double quotes."
+    (interactive)
+    (let ((bounds (bounds-of-thing-at-point 'symbol)))
+      (when bounds
+        (save-excursion
+          (goto-char (cdr bounds))
+          (insert "\"")
+          (goto-char (car bounds))
+          (insert "\""))))))
 
 ;; Javaライブラリのジャンプ時などに
 (use-package jarchive
@@ -994,8 +1029,8 @@
 (setq tramp-default-method "docker")
 (setq tramp-default-remote-shell "/bin/bash")
 
-;; コンテナをシェルで起動しておく
-;; あとは、find-fileから/docker:コンテナ名:/path/to/fileで接続すればlspもうまく動作
+;; docker compose upなどでコンテナが起動していれば
+;; M-x find-fileから/docker:コンテナ名:/path/to/fileで接続すればlspもうまく動作
 
 ;;====================================================================
 ;; DB接続
@@ -1014,7 +1049,8 @@
                           ":" (my-read-1password "eboshigara_dev_db")
                           "@localhost"
                           ":54320"
-                          "/eboshigara_dev")))))
+                          "/eboshigara_dev"
+                          )))))
   :config
   (setq sql-mode-hook
         `(lambda ()
