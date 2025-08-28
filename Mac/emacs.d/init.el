@@ -350,7 +350,7 @@
 ;; Claude Codeの処理中の*マークのアニメーションでガタガタするのを防ぐ
 (dolist (char '(#x00B7 #x2722 #x2733 #x2736 #x273B #x273D))
   (set-fontset-font t char (font-spec :family "JuliaMono")))
-(set-face-attribute 'default nil :font "Source Han Code JP" :height 140)
+(set-face-attribute 'default nil :font "Source Han Code JP" :height 150)
 
 ;; === nerd iconsを利用
 ;; 初回にM-x nerd-icons-install-fontsの実行が必要(既にインストールされていれば不要)
@@ -932,6 +932,8 @@
   :custom
   (claude-code-ide-terminal-backend 'eat)
   (claude-code-ide-window-width 0.4)
+  (claude-code-ide-focus-on-open nil)
+  (claude-code-ide-focus-claude-after-ediff nil)
   :config
   (claude-code-ide-emacs-tools-setup)
 
@@ -940,8 +942,38 @@
     "Set a specific font for Claude Code IDE buffers."
     (when (string-match-p "^\\*claude-code" (buffer-name))
       ;; Source Han Code JPだと縦線の間に隙間が空いて見栄えが悪いのでUDEV Gothic 35NFに変更
-      (buffer-face-set :family "UDEV Gothic 35NF" :height 140)))
+      (buffer-face-set :family "UDEV Gothic 35NF" :height 150)))
   (add-hook 'buffer-list-update-hook #'my-set-font-for-claude-buffer)
+
+  ;; Claude Codeにテキストを送信して実行する共通関数。
+  (defun my-claude-send-to-claude-code (text &optional project-dir)
+    "Send TEXT to Claude Code IDE and execute it."
+    (let* ((target-project-dir (or project-dir (claude-code-ide--get-working-directory)))
+           (claude-buffer-name (claude-code-ide--get-buffer-name target-project-dir))
+           (claude-buffer (get-buffer claude-buffer-name)))
+      (unless claude-buffer
+        (user-error "Claude Code IDEが起動していません (project: %s)" target-project-dir))
+      (with-current-buffer claude-buffer
+        (claude-code-ide--terminal-send-string text)
+        (sit-for 0.1)
+        (claude-code-ide--terminal-send-return))
+      (message "Claude Codeに送信しました: %s" (substring text 0 (min 50 (length text))))))
+
+  ;; Claude Codeに '1', '2', '3' を送信する関数
+  (defun my-claude-send-number-1 ()
+    "Send '1' to Claude Code."
+    (interactive)
+    (my-claude-send-to-claude-code "1"))
+
+  (defun my-claude-send-number-2 ()
+    "Send '2' to Claude Code."
+    (interactive)
+    (my-claude-send-to-claude-code "2"))
+
+  (defun my-claude-send-number-3 ()
+    "Send '3' to Claude Code."
+    (interactive)
+    (my-claude-send-to-claude-code "3"))
 
   ;; Claude Code IDE用スクラッチバッファ（init.el用・Evil対応）
   (defun my-claude-scratch-open ()
@@ -961,9 +993,7 @@
       (with-current-buffer scratch-buffer
         (when (= (buffer-size) 0)
           (insert "*Claude Code IDE scratch* \n\n"))
-        (setq-local claude-scratch-project-dir project-dir)
-        ;; キーバインド
-        (local-set-key (kbd "C-c C-c") #'my-claude-scratch-send-and-execute))
+        (setq-local claude-scratch-project-dir project-dir))
 
       ;; 現在のウィンドウ（通常はファイルが開かれている）を下に分割
       (let ((current-window (selected-window)))
@@ -978,6 +1008,36 @@
           (pop-to-buffer scratch-buffer)
           (goto-char (point-max))))))
 
+  ;; スクラッチバッファが開いているかチェック
+  (defun my-claude-scratch-visible-p ()
+    "Check if Claude scratch buffer is currently visible."
+    (let* ((project-dir (claude-code-ide--get-working-directory))
+           (scratch-buffer-name (format "*claude-scratch[%s]*"
+                                        (file-name-nondirectory (directory-file-name project-dir))))
+           (scratch-buffer (get-buffer scratch-buffer-name)))
+      (and scratch-buffer (get-buffer-window scratch-buffer))))
+
+  ;; スクラッチバッファを閉じる
+  (defun my-claude-scratch-close ()
+    "Close Claude scratch buffer window."
+    (let* ((project-dir (claude-code-ide--get-working-directory))
+           (scratch-buffer-name (format "*claude-scratch[%s]*"
+                                        (file-name-nondirectory (directory-file-name project-dir))))
+           (scratch-buffer (get-buffer scratch-buffer-name)))
+      (when scratch-buffer
+        (let ((scratch-window (get-buffer-window scratch-buffer)))
+          (when scratch-window
+            (delete-window scratch-window))))))
+
+  ;; Claude Code IDE + スクラッチバッファトグル
+  (defun my-claude-code-ide-with-scratch ()
+    "Start Claude Code IDE and toggle scratch buffer."
+    (interactive)
+    (claude-code-ide)
+    (if (my-claude-scratch-visible-p)
+        (my-claude-scratch-close)
+      (my-claude-scratch-open)))
+
   (defun my-claude-scratch-get-selection ()
     "Evil visual選択またはEmacs region選択の範囲を取得。"
     (cond
@@ -990,8 +1050,9 @@
       (cons (region-beginning) (region-end)))
      (t nil)))
 
+  ;; スクラッチバッファから選択範囲をClaude Codeに送信して実行
   (defun my-claude-scratch-send-and-execute ()
-    "選択範囲をClaude Codeに送信して実行。"
+    "Send the selected region in the scratch buffer to Claude Code and execute it."
     (interactive)
     (let ((selection (my-claude-scratch-get-selection)))
       (unless selection
@@ -999,16 +1060,8 @@
       (let* ((start (car selection))
              (end (cdr selection))
              (text (buffer-substring-no-properties start end))
-             (project-dir claude-scratch-project-dir)
-             (claude-buffer-name (claude-code-ide--get-buffer-name project-dir))
-             (claude-buffer (get-buffer claude-buffer-name)))
-        (unless claude-buffer
-          (user-error "Claude Code IDEが起動していません"))
-        (with-current-buffer claude-buffer
-          (claude-code-ide--terminal-send-string text)
-          (sit-for 0.1)
-          (claude-code-ide--terminal-send-return))
-        (message "送信・実行しました"))))
+             (project-dir claude-scratch-project-dir))
+        (my-claude-send-to-claude-code text project-dir))))
   )
 
 ;;====================================================================
@@ -1232,12 +1285,15 @@
     "a p" '(copilot-chat :wk "Copilot chat") ; 補完はM-/でサジェスト
     ;; Claude Code IDE (M-RET: 改行, C-ESC: エスケープ)
     "a m" '(claude-code-ide-menu :wk "Claude menu")
-    "a a" '(claude-code-ide :wk "Claude start")
+    "a a" '(my-claude-code-ide-with-scratch  :wk "Claude start")
     "a b" '(my-claude-scratch-open :wk "Claude scratch buffer")
-    "a s" '(my-claude-scratch-send-and-execute :wk "Claude send region/line")
-    "a S" '(claude-code-ide-send-prompt :wk "Claude send prompt")
     "a i" '(claude-code-ide-insert-at-mentioned :wk "Claude insert at mentioned")
+    "a s" '(claude-code-ide-send-prompt :wk "Claude send prompt")
+    "a S" '(my-claude-scratch-send-and-execute :wk "Claude send region/line")
     "a n" '(claude-code-ide-insert-newline :wk "Claude insert newline")
+    "a 1" '(my-claude-send-number-1 :wk "Claude send '1'")
+    "a 2" '(my-claude-send-number-2 :wk "Claude send '2'")
+    "a 3" '(my-claude-send-number-3 :wk "Claude send '3'")
     "a t" '(claude-code-ide-toggle :wk "Claude toggle window")
     "a T" '(claude-code-ide-switch-to-buffer :wk "Claude switch buffer")
     "a e" '(claude-code-ide-send-escape :wk "Claude send escape")
@@ -1273,14 +1329,15 @@
   (my-local-leader-def
     :keymaps '(emacs-lisp-mode-map
                lisp-interaction-mode-map
-               clojure-ts-mode-map)
+               clojure-ts-mode-map
+               clojure-ts-clojurescript-mode-map)
     "s" '(puni-slurp-forward :wk "slurp forward")
     "S" '(puni-slurp-backward :wk "slurp backward")
     "b" '(puni-barf-forward :wk "barf forward")
     "B" '(puni-barf-backward :wk "barf backward")
     "r" '(puni-raise :wk "raise sexp")
     "w" '(:ignore t :wk "wrap")
-    "w (" '(puni-wrap-round :wk "wrap ()")
+    "w 9" '(puni-wrap-round :wk "wrap ()")
     "w [" '(puni-wrap-square :wk "wrap []")
     "w {" '(puni-wrap-curly :wk "wrap {}")
     "w \"" '(my-wrap-symbol-with-quotes :wk "wrap \"\"")
@@ -1292,7 +1349,8 @@
 
   ;; === Clojure (SPC m)
   (my-global-leader-def
-    :keymaps '(clojure-ts-mode-map)
+    :keymaps '(clojure-ts-mode-map
+               clojure-ts-clojurescript-mode-map)
     "m" '(:ignore t :wk "Clojure")
     "m i" '(cider-juck-in :wk "cider juck-in")
     "m c" '(:ignore t :wk "cider connect")
@@ -1305,14 +1363,17 @@
 
   ;; === Clojure (,)
   (my-local-leader-def
-    :keymaps '(clojure-ts-mode-map)
+    :keymaps '(clojure-ts-mode-map
+               clojure-ts-clojurescript-mode-map)
     "e" '(:ignore t :wk "Eval")
     "e e" '(cider-eval-last-sexp :wk "eval last sexp")
     "e f" '(cider-eval-dwim :wk "eval dwim")
     "e b" '(cider-eval-buffer :wk "eval bufer")
     "e n" '(cider-eval-ns-form :wk "eval ns form")
     "i" '(cider-insert-defun-in-repl :wk "insert to repl")
-    "r" '(cider-ns-refresh :wk "cider refresh")
+    "n" '(:ignore t :wk "Namespace")
+    "n r" '(cider-ns-refresh :wk "cider ns refresh")
+    "n s" '(cider-repl-set-ns :wk "cider ns set")
     "t" '(cider-switch-to-repl-buffer :wk "cider switch to repl"))
 
   ;; === Emacs Lisp (,)
