@@ -1241,7 +1241,7 @@
     "b" '(:ignore t :wk "Buffers/Bookmark")
     "b b" '(consult-buffer :wk "buffer switch")
     "b d" '(kill-current-buffer :wk "buffer kill")
-    "b h" '(dashboard-open :wk "dashboard")
+    "b h" '(dashboard-open :wk "dashboard home")
     "b l" '(consult-bookmark :wk "bookmark list")
     "b s" '(bookmark-set :wk "bookmark set")
     "b k" '(bookmark-delete :wk "bookmark delete")
