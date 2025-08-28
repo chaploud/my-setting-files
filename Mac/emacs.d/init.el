@@ -146,9 +146,6 @@
     (server-start)))
 
 ;; ===== ファイル管理
-;; === バックアップファイルを作成しない
-(setq make-backup-files nil)
-(setq backup-inhibited t)
 
 ;; === ダイアログでのファイルオープンは使わない
 (setq use-file-dialog nil)
@@ -1014,6 +1011,13 @@
        (claude-window
         (claude-code-ide))  ; Claude Codeのトグル
 
+       ;; スクラッチバッファのみ表示されている場合は両方表示
+       (scratch-window
+        (claude-code-ide)  ; Claude Codeを表示
+        (my-claude-code-ide-scratch-show scratch-buffer project-dir)
+        ;; スクラッチバッファにフォーカスを移す
+        (select-window (get-buffer-window scratch-buffer)))
+
        ;; 他のケースは両方表示
        (t
         (claude-code-ide)  ; Claude Codeを表示
@@ -1030,13 +1034,31 @@
     "Send Evil selection to Claude Code or open prompt."
     (interactive)
     (if (and (bound-and-true-p evil-mode)
-             (bound-and-true-p evil-visual-state-p))
+             (or (evil-visual-state-p)
+                 (region-active-p)))
         ;; Evil visual mode での選択がある場合
         (let ((text (buffer-substring-no-properties (region-beginning) (region-end))))
-          (evil-exit-visual-state)
+          (when (evil-visual-state-p)
+            (evil-exit-visual-state))
           (my-claude-code-ide-send-text text))
       ;; 選択していない場合はデフォルトの prompt コマンド
       (claude-code-ide-send-prompt)))
+
+  ;; 数字を送信するコマンド
+  (defun my-claude-code-ide-send-number-1 ()
+    "Send '1' to Claude Code."
+    (interactive)
+    (my-claude-code-ide-send-text "1"))
+
+  (defun my-claude-code-ide-send-number-2 ()
+    "Send '2' to Claude Code."
+    (interactive)
+    (my-claude-code-ide-send-text "2"))
+
+  (defun my-claude-code-ide-send-number-3 ()
+    "Send '3' to Claude Code."
+    (interactive)
+    (my-claude-code-ide-send-text "3"))
 
   ;; テキストを Claude Code に送信
   (defun my-claude-code-ide-send-text (text)
@@ -1431,8 +1453,10 @@
  '(diff-refine-added ((t (:background "#586e5e"))))
  '(ediff-current-diff-A ((t (:extend t :background "#4c3a4c"))))
  '(ediff-current-diff-B ((t (:extend t :background "#3e4b4c"))))
+ '(ediff-current-diff-C ((t (:extend t :background "#4c4540"))))
  '(ediff-fine-diff-A ((t (:background "#744d5f"))))
  '(ediff-fine-diff-B ((t (:background "#586e5e"))))
+ '(ediff-fine-diff-C ((t (:background "#746355"))))
  '(font-lock-comment-delimiter-face ((t (:foreground "#5ab5b0"))))
  '(font-lock-comment-face ((t (:foreground "#5ab5b0"))))
  '(match ((t (:background "#eed49f" :foreground "#1e2030"))))
