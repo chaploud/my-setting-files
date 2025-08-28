@@ -941,125 +941,116 @@
   (defun my-set-font-for-claude-buffer ()
     "Set a specific font for Claude Code IDE buffers."
     (when (string-match-p "^\\*claude-code" (buffer-name))
-      ;; Source Han Code JPだと縦線の間に隙間が空いて見栄えが悪いのでUDEV Gothic 35NFに変更
       (buffer-face-set :family "UDEV Gothic 35NF" :height 150)))
   (add-hook 'buffer-list-update-hook #'my-set-font-for-claude-buffer)
 
-  ;; Claude Codeにテキストを送信して実行する共通関数。
-  (defun my-claude-send-to-claude-code (text &optional project-dir)
-    "Send TEXT to Claude Code IDE and execute it."
-    (let* ((target-project-dir (or project-dir (claude-code-ide--get-working-directory)))
-           (claude-buffer-name (claude-code-ide--get-buffer-name target-project-dir))
+  ;; スクラッチバッファのトグル表示
+  (defun my-claude-code-ide-scratch ()
+    "Toggle Claude Code scratch buffer."
+    (interactive)
+    (let* ((project-dir (claude-code-ide--get-working-directory))
+           (buffer-name (format "*claude-scratch[%s]*"
+                                (file-name-nondirectory (directory-file-name project-dir))))
+           (scratch-buffer (get-buffer buffer-name))
+           (scratch-window (and scratch-buffer (get-buffer-window scratch-buffer))))
+
+      (cond
+       ;; ウィンドウが表示されている場合は閉じる
+       (scratch-window
+        (delete-window scratch-window))
+
+       ;; バッファは存在するが非表示の場合は表示する
+       (scratch-buffer
+        (my-claude-code-ide-scratch-show scratch-buffer project-dir))
+
+       ;; バッファが存在しない場合は作成して表示
+       (t
+        (let ((claude-buffer (get-buffer (claude-code-ide--get-buffer-name project-dir))))
+          (unless claude-buffer
+            (user-error "Claude Code IDEが起動していません"))
+          (let ((new-buffer (get-buffer-create buffer-name)))
+            (with-current-buffer new-buffer
+              (insert "*Claude Code IDE scratch*\n\n")
+              (setq-local claude-scratch-project-dir project-dir)
+              (setq-local truncate-lines nil))  ; 折り返しを有効化
+            (my-claude-code-ide-scratch-show new-buffer project-dir)))))))
+
+  ;; スクラッチバッファを表示する
+  (defun my-claude-code-ide-scratch-show (buffer project-dir)
+    "Show scratch buffer in dedicated window."
+    (let* ((claude-buffer (get-buffer (claude-code-ide--get-buffer-name project-dir)))
+           (claude-window (get-buffer-window claude-buffer))
+           (left-window (if claude-window
+                            (window-left claude-window)
+                          (frame-first-window))))
+      (when left-window
+        (select-window left-window)
+        (let ((new-window (split-window-below -12)))
+          (set-window-buffer new-window buffer)
+          (set-window-dedicated-p new-window t)
+          (select-window new-window)
+          (goto-char (point-max))))))
+
+  ;; Claude Code IDE とスクラッチバッファの起動・トグル
+  (defun my-claude-code-ide-with-scratch ()
+    "Toggle Claude Code IDE with scratch buffer."
+    (interactive)
+    (let* ((project-dir (claude-code-ide--get-working-directory))
+           (claude-buffer-name (claude-code-ide--get-buffer-name project-dir))
+           (claude-buffer (get-buffer claude-buffer-name))
+           (claude-window (and claude-buffer (get-buffer-window claude-buffer)))
+           (scratch-buffer-name (format "*claude-scratch[%s]*"
+                                        (file-name-nondirectory (directory-file-name project-dir))))
+           (scratch-buffer (get-buffer scratch-buffer-name))
+           (scratch-window (and scratch-buffer (get-buffer-window scratch-buffer))))
+
+      (cond
+       ;; 両方が表示されている場合は両方を隠す
+       ((and claude-window scratch-window)
+        (claude-code-ide)  ; Claude Codeのトグル
+        (delete-window scratch-window))
+
+       ;; Claude Codeのみ表示されている場合は隠す
+       (claude-window
+        (claude-code-ide))  ; Claude Codeのトグル
+
+       ;; 他のケースは両方表示
+       (t
+        (claude-code-ide)  ; Claude Codeを表示
+        ;; スクラッチバッファも表示
+        (when (or scratch-buffer (not claude-buffer))
+          (my-claude-code-ide-scratch))
+        ;; スクラッチバッファにフォーカスを移す
+        (let ((scratch-win (get-buffer-window (get-buffer scratch-buffer-name))))
+          (when scratch-win
+            (select-window scratch-win)))))))
+
+  ;; 選択範囲の送信またはプロンプト入力
+  (defun my-claude-code-ide-send-region-or-prompt ()
+    "Send Evil selection to Claude Code or open prompt."
+    (interactive)
+    (if (and (bound-and-true-p evil-mode)
+             (bound-and-true-p evil-visual-state-p))
+        ;; Evil visual mode での選択がある場合
+        (let ((text (buffer-substring-no-properties (region-beginning) (region-end))))
+          (evil-exit-visual-state)
+          (my-claude-code-ide-send-text text))
+      ;; 選択していない場合はデフォルトの prompt コマンド
+      (claude-code-ide-send-prompt)))
+
+  ;; テキストを Claude Code に送信
+  (defun my-claude-code-ide-send-text (text)
+    "Send TEXT to Claude Code."
+    (let* ((project-dir (claude-code-ide--get-working-directory))
+           (claude-buffer-name (claude-code-ide--get-buffer-name project-dir))
            (claude-buffer (get-buffer claude-buffer-name)))
       (unless claude-buffer
-        (user-error "Claude Code IDEが起動していません (project: %s)" target-project-dir))
+        (user-error "Claude Code IDEが起動していません"))
       (with-current-buffer claude-buffer
         (claude-code-ide--terminal-send-string text)
         (sit-for 0.1)
         (claude-code-ide--terminal-send-return))
       (message "Claude Codeに送信しました: %s" (substring text 0 (min 50 (length text))))))
-
-  ;; Claude Codeに '1', '2', '3' を送信する関数
-  (defun my-claude-send-number-1 ()
-    "Send '1' to Claude Code."
-    (interactive)
-    (my-claude-send-to-claude-code "1"))
-
-  (defun my-claude-send-number-2 ()
-    "Send '2' to Claude Code."
-    (interactive)
-    (my-claude-send-to-claude-code "2"))
-
-  (defun my-claude-send-number-3 ()
-    "Send '3' to Claude Code."
-    (interactive)
-    (my-claude-send-to-claude-code "3"))
-
-  ;; Claude Code IDE用スクラッチバッファ（init.el用・Evil対応）
-  (defun my-claude-scratch-open ()
-    "Claude Codeへの送信用のプロンプトを書きためるバッファ"
-    (interactive)
-    (let* ((project-dir (claude-code-ide--get-working-directory))
-           (buffer-name (format "*claude-scratch[%s]*"
-                                (file-name-nondirectory (directory-file-name project-dir))))
-           (claude-buffer-name (claude-code-ide--get-buffer-name project-dir))
-           (claude-buffer (get-buffer claude-buffer-name))
-           (scratch-buffer (get-buffer-create buffer-name)))
-
-      (unless claude-buffer
-        (user-error "Claude Code IDEが起動していません"))
-
-      ;; バッファのセットアップ
-      (with-current-buffer scratch-buffer
-        (when (= (buffer-size) 0)
-          (insert "*Claude Code IDE scratch* \n\n"))
-        (setq-local claude-scratch-project-dir project-dir))
-
-      ;; 現在のウィンドウ（通常はファイルが開かれている）を下に分割
-      (let ((current-window (selected-window)))
-        ;; サイドウィンドウでない場合のみ分割
-        (if (and (not (window-parameter current-window 'window-side))
-                 (not (window-dedicated-p current-window)))
-            (let ((new-window (split-window-below -12)))
-              (set-window-buffer new-window scratch-buffer)
-              (select-window new-window)
-              (goto-char (point-max)))
-          ;; 分割できない場合は新しいウィンドウで表示
-          (pop-to-buffer scratch-buffer)
-          (goto-char (point-max))))))
-
-  ;; スクラッチバッファが開いているかチェック
-  (defun my-claude-scratch-visible-p ()
-    "Check if Claude scratch buffer is currently visible."
-    (let* ((project-dir (claude-code-ide--get-working-directory))
-           (scratch-buffer-name (format "*claude-scratch[%s]*"
-                                        (file-name-nondirectory (directory-file-name project-dir))))
-           (scratch-buffer (get-buffer scratch-buffer-name)))
-      (and scratch-buffer (get-buffer-window scratch-buffer))))
-
-  ;; スクラッチバッファを閉じる
-  (defun my-claude-scratch-close ()
-    "Close Claude scratch buffer window."
-    (let* ((project-dir (claude-code-ide--get-working-directory))
-           (scratch-buffer-name (format "*claude-scratch[%s]*"
-                                        (file-name-nondirectory (directory-file-name project-dir))))
-           (scratch-buffer (get-buffer scratch-buffer-name)))
-      (when scratch-buffer
-        (let ((scratch-window (get-buffer-window scratch-buffer)))
-          (when scratch-window
-            (delete-window scratch-window))))))
-
-  ;; Claude Code IDE + スクラッチバッファトグル
-  (defun my-claude-code-ide-with-scratch ()
-    "Start Claude Code IDE and toggle scratch buffer."
-    (interactive)
-    (claude-code-ide)
-    (my-claude-scratch))
-
-  (defun my-claude-scratch-get-selection ()
-    "Evil visual選択またはEmacs region選択の範囲を取得。"
-    (cond
-     ;; Evil visual mode
-     ((and (bound-and-true-p evil-mode)
-           (bound-and-true-p evil-visual-state-p))
-      (cons (region-beginning) (region-end)))
-     ;; 通常のregion
-     ((use-region-p)
-      (cons (region-beginning) (region-end)))
-     (t nil)))
-
-  ;; スクラッチバッファから選択範囲をClaude Codeに送信して実行
-  (defun my-claude-scratch-send-and-execute ()
-    "Send the selected region in the scratch buffer to Claude Code and execute it."
-    (interactive)
-    (let ((selection (my-claude-scratch-get-selection)))
-      (unless selection
-        (user-error "範囲を選択してください"))
-      (let* ((start (car selection))
-             (end (cdr selection))
-             (text (buffer-substring-no-properties start end))
-             (project-dir claude-scratch-project-dir))
-        (my-claude-send-to-claude-code text project-dir))))
   )
 
 ;;====================================================================
@@ -1284,13 +1275,13 @@
     ;; Claude Code IDE (M-RET: 改行, C-ESC: エスケープ)
     "a m" '(claude-code-ide-menu :wk "Claude menu")
     "a a" '(my-claude-code-ide-with-scratch  :wk "Claude start")
-    "a b" '(my-claude-scratch-open :wk "Claude scratch buffer")
+    "a b" '(my-claude-code-ide-scratch :wk "Claude scratch buffer")
     "a i" '(claude-code-ide-insert-at-mentioned :wk "Claude insert at mentioned")
-    "a s" '(claude-code-ide-send-prompt :wk "Claude send prompt")
+    "a s" '(my-claude-code-ide-send-region-or-prompt :wk "Claude send prompt")
     "a n" '(claude-code-ide-insert-newline :wk "Claude insert newline")
-    "a 1" '(my-claude-send-number-1 :wk "Claude send '1'")
-    "a 2" '(my-claude-send-number-2 :wk "Claude send '2'")
-    "a 3" '(my-claude-send-number-3 :wk "Claude send '3'")
+    "a 1" '(my-claude-code-ide-send-number-1 :wk "Claude send '1'")
+    "a 2" '(my-claude-code-ide-send-number-2 :wk "Claude send '2'")
+    "a 3" '(my-claude-code-ide-send-number-3 :wk "Claude send '3'")
     "a e" '(claude-code-ide-send-escape :wk "Claude send escape")
     "a q" '(claude-code-ide-stop :wk "Claude stop")
     "a c" '(claude-code-ide-continue :wk "Claude continue")
