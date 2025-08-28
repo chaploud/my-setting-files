@@ -670,7 +670,7 @@
     (interactive)
     (eglot-ensure)))
 
-;; === スニペット・テンプレート (tmpel)
+;; === スニペット・テンプレート (tempel)
 (use-package tempel
   :ensure t)
 
@@ -731,7 +731,7 @@
   (eat-enable-shell-prompt-annotation nil)
   (eat-enable-yank-to-terminal t)
   :bind
-  ("C-'" . my-toggle-eat)
+  ("C-'" . my-toggle-eat) ; C-'でターミナルのトグル
   :hook
   ;; Claude Codeなどでnbspが強調されて気になるので
   (eat-mode . (lambda () (setq-local nobreak-char-display nil)))
@@ -744,8 +744,7 @@
     (let ((eat-window (get-buffer-window "*eat*")))
       (if (and eat-window (eq (selected-window) eat-window))
           (quit-window)
-        (eat))))
-  )
+        (eat)))))
 
 ;;====================================================================
 ;; Git操作 (magit・diff-hl・vc)
@@ -757,6 +756,7 @@
   :custom
   (magit-diff-refine-hunk 'all)
   :config
+  ;; NOTE 差分表示の色合いをカタムするために複雑なことをしているが、しなくてもいい
   ;; magit-diff-visit-fileは別ウィンドウで開く
   (advice-add 'magit-diff-visit-file :around
               (lambda (orig-fun &rest args)
@@ -891,10 +891,7 @@
 
   :custom
   (markdown-fontify-code-blocks-natively t)
-  (markdown-indent-on-enter 'indent-and-new-item)
-
-  :bind (:map markdown-mode-map
-              ("C-c C-e" . markdown-do)))
+  (markdown-indent-on-enter 'indent-and-new-item))
 
 ;;====================================================================
 ;; GitHub Copilot連携
@@ -917,8 +914,7 @@
   (add-to-list 'copilot-indentation-alist '(prog-mode  2))
   (add-to-list 'copilot-indentation-alist '(org-mode  2))
   (add-to-list 'copilot-indentation-alist '(text-mode  2))
-  (add-to-list 'copilot-indentation-alist '(emacs-lisp-mode  2))
-  )
+  (add-to-list 'copilot-indentation-alist '(emacs-lisp-mode  2)))
 
 (use-package copilot-chat
   :ensure t)
@@ -1080,11 +1076,9 @@
   :ensure t
   :custom
   (docker-container-columns
-   '(
-     (:name "Names" :width 30 :template "{{ json .Names }}" :sort nil :format nil)
+   '((:name "Names" :width 30 :template "{{ json .Names }}" :sort nil :format nil)
      (:name "Status" :width 30 :template "{{ json .Status }}" :sort nil :format nil)
-     (:name "Ports" :width 30 :template "{{ json .Ports }}" :sort nil :format nil)
-     ))
+     (:name "Ports" :width 30 :template "{{ json .Ports }}" :sort nil :format nil)))
   (docker-container-default-sort-key '("Names")))
 
 (add-to-list 'tramp-remote-path 'tramp-own-remote-path)
@@ -1105,13 +1099,14 @@
   (setq sql-connection-alist
         '((eboshigara-postgres
            (sql-product 'postgres)
+           ;; NOTE: DB設定については適宜変更
            (sql-database (concat
                           "postgresql://"
                           "root"
-                          ":" (my-read-1password "eboshigara_dev_db")
+                          ":" (my-read-1password "sample_dev_db")
                           "@localhost"
-                          ":54320"
-                          "/eboshigara_dev"
+                          ":5432"
+                          "/sample_dev"
                           )))))
   :config
   (setq sql-mode-hook
@@ -1182,6 +1177,7 @@
 
 (add-hook 'before-save-hook #'my-format-buffer)
 (add-hook 'before-save-hook #'whitespace-cleanup) ;; trailing spacesの削除
+
 ;;====================================================================
 ;; キーバインド (general.el)
 ;;====================================================================
@@ -1289,13 +1285,10 @@
     "a b" '(my-claude-scratch-open :wk "Claude scratch buffer")
     "a i" '(claude-code-ide-insert-at-mentioned :wk "Claude insert at mentioned")
     "a s" '(claude-code-ide-send-prompt :wk "Claude send prompt")
-    "a S" '(my-claude-scratch-send-and-execute :wk "Claude send region/line")
     "a n" '(claude-code-ide-insert-newline :wk "Claude insert newline")
     "a 1" '(my-claude-send-number-1 :wk "Claude send '1'")
     "a 2" '(my-claude-send-number-2 :wk "Claude send '2'")
     "a 3" '(my-claude-send-number-3 :wk "Claude send '3'")
-    "a t" '(claude-code-ide-toggle :wk "Claude toggle window")
-    "a T" '(claude-code-ide-switch-to-buffer :wk "Claude switch buffer")
     "a e" '(claude-code-ide-send-escape :wk "Claude send escape")
     "a q" '(claude-code-ide-stop :wk "Claude stop")
     "a c" '(claude-code-ide-continue :wk "Claude continue")
@@ -1352,7 +1345,7 @@
     :keymaps '(clojure-ts-mode-map
                clojure-ts-clojurescript-mode-map)
     "m" '(:ignore t :wk "Clojure")
-    "m i" '(cider-juck-in :wk "cider juck-in")
+    "m i" '(cider-jack-in :wk "cider jack-in")
     "m c" '(:ignore t :wk "cider connect")
     "m c c" '(cider-connect-clj&cljs :wk "connect clj&cljs")
     "m c j" '(cider-connect-clj :wk "connect clj")
@@ -1415,12 +1408,6 @@
   ;; === isearch(C-sまたは/)中に単語削除はM-eの後にC-DELを押すしかない
   ;; 基本はC-hで納得しよう
 
-  ;; === eatのline-modeでC-wを単語削除に
-  (general-define-key
-   :keymaps '(eat-line-mode-map)
-   :states '(insert)
-   "C-w" 'evil-delete-backward-word)
-
   ;; === Copilot Chatでshift+enterで送信
   (general-define-key
    :keymaps 'copilot-chat-org-prompt-mode-map
@@ -1439,22 +1426,20 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-vc-selected-packages
-   '((claude-code-ide :url
-                      "https://github.com/manzaltu/claude-code-ide.el")
-     (copilot :url "https://github.com/copilot-emacs/copilot.el"
-              :branch "main")
-     (eat :url "http://codeberg.org/akib/emacs-eat")))
- '(safe-local-variable-directories '("/Users/shota.508/Studist/teachme_eboshigara/")))
+ )
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(diff-added ((t (:background "#3e4b4c"))))
- '(diff-refine-added ((t (:background "#586e5e"))))
- '(diff-refine-removed ((t (:background "#744d5f"))))
  '(diff-removed ((t (:background "#4c3a4c"))))
+ '(diff-added ((t (:background "#3e4b4c"))))
+ '(diff-refine-removed ((t (:background "#744d5f"))))
+ '(diff-refine-added ((t (:background "#586e5e"))))
+ '(ediff-current-diff-A ((t (:extend t :background "#4c3a4c"))))
+ '(ediff-current-diff-B ((t (:extend t :background "#3e4b4c"))))
+ '(ediff-fine-diff-A ((t (:background "#744d5f"))))
+ '(ediff-fine-diff-B ((t (:background "#586e5e"))))
  '(font-lock-comment-delimiter-face ((t (:foreground "#5ab5b0"))))
  '(font-lock-comment-face ((t (:foreground "#5ab5b0"))))
  '(match ((t (:background "#eed49f" :foreground "#1e2030"))))
