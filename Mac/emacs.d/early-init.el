@@ -1,7 +1,6 @@
-;;; ~/.emacs.d/early-init.el
+;;; ~/.emacs.d/early-init.el --- EmacsのGUI起動前に実行される設定ファイル -*- lexical-binding: t; -*-
 
 ;;; Commentary:
-;; EmacsのGUI起動前に実行される設定ファイル
 
 ;; === 前提
 ;; macOS Sequoia 15.6
@@ -63,3 +62,5 @@
 (unless (package-installed-p 'use-package)
   (package-install 'use-package))
 (require 'use-package)
+
+;;; early-init.el ends here

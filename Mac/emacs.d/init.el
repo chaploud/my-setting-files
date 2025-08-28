@@ -1,7 +1,6 @@
-;;; ~/.emacs.d/init.el
+;;; ~/.emacs.d/init.el --- Emacsのメイン設定ファイル -*- lexical-binding: t; -*-
 
 ;;; Commentary:
-;; Emacsのメイン設定ファイル
 
 ;; === 対象者
 ;; Clojure開発者を想定
@@ -13,10 +12,16 @@
 ;; emacs-plus@30 で利用 (https://github.com/d12frosted/homebrew-emacs-plus)
 
 ;; === 依存関係
-;; gcc@15 インストール済み (https://formulae.brew.sh/formula/gcc)
-;; libgccjit@15 インストール済み (https://formulae.brew.sh/formula/libgccjit)
-;; ripgrep インストール済み (https://formulae.brew.sh/formula/ripgrep)
-;; 1Password CLI ([任意] SQLモードの項目でDB接続時のパスワード参照として使っています)
+;; (1) gcc@15:  `brew install gcc@15`
+;; (2) libgccjit@15 `brew install libgccjit@15`
+;; (3) ripgrep `brew install ripgrep`
+;; (4) 1Password CLI ([任意] SQLモードの項目でDB接続時のパスワード参照として使っています)
+;; (5) JDK: `brew install --cask temurin21`
+;; (6) Clojure CLI: `brew install clojure/tools/clojure`
+;; (7) clojure-lsp: `brew install clojure-lsp/brew/clojure-lsp-native`
+;; (8) docker/orbstack (コンテナを使うなら適宜インストール)
+;; (9) Tree-sitterをコンパイルできるもの: `xcode-select --install`
+;; (10) npm install -g @github/copilot-language-server
 
 ;; === 必要フォント
 ;; Source Han Code JP (https://github.com/adobe-fonts/source-han-code-jp)
@@ -759,7 +764,7 @@
   ;; NOTE 差分表示の色合いをカタムするために複雑なことをしているが、しなくてもいい
   ;; magit-diff-visit-fileは別ウィンドウで開く
   (advice-add 'magit-diff-visit-file :around
-              (lambda (orig-fun &rest args)
+              (lambda (orig-fun &rest _args)
                 (funcall orig-fun t)))
 
   ;; magit-diffのとき、vc-diffを使う。未追跡ファイルは単に開く
@@ -928,7 +933,6 @@
   :custom
   (claude-code-ide-terminal-backend 'eat)
   (claude-code-ide-window-width 0.4)
-  (claude-code-ide-focus-on-open nil)
   (claude-code-ide-focus-claude-after-ediff nil)
   :config
   (claude-code-ide-emacs-tools-setup)
@@ -973,7 +977,7 @@
 
   ;; Claude Code IDE用スクラッチバッファ（init.el用・Evil対応）
   (defun my-claude-scratch-open ()
-    "Claude Codeバッファの下に分割してスクラッチバッファを開く。"
+    "Claude Codeへの送信用のプロンプトを書きためるバッファ"
     (interactive)
     (let* ((project-dir (claude-code-ide--get-working-directory))
            (buffer-name (format "*claude-scratch[%s]*"
@@ -996,7 +1000,7 @@
         ;; サイドウィンドウでない場合のみ分割
         (if (and (not (window-parameter current-window 'window-side))
                  (not (window-dedicated-p current-window)))
-            (let ((new-window (split-window-below -15))) ; 下15行を新ウィンドウに
+            (let ((new-window (split-window-below -12)))
               (set-window-buffer new-window scratch-buffer)
               (select-window new-window)
               (goto-char (point-max)))
@@ -1030,9 +1034,7 @@
     "Start Claude Code IDE and toggle scratch buffer."
     (interactive)
     (claude-code-ide)
-    (if (my-claude-scratch-visible-p)
-        (my-claude-scratch-close)
-      (my-claude-scratch-open)))
+    (my-claude-scratch))
 
   (defun my-claude-scratch-get-selection ()
     "Evil visual選択またはEmacs region選択の範囲を取得。"
@@ -1449,3 +1451,5 @@
 
 ;; === ローディング終了メッセージ
 (message "[%s] %s" (my-display-time) "init.el loaded!")
+
+;;; init.el ends here
