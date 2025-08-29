@@ -859,6 +859,7 @@
 ;; 構造的編集 (puni)
 (use-package puni
   :ensure t
+  :demand t
   :hook
   ((emacs-lisp-mode . puni-mode)
    (lisp-interaction-mode . puni-mode)
@@ -1026,6 +1027,15 @@
         (my-claude-code-ide-scratch-show scratch-buffer project-dir)
         ;; スクラッチバッファにフォーカスを移す
         (select-window (get-buffer-window scratch-buffer)))
+
+       ;; Claude バッファは存在するがウィンドウがない場合
+       (claude-buffer
+        (claude-code-ide)  ; Claude Codeを表示
+        (when (or scratch-buffer (not claude-buffer))
+          (my-claude-code-ide-scratch))
+        (let ((scratch-win (get-buffer-window (get-buffer scratch-buffer-name))))
+          (when scratch-win
+            (select-window scratch-win))))
 
        ;; 他のケースは両方表示
        (t
