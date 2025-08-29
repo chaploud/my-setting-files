@@ -149,9 +149,13 @@
 
 ;; === バックバップファイルを専用ディレクトリに保存
 (setq backup-directory-alist '(("." . "~/.emacs.d/backups")))
+(unless (file-exists-p "~/.emacs.d/backups")
+  (make-directory "~/.emacs.d/backups" t))
 
 ;; === オートセーブファイルを専用ディレクトリに保存
 (setq auto-save-file-name-transforms '((".*" "~/.emacs.d/auto-saves/" t)))
+(unless (file-exists-p "~/.emacs.d/auto-saves")
+  (make-directory "~/.emacs.d/auto-saves" t))
 
 ;; === ダイアログでのファイルオープンは使わない
 (setq use-file-dialog nil)
@@ -1131,7 +1135,7 @@
   :custom
   (sql-postgres-login-params nil)
   (setq sql-connection-alist
-        '((eboshigara-postgres
+        '((sample-postgres
            (sql-product 'postgres)
            ;; NOTE: DB設定については適宜変更
            (sql-database (concat
@@ -1465,7 +1469,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(safe-local-variable-directories '("/Users/shota.508/Studist/teachme_eboshigara/")))
+ )
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
