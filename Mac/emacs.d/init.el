@@ -1107,9 +1107,12 @@
   :ensure t
   :mode ("Dockerfile\\'" . dockerfile-mode))
 
-(use-package yaml-mode
+;; === yaml-ts-mode
+;; 初回起動時に`M-x treesit-install-language-grammar`を実行し
+;; languageとして`yaml`, 手動でURL: https://github.com/ikatyang/tree-sitter-yamlを指定(後はデフォルト)
+(use-package yaml-ts-mode
   :ensure t
-  :mode ("\\.ya?ml\\'" . yaml-mode))
+  :mode ("\\.ya?ml\\'" . yaml-ts-mode))
 
 (use-package docker
   :ensure t
