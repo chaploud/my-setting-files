@@ -58,6 +58,10 @@
 ;; === 初回のEmacs起動後に必要なコマンド
 ;; M-x nerd-icons-install-fonts (nerd-iconsのフォントをインストール)
 ;; M-x eat-compile-terminfo (Macでeatターミナルの操作不具合を防止)
+;; M-x copilot-install-serverが必要
+;; M-x treesit-install-language-grammar
+;;   yaml, https://github.com/ikatyang/tree-sitter-yaml, 後はデフォルト
+;;   json, https://github.com/tree-sitter/tree-sitter-json, 後はデフォルト
 
 ;;; Code:
 
@@ -914,7 +918,7 @@
 ;; GitHub Copilot連携
 ;;====================================================================
 
-;; npm install -g @github/copilot-language-server とGitHub連携が必要
+;; 初回起動後にM-x copilot-install-serverが必要
 (use-package copilot
   :ensure t
   :vc (:url "https://github.com/copilot-emacs/copilot.el" :rev :newest :branch "main")
@@ -1111,8 +1115,15 @@
 ;; 初回起動時に`M-x treesit-install-language-grammar`を実行し
 ;; languageとして`yaml`, 手動でURL: https://github.com/ikatyang/tree-sitter-yamlを指定(後はデフォルト)
 (use-package yaml-ts-mode
-  :ensure t
+  :ensure nil
   :mode ("\\.ya?ml\\'" . yaml-ts-mode))
+
+;; === json-ts-mode
+;; 初回起動時に`M-x treesit-install-language-grammar`を実行し
+;; languageとして`json`, 手動でURL: https://github.com/tree-sitter/tree-sitter-jsonを指定(後はデフォルト)
+(use-package json-ts-mode
+  :ensure nil
+  :mode ("\\.json\\'" . json-ts-mode))
 
 (use-package docker
   :ensure t
@@ -1473,6 +1484,13 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(package-selected-packages nil)
+ '(package-vc-selected-packages
+   '((claude-code-ide :url
+                      "https://github.com/manzaltu/claude-code-ide.el")
+     (copilot :url "https://github.com/copilot-emacs/copilot.el"
+              :branch "main")
+     (eat :url "http://codeberg.org/akib/emacs-eat")))
  '(safe-local-variable-directories '("/Users/shota.508/Studist/teachme_eboshigara/")))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.

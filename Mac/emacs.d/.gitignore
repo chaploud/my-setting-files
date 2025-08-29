@@ -16,3 +16,4 @@ package-quickstart.elc
 eshell/
 backups/
 auto-saves/
+.cache/
