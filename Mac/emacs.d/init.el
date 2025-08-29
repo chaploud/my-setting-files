@@ -147,6 +147,12 @@
 
 ;; ===== ファイル管理
 
+;; === バックバップファイルを専用ディレクトリに保存
+(setq backup-directory-alist '(("." . "~/.emacs.d/backups")))
+
+;; === オートセーブファイルを専用ディレクトリに保存
+(setq auto-save-file-name-transforms '((".*" "~/.emacs.d/auto-saves/" t)))
+
 ;; === ダイアログでのファイルオープンは使わない
 (setq use-file-dialog nil)
 
@@ -215,6 +221,9 @@
 (add-to-list 'auto-mode-alist '("\\zshrc\\'" . shell-script-mode))
 (add-to-list 'auto-mode-alist '("\\zprofile\\'" . shell-script-mode))
 (add-to-list 'auto-mode-alist '("\\zshenv\\'" . shell-script-mode))
+
+;; === eコマンドで開いたときに別ウィンドウで開く
+(setq server-window 'pop-to-buffer)
 
 ;;====================================================================
 ;; バッファの表示方法についての設定 (display-buffer-alist)
@@ -341,7 +350,7 @@
 ;; === カーソル位置の列番号をモードラインに表示
 (column-number-mode t)
 
-;; === tree-sittterによる色付けmax
+;; === tree-sitterによる色付けmax
 (use-package treesit
   :ensure nil
   :custom
@@ -352,7 +361,7 @@
 ;; Claude Codeの処理中の*マークのアニメーションでガタガタするのを防ぐ
 (dolist (char '(#x00B7 #x2722 #x2733 #x2736 #x273B #x273D))
   (set-fontset-font t char (font-spec :family "JuliaMono")))
-(set-face-attribute 'default nil :font "Source Han Code JP" :height 150)
+(set-face-attribute 'default nil :font "Source Han Code JP" :height 140)
 
 ;; === nerd iconsを利用
 ;; 初回にM-x nerd-icons-install-fontsの実行が必要(既にインストールされていれば不要)
@@ -578,7 +587,7 @@
   :custom
   (completion-styles '(basic partial-completion orderless))
   (completion-category-defaults nil)
-  (completion-category-overrides '((file (styles partial-completion))
+  (completion-category-overrides '((file (styles basic))
                                    (corfu (styles basic partial-completion orderless))))
   ;; 正規表現とあいまい検索もデフォルトで有効に
   ;; 完全一致(literal)を優先させたいときは先頭に`='をつける
@@ -938,7 +947,7 @@
   (defun my-set-font-for-claude-buffer ()
     "Set a specific font for Claude Code IDE buffers."
     (when (string-match-p "^\\*claude-code" (buffer-name))
-      (buffer-face-set :family "UDEV Gothic 35NF" :height 150)))
+      (buffer-face-set :family "UDEV Gothic 35NF" :height 140)))
   (add-hook 'buffer-list-update-hook #'my-set-font-for-claude-buffer)
 
   ;; スクラッチバッファのトグル表示
@@ -1333,6 +1342,11 @@
     "T" '(persp-prev :wk "prev workspace")
     )
 
+  (my-motion-leader-def
+    :keymaps '(dired-mode-map)
+    "r" '(dired-subtree-revert :wk "revert dired subtree")
+    )
+
   ;; === Lisp系の編集操作 (,)
   (my-local-leader-def
     :keymaps '(emacs-lisp-mode-map
@@ -1441,16 +1455,16 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(safe-local-variable-directories '("/Users/shota.508/Studist/teachme_eboshigara/")))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(diff-removed ((t (:background "#4c3a4c"))))
  '(diff-added ((t (:background "#3e4b4c"))))
- '(diff-refine-removed ((t (:background "#744d5f"))))
  '(diff-refine-added ((t (:background "#586e5e"))))
+ '(diff-refine-removed ((t (:background "#744d5f"))))
+ '(diff-removed ((t (:background "#4c3a4c"))))
  '(ediff-current-diff-A ((t (:extend t :background "#4c3a4c"))))
  '(ediff-current-diff-B ((t (:extend t :background "#3e4b4c"))))
  '(ediff-current-diff-C ((t (:extend t :background "#4c4540"))))

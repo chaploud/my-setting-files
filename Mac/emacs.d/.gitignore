@@ -14,3 +14,5 @@ undo-fu-session
 package-quickstart.el
 package-quickstart.elc
 eshell/
+backups/
+auto-saves/
