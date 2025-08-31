@@ -676,6 +676,7 @@
   :ensure nil
   :hook
   (clojure-ts-mode . eglot-ensure)
+  (zig-mode . eglot-ensure)
   :custom
   (eglot-events-buffer-config '(:size nil :format full))
   (eglot-autoshutdown t)
@@ -1171,6 +1172,15 @@
     (let ((password (shell-command-to-string
                      (format "op read op://Private/%s/password" name))))
       (string-trim password))))
+
+;;====================================================================
+;; Zig
+;;====================================================================
+;; brew install zig
+;; brew install zls
+(use-package zig-mode
+  :ensure t
+  :mode "\\.\\(zig\\|zon\\))\\'")
 
 ;;====================================================================
 ;; Format On Save設定の集約
