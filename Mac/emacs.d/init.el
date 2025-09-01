@@ -731,6 +731,10 @@
 (use-package vterm
   :ensure t
   :after evil
+  :custom
+  (vterm-tramp-shells '(("ssh" "/bin/bash")
+                        ("scp" "/bin/bash")
+                        ("docker" "/bin/bash")))
   :hook
   (vterm-mode . (lambda ()
                   ;; Claude Code IDEなどでnbspが青く可視化されるのが気に食わないため
@@ -1115,10 +1119,6 @@
      (:name "Status" :width 30 :template "{{ json .Status }}" :sort nil :format nil)
      (:name "Ports" :width 30 :template "{{ json .Ports }}" :sort nil :format nil)))
   (docker-container-default-sort-key '("Names")))
-
-(add-to-list 'tramp-remote-path 'tramp-own-remote-path)
-(setq tramp-default-method "docker")
-(setq tramp-default-remote-shell "/bin/bash")
 
 ;; docker compose upなどでコンテナが起動していれば
 ;; M-x find-fileから/docker:コンテナ名:/path/to/fileで接続すればlspもうまく動作
