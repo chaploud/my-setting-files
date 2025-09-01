@@ -385,7 +385,7 @@
 (dolist (char '(#x00B7 #x2722 #x2733 #x2736 #x273B #x273D))
   (set-fontset-font t char (font-spec :family "JuliaMono")))
 (set-fontset-font t 'han (font-spec :family "Source Han Code JP") nil 'prepend)
-(set-face-attribute 'default nil :font "Source Han Code JP" :height 140)
+(set-face-attribute 'default nil :font "Source Han Code JP" :height 130)
 
 ;; === nerd iconsを利用
 ;; 初回にM-x nerd-icons-install-fontsの実行が必要(既にインストールされていれば不要)
@@ -963,7 +963,7 @@
   (defun my-set-font-for-claude-buffer ()
     "Set a specific font for Claude Code IDE buffers."
     (when (string-match-p "^\\*claude-code" (buffer-name))
-      (buffer-face-set :family "UDEV Gothic 35NF" :height 140)))
+      (buffer-face-set :family "UDEV Gothic 35NF" :height 130)))
   (add-hook 'buffer-list-update-hook #'my-set-font-for-claude-buffer)
 
   ;; スクラッチバッファのトグル表示
