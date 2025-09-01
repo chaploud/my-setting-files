@@ -230,6 +230,25 @@
 (setq server-window 'pop-to-buffer)
 
 ;;====================================================================
+;; bookmark
+;;====================================================================
+
+(use-package bookmark
+  :ensure nil
+  :custom
+  (bookmark-save-flag 1)
+  :config
+  (defun my-bookmark-set ()
+    "Set a bookmark without prompting"
+    (interactive)
+    (let* ((line (line-number-at-pos))
+           (buf (or (file-name-nondirectory (or (buffer-file-name) ""))
+                    (buffer-name)))
+           (name (format "%s:L%d" (if (string-empty-p buf) (buffer-name) buf) line))
+           (record (bookmark-make-record)))
+      (bookmark-store name record t))))
+
+;;====================================================================
 ;; バッファの表示方法についての設定 (display-buffer-alist)
 ;;====================================================================
 
@@ -416,9 +435,9 @@
   (dashboard-startup-banner 'logo)
   (dashboard-center-content t)
   (dashboard-vertically-center-content t)
-  (dashboard-items '((recents . 5)
-                     (bookmarks . 5)
-                     (projects . 5)))
+  (dashboard-items '((recents . 10)
+                     (bookmarks . 10)
+                     (projects . 7)))
   :config
   (dashboard-setup-startup-hook))
 
@@ -850,7 +869,8 @@
   :custom
   (cider-repl-buffer-size-limit 10000)
   (cider-font-lock-dynamically '(macro core function var deprecated))
-  (cider-repl-pop-to-buffer-on-connect nil))
+  (cider-repl-pop-to-buffer-on-connect nil)
+  (cider-use-xref nil))
 
 ;; 構造的編集 (puni)
 (use-package puni
@@ -1158,6 +1178,7 @@
 ;;====================================================================
 ;; Zig
 ;;====================================================================
+
 ;; brew install zig
 ;; brew install zls
 (use-package zig-mode
@@ -1285,7 +1306,7 @@
     "b d" '(kill-current-buffer :wk "buffer kill")
     "b h" '(dashboard-open :wk "dashboard home")
     "b l" '(consult-bookmark :wk "bookmark list")
-    "b s" '(bookmark-set :wk "bookmark set")
+    "b s" '(my-bookmark-set :wk "bookmark set")
     "b k" '(bookmark-delete :wk "bookmark delete")
 
     ;; (s) 検索
@@ -1475,7 +1496,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(safe-local-variable-directories '("/Users/shota.508/Studist/teachme_eboshigara/")))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
