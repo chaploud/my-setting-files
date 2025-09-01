@@ -25,7 +25,7 @@
           (lambda ()
             (setq gc-cons-percentage 0.3
                   gc-cons-threshold (* 256 1024 1024)     ; 256MB
-                  read-process-output-max (* 2 1024 1024) ; 2MB
+                  read-process-output-max (* 4 1024 1024) ; 4MB
                   )
             (add-hook 'focus-out-hook #'garbage-collect)
             (run-with-idle-timer 30 t #'garbage-collect)

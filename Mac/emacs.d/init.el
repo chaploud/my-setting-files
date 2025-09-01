@@ -21,6 +21,7 @@
 ;; (7) clojure-lsp: `brew install clojure-lsp/brew/clojure-lsp-native`
 ;; (8) docker/orbstack (コンテナを使うなら適宜インストール)
 ;; (9) Tree-sitterをコンパイルできるもの: `xcode-select --install`
+;; (10) gls: `brew install coreutils` (diredでのファイル一覧表示に利用)
 
 ;; === 必要フォント
 ;; Source Han Code JP (https://github.com/adobe-fonts/source-han-code-jp)
@@ -50,13 +51,9 @@
 ;;     emacs "$@" &
 ;;   fi
 ;; }
-;;
-;; # Emacsのeatターミナルのための設定
-;; [ -n "$EAT_SHELL_INTEGRATION_DIR" ] && source "$EAT_SHELL_INTEGRATION_DIR/zsh"
 
 ;; === 初回のEmacs起動後に必要なコマンド
 ;; M-x nerd-icons-install-fonts (nerd-iconsのフォントをインストール)
-;; M-x eat-compile-terminfo (Macでeatターミナルの操作不具合を防止)
 ;; M-x copilot-install-server (GitHub Copilotのサーバー)
 ;; M-x treesit-install-language-grammar (高速な構文解析)
 ;;   yaml, https://github.com/ikatyang/tree-sitter-yaml, 後はデフォルト
@@ -263,9 +260,9 @@
                (side . right)
                (window-width . 0.5)))
 
-;; eatは分割して開く
+;; vtermは分割して開く
 (add-to-list 'display-buffer-alist
-             '("\\*eat\\*"
+             '("\\*vterm\\*"
                (display-buffer-pop-up-window
                 display-buffer-use-some-window)
                (side . right)
@@ -491,8 +488,7 @@
   (evil-global-set-key 'motion "k" 'evil-previous-visual-line)
   ;; 最初からnormalモードであってほしいバッファ
   (evil-set-initial-state 'messages-buffer-mode 'normal)
-  (evil-set-initial-state 'dashboard-mode 'normal)
-  )
+  (evil-set-initial-state 'dashboard-mode 'normal))
 
 ;; === evilの便利なキーバインド追加
 (use-package evil-collection
@@ -730,41 +726,28 @@
   )
 
 ;;====================================================================
-;; ターミナル (eat)
+;; ターミナル (vterm)
 ;;====================================================================
-
-;; === ポップアップ管理 (shackle)
-(use-package shackle
+(use-package vterm
   :ensure t
-  :custom
-  (shackle-rules '(("\\*eat\\*" :popup t :align 'right :size 0.5 :select t)))
-  (shackle-mode t))
-
-;; === eat
-;; インストール直後に `M-x eat-compile-terminfo' を実行する
-;; C-c C-l: eat-line-mode, C-c C-j: eat-semi-char-modeで日本語入力などを制御しよう
-(use-package eat
-  :ensure t
-  :demand t
-  :vc (:url "http://codeberg.org/akib/emacs-eat" :rev :newest)
-  :custom
-  (eat-enable-shell-prompt-annotation nil)
-  (eat-enable-yank-to-terminal t)
-  :bind
-  ("C-'" . my-toggle-eat) ; C-'でターミナルのトグル
+  :after evil
   :hook
-  ;; Claude Codeなどでnbspが強調されて気になるので
-  (eat-mode . (lambda () (setq-local nobreak-char-display nil)))
-  (eat-line-mode . my-turn-on-skk)
+  (vterm-mode . (lambda ()
+                  ;; Claude Code IDEなどでnbspが青く可視化されるのが気に食わないため
+                  (setq-local nobreak-char-display 'nil)
+                  ;; insertモードで起動
+                  (evil-insert-state)))
+  :bind
+  ("C-'" . my-toggle-vterm)
   :config
-  (setq process-adaptive-read-buffering nil)
-  (defun my-toggle-eat ()
-    "Toggle eat terminal."
+  ;; vterm-toggleパッケージは使わない(claude-code-ideとの兼ね合い)
+  (defun my-toggle-vterm ()
+    "Toggle vterm terminal."
     (interactive)
-    (let ((eat-window (get-buffer-window "*eat*")))
-      (if (and eat-window (eq (selected-window) eat-window))
+    (let ((vterm-window (get-buffer-window "*vterm*")))
+      (if (and vterm-window (eq (selected-window) vterm-window))
           (quit-window)
-        (eat)))))
+        (vterm)))))
 
 ;;====================================================================
 ;; Git操作 (magit・diff-hl・vc)
@@ -947,7 +930,6 @@
   :ensure t
   :vc (:url "https://github.com/manzaltu/claude-code-ide.el" :rev :newest)
   :custom
-  (claude-code-ide-terminal-backend 'eat)
   (claude-code-ide-window-width 0.4)
   (claude-code-ide-focus-claude-after-ediff nil)
   :config
