@@ -999,20 +999,24 @@
             (my-claude-code-ide-scratch-show new-buffer project-dir)))))))
 
   ;; スクラッチバッファを表示する
-  (defun my-claude-code-ide-scratch-show (buffer project-dir)
-    "Show scratch buffer in dedicated window."
-    (let* ((claude-buffer (get-buffer (claude-code-ide--get-buffer-name project-dir)))
-           (claude-window (get-buffer-window claude-buffer))
-           (left-window (if claude-window
-                            (window-left claude-window)
-                          (frame-first-window))))
-      (when left-window
-        (select-window left-window)
-        (let ((new-window (split-window-below -12)))
-          (set-window-buffer new-window buffer)
-          (set-window-dedicated-p new-window t)
-          (select-window new-window)
-          (goto-char (point-max))))))
+  (defun my-claude-code-ide-scratch-show (buffer _project-dir)
+    "Show scratch BUFFER below the leftmost window of the current frame."
+    (let* ((base (frame-first-window))  ;; フレームの一番左上の live window
+           (win  nil))
+      (when (window-live-p base)
+        (condition-case _
+            (progn
+              ;; 左端ウィンドウの直下に 12 行で割って表示
+              (setq win (split-window base -12 'below))
+              (set-window-buffer win buffer))
+          (error
+           ;; 何かで split に失敗しても、とにかく表示はする
+           (setq win (display-buffer buffer '((display-buffer-pop-up-window)))))))
+      (when (window-live-p win)
+        (set-window-dedicated-p win t)
+        (select-window win)
+        (goto-char (point-max)))
+      win))
 
   ;; Claude Code IDE とスクラッチバッファの起動・トグル
   (defun my-claude-code-ide-with-scratch ()
