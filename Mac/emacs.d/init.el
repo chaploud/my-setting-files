@@ -592,6 +592,7 @@
   :ensure t
   :custom
   (consult-async-min-input 2)
+  (consult-ripgrep-args "rg --null --line-buffered --color=never --max-columns=1000 --path-separator /   --smart-case --no-heading --with-filename --line-number --search-zip --hidden")
   :hook
   (completion-list-mode . consult-preview-at-point-mode))
 
