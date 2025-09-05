@@ -1213,6 +1213,20 @@
   (js-indent-level 2))
 
 ;;====================================================================
+;; Groovy DSL (.gradle)
+;;====================================================================
+(use-package groovy-mode
+  :ensure t
+  :mode "\\.gradle\\'")
+
+;;====================================================================
+;; Terraform (.tf)
+;;====================================================================
+(use-package terraform-mode
+  :ensure t
+  :mode "\\.tf\\'")
+
+;;====================================================================
 ;; Format On Save設定の集約
 ;;====================================================================
 
@@ -1525,6 +1539,17 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   '(cape catppuccin-theme cider claude-code-ide clojure-ts-mode
+          colorful-mode copilot copilot-chat corfu dashboard ddskk
+          diff-hl dired-subtree docker dockerfile-mode doom-modeline
+          eat eglot-tempel embark-consult evil-anzu evil-collection
+          evil-commentary evil-escape evil-goggles evil-numbers
+          evil-surround exec-path-from-shell general groovy-mode
+          helpful hl-todo jarchive magit marginalia nerd-icons-corfu
+          orderless perspective puni rainbow-delimiters shackle
+          terraform-mode treesit-auto ultra-scroll undo-fu
+          undo-fu-session vertico vterm-toggle wgrep zig-mode))
  '(safe-local-variable-directories '("/Users/shota.508/Studist/teachme_eboshigara/")))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
