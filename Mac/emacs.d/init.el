@@ -93,6 +93,18 @@
                          (intern (read-string "Package: ")))))
   (message "[%s] built-in: %s" symbol (when (package-built-in-p symbol) t)))
 
+;; === 現在のファイルのプロジェクトルートからのパスをコピー
+(defun my-copy-project-relative-path ()
+  "Copy the current file's path relative to the project root."
+  (interactive)
+  (if-let* ((proj (project-current))
+            (root (project-root proj))
+            (file (buffer-file-name)))
+      (let ((relpath (file-relative-name file root)))
+        (kill-new relpath)
+        (message "Copied: %s" relpath))
+    (user-error "Not visiting a file in a project.")))
+
 ;;===== TIPS / Rules of use-package ==================================
 ;; :ensure 組み込みパッケージにはnil, 外部パッケージにはtを指定
 ;; :vc GitHubやCodebergなどから直接インストールする場合に利用
@@ -592,7 +604,7 @@
   :ensure t
   :custom
   (consult-async-min-input 2)
-  (consult-ripgrep-args "rg --null --line-buffered --color=never --max-columns=1000 --path-separator /   --smart-case --no-heading --with-filename --line-number --search-zip --hidden")
+  (consult-ripgrep-args "rg --null --line-buffered --color=never --max-columns=1000 --path-separator /   --smart-case --no-heading --with-filename --line-number --search-zip --hidden --glob=!.git --glob=!node_modules/* --glob=!target/* --glob=!*.lock")
   :hook
   (completion-list-mode . consult-preview-at-point-mode))
 
@@ -931,7 +943,7 @@
   :ensure t
   :vc (:url "https://github.com/copilot-emacs/copilot.el" :rev :newest :branch "main")
   :hook
-  (prog-mode . copilot-mode)
+  ;; (prog-mode . copilot-mode)
   (copilot-chat-org-prompt-mode . copilot-mode) ; チャット内自体でも有効化
   :bind
   (:map copilot-completion-map
@@ -1193,6 +1205,14 @@
   :mode "\\.\\(zig\\|zon\\))\\'")
 
 ;;====================================================================
+;; Web開発系
+;;====================================================================
+(use-package js
+  :ensure nil
+  :custom
+  (js-indent-level 2))
+
+;;====================================================================
 ;; Format On Save設定の集約
 ;;====================================================================
 
@@ -1292,6 +1312,7 @@
     "t" '(:ignore t :wk "Toggle")
     "t l" '(toggle-truncate-lines :wk "truncate line")
     "t f" '(flymake-mode :wk "toggle flymake")
+    "t c" '(copilot-mode :wk "toggle copilot")
 
     ;; (q) 終了操作
     "q" '(:ignore t :wk "Quit")
@@ -1306,6 +1327,7 @@
     "f s" '(save-buffer :wk "file save")
     "f i" '(my-open-user-init :wk "init.el")
     "f t" '(project-dired :wk "dired")
+    "f y" '(my-copy-project-relative-path :wk "copy relative path")
 
     ;; (b) バッファ操作/ブックマーク
     "b" '(:ignore t :wk "Buffers/Bookmark")

@@ -83,4 +83,4 @@
 # === emacs: eatシェルのための設定
 [ -n "$EAT_SHELL_INTEGRATION_DIR" ] && source "$EAT_SHELL_INTEGRATION_DIR/zsh"
 
-alias claude="/Users/shota.508/.claude/local/claude"
+export PATH="$HOME/.claude/local:$PATH"
