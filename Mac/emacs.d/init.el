@@ -934,7 +934,8 @@
 
   :custom
   (markdown-fontify-code-blocks-natively t)
-  (markdown-indent-on-enter 'indent-and-new-item))
+  (markdown-indent-on-enter 'indent-and-new-item)
+  (markdown-gfm-use-electric-backquote nil))
 
 ;;====================================================================
 ;; GitHub Copilot連携

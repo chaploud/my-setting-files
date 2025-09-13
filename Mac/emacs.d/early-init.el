@@ -8,6 +8,26 @@
 ;; libgccjit@15 インストール済み (https://formulae.brew.sh/formula/libgccjit)
 ;; emacs-plus@30 で利用 (https://github.com/d12frosted/homebrew-emacs-plus)
 
+;;====================================================================
+;; 最初期のGUI設定
+;;===================================================================
+
+;; === 初期フレームから最大化
+(add-to-list 'default-frame-alist '(fullscreen . maximized))
+
+;; === フレームタイトル
+(setq frame-title-format "Emacs")
+(setq ns-use-proxy-icon nil)
+
+;; === GUIをスッキリさせる
+(menu-bar-mode -1)
+(tool-bar-mode -1)
+(scroll-bar-mode -1)
+
+;;====================================================================
+;; ネイティブコンパイル・GC設定
+;;===================================================================
+
 ;; === ネイティブコンパイルをMacで動作させるためパスを通す
 (setenv "LIBRARY_PATH"
         (string-join
@@ -28,16 +48,7 @@
                   read-process-output-max (* 4 1024 1024) ; 4MB
                   )
             (add-hook 'focus-out-hook #'garbage-collect)
-            (run-with-idle-timer 30 t #'garbage-collect)
-            ;; 読み込み後、常に画面を最大化する
-            (toggle-frame-maximized)
-            )
-          )
-
-;; === GUIをスッキリさせる
-(menu-bar-mode -1)
-(tool-bar-mode -1)
-(scroll-bar-mode -1)
+            (run-with-idle-timer 30 t #'garbage-collect)))
 
 ;; === ネイティブコンパイルの警告を抑制する
 (setq native-comp-async-report-warnings-errors 'silent)
