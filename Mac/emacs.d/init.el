@@ -114,7 +114,8 @@
 ;; :hook パッケージに関連するフックをコンスセル形式で設定 (hook . function)
 ;;   * 末尾が-hookならそのまま、そうでなければ-hookを付けたものが使われる。関数側は#'をつけない
 ;; :config 通常通りの処理をまとめる意味 (グローバルスコープになる)
-;; 空行は入れないように統一する
+;; :mode ファイル名からモード決定
+;; :interpreter shebangからモード決定
 ;;====================================================================
 
 ;; === ローディング開始メッセージ
@@ -151,10 +152,6 @@
 	(global-so-long-mode t)
 	;; === 削除したファイルをゴミ箱に移動
 	(delete-by-moving-to-trash t)
-	;; === バックアップファイルを専用ディレクトリに保存
-	(backup-directory-alist '(("." . "~/.emacs.d/backups")))
-	;; === オートセーブファイルを専用ディレクトリに保存
-	(auto-save-file-name-transforms '((".*" "~/.emacs.d/auto-saves/" t)))
 	;; === シンボリックリンクを常に質問なしで開く
 	(vc-follow-symlinks t)
 	;; === 文字列を折り返さないのをデフォルトに
@@ -169,8 +166,6 @@
 	(savehist-mode t)
 	;; === ウィンドウの状態を保持
 	(winner-mode t)
-	;; === 末尾のスペースやタブを可視化
-	(show-trailing-whitespace t)
 	;; === 対応括弧を補完
 	(electric-pair-mode t)
 	;; === *scratch*バッファのデフォルトをtext-modeに
@@ -187,14 +182,35 @@
 	(setq find-function-C-source-directory
 				(concat "~/Documents/OSS/emacs/emacs-" emacs-version "/src"))
 
-	;; === バックアップファイルを専用ディレクトリがなければ作成
-	(unless (file-exists-p "~/.emacs.d/backups")
-		(make-directory "~/.emacs.d/backups" t))
+	;; === prog-modeとtext-modeのみ末尾の空白を表示
+	(add-hook 'prog-mode-hook
+						(lambda () (setq show-trailing-whitespace t)))
+	(add-hook 'text-mode-hook
+						(lambda () (setq show-trailing-whitespace t)))
 
-	;; === オートセーブファイルの専用ディレクトリがなければ作成
-	(unless (file-exists-p "~/.emacs.d/auto-saves")
-		(make-directory "~/.emacs.d/auto-saves" t))
-
+	;; ===== Git管理外のファイルは、~/.cache/emacs/以下に保存する =====
+	;; NOTE: elpa/, eln-cache/, tree-sitter/ はあえて除外している
+	(defconst my-cache (expand-file-name "~/.cache/emacs/"))
+	(dolist (d '(""
+							 "backups"
+							 "auto-saves"
+							 "auto-save-list"
+							 "undo-fu-session"
+							 "transient"))
+		(make-directory (concat my-cache) t))
+	(setopt backup-directory-alist `(("." . ,(concat my-cache "backups"))))
+	(setopt auto-save-file-name-transforms `((".*" ,(concat my-cache "auto-saves/") t)))
+	(setopt auto-save-list-file-prefix (concat my-cache "auto-save-list/.saves-"))
+	(setopt recentf-save-file (concat my-cache "recentf"))
+	(setopt savehist-file (concat my-cache "savehist"))
+	(setopt bookmark-default-file (concat my-cache "bookmarks"))
+	(setopt tramp-persistency-file-name (concat my-cache "tramp"))
+	(setopt undo-fu-session-directory (concat my-cache "undo-fu-session/"))
+	(setopt persp-state-default-file (concat my-cache "workspace-default"))
+	(setopt transient-history-file (concat my-cache "transient/history.el"))
+	(setopt transient-levels-file (concat my-cache "transient/levels.el"))
+	(setopt transient-values-file (concat my-cache "transient/values.el"))
+	(setopt project-list-file (concat my-cache "projects"))
 	)
 
 (use-package server
@@ -215,12 +231,6 @@
 	(which-key-idle-delay 0.3)
 	(which-key-idle-secondary-delay 0)
 	(which-key-sort-order nil))
-
-;; ==== モード別設定
-;; === zshファイルを開いたときにshell-script-modeを有効に
-(add-to-list 'auto-mode-alist '("\\zshrc\\'" . shell-script-mode))
-(add-to-list 'auto-mode-alist '("\\zprofile\\'" . shell-script-mode))
-(add-to-list 'auto-mode-alist '("\\zshenv\\'" . shell-script-mode))
 
 ;;====================================================================
 ;; bookmark
@@ -818,9 +828,24 @@
 	(setq persp-suppress-no-prefix-key-warning t)
 	(persp-mode)
 	:custom
-	(persp-state-default-file "~/.cache/emacs/workspace-default")
 	(persp-sort 'created)
 	(persp-modestring-short t))
+
+;;====================================================================
+;; Shell Script
+;;====================================================================
+
+(use-package sh-script
+	:ensure nil
+	:mode (("\\.\\(sh\\|bash\\)\\'" . sh-mode) ; sh/bash
+				 ("\\.\\(bashrc\\|bash_profile\\)\\'" . sh-mode) ; bash
+				 ("\\.?zsh\\(rc\\|env\\|profile\\)?\\'" . sh-mode)) ; zsh
+	:interpreter (("sh"   . sh-mode)
+								("bash" . sh-mode)
+								("zsh"  . sh-mode))
+	:custom
+	(sh-basic-offset 2)
+	(sh-indentation  2))
 
 ;;====================================================================
 ;; Clojure/ClojureScript/ClojureDart
