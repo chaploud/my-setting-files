@@ -1,1 +1,27 @@
 # Emacsの設定メモ
+
+- [ ] Emacs・開発環境設定
+  - [ ] Clojure関連のブラッシュアップとまとめ
+    - [ ] ClojureScriptの補完
+    - [ ] AST指向の差分
+    - [ ] コマンド体系
+    - [ ] 便利事項の探索と活用
+    - [ ] Zennの執筆更新
+    - [ ] Claude Code利用の更新
+    - [ ] GitHubとの連携ができるらしいので試し
+    - [ ] できるだけ、M-x installやtree-sitterも自動化したい
+  - [ ] Clojure以外の設定や環境設定やインストール
+    - [ ] HTML
+    - [ ] CSS
+    - [ ] JavaScript
+    - [ ] TypeScript
+    - [ ] Vue
+    - [ ] React
+    - [ ] Java
+    - [ ] Terraform
+    - [ ] HCL
+    - [ ] YAML
+    - [ ] config
+    - [ ] bash
+    - [ ] zsh
+  - [ ] 起動速度改善
