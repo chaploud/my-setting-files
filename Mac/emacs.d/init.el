@@ -191,14 +191,10 @@
 	;; ===== Git管理外のファイルは、~/.cache/emacs/以下に保存する =====
 	;; NOTE: elpa/, eln-cache/, tree-sitter/ はあえて除外している
 	(defconst my-cache (expand-file-name "~/.cache/emacs/"))
-	(dolist (d '(""
-							 "backups"
-							 "auto-saves"
-							 "auto-save-list"
-							 "undo-fu-session"
-							 "transient"))
-		(make-directory (concat my-cache) t))
-	(setopt backup-directory-alist `(("." . ,(concat my-cache "backups"))))
+	(dolist (d '("" "backups" "auto-saves" "auto-save-list" "undo-fu-session" "transient"
+							 "copilot" "copilot-chat"))
+		(make-directory (concat my-cache d "/") t))
+	(setopt backup-directory-alist `(("." . ,(concat my-cache "backups/"))))
 	(setopt auto-save-file-name-transforms `((".*" ,(concat my-cache "auto-saves/") t)))
 	(setopt auto-save-list-file-prefix (concat my-cache "auto-save-list/.saves-"))
 	(setopt recentf-save-file (concat my-cache "recentf"))
@@ -211,6 +207,8 @@
 	(setopt transient-levels-file (concat my-cache "transient/levels.el"))
 	(setopt transient-values-file (concat my-cache "transient/values.el"))
 	(setopt project-list-file (concat my-cache "projects"))
+	(setopt copilot-install-dir (concat my-cache "copilot/"))
+	(setopt copilot-chat-default-save-dir (concat my-cache "copilot-chat/"))
 	)
 
 (use-package server
@@ -239,7 +237,7 @@
 (use-package bookmark
 	:ensure nil
 	:custom
-	(bookmark-save-flag 1)
+	(bookmark-save-flag 1) ; tではなく1で毎回保存
 	:config
 	(defun my-bookmark-set ()
 		"Set a bookmark without prompting"
@@ -255,49 +253,32 @@
 ;; バッファの表示方法についての設定 (display-buffer-alist)
 ;;====================================================================
 
-;; === 後で追加したものが優先される
+;; 良く使う分割方法
+(defconst my-display-split
+	'((display-buffer-pop-up-window
+		 display-buffer-use-some-window)
+		(side . right)
+		(window-width . 0.5)))
 
-;; diredを開くときは分割して表示される
-(add-to-list 'display-buffer-alist
-						 '((derived-mode . dired-mode)
-							 (display-buffer-pop-up-window
-								display-buffer-use-some-window)
-							 (side . right)
-							 (window-width . 0.5)))
-
-;; dired上でdiredを開くときは同じウィンドウで開く
-;; RETでその場で、S-RETで別のウィンドウで開く
-(add-to-list 'display-buffer-alist
-						 '((lambda (buffer-name action)
-								 (and (with-current-buffer buffer-name (derived-mode-p 'dired-mode))
-											(with-current-buffer (window-buffer (selected-window))
-												(derived-mode-p 'dired-mode))))
-							 (display-buffer-same-window)))
-
-;; ielmは分割して開く
-(add-to-list 'display-buffer-alist
-						 '("\\*ielm\\*"
-							 (display-buffer-pop-up-window
-								display-buffer-use-some-window)
-							 (side . right)
-							 (window-width . 0.5)))
-
-;; vtermは分割して開く
-(add-to-list 'display-buffer-alist
-						 '("\\*vterm\\*"
-							 (display-buffer-pop-up-window
-								display-buffer-use-some-window)
-							 (side . right)
-							 (window-width . 0.5)
-							 (window-parameters  . ((dedicated . t)))))
-
-;; flymake-show-project-diagnosticsは右分割で開く
-(add-to-list 'display-buffer-alist
-						 '("\\*Flymake diagnostics"
-							 (display-buffer-pop-up-window
-								display-buffer-use-some-window)
-							 (side . right)
-							 (window-width . 0.5)))
+;; 上に書いたものが優先される
+(let ((rules
+			 (list
+				;; flymake-show-project-diagnostics
+				`("\\*Flymake diagnostics" ,@my-display-split)
+				;; vterm
+				`("\\*vterm\\*" ,@my-display-split
+					(window-parameters . ((dedicated . t))))
+				;; ielm
+				`("\\*ielm\\*" ,@my-display-split)
+				;; dired上でdiredを開く時は同じウィンドウで開く(RETでその場で、S-RETで別のウィンドウで開く)
+				`((lambda (buffer-name action)
+						(and (with-current-buffer buffer-name (derived-mode-p 'dired-mode))
+								 (with-current-buffer (window-buffer (selected-window))
+									 (derived-mode-p 'dired-mode))))
+					(display-buffer-same-window))
+				;; diredを分割して開くようにする
+				`((derived-mode . dired-mode) ,@my-display-split))))
+	(setq display-buffer-alist (append rules display-buffer-alist)))
 
 ;;====================================================================
 ;; Emacs Lisp用の便利なHelp
