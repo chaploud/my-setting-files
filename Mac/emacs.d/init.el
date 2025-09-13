@@ -333,7 +333,7 @@
 	(skk-cursor-default-color "#cad3f5")
 	(skk-cursor-latin-color "#cad3f5")
 	(skk-cursor-hiragana-color "#f5bde6")
-	(skk-cursor-katakana-color "#8bd5ca")
+	(skk-cursor-katakana-color "#a6da95")
 	(skk-cursor-abbrev-color "#c6a0f6")
 	:hook
 	(isearch-mode-hook . skk-isearch-mode-setup)
@@ -585,9 +585,19 @@
 	:ensure t
 	:custom
 	(consult-async-min-input 2)
-	(consult-ripgrep-args "rg --null --line-buffered --color=never --max-columns=1000 --path-separator /   --smart-case --no-heading --with-filename --line-number --search-zip --hidden --glob=!.git --glob=!node_modules/* --glob=!target/* --glob=!*.lock")
+	(consult-narrow-key "<") ; consultのミニバッファで< fなどで絞り込める
 	:hook
-	(completion-list-mode . consult-preview-at-point-mode))
+	(completion-list-mode . consult-preview-at-point-mode)
+	:config
+	;; もとのconsult-ripgre-pargsの値に追記したほうがいい
+	(let ((additional-args '("--hidden"
+													 "--glob=!.git"
+													 "--glob=!node_modules/*"
+													 "--glob=!target/*"
+													 "--glob=!*.lock"
+													 "--glob=!*.log")))
+		(setq consult-ripgrep-args
+					(concat consult-ripgrep-args " " (string-join additional-args " ")))))
 
 ;; === 補完候補を垂直に表示するUI (vertico)
 (use-package vertico
