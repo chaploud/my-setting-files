@@ -705,11 +705,12 @@
   :hook
   (clojure-ts-mode . eglot-ensure)
   (zig-mode . eglot-ensure)
+  (terraform-mode . eglot-ensure)
   :custom
   (eglot-events-buffer-config '(:size nil :format full))
   (eglot-autoshutdown t)
   (eglot-connect-timeout 120)
-  (eglot-extend-to-xref t)
+  (eglot-extend-to-xref nil)
   (eldoc-echo-area-use-multiline-p nil)
   :config
   ;; === eglotによるLSP起動
@@ -883,6 +884,7 @@
   (cider-repl-buffer-size-limit 10000)
   (cider-font-lock-dynamically '(macro core function var deprecated))
   (cider-repl-pop-to-buffer-on-connect nil)
+  (setq cider-cljs-comple)
   (cider-use-xref nil))
 
 ;; 構造的編集 (puni)
@@ -1257,7 +1259,9 @@
 (defvar my-format-rules
   '((emacs-lisp-mode . (my-format-emacs-lisp))
     (clojure-ts-mode . (:lsp my-format-clojure))
-    (clojure-ts-clojurescript-mode . (:lsp my-format-clojure))))
+    (clojure-ts-clojurescript-mode . (:lsp my-format-clojure))
+    (clojure-ts-clojurec-mode . (:lsp my-format-clojure))
+    (clojure-ts-clojuredart-mode . (:lsp my-format-clojure))))
 
 (defun my-format-try (formatter)
   "Try to format using FORMATTER."
@@ -1436,7 +1440,9 @@
     :keymaps '(emacs-lisp-mode-map
                lisp-interaction-mode-map
                clojure-ts-mode-map
-               clojure-ts-clojurescript-mode-map)
+               clojure-ts-clojurescript-mode-map
+               clojure-ts-clojurec-mode-map
+               clojure-ts-clojuredart-mode-map)
     "s" '(puni-slurp-forward :wk "slurp forward")
     "S" '(puni-slurp-backward :wk "slurp backward")
     "b" '(puni-barf-forward :wk "barf forward")
@@ -1456,7 +1462,9 @@
   ;; === Clojure (SPC m)
   (my-global-leader-def
     :keymaps '(clojure-ts-mode-map
-               clojure-ts-clojurescript-mode-map)
+               clojure-ts-clojurescript-mode-map
+               clojure-ts-clojurec-mode-map
+               clojure-ts-clojuredart-mode-map)
     "m" '(:ignore t :wk "Clojure")
     "m i" '(cider-jack-in :wk "cider jack-in")
     "m c" '(:ignore t :wk "cider connect")
@@ -1470,7 +1478,9 @@
   ;; === Clojure (,)
   (my-local-leader-def
     :keymaps '(clojure-ts-mode-map
-               clojure-ts-clojurescript-mode-map)
+               clojure-ts-clojurescript-mode-map
+               clojure-ts-clojurec-mode-map
+               clojure-ts-clojuredart-mode-map)
     "e" '(:ignore t :wk "Eval")
     "e e" '(cider-eval-last-sexp :wk "eval last sexp")
     "e f" '(cider-eval-dwim :wk "eval dwim")
@@ -1539,17 +1549,12 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages
-   '(cape catppuccin-theme cider claude-code-ide clojure-ts-mode
-          colorful-mode copilot copilot-chat corfu dashboard ddskk
-          diff-hl dired-subtree docker dockerfile-mode doom-modeline
-          eat eglot-tempel embark-consult evil-anzu evil-collection
-          evil-commentary evil-escape evil-goggles evil-numbers
-          evil-surround exec-path-from-shell general groovy-mode
-          helpful hl-todo jarchive magit marginalia nerd-icons-corfu
-          orderless perspective puni rainbow-delimiters shackle
-          terraform-mode treesit-auto ultra-scroll undo-fu
-          undo-fu-session vertico vterm-toggle wgrep zig-mode))
+ '(package-selected-packages nil)
+ '(package-vc-selected-packages
+   '((claude-code-ide :url
+                      "https://github.com/manzaltu/claude-code-ide.el")
+     (copilot :url "https://github.com/copilot-emacs/copilot.el"
+              :branch "main")))
  '(safe-local-variable-directories '("/Users/shota.508/Studist/teachme_eboshigara/")))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
