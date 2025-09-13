@@ -309,15 +309,18 @@
 								(when (frame-focus-state)
 									(my-switch-ime "net.mtgto.inputmethod.macSKK.ascii"))))
 
+(use-package ccc
+	:ensure t)
+
 (use-package ddskk
 	:ensure t
+	:after evil
 	:custom
 	(skk-server-host "127.0.0.1")
 	(skk-server-portnum 1178)
 	(skk-dcomp-activate t)
 	(skk-egg-like-newline t)
 	(skk-delete-implies-kakutei nil)
-	(skk-use-color-cursor nil)
 	(skk-show-candidates-nth-henkan-char 3)
 	(skk-isearch-mode-enable 'always)
 	(skk-isearch-mode-string-alist '((hiragana . "")
@@ -326,11 +329,17 @@
 																	 (latin . "")
 																	 (abbrev . "")
 																	 (nil . "")))
+	(skk-use-color-cursor t)
+	(skk-cursor-default-color "#cad3f5")
+	(skk-cursor-latin-color "#cad3f5")
+	(skk-cursor-hiragana-color "#f5bde6")
+	(skk-cursor-katakana-color "#8bd5ca")
+	(skk-cursor-abbrev-color "#c6a0f6")
 	:hook
 	(isearch-mode-hook . skk-isearch-mode-setup)
 	(isearch-mode-hook . skk-latin-mode-on)
 	(isearch-mode-end-hook . skk-isearch-mode-cleanup)
-	(evil-normal-state-entry-hook . skk-latin-mode-on)
+	(evil-normal-state-entry . skk-latin-mode-on)
 	(text-mode-hook . my-turn-on-skk)
 	(prog-mode-hook . my-turn-on-skk)
 	:bind
