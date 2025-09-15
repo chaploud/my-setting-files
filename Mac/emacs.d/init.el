@@ -32,7 +32,7 @@
 ;; (07) [YAML] `npm i -g yaml-language-server`
 ;; (08) [Bash] `npm i -g bash-language-server`
 ;; (09) [Vue] `brew install vue-language-server`
-;; (10) [Ruby] `gem install ruby-lsp ruby-lsp-rails ruby-lsp-rspec rubocop rubocop-rails`
+;; (10) [Ruby] `gem install ruby-lsp ruby-lsp-rails ruby-lsp-rspec rubocop rubocop-rails syntax_tree`
 
 ;; === 必要フォント
 ;; Source Han Code JP (https://github.com/adobe-fonts/source-han-code-jp)
@@ -66,9 +66,6 @@
 ;; === 初回のEmacs起動後に必要なコマンド
 ;; M-x nerd-icons-install-fonts (nerd-iconsのフォントをインストール)
 ;; M-x copilot-install-server (GitHub Copilotのサーバー)
-;; M-x treesit-install-language-grammar (高速な構文解析)
-;;   yaml, https://github.com/ikatyang/tree-sitter-yaml, 後はデフォルト
-;;   json, https://github.com/tree-sitter/tree-sitter-json, 後はデフォルト
 
 ;;; Code:
 
@@ -376,12 +373,6 @@
 
 ;; === カーソル位置の列番号をモードラインに表示
 (column-number-mode t)
-
-;; === tree-sitterによる色付けmax
-(use-package treesit
-	:ensure nil
-	:custom
-	(treesit-font-lock-level 4))
 
 ;; === フォント設定
 (setq use-default-font-for-symbols nil)
@@ -700,6 +691,207 @@
 	(add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter))
 
 ;;====================================================================
+;; ターミナル (vterm)
+;;====================================================================
+
+(use-package vterm
+	:ensure t
+	:after evil
+	:custom
+	(vterm-max-scrollback 10000)
+	(vterm-tramp-shells '(("ssh" "/bin/bash")
+												("scp" "/bin/bash")
+												("docker" "/bin/bash")))
+	:hook
+	(vterm-mode . (lambda ()
+									;; Claude Code IDEなどでnbspが青く可視化されるのが気に食わないため
+									(setq-local nobreak-char-display 'nil)
+									;; insertモードで起動
+									(evil-insert-state)))
+	:bind
+	("C-'" . my-toggle-vterm)
+	:config
+	;; vterm-toggleパッケージは使わない(claude-code-ideとの兼ね合い)
+	(defun my-toggle-vterm ()
+		"Toggle vterm terminal."
+		(interactive)
+		(let* ((vterm-buffer (get-buffer "*vterm*"))
+					 (vterm-window (get-buffer-window "*vterm*"))
+					 (current-project-root (or (and (project-current)
+																					(project-root (project-current)))
+																		 default-directory))
+					 (vterm-dir (when vterm-buffer
+												(with-current-buffer vterm-buffer
+													default-directory))))
+			(if (and vterm-window (eq (selected-window) vterm-window))
+					(quit-window)
+				(progn
+					(vterm)
+					;; 現在バッファのプロジェクトが異なるなら、気を利かせてディレクトリ移動する
+					(when (and vterm-dir
+										 (not (string= (file-truename current-project-root)
+																	 (file-truename vterm-dir))))
+						(vterm-send-string (format "cd %s" current-project-root))
+						(vterm-send-return)))))))
+
+;;====================================================================
+;; Git操作 (magit・diff-hl・vc)
+;;====================================================================
+
+;; === magit
+(use-package magit
+	:ensure t
+	:custom
+	(magit-diff-refine-hunk 'all)
+	:config
+	;; NOTE 差分表示の色合いをカタムするために複雑なことをしているが、しなくてもいい
+	;; magit-diff-visit-fileは別ウィンドウで開く
+	(advice-add 'magit-diff-visit-file :around
+							(lambda (orig-fun &rest _args)
+								(funcall orig-fun t)))
+
+	;; magit-diffのとき、vc-diffを使う。未追跡ファイルは単に開く
+	(defun my-magit-diff-dwim-with-vc-diff (orig-fun &rest args)
+		"Advice function to use `vc-diff` in `magit-status-mode`."
+		(if-let (file (and (derived-mode-p 'magit-status-mode)
+											 (magit-file-at-point)))
+				(if (null (vc-state file))
+						(progn
+							(message "%s is untracked file." file)
+							(view-file-other-window file))
+					(with-current-buffer (find-file-noselect file)
+						(call-interactively #'vc-diff)))
+			(apply orig-fun args)))
+
+	(advice-add 'magit-diff-dwim :around #'my-magit-diff-dwim-with-vc-diff))
+
+;; === フリンジに差分を強調表示 (diff-hl)
+(use-package diff-hl
+	:ensure t
+	:custom
+	(global-diff-hl-mode t)
+	(diff-hl-flydiff-mode t)
+	:hook
+	(magit-pre-refresh-hook  . diff-hl-magit-pre-refresh)
+	(magit-post-refresh-hook . diff-hl-magit-post-refresh))
+
+;;====================================================================
+;; ワークスペース (perspective.el)
+;;====================================================================
+
+(use-package perspective
+	:ensure t
+	:init
+	(setq persp-suppress-no-prefix-key-warning t)
+	(persp-mode)
+	:custom
+	(persp-sort 'created)
+	(persp-modestring-short t))
+
+;;====================================================================
+;; Tree-sitter
+;;====================================================================
+
+(use-package treesit
+	:ensure nil
+	:custom
+	;; === tree-sitterによる色付けmax
+	(treesit-font-lock-level 4)
+	:config
+	;; === tsモードで扱いたい言語
+	(setq my-treesit-language-list
+				'(bash
+					c
+					clojure
+					css
+					dockerfile
+					groovy
+					hcl
+					html
+					java
+					javascript
+					jsdoc
+					json
+					lua
+					markdown
+					python
+					ruby
+					rust
+					toml
+					tsx
+					typescript
+					yaml
+					zig
+					))
+	;; === tsの参照URLを指定
+	(setq treesit-language-source-alist
+				'((bash "https://github.com/tree-sitter/tree-sitter-bash")
+					(c "https://github.com/tree-sitter/tree-sitter-c")
+					(clojure "https://github.com/sogaiu/tree-sitter-clojure")
+					(css "https://github.com/tree-sitter/tree-sitter-css")
+					(dockerfile "https://github.com/camdencheek/tree-sitter-dockerfile")
+					(groovy "https://github.com/murtaza64/tree-sitter-groovy")
+					(hcl "https://github.com/tree-sitter-grammars/tree-sitter-hcl")
+					(html "https://github.com/tree-sitter/tree-sitter-html")
+					(java "https://github.com/tree-sitter/tree-sitter-java")
+					(javascript "https://github.com/tree-sitter/tree-sitter-javascript")
+					(jsdoc "https://github.com/tree-sitter/tree-sitter-jsdoc")
+					(json "https://github.com/tree-sitter/tree-sitter-json")
+					(lua "https://github.com/tjdevries/tree-sitter-lua")
+					(markdown "https://github.com/ikatyang/tree-sitter-markdown")
+					(python "https://github.com/tree-sitter/tree-sitter-python")
+					(ruby "https://github.com/tree-sitter/tree-sitter-ruby")
+					(rust "https://github.com/tree-sitter/tree-sitter-rust")
+					(toml "https://github.com/ikatyang/tree-sitter-toml")
+					(tsx "https://github.com/tree-sitter/tree-sitter-typescript" "tsx/src")
+					(typescript "https://github.com/tree-sitter/tree-sitter-typescript" "typescript/src")
+					(yaml "https://github.com/ikatyang/tree-sitter-yaml")
+					(zig "https://github.com/tree-sitter/zig-tree-sitter")
+					))
+	;; === 未導入だけ自動インストール
+	(defun my-treesit-install-grammars ()
+		"my-treesit-language-listのうち未導入のgrammarを自動インストールする"
+		(interactive)
+		(dolist (lang my-treesit-language-list)
+			(unless (treesit-language-available-p lang)
+				(condition-case err
+						(progn
+							(message "[treesit] Installing grammar for %s..." lang)
+							(treesit-install-language-grammar lang)
+							(message "[treesit Installed: %s..." lang))
+					(error
+					 (message "[treesit] FAILED %s → %s" lang (error-message-string err)))))))
+
+	(add-hook 'emacs-startup-hook
+						(lambda () (run-with-idle-timer 1 nil #'my-treesit-install-grammars)))
+
+	(setq major-mode-remap-alist
+				'((sh-mode . bash-ts-mode)
+					(c-mode . c-ts-mode)
+					(clojure-mode . clojure-ts-mode)
+					(css-mode . css-ts-mode)
+					(dockerfile . dockerfile)
+					(groovy-mode . groovy-ts-mode)
+					(hcl-mode . hcl-ts-mode)
+					(html-mode . html-ts-mode)
+					(java-mode . java-ts-mode)
+					(javascript-mode . javascript-ts-mode)
+					(jsdoc-mode . jsdoc-ts-mode)
+					(json-mode . json-ts-mode)
+					(lua-mode . lua-ts-mode)
+					(markdown-mode . markdown-ts-mode)
+					(python-mode . python-ts-mode)
+					(ruby-mode . ruby-ts-mode)
+					(rust-mode . rust-ts-mode)
+					(toml-mode . toml-ts-mode)
+					(tsx-mode . tsx-ts-mode)
+					(typescript-mode . typescript-ts-mode)
+					(yaml-mode . yaml-ts-mode)
+					(zig-mode . zig-ts-mode)
+					))
+	)
+
+;;====================================================================
 ;; LSP (eglot)
 ;;====================================================================
 
@@ -776,87 +968,6 @@
 		(setq-local my-text-capf-configured t))
 	)
 
-;;====================================================================
-;; ターミナル (vterm)
-;;====================================================================
-(use-package vterm
-	:ensure t
-	:after evil
-	:custom
-	(vterm-tramp-shells '(("ssh" "/bin/bash")
-												("scp" "/bin/bash")
-												("docker" "/bin/bash")))
-	:hook
-	(vterm-mode . (lambda ()
-									;; Claude Code IDEなどでnbspが青く可視化されるのが気に食わないため
-									(setq-local nobreak-char-display 'nil)
-									;; insertモードで起動
-									(evil-insert-state)))
-	:bind
-	("C-'" . my-toggle-vterm)
-	:config
-	;; vterm-toggleパッケージは使わない(claude-code-ideとの兼ね合い)
-	(defun my-toggle-vterm ()
-		"Toggle vterm terminal."
-		(interactive)
-		(let ((vterm-window (get-buffer-window "*vterm*")))
-			(if (and vterm-window (eq (selected-window) vterm-window))
-					(quit-window)
-				(vterm)))))
-
-;;====================================================================
-;; Git操作 (magit・diff-hl・vc)
-;;====================================================================
-
-;; === magit
-(use-package magit
-	:ensure t
-	:custom
-	(magit-diff-refine-hunk 'all)
-	:config
-	;; NOTE 差分表示の色合いをカタムするために複雑なことをしているが、しなくてもいい
-	;; magit-diff-visit-fileは別ウィンドウで開く
-	(advice-add 'magit-diff-visit-file :around
-							(lambda (orig-fun &rest _args)
-								(funcall orig-fun t)))
-
-	;; magit-diffのとき、vc-diffを使う。未追跡ファイルは単に開く
-	(defun my-magit-diff-dwim-with-vc-diff (orig-fun &rest args)
-		"Advice function to use `vc-diff` in `magit-status-mode`."
-		(if-let (file (and (derived-mode-p 'magit-status-mode)
-											 (magit-file-at-point)))
-				(if (null (vc-state file))
-						(progn
-							(message "%s is untracked file." file)
-							(view-file-other-window file))
-					(with-current-buffer (find-file-noselect file)
-						(call-interactively #'vc-diff)))
-			(apply orig-fun args)))
-
-	(advice-add 'magit-diff-dwim :around #'my-magit-diff-dwim-with-vc-diff))
-
-;; === フリンジに差分を強調表示 (diff-hl)
-(use-package diff-hl
-	:ensure t
-	:custom
-	(global-diff-hl-mode t)
-	(diff-hl-flydiff-mode t)
-	:hook
-	(magit-pre-refresh-hook  . diff-hl-magit-pre-refresh)
-	(magit-post-refresh-hook . diff-hl-magit-post-refresh))
-
-;;====================================================================
-;; ワークスペース (perspective.el)
-;;====================================================================
-
-(use-package perspective
-	:ensure t
-	:init
-	(setq persp-suppress-no-prefix-key-warning t)
-	(persp-mode)
-	:custom
-	(persp-sort 'created)
-	(persp-modestring-short t))
 
 ;;====================================================================
 ;; Shell Script

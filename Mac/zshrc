@@ -8,9 +8,9 @@
  alias s="ls"
  alias l="ls"
 
- chpwd() {
-	 ls -a
- }
+ # chpwd() {
+ #	 ls -a
+ # }
 
  # grep
  alias grep='grep --color=auto'
@@ -93,3 +93,7 @@ alias tf='terraform'
 
 # Ruby
 eval "$(rbenv init - zsh)"
+
+# for Ruby (MySQL)
+PATH="/opt/homebrew/opt/mysql-client@8.4/bin/:$PATH"
+PKG_CONFIG_PATH="/opt/homebrew/opt/mysql-client@8.4/lib/pkgconfig:$PKG_CONFIG_PATH"
