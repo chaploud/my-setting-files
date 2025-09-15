@@ -9,7 +9,7 @@
  alias l="ls"
 
  chpwd() {
-   ls -a
+	 ls -a
  }
 
  # grep
@@ -30,17 +30,17 @@
 
  # grmb: git remove branch
  git_rmb() {
-   local current_branch=$(git branch --show-current)
-   local branches=$(git branch | grep -v "^\*" | sed 's/^[ \t]*//')
-   local selected_branch=$(echo "$branches" | fzf \
-     --prompt="Select branch to remove: " \
-     --preview="git log --oneline --graph --color=always {}" \
-     --header="Current branch: $current_branch")
+	 local current_branch=$(git branch --show-current)
+	 local branches=$(git branch | grep -v "^\*" | sed 's/^[ \t]*//')
+	 local selected_branch=$(echo "$branches" | fzf \
+		 --prompt="Select branch to remove: " \
+		 --preview="git log --oneline --graph --color=always {}" \
+		 --header="Current branch: $current_branch")
 
-   if [ -n "$selected_branch" ]; then
-     git branch -d "$selected_branch"
-     echo "Removed branch: $selected_branch"
-   fi
+	 if [ -n "$selected_branch" ]; then
+		 git branch -d "$selected_branch"
+		 echo "Removed branch: $selected_branch"
+	 fi
  }
  alias grmb='git_rmb'
 
@@ -56,11 +56,11 @@
 
  # emacsclient
  e() {
-   if emacsclient --eval "t" > /dev/null 2>&1; then
-     emacsclient -n "$@"
-   else
-     emacs "$@" &
-   fi
+	 if emacsclient --eval "t" > /dev/null 2>&1; then
+		 emacsclient -n "$@"
+	 else
+		 emacs "$@" &
+	 fi
  }
 
  # === 補完候補の読み込み
@@ -70,14 +70,14 @@
  local threshold=$((60 * 60 * 24)) # 1日
 
  if [ -f ~/.zcompdump ]; then
-   local updated=$(date -r ~/.zcompdump +%s)
-   if [ $((${now} - ${updated})) -gt ${threshold} ]; then
-     compinit
-   else
-     compinit -C
-   fi
+	 local updated=$(date -r ~/.zcompdump +%s)
+	 if [ $((${now} - ${updated})) -gt ${threshold} ]; then
+		 compinit
+	 else
+		 compinit -C
+	 fi
  else
-   compinit
+	 compinit
  fi
 
 # === emacs: eatシェルのための設定
@@ -90,3 +90,6 @@ eval "$(direnv hook zsh)"
 
 # Terraform
 alias tf='terraform'
+
+# Ruby
+eval "$(rbenv init - zsh)"

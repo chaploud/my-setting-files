@@ -12,16 +12,27 @@
 ;; emacs-plus@30 で利用 (https://github.com/d12frosted/homebrew-emacs-plus)
 
 ;; === 依存関係
-;; (1) gcc@15:  `brew install gcc@15`
-;; (2) libgccjit@15 `brew install libgccjit@15`
-;; (3) ripgrep `brew install ripgrep`
-;; (4) 1Password CLI ([任意] SQLモードの項目でDB接続時のパスワード参照として使っています)
-;; (5) JDK: `brew install --cask temurin21`
-;; (6) Clojure CLI: `brew install clojure/tools/clojure`
-;; (7) clojure-lsp: `brew install clojure-lsp/brew/clojure-lsp-native`
-;; (8) docker/orbstack (コンテナを使うなら適宜インストール)
-;; (9) Tree-sitterをコンパイルできるもの: `xcode-select --install`
-;; (10) gls: `brew install coreutils` (diredでのファイル一覧表示に利用)
+;; (01) gcc@15:  `brew install gcc@15`
+;; (02) libgccjit@15 `brew install libgccjit@15`
+;; (03) ripgrep `brew install ripgrep`
+;; (04) 1Password CLI ([任意] SQLモードの項目でDB接続時のパスワード参照として使っています)
+;; (05) JDK: `brew install --cask temurin21`
+;; (06) Clojure CLI: `brew install clojure/tools/clojure`
+;; (07) docker/orbstack (コンテナを使うなら適宜インストール)
+;; (08) Tree-sitterをコンパイルできるもの: `xcode-select --install`
+;; (09) gls: `brew install coreutils` (diredでのファイル一覧表示に利用)
+
+;; === LSP用に必要なインストール
+;; (01) [Clojure] `brew install clojure-lsp/brew/clojure-lsp-native`
+;; (02) [Java] `brew install jdtls`
+;; (03) [Zig] `brew install zls`
+;; (04) [Terraform] `brew install terraform-ls`
+;; (05) [TypeScript/React] `npm i -g typescript typescript-language-server`
+;; (06) [HTML/CSS/json] `npm i -g vscode-langservers-extracted`
+;; (07) [YAML] `npm i -g yaml-language-server`
+;; (08) [Bash] `npm i -g bash-language-server`
+;; (09) [Vue] `brew install vue-language-server`
+;; (10) [Ruby] `gem install ruby-lsp ruby-lsp-rails ruby-lsp-rspec rubocop rubocop-rails`
 
 ;; === 必要フォント
 ;; Source Han Code JP (https://github.com/adobe-fonts/source-han-code-jp)
@@ -586,14 +597,17 @@
 	:custom
 	(consult-async-min-input 2)
 	(consult-narrow-key "<") ; consultのミニバッファで< fなどで絞り込める
+	:init
+	(setq xref-show-xrefs-function #'consult-xref)
+	(setq xref-show-definitions-function #'consult-xref)
 	:hook
 	(completion-list-mode . consult-preview-at-point-mode)
 	:config
 	;; もとのconsult-ripgre-pargsの値に追記したほうがいい
 	(let ((additional-args '("--hidden"
-													 "--glob=!.git"
-													 "--glob=!node_modules/*"
-													 "--glob=!target/*"
+													 "--glob=!.git/**"
+													 "--glob=!node_modules/**"
+													 "--glob=!target/**"
 													 "--glob=!*.lock"
 													 "--glob=!*.log")))
 		(setq consult-ripgrep-args
@@ -676,8 +690,7 @@
 	(corfu-cycle t)
 	(corfu-preselect 'prompt)
 	(corfu-quit-no-match 'separator)
-	(tab-always-indent 'complete)
-	(corfu-separator ?\s))
+	(tab-always-indent 'complete))
 
 ;; === 補完ポップアップ内のアイコン
 (use-package nerd-icons-corfu
@@ -693,22 +706,36 @@
 ;; === lsp (eglot)
 (use-package eglot
 	:ensure nil
-	:hook
-	(clojure-ts-mode . eglot-ensure)
-	(zig-mode . eglot-ensure)
-	(terraform-mode . eglot-ensure)
 	:custom
 	(eglot-events-buffer-config '(:size nil :format full))
 	(eglot-autoshutdown t)
 	(eglot-connect-timeout 120)
 	(eglot-extend-to-xref nil)
 	(eldoc-echo-area-use-multiline-p nil)
+
+	:hook
+	(clojure-ts-mode . eglot-ensure)
+	(zig-mode . eglot-ensure)
+	(terraform-mode . eglot-ensure)
+
 	:config
 	;; === eglotによるLSP起動
 	(defun my-eglot-start ()
 		"Start eglot for the current buffer if not already started."
 		(interactive)
-		(eglot-ensure)))
+		(eglot-ensure))
+
+	;; eglotのデフォルトのlspではない場合
+	;; Ruby
+	;; (add-to-list 'eglot-server-programs
+	;;						 '((ruby-mode ruby-ts-mode) . ("ruby-lsp")))
+	;; Vue
+	;;(add-to-list 'eglot-server-programs
+	;;						 '((web-mode :language-id "vue")
+	;;							 . ("vue-language-server" "--stdio")))
+
+	;; LSPを自動起動したいモードをここに追記する
+	)
 
 ;; === スニペット・テンプレート (tempel)
 (use-package tempel
@@ -846,6 +873,10 @@
 	:custom
 	(sh-basic-offset 2)
 	(sh-indentation  2))
+
+;;====================================================================
+;; Web
+;;====================================================================
 
 ;;====================================================================
 ;; Clojure/ClojureScript/ClojureDart
