@@ -12,27 +12,28 @@
 ;; emacs-plus@30 で利用 (https://github.com/d12frosted/homebrew-emacs-plus)
 
 ;; === 依存関係
-;; (01) gcc@15:  `brew install gcc@15`
-;; (02) libgccjit@15 `brew install libgccjit@15`
-;; (03) ripgrep `brew install ripgrep`
-;; (04) 1Password CLI ([任意] SQLモードの項目でDB接続時のパスワード参照として使っています)
-;; (05) JDK: `brew install --cask temurin21`
-;; (06) Clojure CLI: `brew install clojure/tools/clojure`
-;; (07) docker/orbstack (コンテナを使うなら適宜インストール)
-;; (08) Tree-sitterをコンパイルできるもの: `xcode-select --install`
-;; (09) gls: `brew install coreutils` (diredでのファイル一覧表示に利用)
+;; [gcc@15] brew install gcc@15
+;; [libgccjit@15] brew istall libgccjit@15
+;; [gls] brew install coreutils (diredでのファイル一覧表示に利用)
+;; [ripgrep] brew install ripgrep (全文検索系で利用)
+;; [Tree-sitterをコンパイルできるもの]: xcode-select --install
+;; [JDK] brew install --cask temurin21
+;; [Clojure CLI] brew install clojure/tools/clojure
+;; [docker/orbstack] (コンテナを使うなら適宜インストール)
+;; [1Password CLI] ([任意] SQLモードの項目でDB接続時のパスワード参照として使っています)
 
 ;; === LSP用に必要なインストール
-;; [Bash] `npm i -g bash-language-server`
-;; [Clojure] `brew install clojure-lsp/brew/clojure-lsp-native`
-;; [Java] `brew install jdtls`
-;; [Zig] `brew install zls`
-;; [Terraform] `brew install terraform-ls`
-;; [TypeScript/React] `npm i -g typescript typescript-language-server`
-;; [HTML/CSS/json] `npm i -g vscode-langservers-extracted`
-;; [YAML] `npm i -g yaml-language-server`
-;; [Vue] `brew install vue-language-server`
-;; [Ruby] `gem install ruby-lsp ruby-lsp-rails ruby-lsp-rspec rubocop rubocop-rails syntax_tree`
+;; [Bash] npm i -g bash-language-server
+;; [C/C++] brew install llvm
+;; [Clojure] brew install clojure-lsp/brew/clojure-lsp-native
+;; [Java] brew install jdtls
+;; [Zig] brew install zls
+;; [Terraform] brew install terraform-ls
+;; [TypeScript/React] npm i -g typescript typescript-language-server
+;; [HTML/CSS/json] npm i -g vscode-langservers-extracted
+;; [YAML] npm i -g yaml-language-server
+;; [Vue] brew install vue-language-server
+;; [Ruby] gem install ruby-lsp ruby-lsp-rails ruby-lsp-rspec rubocop rubocop-rails syntax_tree
 
 ;; === 必要フォント
 ;; Source Han Code JP (https://github.com/adobe-fonts/source-han-code-jp)
@@ -805,47 +806,48 @@
 	:config
 	;; === tsモードで扱いたい言語
 	(setq my-treesit-language-list
-				'(bash
+				'(clojure
+					bash
 					c
-					clojure
-					css
-					dockerfile
-					groovy
-					hcl
 					html
-					java
+					css
 					javascript
 					jsdoc
+					typescript
+					tsx
 					json
+					dockerfile
+					yaml
+					hcl
+					java
+					groovy
 					python
 					ruby
 					rust
 					toml
-					;; tsx
-					;; typescript
-					yaml
 					))
 	;; === tsの参照URLを指定
 	(setq treesit-language-source-alist
-				'((bash "https://github.com/tree-sitter/tree-sitter-bash")
+				'((clojure "https://github.com/sogaiu/tree-sitter-clojure")
+					(bash "https://github.com/tree-sitter/tree-sitter-bash")
 					(c "https://github.com/tree-sitter/tree-sitter-c")
-					(clojure "https://github.com/sogaiu/tree-sitter-clojure")
-					(css "https://github.com/tree-sitter/tree-sitter-css")
-					(dockerfile "https://github.com/camdencheek/tree-sitter-dockerfile")
-					(groovy "https://github.com/murtaza64/tree-sitter-groovy")
-					(hcl "https://github.com/tree-sitter-grammars/tree-sitter-hcl")
+					(cpp "https://github.com/tree-sitter/tree-sitter-cpp")
 					(html "https://github.com/tree-sitter/tree-sitter-html")
-					(java "https://github.com/tree-sitter/tree-sitter-java")
+					(css "https://github.com/tree-sitter/tree-sitter-css")
 					(javascript "https://github.com/tree-sitter/tree-sitter-javascript") ; jsxを兼ねる
 					(jsdoc "https://github.com/tree-sitter/tree-sitter-jsdoc")
+					(typescript "https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src")
+					(tsx "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src")
 					(json "https://github.com/tree-sitter/tree-sitter-json")
+					(dockerfile "https://github.com/camdencheek/tree-sitter-dockerfile")
+					(yaml "https://github.com/ikatyang/tree-sitter-yaml")
+					(hcl "https://github.com/tree-sitter-grammars/tree-sitter-hcl")
+					(java "https://github.com/tree-sitter/tree-sitter-java")
+					(groovy "https://github.com/murtaza64/tree-sitter-groovy")
 					(python "https://github.com/tree-sitter/tree-sitter-python")
 					(ruby "https://github.com/tree-sitter/tree-sitter-ruby")
 					(rust "https://github.com/tree-sitter/tree-sitter-rust")
 					(toml "https://github.com/ikatyang/tree-sitter-toml")
-					;; (tsx "https://github.com/tree-sitter/tree-sitter-typescript" nil "tsx")
-					;; (typescript "https://github.com/tree-sitter/tree-sitter-typescript" nil "typescript")
-					(yaml "https://github.com/ikatyang/tree-sitter-yaml")
 					))
 	;; === 未導入だけ自動インストール
 	(defun my-treesit-install-grammars ()
@@ -863,29 +865,6 @@
 
 	(add-hook 'emacs-startup-hook
 						(lambda () (run-with-idle-timer 1 nil #'my-treesit-install-grammars)))
-
-	(setq major-mode-remap-alist
-				'((sh-mode . bash-ts-mode)
-					(c-mode . c-ts-mode)
-					(clojure-mode . clojure-ts-mode)
-					(css-mode . css-ts-mode)
-					(dockerfile-mode . dockerfile-ts-mode)
-					(groovy-mode . groovy-ts-mode)
-					(hcl-mode . hcl-ts-mode)
-					(html-mode . html-ts-mode)
-					(java-mode . java-ts-mode)
-					(js-mode . js-ts-mode)
-					(js-jsx-mode . js-ts-mode)
-					(jsdoc-mode . jsdoc-ts-mode)
-					(json-mode . json-ts-mode)
-					(python-mode . python-ts-mode)
-					(ruby-mode . ruby-ts-mode)
-					(rust-mode . rust-ts-mode)
-					(toml-mode . toml-ts-mode)
-					;; (tsx-mode . tsx-ts-mode)
-					;; (typescript-mode . typescript-ts-mode)
-					(yaml-mode . yaml-ts-mode)
-					))
 	)
 
 ;;====================================================================
@@ -965,8 +944,14 @@
 
 	:hook
 	;; LSP自動起動したい場合はここに追加
-	(bash-ts-mode . eglot-ensure)
 	(clojure-ts-mode . eglot-ensure)
+	(bash-ts-mode . eglot-ensure)
+	(c-ts-mode . eglot-ensure)
+	(css-ts-mode . eglot-ensure)
+	(html-ts-mode . eglot-ensure)
+	(js-ts-mode . eglot-ensure)
+	(typescript-ts-mode . eglot-ensure)
+	(tsx-ts-mode . eglot-ensure)
 	(zig-mode . eglot-ensure)
 	(terraform-mode . eglot-ensure)
 
@@ -1016,40 +1001,13 @@
 		(setq-local my-text-capf-configured t))
 	)
 
-
-;;====================================================================
-;; Shell Script
-;;====================================================================
-;; [依存関係]
-;; npm i -g bash-language-server
-;; brew install shfmt
-
-(use-package sh-script
-	:ensure nil
-	:mode (("\\.\\(sh\\|bash\\)\\'" . bash-ts-mode) ; sh/bash
-				 ("\\.?\\(bashrc\\|bash_profile\\)\\'" . bash-ts-mode) ; bash
-				 ("\\.?zsh\\(rc\\|env\\|profile\\)?\\'" . bash-ts-mode)) ; zsh
-	:interpreter (("sh"   . bash-ts-mode)
-								("bash" . bash-ts-mode)
-								("zsh"  . bash-ts-mode))
-	:custom
-	(sh-basic-offset 2)
-	(sh-indentation  2))
-
-;;====================================================================
-;; Web
-;;====================================================================
-
 ;;====================================================================
 ;; Clojure/ClojureScript/ClojureDart
-;;
-;; [依存関係]
-;; (1) JDK: `brew install --cask temurin21`
-;; (2) Clojure CLI: `brew install clojure/tools/clojure`
-;; (3) clojure-lsp: `brew install clojure-lsp/brew/clojure-lsp-native`
-;; (4) docker/orbstack
-;; (5) Tree-sitterをコンパイルできるもの: `xcode-select --install`
 ;;====================================================================
+;; [依存関係]
+;; brew install --cask temurin21
+;; brew install clojure/tools/clojure
+;; brew install clojure-lsp/brew/clojure-lsp-native
 
 ;; === clojure-ts-mode
 ;; 従来のclojure-modeではなくclojure-ts-modeで置き換える
@@ -1083,7 +1041,6 @@
 	(cider-repl-buffer-size-limit 10000)
 	(cider-font-lock-dynamically '(macro core function var deprecated))
 	(cider-repl-pop-to-buffer-on-connect nil)
-	(setq cider-cljs-comple)
 	(cider-use-xref nil))
 
 ;; 構造的編集 (puni)
@@ -1120,6 +1077,48 @@
 	:after eglot
 	:config
 	(jarchive-setup))
+
+;;====================================================================
+;; Shell Script
+;;====================================================================
+;; [依存関係]
+;; npm i -g bash-language-server
+;; brew install shfmt
+
+(use-package sh-script
+	:ensure nil
+	:mode (("\\.\\(sh\\|bash\\)\\'" . bash-ts-mode) ; sh/bash
+				 ("\\.?\\(bashrc\\|bash_profile\\)\\'" . bash-ts-mode) ; bash
+				 ("\\.?zsh\\(rc\\|env\\|profile\\)?\\'" . bash-ts-mode)) ; zsh
+	:interpreter (("sh"   . bash-ts-mode)
+								("bash" . bash-ts-mode)
+								("zsh"  . bash-ts-mode))
+	:custom
+	(sh-basic-offset 2)
+	(sh-indentation  2))
+
+;;====================================================================
+;; C言語
+;;====================================================================
+;; [依存関係]
+;; brew install llvm
+(use-package c-ts-mode
+	:ensure nil
+	:mode (("\\.c\\'" . c-ts-mode)
+				 ("\\.h\\'" . c-ts-mode)))
+
+;;====================================================================
+;; TypeScript / TSX
+;;====================================================================
+;; [依存関係]
+;; npm i -g typescript typescript-language-server
+(use-package typescript-ts-mode
+	:ensure nil
+	:mode "\\.ts\\'")
+
+(use-package tsx-ts-mode
+	:ensure nil
+	:mode "\\.tsx\\'")
 
 ;;====================================================================
 ;; Markdown
