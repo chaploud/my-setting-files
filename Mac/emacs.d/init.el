@@ -28,10 +28,11 @@
 ;; [C/C++] brew install llvm
 ;; [HTML/CSS/JSON] npm i -g vscode-langservers-extracted
 ;; [JavaScript/JSX/TypeScript/TSX] npm i -g typescript typescript-language-server
+;; [Dockerfile] npm i -g dockerfile-language-server-nodejs
+;; [YAML] npm i -g yaml-language-server
+;; [Terraform] brew install terraform-ls
 ;; [Java] brew install jdtls
 ;; [Zig] brew install zls
-;; [Terraform] brew install terraform-ls
-;; [YAML] npm i -g yaml-language-server
 ;; [Vue] brew install vue-language-server
 ;; [Ruby] gem install ruby-lsp ruby-lsp-rails ruby-lsp-rspec rubocop rubocop-rails syntax_tree
 
@@ -795,362 +796,6 @@
 	(persp-modestring-short t))
 
 ;;====================================================================
-;; Tree-sitter
-;;====================================================================
-
-(use-package treesit
-	:ensure nil
-	:custom
-	;; === tree-sitterによる色付けmax
-	(treesit-font-lock-level 4)
-	:config
-	;; === tsモードで扱いたい言語
-	(setq my-treesit-language-list
-				'(clojure
-					bash
-					c
-					cpp
-					html
-					css
-					javascript
-					jsdoc
-					typescript
-					tsx
-					json
-					dockerfile
-					yaml
-					hcl
-					java
-					groovy
-					python
-					ruby
-					rust
-					toml
-					))
-	;; === tsの参照URLを指定(デフォルト以外)
-	(setq treesit-language-source-alist
-				'((clojure "https://github.com/sogaiu/tree-sitter-clojure")
-					(typescript "https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src")
-					(tsx "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src")
-					(dockerfile "https://github.com/camdencheek/tree-sitter-dockerfile")
-					(yaml "https://github.com/ikatyang/tree-sitter-yaml")
-					(hcl "https://github.com/tree-sitter-grammars/tree-sitter-hcl")
-					(groovy "https://github.com/murtaza64/tree-sitter-groovy")
-					(toml "https://github.com/ikatyang/tree-sitter-toml")
-					))
-	;; === 未導入だけ自動インストール
-	(defun my-treesit-install-grammars ()
-		"my-treesit-language-listのうち未導入のgrammarを自動インストールする"
-		(interactive)
-		(dolist (lang my-treesit-language-list)
-			(unless (treesit-language-available-p lang)
-				(condition-case err
-						(progn
-							(message "[treesit] Installing grammar for %s..." lang)
-							(treesit-install-language-grammar lang)
-							(message "[treesit Installed: %s..." lang))
-					(error
-					 (message "[treesit] FAILED %s → %s" lang (error-message-string err)))))))
-
-	(add-hook 'emacs-startup-hook
-						(lambda () (run-with-idle-timer 1 nil #'my-treesit-install-grammars)))
-	)
-
-;;====================================================================
-;; Format On Save設定の集約
-;;====================================================================
-
-;; === Emacs Lisp
-(defun my-format-emacs-lisp ()
-	"Format the current buffer as Emacs Lisp code."
-	(interactive)
-	(save-excursion
-		(indent-region (point-min) (point-max)))
-	(message "[elisp] formatted."))
-
-;; === Clojure
-(defun my-format-clojure ()
-	"Format the current buffer as Clojure code using cljfmt."
-	(interactive)
-	;; プロジェクトルートでのcljfmtの実行
-	;; バッファを消して再度挿入なのでsave-excursionは使えない
-	(when-let* ((cljfmt-path (executable-find "cljfmt"))
-							(project-root-path (project-root (project-current))))
-		(let ((p-current (point))
-					(default-directory project-root-path))
-			(call-process-region (point-min) (point-max) cljfmt-path t t nil "fix" "-" "--quiet")
-			(goto-char p-current)
-			(message "[cljfmt] Formatted."))))
-
-;; === フォーマッタの適用方法をここにまとめる
-;; 左: メジャーモード, 右: 優先順位をつけたフォーマット方法のリスト
-(defvar my-format-rules
-	'((emacs-lisp-mode . (my-format-emacs-lisp))
-		(clojure-ts-mode . (:lsp my-format-clojure))
-		(clojure-ts-clojurescript-mode . (:lsp my-format-clojure))
-		(clojure-ts-clojurec-mode . (:lsp my-format-clojure))
-		(clojure-ts-clojuredart-mode . (:lsp my-format-clojure))
-		))
-
-(defun my-format-try (formatter)
-	"Try to format using FORMATTER."
-	(pcase formatter
-		(:lsp
-		 (when (bound-and-true-p eglot--managed-mode)
-			 (message "[eglot] Formatting via LSP...")
-			 (call-interactively #'eglot-format-buffer)
-			 t))
-
-		((and (pred fboundp) fn)
-		 (funcall fn)
-		 t)
-
-		(_ nil)))
-
-(defun my-format-buffer ()
-	"Format the current buffer based on its major mode."
-	(interactive)
-	(let ((formatters (cdr (assoc major-mode my-format-rules))))
-		(if (not (cl-some #'my-format-try formatters))
-				(message "No suitable formatter found for %s" major-mode))))
-
-(add-hook 'before-save-hook #'my-format-buffer)
-(add-hook 'before-save-hook #'whitespace-cleanup) ;; trailing spacesの削除
-
-;;====================================================================
-;; LSP (eglot)
-;;====================================================================
-
-;; === lsp (eglot)
-(use-package eglot
-	:ensure nil
-	:custom
-	(eglot-events-buffer-config '(:size nil :format full))
-	(eglot-autoshutdown t)
-	(eglot-connect-timeout 120)
-	(eglot-extend-to-xref nil)
-	(eldoc-echo-area-use-multiline-p nil)
-
-	:hook
-	;; LSP自動起動したい場合はここに追加
-	(clojure-ts-mode . eglot-ensure)
-	(bash-ts-mode . eglot-ensure)
-	(c-ts-mode . eglot-ensure)
-	(css-ts-mode . eglot-ensure)
-	(html-ts-mode . eglot-ensure)
-	(js-ts-mode . eglot-ensure)
-	(typescript-ts-mode . eglot-ensure)
-	(tsx-ts-mode . eglot-ensure)
-	(zig-mode . eglot-ensure)
-	(terraform-mode . eglot-ensure)
-
-	:config
-	;; === eglotによるLSP起動
-	(defun my-eglot-start ()
-		"Start eglot for the current buffer if not already started."
-		(interactive)
-		(eglot-ensure)))
-
-;; === スニペット・テンプレート (tempel)
-(use-package tempel
-	:ensure t)
-
-(use-package eglot-tempel
-	:ensure t
-	:init (eglot-tempel-mode t))
-
-;; === 補完ソースの統合・拡張 (cape)
-(use-package cape
-	:ensure t
-	:hook
-	(prog-mode . my-prog-capf)
-	(text-mode . my-text-capf)
-	:config
-	(defun my-prog-capf ()
-		(unless (local-variable-p 'my-prog-capf-configured)
-			(if (bound-and-true-p eglot--managed-mode)
-					(setq-local completion-at-point-functions
-											(cons (cape-capf-super #'eglot-completion-at-point
-																						 #'tempel-expand
-																						 #'cape-file)
-														completion-at-point-functions))
-				(setq-local completion-at-point-functions
-										(cons (cape-capf-super #'tempel-complete
-																					 #'cape-file)
-													completion-at-point-functions))))
-		(setq-local my-prog-capf-configured t))
-
-	(defun my-text-capf ()
-		(unless (local-variable-p 'my-text-capf-configured)
-			(setq-local completion-at-point-functions
-									(cons (cape-capf-super #'tempel-complete
-																				 #'cape-dabbrev
-																				 #'cape-file)
-												completion-at-point-functions)))
-		(setq-local my-text-capf-configured t))
-	)
-
-;;====================================================================
-;; Clojure/ClojureScript/ClojureDart
-;;====================================================================
-;; [依存関係]
-;; brew install --cask temurin21
-;; brew install clojure/tools/clojure
-;; brew install clojure-lsp/brew/clojure-lsp-native
-
-;; === clojure-ts-mode
-;; 従来のclojure-modeではなくclojure-ts-modeで置き換える
-;; (.clj,.cljc,.cljs,.cljd,.edn自動認識)
-(use-package clojure-ts-mode
-	:ensure t
-	:custom
-	(clojure-ts-toplevel-inside-comment-form t)
-	:config
-	;; === clojure-lsp用キャッシュの削除 & 再起動
-	(defun my-clojure-lsp-clear-cache-and-restart ()
-		"Clear clojure-lsp cache and restart the server."
-		(interactive)
-		(call-interactively #'eglot-shutdown)
-		(let* ((root-dir (project-root (project-current)))
-					 (lsp-cache (file-name-concat root-dir ".lsp/.cache"))
-					 (kondo-cache (file-name-concat root-dir ".clj-kondo/.cache")))
-			(when (file-directory-p lsp-cache)
-				(delete-directory lsp-cache t)
-				(message "[%s] Deleted clojure-lsp cache at %s" (my-display-time) lsp-cache))
-			(when (file-directory-p kondo-cache)
-				(delete-directory kondo-cache t)
-				(message "[%s] Deleted clj-kondo cache at %s" (my-display-time) kondo-cache))
-			)
-		(eglot-ensure)))
-
-(use-package cider
-	:ensure t
-	:hook (clojure-ts-mode . cider-mode)
-	:custom
-	(cider-repl-buffer-size-limit 10000)
-	(cider-font-lock-dynamically '(macro core function var deprecated))
-	(cider-repl-pop-to-buffer-on-connect nil)
-	(cider-use-xref nil))
-
-;; 構造的編集 (puni)
-(use-package puni
-	:ensure t
-	:demand t
-	:hook
-	((emacs-lisp-mode . puni-mode)
-	 (lisp-interaction-mode . puni-mode)
-	 (clojure-ts-mode . puni-mode))
-	:config
-	;; === puniでカーソル以降をそのレベルで閉じるまで削除
-	(defun my-puni-kill-to-end ()
-		"Kill to the end of the current sexp."
-		(interactive)
-		(let ((end (save-excursion (puni-end-of-sexp) (point))))
-			(kill-region (point) end)))
-
-	;; === puniでシンボルを""で囲む
-	(defun my-wrap-symbol-with-quotes ()
-		"Surround the current symbol with double quotes."
-		(interactive)
-		(let ((bounds (bounds-of-thing-at-point 'symbol)))
-			(when bounds
-				(save-excursion
-					(goto-char (cdr bounds))
-					(insert "\"")
-					(goto-char (car bounds))
-					(insert "\""))))))
-
-;; Javaライブラリのジャンプ時などに
-(use-package jarchive
-	:ensure t
-	:after eglot
-	:config
-	(jarchive-setup))
-
-;;====================================================================
-;; Shell Script
-;;====================================================================
-;; [依存関係]
-;; npm i -g bash-language-server
-;; brew install shfmt
-
-(use-package sh-script
-	:ensure nil
-	:mode (("\\.\\(sh\\|bash\\)\\'" . bash-ts-mode) ; sh/bash
-				 ("\\.?\\(bashrc\\|bash_profile\\)\\'" . bash-ts-mode) ; bash
-				 ("\\.?zsh\\(rc\\|env\\|profile\\)?\\'" . bash-ts-mode)) ; zsh
-	:interpreter (("sh"   . bash-ts-mode)
-								("bash" . bash-ts-mode)
-								("zsh"  . bash-ts-mode))
-	:custom
-	(sh-basic-offset 2)
-	(sh-indentation  2))
-
-;;====================================================================
-;; C言語
-;;====================================================================
-;; [依存関係]
-;; brew install llvm
-(use-package c-ts-mode
-	:ensure nil
-	:mode (("\\.c\\'" . c-ts-mode)
-				 ("\\.h\\'" . c-ts-mode)))
-
-;;====================================================================
-;; HTML/CSS/JSON
-;;====================================================================
-;; [依存関係]
-;; npm i -g vscode-langservers-extracted
-
-(use-package html-ts-mode
-	:ensure nil
-	:mode "\\.x?html\\'")
-
-(use-package css-ts-mode
-	:ensure nil
-	:mode "\\.css\\'")
-
-(use-package json-ts-mode
-	:ensure nil
-	:mode "\\.json\\'")
-
-;;====================================================================
-;; JavaScript / JSX / TypeScript / TSX
-;;====================================================================
-;; [依存関係]
-;; npm i -g typescript typescript-language-server
-
-(use-package js-ts-mode
-	:ensure nil
-	:mode (("\\.js\\'" . js-ts-mode)
-				 ("\\.cjs\\'" . js-ts-mode)
-				 ("\\.mjs\\'" . js-ts-mode)
-				 ("\\.jsx\\'" . js-ts-mode)))
-
-(use-package typescript-ts-mode
-	:ensure nil
-	:mode "\\.ts\\'")
-
-(use-package tsx-ts-mode
-	:ensure nil
-	:mode "\\.tsx\\'")
-
-;;====================================================================
-;; Markdown
-;;====================================================================
-
-(use-package markdown-mode
-	:ensure t
-	:mode ("\\.md\\'" . gfm-mode)
-	:init
-	(setq markdown-command '("pandoc" "--from=markdown" "--to=html5"))
-
-	:custom
-	(markdown-fontify-code-blocks-natively t)
-	(markdown-indent-on-enter 'indent-and-new-item)
-	(markdown-gfm-use-electric-backquote nil))
-
-;;====================================================================
 ;; GitHub Copilot連携
 ;;====================================================================
 
@@ -1343,26 +988,373 @@
 	)
 
 ;;====================================================================
-;; Dockerコンテナ内開発ワークフロー
+;; Tree-sitter
 ;;====================================================================
 
-(use-package dockerfile-mode
-	:ensure t
-	:mode ("Dockerfile\\'" . dockerfile-mode))
-
-;; === yaml-ts-mode
-;; 初回起動時に`M-x treesit-install-language-grammar`を実行し
-;; languageとして`yaml`, 手動でURL: https://github.com/ikatyang/tree-sitter-yamlを指定(後はデフォルト)
-(use-package yaml-ts-mode
+(use-package treesit
 	:ensure nil
-	:mode ("\\.ya?ml\\'" . yaml-ts-mode))
+	:custom
+	;; === tree-sitterによる色付けmax
+	(treesit-font-lock-level 4)
+	:config
+	;; === tree-sitterの文法をインストールしたいリスト
+	(setq my-treesit-language-list
+				'(clojure
+					bash
+					c
+					cpp
+					html
+					css
+					javascript
+					jsdoc
+					typescript
+					tsx
+					json
+					dockerfile
+					yaml
+					hcl
+					java
+					groovy
+					python
+					ruby
+					rust
+					toml
+					))
+	;; === tsの参照URLを指定(デフォルト以外)
+	(setq treesit-language-source-alist
+				'((clojure "https://github.com/sogaiu/tree-sitter-clojure")
+					(typescript "https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src")
+					(tsx "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src")
+					(dockerfile "https://github.com/camdencheek/tree-sitter-dockerfile")
+					(yaml "https://github.com/ikatyang/tree-sitter-yaml")
+					(hcl "https://github.com/tree-sitter-grammars/tree-sitter-hcl")
+					(groovy "https://github.com/murtaza64/tree-sitter-groovy")
+					(toml "https://github.com/ikatyang/tree-sitter-toml")
+					))
+	;; === 未導入だけ自動インストール
+	(defun my-treesit-install-grammars ()
+		"my-treesit-language-listのうち未導入のgrammarを自動インストールする"
+		(interactive)
+		(dolist (lang my-treesit-language-list)
+			(unless (treesit-language-available-p lang)
+				(condition-case err
+						(progn
+							(message "[treesit] Installing grammar for %s..." lang)
+							(treesit-install-language-grammar lang)
+							(message "[treesit Installed: %s..." lang))
+					(error
+					 (message "[treesit] FAILED %s → %s" lang (error-message-string err)))))))
 
-;; === json-ts-mode
-;; 初回起動時に`M-x treesit-install-language-grammar`を実行し
-;; languageとして`json`, 手動でURL: https://github.com/tree-sitter/tree-sitter-jsonを指定(後はデフォルト)
+	(add-hook 'emacs-startup-hook
+						(lambda () (run-with-idle-timer 1 nil #'my-treesit-install-grammars)))
+	)
+
+;;====================================================================
+;; Format On Save設定の集約
+;;====================================================================
+
+;; === Emacs Lisp
+(defun my-format-emacs-lisp ()
+	"Format the current buffer as Emacs Lisp code."
+	(interactive)
+	(save-excursion
+		(indent-region (point-min) (point-max)))
+	(message "[elisp] formatted."))
+
+;; === Clojure
+(defun my-format-clojure ()
+	"Format the current buffer as Clojure code using cljfmt."
+	(interactive)
+	;; プロジェクトルートでのcljfmtの実行
+	;; バッファを消して再度挿入なのでsave-excursionは使えない
+	(when-let* ((cljfmt-path (executable-find "cljfmt"))
+							(project-root-path (project-root (project-current))))
+		(let ((p-current (point))
+					(default-directory project-root-path))
+			(call-process-region (point-min) (point-max) cljfmt-path t t nil "fix" "-" "--quiet")
+			(goto-char p-current)
+			(message "[cljfmt] Formatted."))))
+
+;; === フォーマッタの適用方法をここにまとめる
+;; 左: メジャーモード, 右: 優先順位をつけたフォーマット方法のリスト
+(defvar my-format-rules
+	'((emacs-lisp-mode . (my-format-emacs-lisp))
+		(clojure-ts-mode . (:lsp my-format-clojure))
+		(clojure-ts-clojurescript-mode . (:lsp my-format-clojure))
+		(clojure-ts-clojurec-mode . (:lsp my-format-clojure))
+		(clojure-ts-clojuredart-mode . (:lsp my-format-clojure))
+		))
+
+(defun my-format-try (formatter)
+	"Try to format using FORMATTER."
+	(pcase formatter
+		(:lsp
+		 (when (bound-and-true-p eglot--managed-mode)
+			 (message "[eglot] Formatting via LSP...")
+			 (call-interactively #'eglot-format-buffer)
+			 t))
+
+		((and (pred fboundp) fn)
+		 (funcall fn)
+		 t)
+
+		(_ nil)))
+
+(defun my-format-buffer ()
+	"Format the current buffer based on its major mode."
+	(interactive)
+	(let ((formatters (cdr (assoc major-mode my-format-rules))))
+		(if (not (cl-some #'my-format-try formatters))
+				(message "No suitable formatter found for %s" major-mode))))
+
+(add-hook 'before-save-hook #'my-format-buffer)
+(add-hook 'before-save-hook #'whitespace-cleanup) ;; trailing spacesの削除
+
+;;====================================================================
+;; LSP (eglot)
+;;====================================================================
+
+;; === lsp (eglot)
+(use-package eglot
+	:ensure nil
+	:custom
+	(eglot-events-buffer-config '(:size nil :format full))
+	(eglot-autoshutdown t)
+	(eglot-connect-timeout 120)
+	(eglot-extend-to-xref nil)
+	(eldoc-echo-area-use-multiline-p nil)
+
+	:hook
+	;; LSP自動起動したい場合はここに追加
+	(clojure-ts-mode . eglot-ensure)
+	(bash-ts-mode . eglot-ensure)
+	(c-ts-mode . eglot-ensure)
+	(css-ts-mode . eglot-ensure)
+	(html-ts-mode . eglot-ensure)
+	(js-ts-mode . eglot-ensure)
+	(typescript-ts-mode . eglot-ensure)
+	(tsx-ts-mode . eglot-ensure)
+	(dockerfile-ts-mode . eglot-ensure)
+	(yaml-ts-mode . eglot-ensure)
+	(terraform-mode . eglot-ensure)
+	(zig-mode . eglot-ensure)
+
+	:config
+	;; === eglotによるLSP起動
+	(defun my-eglot-start ()
+		"Start eglot for the current buffer if not already started."
+		(interactive)
+		(eglot-ensure)))
+
+;; === スニペット・テンプレート (tempel)
+(use-package tempel
+	:ensure t)
+
+(use-package eglot-tempel
+	:ensure t
+	:init (eglot-tempel-mode t))
+
+;; === 補完ソースの統合・拡張 (cape)
+(use-package cape
+	:ensure t
+	:hook
+	(prog-mode . my-prog-capf)
+	(text-mode . my-text-capf)
+	:config
+	(defun my-prog-capf ()
+		(unless (local-variable-p 'my-prog-capf-configured)
+			(if (bound-and-true-p eglot--managed-mode)
+					(setq-local completion-at-point-functions
+											(cons (cape-capf-super #'eglot-completion-at-point
+																						 #'tempel-expand
+																						 #'cape-file)
+														completion-at-point-functions))
+				(setq-local completion-at-point-functions
+										(cons (cape-capf-super #'tempel-complete
+																					 #'cape-file)
+													completion-at-point-functions))))
+		(setq-local my-prog-capf-configured t))
+
+	(defun my-text-capf ()
+		(unless (local-variable-p 'my-text-capf-configured)
+			(setq-local completion-at-point-functions
+									(cons (cape-capf-super #'tempel-complete
+																				 #'cape-dabbrev
+																				 #'cape-file)
+												completion-at-point-functions)))
+		(setq-local my-text-capf-configured t))
+	)
+
+;;====================================================================
+;; Markdown
+;;====================================================================
+
+(use-package markdown-mode
+	:ensure t
+	:mode ("\\.md\\'" . gfm-mode)
+	:init
+	(setq markdown-command '("pandoc" "--from=markdown" "--to=html5"))
+
+	:custom
+	(markdown-fontify-code-blocks-natively t)
+	(markdown-indent-on-enter 'indent-and-new-item)
+	(markdown-gfm-use-electric-backquote nil))
+
+;;====================================================================
+;; Clojure/ClojureScript/ClojureDart
+;;====================================================================
+;; [依存関係]
+;; brew install --cask temurin21
+;; brew install clojure/tools/clojure
+;; brew install clojure-lsp/brew/clojure-lsp-native
+
+;; === clojure-ts-mode
+;; 従来のclojure-modeではなくclojure-ts-modeで置き換える
+;; (.clj,.cljc,.cljs,.cljd,.edn自動認識)
+(use-package clojure-ts-mode
+	:ensure t
+	:custom
+	(clojure-ts-toplevel-inside-comment-form t)
+	:config
+	;; === clojure-lsp用キャッシュの削除 & 再起動
+	(defun my-clojure-lsp-clear-cache-and-restart ()
+		"Clear clojure-lsp cache and restart the server."
+		(interactive)
+		(call-interactively #'eglot-shutdown)
+		(let* ((root-dir (project-root (project-current)))
+					 (lsp-cache (file-name-concat root-dir ".lsp/.cache"))
+					 (kondo-cache (file-name-concat root-dir ".clj-kondo/.cache")))
+			(when (file-directory-p lsp-cache)
+				(delete-directory lsp-cache t)
+				(message "[%s] Deleted clojure-lsp cache at %s" (my-display-time) lsp-cache))
+			(when (file-directory-p kondo-cache)
+				(delete-directory kondo-cache t)
+				(message "[%s] Deleted clj-kondo cache at %s" (my-display-time) kondo-cache))
+			)
+		(eglot-ensure)))
+
+(use-package cider
+	:ensure t
+	:hook (clojure-ts-mode . cider-mode)
+	:custom
+	(cider-repl-buffer-size-limit 10000)
+	(cider-font-lock-dynamically '(macro core function var deprecated))
+	(cider-repl-pop-to-buffer-on-connect nil)
+	(cider-use-xref nil))
+
+;; 構造的編集 (puni)
+(use-package puni
+	:ensure t
+	:demand t
+	:hook
+	((emacs-lisp-mode . puni-mode)
+	 (lisp-interaction-mode . puni-mode)
+	 (clojure-ts-mode . puni-mode))
+	:config
+	;; === puniでカーソル以降をそのレベルで閉じるまで削除
+	(defun my-puni-kill-to-end ()
+		"Kill to the end of the current sexp."
+		(interactive)
+		(let ((end (save-excursion (puni-end-of-sexp) (point))))
+			(kill-region (point) end)))
+
+	;; === puniでシンボルを""で囲む
+	(defun my-wrap-symbol-with-quotes ()
+		"Surround the current symbol with double quotes."
+		(interactive)
+		(let ((bounds (bounds-of-thing-at-point 'symbol)))
+			(when bounds
+				(save-excursion
+					(goto-char (cdr bounds))
+					(insert "\"")
+					(goto-char (car bounds))
+					(insert "\""))))))
+
+;; Javaライブラリのジャンプ時などに
+(use-package jarchive
+	:ensure t
+	:after eglot
+	:config
+	(jarchive-setup))
+
+;;====================================================================
+;; Shell Script
+;;====================================================================
+;; [依存関係]
+;; npm i -g bash-language-server
+;; brew install shfmt
+
+(use-package sh-script
+	:ensure nil
+	:mode (("\\.\\(sh\\|bash\\)\\'" . bash-ts-mode) ; sh/bash
+				 ("\\.?\\(bashrc\\|bash_profile\\)\\'" . bash-ts-mode) ; bash
+				 ("\\.?zsh\\(rc\\|env\\|profile\\)?\\'" . bash-ts-mode)) ; zsh
+	:interpreter (("sh"   . bash-ts-mode)
+								("bash" . bash-ts-mode)
+								("zsh"  . bash-ts-mode))
+	:custom
+	(sh-basic-offset 2)
+	(sh-indentation  2))
+
+;;====================================================================
+;; C言語
+;;====================================================================
+;; [依存関係]
+;; brew install llvm
+(use-package c-ts-mode
+	:ensure nil
+	:mode (("\\.c\\'" . c-ts-mode)
+				 ("\\.h\\'" . c-ts-mode)))
+
+;;====================================================================
+;; HTML/CSS/JSON
+;;====================================================================
+;; [依存関係]
+;; npm i -g vscode-langservers-extracted
+
+(use-package html-ts-mode
+	:ensure nil
+	:mode "\\.x?html\\'")
+
+(use-package css-ts-mode
+	:ensure nil
+	:mode "\\.css\\'")
+
 (use-package json-ts-mode
 	:ensure nil
-	:mode ("\\.json\\'" . json-ts-mode))
+	:mode "\\.json\\'")
+
+;;====================================================================
+;; JavaScript / JSX / TypeScript / TSX
+;;====================================================================
+;; [依存関係]
+;; npm i -g typescript typescript-language-server
+
+(use-package js-ts-mode
+	:ensure nil
+	:mode (("\\.js\\'" . js-ts-mode)
+				 ("\\.cjs\\'" . js-ts-mode)
+				 ("\\.mjs\\'" . js-ts-mode)
+				 ("\\.jsx\\'" . js-ts-mode))
+	:config
+	(js-indent-level 2))
+
+(use-package typescript-ts-mode
+	:ensure nil
+	:mode "\\.ts\\'")
+
+(use-package tsx-ts-mode
+	:ensure nil
+	:mode "\\.tsx\\'")
+
+;;====================================================================
+;; Docker
+;;====================================================================
+
+(use-package dockerfile-ts-mode
+	:ensure nil
+	:mode (("Dockerfile\\'" . dockerfile-ts-mode)
+				 ("\\.dockerfile\\'" . dockerfile-ts-mode)))
 
 (use-package docker
 	:ensure t
@@ -1377,6 +1369,47 @@
 ;; M-x find-fileから/docker:コンテナ名:/path/to/fileで接続すればlspもうまく動作
 ;; コンテナのシェルにアタッチしたときに、C-p, C-nが2回必要な問題は、config.jsonに以下を記載
 ;; { "detachKeys": "ctrl-z,z" }
+
+;;====================================================================
+;; YAML
+;;====================================================================
+
+(use-package yaml-ts-mode
+	:ensure nil
+	:mode ("\\.ya?ml\\'" . yaml-ts-mode))
+
+;;====================================================================
+;; Terraform (.tf)
+;;====================================================================
+
+(use-package terraform-mode
+	:ensure t
+	:mode "\\.tf\\'")
+
+;;====================================================================
+;; Zig
+;;====================================================================
+
+;; brew install zig
+;; brew install zls
+(use-package zig-mode
+	:ensure t
+	:mode "\\.\\(zig\\|zon\\))\\'")
+
+;;====================================================================
+;; Web開発系
+;;====================================================================
+(use-package js
+	:ensure nil
+	:custom
+	(js-indent-level 2))
+
+;;====================================================================
+;; Groovy DSL (.gradle)
+;;====================================================================
+(use-package groovy-mode
+	:ensure t
+	:mode "\\.gradle\\'")
 
 ;;====================================================================
 ;; DB接続
@@ -1409,38 +1442,6 @@
 		(let ((password (shell-command-to-string
 										 (format "op read op://Private/%s/password" name))))
 			(string-trim password))))
-
-;;====================================================================
-;; Zig
-;;====================================================================
-
-;; brew install zig
-;; brew install zls
-(use-package zig-mode
-	:ensure t
-	:mode "\\.\\(zig\\|zon\\))\\'")
-
-;;====================================================================
-;; Web開発系
-;;====================================================================
-(use-package js
-	:ensure nil
-	:custom
-	(js-indent-level 2))
-
-;;====================================================================
-;; Groovy DSL (.gradle)
-;;====================================================================
-(use-package groovy-mode
-	:ensure t
-	:mode "\\.gradle\\'")
-
-;;====================================================================
-;; Terraform (.tf)
-;;====================================================================
-(use-package terraform-mode
-	:ensure t
-	:mode "\\.tf\\'")
 
 ;;====================================================================
 ;; キーバインド (general.el)
