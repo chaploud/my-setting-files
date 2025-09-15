@@ -27,14 +27,16 @@
 ;; [Bash] npm i -g bash-language-server
 ;; [C/C++] brew install llvm
 ;; [HTML/CSS/JSON] npm i -g vscode-langservers-extracted
+;; [Vue] brew install vue-language-server
 ;; [JavaScript/JSX/TypeScript/TSX] npm i -g typescript typescript-language-server
 ;; [Dockerfile] npm i -g dockerfile-language-server-nodejs
 ;; [YAML] npm i -g yaml-language-server
 ;; [Terraform] brew install terraform-ls
 ;; [Java] brew install jdtls
-;; [Zig] brew install zls
-;; [Vue] brew install vue-language-server
+;; [Python] pipx install 'python-lsp-server[all]'
 ;; [Ruby] gem install ruby-lsp ruby-lsp-rails ruby-lsp-rspec rubocop rubocop-rails syntax_tree
+;; [Rust]
+;; [Zig] brew install zls
 
 ;; === 必要フォント
 ;; Source Han Code JP (https://github.com/adobe-fonts/source-han-code-jp)
@@ -707,7 +709,8 @@
 	:hook
 	(vterm-mode . (lambda ()
 									;; Claude Code IDEなどでnbspが青く可視化されるのが気に食わないため
-									(setq-local nobreak-char-display 'nil)))
+									(setq-local nobreak-char-display 'nil)
+									(evil-insert-state)))
 	:bind
 	("C-'" . my-toggle-vterm)
 	(:map vterm-mode-map
@@ -1137,6 +1140,8 @@
 	(dockerfile-ts-mode . eglot-ensure)
 	(yaml-ts-mode . eglot-ensure)
 	(terraform-mode . eglot-ensure)
+	(java-ts-mode . eglot-ensure)
+	(python-ts-mode . eglot-ensure)
 	(zig-mode . eglot-ensure)
 
 	:config
@@ -1350,7 +1355,8 @@
 ;;====================================================================
 ;; Docker
 ;;====================================================================
-
+;; [依存関係]
+;; npm i -g dockerfile-language-server-nodejs
 (use-package dockerfile-ts-mode
 	:ensure nil
 	:mode (("Dockerfile\\'" . dockerfile-ts-mode)
@@ -1373,6 +1379,8 @@
 ;;====================================================================
 ;; YAML
 ;;====================================================================
+;; [依存関係]
+;; npm i -g yaml-language-server
 
 (use-package yaml-ts-mode
 	:ensure nil
@@ -1381,10 +1389,37 @@
 ;;====================================================================
 ;; Terraform (.tf)
 ;;====================================================================
+;; [依存関係]
+;; brew install terraform-ls
 
 (use-package terraform-mode
 	:ensure t
 	:mode "\\.tf\\'")
+
+;;====================================================================
+;; Java
+;;====================================================================
+;; [依存関係]
+;; brew install jdtls
+
+(use-package java-ts-mode
+	:ensure nil
+	:mode "\\.java\\'")
+
+;;====================================================================
+;; Groovy DSL (.gradle)
+;;====================================================================
+(use-package groovy-mode
+	:ensure t
+	:mode "\\.gradle\\'")
+
+;;====================================================================
+;; Python
+;;====================================================================
+(use-package python-ts-mode
+	:ensure nil
+	:mode "\\.py\\'"
+	:interpreter ("python" . python-ts-mode))
 
 ;;====================================================================
 ;; Zig
@@ -1395,21 +1430,6 @@
 (use-package zig-mode
 	:ensure t
 	:mode "\\.\\(zig\\|zon\\))\\'")
-
-;;====================================================================
-;; Web開発系
-;;====================================================================
-(use-package js
-	:ensure nil
-	:custom
-	(js-indent-level 2))
-
-;;====================================================================
-;; Groovy DSL (.gradle)
-;;====================================================================
-(use-package groovy-mode
-	:ensure t
-	:mode "\\.gradle\\'")
 
 ;;====================================================================
 ;; DB接続
@@ -1704,7 +1724,17 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages nil)
+ '(package-selected-packages
+	 '(cape catppuccin-theme cider claude-code-ide clojure-ts-mode
+					colorful-mode copilot copilot-chat corfu dashboard ddskk
+					diff-hl dired-subtree docker dockerfile-mode doom-modeline
+					eglot-tempel embark-consult evil-anzu evil-collection
+					evil-commentary evil-escape evil-goggles evil-numbers
+					evil-surround exec-path-from-shell general groovy-mode
+					groovy-ts-mode helpful hl-todo jarchive magit marginalia
+					nerd-icons-corfu orderless perspective puni
+					rainbow-delimiters terraform-mode ultra-scroll undo-fu
+					undo-fu-session vertico vterm web-mode wgrep zig-mode))
  '(package-vc-selected-packages
 	 '((claude-code-ide :url
 											"https://github.com/manzaltu/claude-code-ide.el")
