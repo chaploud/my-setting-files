@@ -949,37 +949,6 @@
 			(goto-char p-current)
 			(message "[cljfmt] Formatted."))))
 
-
-;;====================================================================
-;; Shell Script
-;;====================================================================
-;; [依存関係]
-;; npm i -g bash-language-server
-;; brew install shfmt
-
-;; (use-package sh-script
-;;	:ensure nil
-;;	:mode (("\\.\\(sh\\|bash\\)\\'" . sh-mode) ; sh/bash
-;;				 ("\\.\\(bashrc\\|bash_profile\\)\\'" . sh-mode) ; bash
-;;				 ("\\.?zsh\\(rc\\|env\\|profile\\)?\\'" . sh-mode)) ; zsh
-;;	:interpreter (("sh"   . sh-mode)
-;;								("bash" . sh-mode)
-;;								("zsh"  . sh-mode))
-;;	:custom
-;;	(sh-basic-offset 2)
-;;	(sh-indentation  2)
-
-;;	:config
-;;	(add-to-list 'eglot-server-programs
-;;							 '((bash-ts-mode) . ("bash-language-server" "start")))
-;;	(defun my-format-bash ()
-;;		(interactive)
-;;		(when (executable-find "shfmt")
-;;			(call-process-region (point-min) (point-max) "shfmt" t t nil "-i" "2" "-bn" "-ci" "-st")
-;;			(message "[shfmt] formatted")))
-;;	(add-to-list 'my-format-rules '(bash-ts-mode . (:lsp my-format-bash)))
-;;	)
-
 ;;====================================================================
 ;; LSP (eglot)
 ;;====================================================================
@@ -1006,16 +975,7 @@
 		(interactive)
 		(eglot-ensure))
 
-	;; eglotのデフォルトのlspではない場合
-	;; Ruby
-	;; (add-to-list 'eglot-server-programs
-	;;						 '((ruby-mode ruby-ts-mode) . ("ruby-lsp")))
-	;; Vue
-	;;(add-to-list 'eglot-server-programs
-	;;						 '((web-mode :language-id "vue")
-	;;							 . ("vue-language-server" "--stdio")))
-
-	;; LSPを自動起動したいモードをここに追記する
+	;; === LSPを自動起動したいモードをここに追記する
 	)
 
 ;; === スニペット・テンプレート (tempel)
@@ -1055,6 +1015,40 @@
 																				 #'cape-file)
 												completion-at-point-functions)))
 		(setq-local my-text-capf-configured t))
+	)
+
+
+;;====================================================================
+;; Shell Script
+;;====================================================================
+;; [依存関係]
+;; npm i -g bash-language-server
+;; brew install shfmt
+
+(use-package sh-script
+	:ensure nil
+	:mode (("\\.\\(sh\\|bash\\)\\'" . bash-ts-mode) ; sh/bash
+				 ("\\.?\\(bashrc\\|bash_profile\\)\\'" . bash-ts-mode) ; bash
+				 ("\\.?zsh\\(rc\\|env\\|profile\\)?\\'" . bash-ts-mode)) ; zsh
+	:interpreter (("sh"   . bash-ts-mode)
+								("bash" . bash-ts-mode)
+								("zsh"  . bash-ts-mode))
+	:custom
+	(sh-basic-offset 2)
+	(sh-indentation  2)
+	:config
+	;; LSP
+	(with-eval-after-load 'eglot
+		(add-to-list 'eglot-server-programs
+								 '((bash-ts-mode sh-mode) . ("bash-language-server" "start"))))
+
+	;; Format
+	(defun my-format-bash ()
+		(interactive)
+		(when (executable-find "shfmt")
+			(call-process-region (point-min) (point-max) "shfmt" t t nil "-i" "2" "-bn" "-ci" "-st")
+			(message "[shfmt] formatted")))
+	(add-to-list 'my-format-rules '(bash-ts-mode . (:lsp my-format-bash)))
 	)
 
 ;;====================================================================
