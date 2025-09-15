@@ -23,16 +23,16 @@
 ;; (09) gls: `brew install coreutils` (diredでのファイル一覧表示に利用)
 
 ;; === LSP用に必要なインストール
-;; (01) [Clojure] `brew install clojure-lsp/brew/clojure-lsp-native`
-;; (02) [Java] `brew install jdtls`
-;; (03) [Zig] `brew install zls`
-;; (04) [Terraform] `brew install terraform-ls`
-;; (05) [TypeScript/React] `npm i -g typescript typescript-language-server`
-;; (06) [HTML/CSS/json] `npm i -g vscode-langservers-extracted`
-;; (07) [YAML] `npm i -g yaml-language-server`
-;; (08) [Bash] `npm i -g bash-language-server && brew install shfmt`
-;; (09) [Vue] `brew install vue-language-server`
-;; (10) [Ruby] `gem install ruby-lsp ruby-lsp-rails ruby-lsp-rspec rubocop rubocop-rails syntax_tree`
+;; [Bash] `npm i -g bash-language-server`
+;; [Clojure] `brew install clojure-lsp/brew/clojure-lsp-native`
+;; [Java] `brew install jdtls`
+;; [Zig] `brew install zls`
+;; [Terraform] `brew install terraform-ls`
+;; [TypeScript/React] `npm i -g typescript typescript-language-server`
+;; [HTML/CSS/json] `npm i -g vscode-langservers-extracted`
+;; [YAML] `npm i -g yaml-language-server`
+;; [Vue] `brew install vue-language-server`
+;; [Ruby] `gem install ruby-lsp ruby-lsp-rails ruby-lsp-rspec rubocop rubocop-rails syntax_tree`
 
 ;; === 必要フォント
 ;; Source Han Code JP (https://github.com/adobe-fonts/source-han-code-jp)
@@ -817,7 +817,6 @@
 					javascript
 					jsdoc
 					json
-					markdown
 					python
 					ruby
 					rust
@@ -840,7 +839,6 @@
 					(javascript "https://github.com/tree-sitter/tree-sitter-javascript") ; jsxを兼ねる
 					(jsdoc "https://github.com/tree-sitter/tree-sitter-jsdoc")
 					(json "https://github.com/tree-sitter/tree-sitter-json")
-					(markdown "https://github.com/ikatyang/tree-sitter-markdown")
 					(python "https://github.com/tree-sitter/tree-sitter-python")
 					(ruby "https://github.com/tree-sitter/tree-sitter-ruby")
 					(rust "https://github.com/tree-sitter/tree-sitter-rust")
@@ -871,7 +869,7 @@
 					(c-mode . c-ts-mode)
 					(clojure-mode . clojure-ts-mode)
 					(css-mode . css-ts-mode)
-					(dockerfile . dockerfile)
+					(dockerfile-mode . dockerfile-ts-mode)
 					(groovy-mode . groovy-ts-mode)
 					(hcl-mode . hcl-ts-mode)
 					(html-mode . html-ts-mode)
@@ -880,14 +878,12 @@
 					(js-jsx-mode . js-ts-mode)
 					(jsdoc-mode . jsdoc-ts-mode)
 					(json-mode . json-ts-mode)
-					(lua-mode . lua-ts-mode)
-					(markdown-mode . markdown-ts-mode)
 					(python-mode . python-ts-mode)
 					(ruby-mode . ruby-ts-mode)
 					(rust-mode . rust-ts-mode)
 					(toml-mode . toml-ts-mode)
-					(tsx-mode . tsx-ts-mode)
-					(typescript-mode . typescript-ts-mode)
+					;; (tsx-mode . tsx-ts-mode)
+					;; (typescript-mode . typescript-ts-mode)
 					(yaml-mode . yaml-ts-mode)
 					))
 	)
@@ -904,11 +900,29 @@
 		(indent-region (point-min) (point-max)))
 	(message "[elisp] formatted."))
 
+;; === Clojure
+(defun my-format-clojure ()
+	"Format the current buffer as Clojure code using cljfmt."
+	(interactive)
+	;; プロジェクトルートでのcljfmtの実行
+	;; バッファを消して再度挿入なのでsave-excursionは使えない
+	(when-let* ((cljfmt-path (executable-find "cljfmt"))
+							(project-root-path (project-root (project-current))))
+		(let ((p-current (point))
+					(default-directory project-root-path))
+			(call-process-region (point-min) (point-max) cljfmt-path t t nil "fix" "-" "--quiet")
+			(goto-char p-current)
+			(message "[cljfmt] Formatted."))))
+
 ;; === フォーマッタの適用方法をここにまとめる
 ;; 左: メジャーモード, 右: 優先順位をつけたフォーマット方法のリスト
 (defvar my-format-rules
 	'((emacs-lisp-mode . (my-format-emacs-lisp))
-		(clojure-ts-mode . (:lsp my-format-clojure)))) ;; TODO: サンプル後で移動
+		(clojure-ts-mode . (:lsp my-format-clojure))
+		(clojure-ts-clojurescript-mode . (:lsp my-format-clojure))
+		(clojure-ts-clojurec-mode . (:lsp my-format-clojure))
+		(clojure-ts-clojuredart-mode . (:lsp my-format-clojure))
+		))
 
 (defun my-format-try (formatter)
 	"Try to format using FORMATTER."
@@ -935,20 +949,6 @@
 (add-hook 'before-save-hook #'my-format-buffer)
 (add-hook 'before-save-hook #'whitespace-cleanup) ;; trailing spacesの削除
 
-;; === Clojure TODO: あとで移動
-(defun my-format-clojure ()
-	"Format the current buffer as Clojure code using cljfmt."
-	(interactive)
-	;; プロジェクトルートでのcljfmtの実行
-	;; バッファを消して再度挿入なのでsave-excursionは使えない
-	(when-let* ((cljfmt-path (executable-find "cljfmt"))
-							(project-root-path (project-root (project-current))))
-		(let ((p-current (point))
-					(default-directory project-root-path))
-			(call-process-region (point-min) (point-max) cljfmt-path t t nil "fix" "-" "--quiet")
-			(goto-char p-current)
-			(message "[cljfmt] Formatted."))))
-
 ;;====================================================================
 ;; LSP (eglot)
 ;;====================================================================
@@ -964,6 +964,8 @@
 	(eldoc-echo-area-use-multiline-p nil)
 
 	:hook
+	;; LSP自動起動したい場合はここに追加
+	(bash-ts-mode . eglot-ensure)
 	(clojure-ts-mode . eglot-ensure)
 	(zig-mode . eglot-ensure)
 	(terraform-mode . eglot-ensure)
@@ -973,10 +975,7 @@
 	(defun my-eglot-start ()
 		"Start eglot for the current buffer if not already started."
 		(interactive)
-		(eglot-ensure))
-
-	;; === LSPを自動起動したいモードをここに追記する
-	)
+		(eglot-ensure)))
 
 ;; === スニペット・テンプレート (tempel)
 (use-package tempel
@@ -1035,21 +1034,7 @@
 								("zsh"  . bash-ts-mode))
 	:custom
 	(sh-basic-offset 2)
-	(sh-indentation  2)
-	:config
-	;; LSP
-	(with-eval-after-load 'eglot
-		(add-to-list 'eglot-server-programs
-								 '((bash-ts-mode sh-mode) . ("bash-language-server" "start"))))
-
-	;; Format
-	(defun my-format-bash ()
-		(interactive)
-		(when (executable-find "shfmt")
-			(call-process-region (point-min) (point-max) "shfmt" t t nil "-i" "2" "-bn" "-ci" "-st")
-			(message "[shfmt] formatted")))
-	(add-to-list 'my-format-rules '(bash-ts-mode . (:lsp my-format-bash)))
-	)
+	(sh-indentation  2))
 
 ;;====================================================================
 ;; Web
