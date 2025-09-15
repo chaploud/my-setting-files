@@ -705,11 +705,11 @@
 	:hook
 	(vterm-mode . (lambda ()
 									;; Claude Code IDEなどでnbspが青く可視化されるのが気に食わないため
-									(setq-local nobreak-char-display 'nil)
-									;; insertモードで起動
-									(evil-insert-state)))
+									(setq-local nobreak-char-display 'nil)))
 	:bind
 	("C-'" . my-toggle-vterm)
+	(:map vterm-mode-map
+				("M-:" . eval-expression))
 	:config
 	;; vterm-toggleパッケージは使わない(claude-code-ideとの兼ね合い)
 	(defun my-toggle-vterm ()
@@ -726,13 +726,18 @@
 			(if (and vterm-window (eq (selected-window) vterm-window))
 					(quit-window)
 				(progn
-					(vterm)
-					;; 現在バッファのプロジェクトが異なるなら、気を利かせてディレクトリ移動する
-					(when (and vterm-dir
-										 (not (string= (file-truename current-project-root)
-																	 (file-truename vterm-dir))))
-						(vterm-send-string (format "cd %s" current-project-root))
-						(vterm-send-return)))))))
+					(let ((default-directory current-project-root))
+						(vterm)
+						(with-current-buffer vterm-buffer)
+						(evil-insert-state)))
+				;; 現在バッファのプロジェクトが異なるなら、気を利かせてディレクトリ移動する
+				(when (and vterm-dir
+									 (not (string= (file-truename current-project-root)
+																 (file-truename vterm-dir))))
+					(vterm-send-string (format "cd %s" current-project-root))
+					(vterm-send-return)
+					(with-current-buffer vterm-buffer
+						(setq-local default-directory current-project-root))))))))
 
 ;;====================================================================
 ;; Git操作 (magit・diff-hl・vc)
@@ -843,8 +848,8 @@
 					(ruby "https://github.com/tree-sitter/tree-sitter-ruby")
 					(rust "https://github.com/tree-sitter/tree-sitter-rust")
 					(toml "https://github.com/ikatyang/tree-sitter-toml")
-					(tsx "https://github.com/tree-sitter/tree-sitter-typescript" "tsx/src")
-					(typescript "https://github.com/tree-sitter/tree-sitter-typescript" "typescript/src")
+					(tsx "https://github.com/tree-sitter/tree-sitter-typescript" "tsx")
+					(typescript "https://github.com/tree-sitter/tree-sitter-typescript" "typescript")
 					(yaml "https://github.com/ikatyang/tree-sitter-yaml")
 					(zig "https://github.com/tree-sitter/zig-tree-sitter")
 					))
