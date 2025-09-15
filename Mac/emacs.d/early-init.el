@@ -12,9 +12,6 @@
 ;; 最初期のGUI設定
 ;;===================================================================
 
-;; === 初期フレームから最大化
-(add-to-list 'default-frame-alist '(fullscreen . maximized))
-
 ;; === 真っ白画面をはさまないようにする
 (add-to-list 'default-frame-alist '(background-color . "#24273a"))
 (add-to-list 'default-frame-alist '(foreground-color . "#cad3f5"))
@@ -52,7 +49,9 @@
 									read-process-output-max (* 4 1024 1024) ; 4MB
 									)
 						(add-hook 'focus-out-hook #'garbage-collect)
-						(run-with-idle-timer 30 t #'garbage-collect)))
+						(run-with-idle-timer 30 t #'garbage-collect)
+						;; 読み込み後、常に画面を最大化する
+						(toggle-frame-maximized)))
 
 ;; === ネイティブコンパイルの警告を抑制する
 (setq native-comp-async-report-warnings-errors 'silent)

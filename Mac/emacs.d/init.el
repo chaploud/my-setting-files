@@ -30,7 +30,7 @@
 ;; (05) [TypeScript/React] `npm i -g typescript typescript-language-server`
 ;; (06) [HTML/CSS/json] `npm i -g vscode-langservers-extracted`
 ;; (07) [YAML] `npm i -g yaml-language-server`
-;; (08) [Bash] `npm i -g bash-language-server`
+;; (08) [Bash] `npm i -g bash-language-server && brew install shfmt`
 ;; (09) [Vue] `brew install vue-language-server`
 ;; (10) [Ruby] `gem install ruby-lsp ruby-lsp-rails ruby-lsp-rspec rubocop rubocop-rails syntax_tree`
 
@@ -737,7 +737,7 @@
 					(vterm-send-string (format "cd %s" current-project-root))
 					(vterm-send-return)
 					(with-current-buffer vterm-buffer
-						(setq-local default-directory current-project-root))))))))
+						(setq-local default-directory current-project-root)))))))
 
 ;;====================================================================
 ;; Git操作 (magit・diff-hl・vc)
@@ -817,16 +817,14 @@
 					javascript
 					jsdoc
 					json
-					lua
 					markdown
 					python
 					ruby
 					rust
 					toml
-					tsx
-					typescript
+					;; tsx
+					;; typescript
 					yaml
-					zig
 					))
 	;; === tsの参照URLを指定
 	(setq treesit-language-source-alist
@@ -839,19 +837,17 @@
 					(hcl "https://github.com/tree-sitter-grammars/tree-sitter-hcl")
 					(html "https://github.com/tree-sitter/tree-sitter-html")
 					(java "https://github.com/tree-sitter/tree-sitter-java")
-					(javascript "https://github.com/tree-sitter/tree-sitter-javascript")
+					(javascript "https://github.com/tree-sitter/tree-sitter-javascript") ; jsxを兼ねる
 					(jsdoc "https://github.com/tree-sitter/tree-sitter-jsdoc")
 					(json "https://github.com/tree-sitter/tree-sitter-json")
-					(lua "https://github.com/tjdevries/tree-sitter-lua")
 					(markdown "https://github.com/ikatyang/tree-sitter-markdown")
 					(python "https://github.com/tree-sitter/tree-sitter-python")
 					(ruby "https://github.com/tree-sitter/tree-sitter-ruby")
 					(rust "https://github.com/tree-sitter/tree-sitter-rust")
 					(toml "https://github.com/ikatyang/tree-sitter-toml")
-					(tsx "https://github.com/tree-sitter/tree-sitter-typescript" "tsx")
-					(typescript "https://github.com/tree-sitter/tree-sitter-typescript" "typescript")
+					;; (tsx "https://github.com/tree-sitter/tree-sitter-typescript" nil "tsx")
+					;; (typescript "https://github.com/tree-sitter/tree-sitter-typescript" nil "typescript")
 					(yaml "https://github.com/ikatyang/tree-sitter-yaml")
-					(zig "https://github.com/tree-sitter/zig-tree-sitter")
 					))
 	;; === 未導入だけ自動インストール
 	(defun my-treesit-install-grammars ()
@@ -880,7 +876,8 @@
 					(hcl-mode . hcl-ts-mode)
 					(html-mode . html-ts-mode)
 					(java-mode . java-ts-mode)
-					(javascript-mode . javascript-ts-mode)
+					(js-mode . js-ts-mode)
+					(js-jsx-mode . js-ts-mode)
 					(jsdoc-mode . jsdoc-ts-mode)
 					(json-mode . json-ts-mode)
 					(lua-mode . lua-ts-mode)
@@ -892,9 +889,96 @@
 					(tsx-mode . tsx-ts-mode)
 					(typescript-mode . typescript-ts-mode)
 					(yaml-mode . yaml-ts-mode)
-					(zig-mode . zig-ts-mode)
 					))
 	)
+
+;;====================================================================
+;; Format On Save設定の集約
+;;====================================================================
+
+;; === Emacs Lisp
+(defun my-format-emacs-lisp ()
+	"Format the current buffer as Emacs Lisp code."
+	(interactive)
+	(save-excursion
+		(indent-region (point-min) (point-max)))
+	(message "[elisp] formatted."))
+
+;; === フォーマッタの適用方法をここにまとめる
+;; 左: メジャーモード, 右: 優先順位をつけたフォーマット方法のリスト
+(defvar my-format-rules
+	'((emacs-lisp-mode . (my-format-emacs-lisp))
+		(clojure-ts-mode . (:lsp my-format-clojure)))) ;; TODO: サンプル後で移動
+
+(defun my-format-try (formatter)
+	"Try to format using FORMATTER."
+	(pcase formatter
+		(:lsp
+		 (when (bound-and-true-p eglot--managed-mode)
+			 (message "[eglot] Formatting via LSP...")
+			 (call-interactively #'eglot-format-buffer)
+			 t))
+
+		((and (pred fboundp) fn)
+		 (funcall fn)
+		 t)
+
+		(_ nil)))
+
+(defun my-format-buffer ()
+	"Format the current buffer based on its major mode."
+	(interactive)
+	(let ((formatters (cdr (assoc major-mode my-format-rules))))
+		(if (not (cl-some #'my-format-try formatters))
+				(message "No suitable formatter found for %s" major-mode))))
+
+(add-hook 'before-save-hook #'my-format-buffer)
+(add-hook 'before-save-hook #'whitespace-cleanup) ;; trailing spacesの削除
+
+;; === Clojure TODO: あとで移動
+(defun my-format-clojure ()
+	"Format the current buffer as Clojure code using cljfmt."
+	(interactive)
+	;; プロジェクトルートでのcljfmtの実行
+	;; バッファを消して再度挿入なのでsave-excursionは使えない
+	(when-let* ((cljfmt-path (executable-find "cljfmt"))
+							(project-root-path (project-root (project-current))))
+		(let ((p-current (point))
+					(default-directory project-root-path))
+			(call-process-region (point-min) (point-max) cljfmt-path t t nil "fix" "-" "--quiet")
+			(goto-char p-current)
+			(message "[cljfmt] Formatted."))))
+
+
+;;====================================================================
+;; Shell Script
+;;====================================================================
+;; [依存関係]
+;; npm i -g bash-language-server
+;; brew install shfmt
+
+;; (use-package sh-script
+;;	:ensure nil
+;;	:mode (("\\.\\(sh\\|bash\\)\\'" . sh-mode) ; sh/bash
+;;				 ("\\.\\(bashrc\\|bash_profile\\)\\'" . sh-mode) ; bash
+;;				 ("\\.?zsh\\(rc\\|env\\|profile\\)?\\'" . sh-mode)) ; zsh
+;;	:interpreter (("sh"   . sh-mode)
+;;								("bash" . sh-mode)
+;;								("zsh"  . sh-mode))
+;;	:custom
+;;	(sh-basic-offset 2)
+;;	(sh-indentation  2)
+
+;;	:config
+;;	(add-to-list 'eglot-server-programs
+;;							 '((bash-ts-mode) . ("bash-language-server" "start")))
+;;	(defun my-format-bash ()
+;;		(interactive)
+;;		(when (executable-find "shfmt")
+;;			(call-process-region (point-min) (point-max) "shfmt" t t nil "-i" "2" "-bn" "-ci" "-st")
+;;			(message "[shfmt] formatted")))
+;;	(add-to-list 'my-format-rules '(bash-ts-mode . (:lsp my-format-bash)))
+;;	)
 
 ;;====================================================================
 ;; LSP (eglot)
@@ -972,23 +1056,6 @@
 												completion-at-point-functions)))
 		(setq-local my-text-capf-configured t))
 	)
-
-
-;;====================================================================
-;; Shell Script
-;;====================================================================
-
-(use-package sh-script
-	:ensure nil
-	:mode (("\\.\\(sh\\|bash\\)\\'" . sh-mode) ; sh/bash
-				 ("\\.\\(bashrc\\|bash_profile\\)\\'" . sh-mode) ; bash
-				 ("\\.?zsh\\(rc\\|env\\|profile\\)?\\'" . sh-mode)) ; zsh
-	:interpreter (("sh"   . sh-mode)
-								("bash" . sh-mode)
-								("zsh"  . sh-mode))
-	:custom
-	(sh-basic-offset 2)
-	(sh-indentation  2))
 
 ;;====================================================================
 ;; Web
@@ -1381,66 +1448,6 @@
 (use-package terraform-mode
 	:ensure t
 	:mode "\\.tf\\'")
-
-;;====================================================================
-;; Format On Save設定の集約
-;;====================================================================
-
-;; === Emacs Lisp
-(defun my-format-emacs-lisp ()
-	"Format the current buffer as Emacs Lisp code."
-	(interactive)
-	(save-excursion
-		(indent-region (point-min) (point-max)))
-	(message "[elisp] formatted."))
-
-;; === Clojure
-(defun my-format-clojure ()
-	"Format the current buffer as Clojure code using cljfmt."
-	(interactive)
-	;; プロジェクトルートでのcljfmtの実行
-	;; バッファを消して再度挿入なのでsave-excursionは使えない
-	(when-let* ((cljfmt-path (executable-find "cljfmt"))
-							(project-root-path (project-root (project-current))))
-		(let ((p-current (point))
-					(default-directory project-root-path))
-			(call-process-region (point-min) (point-max) cljfmt-path t t nil "fix" "-" "--quiet")
-			(goto-char p-current)
-			(message "[cljfmt] Formatted."))))
-
-;; === フォーマッタの適用方法をここにまとめる
-;; 左: メジャーモード, 右: 優先順位をつけたフォーマット方法のリスト
-(defvar my-format-rules
-	'((emacs-lisp-mode . (my-format-emacs-lisp))
-		(clojure-ts-mode . (:lsp my-format-clojure))
-		(clojure-ts-clojurescript-mode . (:lsp my-format-clojure))
-		(clojure-ts-clojurec-mode . (:lsp my-format-clojure))
-		(clojure-ts-clojuredart-mode . (:lsp my-format-clojure))))
-
-(defun my-format-try (formatter)
-	"Try to format using FORMATTER."
-	(pcase formatter
-		(:lsp
-		 (when (bound-and-true-p eglot--managed-mode)
-			 (message "[eglot] Formatting via LSP...")
-			 (call-interactively #'eglot-format-buffer)
-			 t))
-
-		((and (pred fboundp) fn)
-		 (funcall fn)
-		 t)
-
-		(_ nil)))
-
-(defun my-format-buffer ()
-	"Format the current buffer based on its major mode."
-	(interactive)
-	(let ((formatters (cdr (assoc major-mode my-format-rules))))
-		(if (not (cl-some #'my-format-try formatters))
-				(message "No suitable formatter found for %s" major-mode))))
-
-(add-hook 'before-save-hook #'my-format-buffer)
-(add-hook 'before-save-hook #'whitespace-cleanup) ;; trailing spacesの削除
 
 ;;====================================================================
 ;; キーバインド (general.el)
