@@ -35,8 +35,9 @@
 ;; [Java] brew install jdtls
 ;; [Python] pipx install 'python-lsp-server[all]'
 ;; [Ruby] gem install ruby-lsp ruby-lsp-rails ruby-lsp-rspec rubocop rubocop-rails syntax_tree
-;; [Rust]
+;; [Rust] rustupのインストール
 ;; [Zig] brew install zls
+;; [SQL] go install github.com/sqls-server/sqls@latest
 
 ;; === 必要フォント
 ;; Source Han Code JP (https://github.com/adobe-fonts/source-han-code-jp)
@@ -1142,14 +1143,22 @@
 	(terraform-mode . eglot-ensure)
 	(java-ts-mode . eglot-ensure)
 	(python-ts-mode . eglot-ensure)
+	(ruby-ts-mode . eglot-ensure)
+	(rust-ts-mode . eglot-ensure)
 	(zig-mode . eglot-ensure)
+	(sql-mode . eglot-ensure)
 
 	:config
 	;; === eglotによるLSP起動
 	(defun my-eglot-start ()
 		"Start eglot for the current buffer if not already started."
 		(interactive)
-		(eglot-ensure)))
+		(eglot-ensure))
+
+	;; カスタムLSPパス
+	(with-eval-after-load 'eglot
+		(add-to-list 'eglot-server-programs
+								 '(sql-mode . ("sqls")))))
 
 ;; === スニペット・テンプレート (tempel)
 (use-package tempel
@@ -1416,20 +1425,52 @@
 ;;====================================================================
 ;; Python
 ;;====================================================================
+;; [依存関係]
+;; pipx install 'python-lsp-server[all]'
 (use-package python-ts-mode
 	:ensure nil
 	:mode "\\.py\\'"
 	:interpreter ("python" . python-ts-mode))
 
 ;;====================================================================
+;; Ruby
+;;====================================================================
+;; [依存関係]
+;; gem install ruby-lsp ruby-lsp-rails ruby-lsp-rspec rubocop rubocop-rails syntax_tree
+(use-package ruby-ts-mode
+	:ensure nil
+	:mode (("\\.rb\\'" . ruby-ts-mode)
+				 ("\\.rake\\'" . ruby-ts-mode)
+				 ("Rakefile\\'" . ruby-ts-mode)
+				 ("Gemfile\\'" . ruby-ts-mode)))
+
+;;====================================================================
+;; Rust
+;;====================================================================
+;; [依存関係]
+;; rustupのインストール
+(use-package rust-ts-mode
+	:ensure nil
+	:mode "\\.rs\\'")
+
+;;====================================================================
+;; TOML
+;;====================================================================
+(use-package toml-ts-mode
+	:ensure nil
+	:mode "\\.toml\\'")
+
+;;====================================================================
 ;; Zig
 ;;====================================================================
-
+;; [依存関係]
 ;; brew install zig
 ;; brew install zls
+
 (use-package zig-mode
 	:ensure t
-	:mode "\\.\\(zig\\|zon\\))\\'")
+	:mode (("\\.zig\\'" . zig-mode)
+				 ("\\.zon\\'" . zig-mode)))
 
 ;;====================================================================
 ;; DB接続
@@ -1439,24 +1480,20 @@
 	:ensure nil
 	:custom
 	(sql-postgres-login-params nil)
-	(setq sql-connection-alist
-				'((sample-postgres
-					 (sql-product 'postgres)
-					 ;; NOTE: DB設定については適宜変更
-					 (sql-database (concat
-													"postgresql://"
-													"root"
-													":" (my-read-1password "sample_dev_db")
-													"@localhost"
-													":5432"
-													"/sample_dev"
-													)))))
+	(sql-connection-alist
+	 '((eboshigara-dev
+			(sql-product 'postgres)
+			;; NOTE: DB設定については適宜変更
+			(sql-database (concat
+										 "postgresql://"
+										 "root"
+										 ":" (my-read-1password "eboshigara_dev_db")
+										 "@localhost"
+										 ":54320"
+										 "/eboshigara_dev"
+										 )))))
+	:hook (sql-mode . (lambda () (sql-indent-enable)))
 	:config
-	(setq sql-mode-hook
-				`(lambda ()
-					 (sql-indent-enable)
-					 (sql-highlight-postgres-keywords)))
-
 	(defun my-read-1password (name)
 		"1Passwordからパスワードを取得する"
 		(let ((password (shell-command-to-string
@@ -1724,22 +1761,6 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages
-	 '(cape catppuccin-theme cider claude-code-ide clojure-ts-mode
-					colorful-mode copilot copilot-chat corfu dashboard ddskk
-					diff-hl dired-subtree docker dockerfile-mode doom-modeline
-					eglot-tempel embark-consult evil-anzu evil-collection
-					evil-commentary evil-escape evil-goggles evil-numbers
-					evil-surround exec-path-from-shell general groovy-mode
-					groovy-ts-mode helpful hl-todo jarchive magit marginalia
-					nerd-icons-corfu orderless perspective puni
-					rainbow-delimiters terraform-mode ultra-scroll undo-fu
-					undo-fu-session vertico vterm web-mode wgrep zig-mode))
- '(package-vc-selected-packages
-	 '((claude-code-ide :url
-											"https://github.com/manzaltu/claude-code-ide.el")
-		 (copilot :url "https://github.com/copilot-emacs/copilot.el"
-							:branch "main")))
  '(safe-local-variable-directories '("/Users/shota.508/Studist/teachme_eboshigara/")))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.

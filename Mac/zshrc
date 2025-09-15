@@ -80,9 +80,6 @@ else
  compinit
 fi
 
-# === emacs: eatシェルのための設定
-[ -n "$EAT_SHELL_INTEGRATION_DIR" ] && source "$EAT_SHELL_INTEGRATION_DIR/zsh"
-
 export PATH="$HOME/.claude/local:$PATH"
 
 # infra
@@ -93,7 +90,3 @@ alias tf='terraform'
 
 # Ruby
 eval "$(rbenv init - zsh)"
-
-# for Ruby (MySQL)
-PATH="/opt/homebrew/opt/mysql-client@8.4/bin/:$PATH"
-PKG_CONFIG_PATH="/opt/homebrew/opt/mysql-client@8.4/lib/pkgconfig:$PKG_CONFIG_PATH"
