@@ -23,14 +23,14 @@
 ;; [1Password CLI] ([任意] SQLモードの項目でDB接続時のパスワード参照として使っています)
 
 ;; === LSP用に必要なインストール
+;; [Clojure] brew install clojure-lsp/brew/clojure-lsp-native
 ;; [Bash] npm i -g bash-language-server
 ;; [C/C++] brew install llvm
-;; [Clojure] brew install clojure-lsp/brew/clojure-lsp-native
+;; [HTML/CSS/JSON] npm i -g vscode-langservers-extracted
+;; [JavaScript/JSX/TypeScript/TSX] npm i -g typescript typescript-language-server
 ;; [Java] brew install jdtls
 ;; [Zig] brew install zls
 ;; [Terraform] brew install terraform-ls
-;; [TypeScript/React] npm i -g typescript typescript-language-server
-;; [HTML/CSS/json] npm i -g vscode-langservers-extracted
 ;; [YAML] npm i -g yaml-language-server
 ;; [Vue] brew install vue-language-server
 ;; [Ruby] gem install ruby-lsp ruby-lsp-rails ruby-lsp-rspec rubocop rubocop-rails syntax_tree
@@ -809,6 +809,7 @@
 				'(clojure
 					bash
 					c
+					cpp
 					html
 					css
 					javascript
@@ -826,27 +827,15 @@
 					rust
 					toml
 					))
-	;; === tsの参照URLを指定
+	;; === tsの参照URLを指定(デフォルト以外)
 	(setq treesit-language-source-alist
 				'((clojure "https://github.com/sogaiu/tree-sitter-clojure")
-					(bash "https://github.com/tree-sitter/tree-sitter-bash")
-					(c "https://github.com/tree-sitter/tree-sitter-c")
-					(cpp "https://github.com/tree-sitter/tree-sitter-cpp")
-					(html "https://github.com/tree-sitter/tree-sitter-html")
-					(css "https://github.com/tree-sitter/tree-sitter-css")
-					(javascript "https://github.com/tree-sitter/tree-sitter-javascript") ; jsxを兼ねる
-					(jsdoc "https://github.com/tree-sitter/tree-sitter-jsdoc")
 					(typescript "https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src")
 					(tsx "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src")
-					(json "https://github.com/tree-sitter/tree-sitter-json")
 					(dockerfile "https://github.com/camdencheek/tree-sitter-dockerfile")
 					(yaml "https://github.com/ikatyang/tree-sitter-yaml")
 					(hcl "https://github.com/tree-sitter-grammars/tree-sitter-hcl")
-					(java "https://github.com/tree-sitter/tree-sitter-java")
 					(groovy "https://github.com/murtaza64/tree-sitter-groovy")
-					(python "https://github.com/tree-sitter/tree-sitter-python")
-					(ruby "https://github.com/tree-sitter/tree-sitter-ruby")
-					(rust "https://github.com/tree-sitter/tree-sitter-rust")
 					(toml "https://github.com/ikatyang/tree-sitter-toml")
 					))
 	;; === 未導入だけ自動インストール
@@ -1108,10 +1097,36 @@
 				 ("\\.h\\'" . c-ts-mode)))
 
 ;;====================================================================
-;; TypeScript / TSX
+;; HTML/CSS/JSON
+;;====================================================================
+;; [依存関係]
+;; npm i -g vscode-langservers-extracted
+
+(use-package html-ts-mode
+	:ensure nil
+	:mode "\\.x?html\\'")
+
+(use-package css-ts-mode
+	:ensure nil
+	:mode "\\.css\\'")
+
+(use-package json-ts-mode
+	:ensure nil
+	:mode "\\.json\\'")
+
+;;====================================================================
+;; JavaScript / JSX / TypeScript / TSX
 ;;====================================================================
 ;; [依存関係]
 ;; npm i -g typescript typescript-language-server
+
+(use-package js-ts-mode
+	:ensure nil
+	:mode (("\\.js\\'" . js-ts-mode)
+				 ("\\.cjs\\'" . js-ts-mode)
+				 ("\\.mjs\\'" . js-ts-mode)
+				 ("\\.jsx\\'" . js-ts-mode)))
+
 (use-package typescript-ts-mode
 	:ensure nil
 	:mode "\\.ts\\'")
@@ -1144,7 +1159,7 @@
 	:ensure t
 	:vc (:url "https://github.com/copilot-emacs/copilot.el" :rev :newest :branch "main")
 	:hook
-	;; (prog-mode . copilot-mode)
+	(prog-mode . copilot-mode)
 	(copilot-chat-org-prompt-mode . copilot-mode) ; チャット内自体でも有効化
 	:bind
 	(:map copilot-completion-map
