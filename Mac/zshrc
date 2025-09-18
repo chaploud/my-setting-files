@@ -33,13 +33,13 @@ git_rmb() {
  local current_branch=$(git branch --show-current)
  local branches=$(git branch | grep -v "^\*" | sed 's/^[ \t]*//')
  local selected_branch=$(echo "$branches" | fzf \
-	 --prompt="Select branch to remove: " \
-	 --preview="git log --oneline --graph --color=always {}" \
-	 --header="Current branch: $current_branch")
+   --prompt="Select branch to remove: " \
+   --preview="git log --oneline --graph --color=always {}" \
+   --header="Current branch: $current_branch")
 
  if [ -n "$selected_branch" ]; then
-	 git branch -d "$selected_branch"
-	 echo "Removed branch: $selected_branch"
+   git branch -d "$selected_branch"
+   echo "Removed branch: $selected_branch"
  fi
 }
 alias grmb='git_rmb'
@@ -57,9 +57,9 @@ alias myskillup='gf && docker compose down && docker compose up'
 # emacsclient
 e() {
  if emacsclient --eval "t" > /dev/null 2>&1; then
-	 emacsclient -n "$@"
+   emacsclient -n "$@"
  else
-	 emacs "$@" &
+   emacs "$@" &
  fi
 }
 
@@ -72,9 +72,9 @@ local threshold=$((60 * 60 * 24)) # 1日
 if [ -f ~/.zcompdump ]; then
  local updated=$(date -r ~/.zcompdump +%s)
  if [ $((${now} - ${updated})) -gt ${threshold} ]; then
-	 compinit
+   compinit
  else
-	 compinit -C
+   compinit -C
  fi
 else
  compinit
@@ -90,3 +90,6 @@ alias tf='terraform'
 
 # Ruby
 eval "$(rbenv init - zsh)"
+
+# MySQL
+export PATH="/opt/homebrew/opt/mysql@8.4/bin:$PATH"

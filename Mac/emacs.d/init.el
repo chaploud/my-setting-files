@@ -1497,7 +1497,14 @@
                      "@localhost"
                      ":54320"
                      "/eboshigara_dev"
-                     )))))
+                     )))
+     (sql-antipatterns
+      (sql-product 'mysql)
+      (sql-user "root")
+      (sql-password "")
+      (sql-server "localhost")
+      (sql-port 3306)
+      (sql-database "anti_patterns"))))
   :hook (sql-mode . (lambda () (sql-indent-enable)))
   :config
   (defun my-read-1password (name)
