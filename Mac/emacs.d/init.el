@@ -703,7 +703,7 @@
   :ensure t
   :after evil
   :custom
-  (vterm-max-scrollback 10000)
+  (vterm-max-scrollback 100000)
   (vterm-tramp-shells '(("ssh" "/bin/bash")
                         ("scp" "/bin/bash")
                         ("docker" "/bin/bash")))
@@ -1124,7 +1124,7 @@
   :custom
   (eglot-events-buffer-config '(:size nil :format full))
   (eglot-autoshutdown t)
-  (eglot-connect-timeout 120)
+  (eglot-connect-timeout 360)
   (eglot-extend-to-xref nil)
   (eldoc-echo-area-use-multiline-p nil)
 
