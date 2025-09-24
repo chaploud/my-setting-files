@@ -93,3 +93,8 @@ eval "$(rbenv init - zsh)"
 
 # MySQL
 export PATH="/opt/homebrew/opt/mysql@8.4/bin:$PATH"
+
+# docker
+alias dcu='docker compose up'
+alias dcd='docker compose down'
+alias dcdv='docker compose down -v --remove-orphans'

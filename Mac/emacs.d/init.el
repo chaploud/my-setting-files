@@ -883,8 +883,8 @@
       (when (window-live-p base)
         (condition-case _
             (progn
-              ;; 左端ウィンドウの直下に 12 行で割って表示
-              (setq win (split-window base -12 'below))
+              ;; 左端ウィンドウの直下に 15 行で割って表示
+              (setq win (split-window base -15 'below))
               (set-window-buffer win buffer))
           (error
            ;; 何かで split に失敗しても、とにかく表示はする
