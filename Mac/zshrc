@@ -98,3 +98,6 @@ export PATH="/opt/homebrew/opt/mysql@8.4/bin:$PATH"
 alias dcu='docker compose up'
 alias dcd='docker compose down'
 alias dcdv='docker compose down -v --remove-orphans'
+
+# codex-acp
+export PATH="$HOME/Install/codex-acp/target/release:$PATH"

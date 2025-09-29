@@ -118,6 +118,37 @@
         (message "Copied: %s" relpath))
     (user-error "Not visiting a file in a project.")))
 
+;; === バッファやプロセスを全て終了させるが、Emacs自体は終了させない
+(defun my-reset-session ()
+  "Close all buffers and kill all processes, but do not exit Emacs."
+  (interactive)
+  (let ((kill-buffer-query-functions nil))
+    ;; perspective.elで、mainだけ残す
+    (when (fboundp 'persp-switch)
+      (ignore-errors (persp-switch "main"))
+      (when (fboundp 'persp-names)
+        (dolist (name (persp-names))
+          (unless (string= name "main")
+            (ignore-errors (persp-kill name))))))
+    ;; プロセス全部kill
+    (dolist (p (process-list))
+      (ignore-errors (delete-process p)))
+
+    ;; バッファ全部kill
+    (dolist (b (buffer-list))
+      (when (buffer-live-p b)
+        (with-current-buffer b (set-buffer-modified-p nil))
+        (ignore-errors (kill-buffer b))))
+
+    ;; 1ウィンドウ化 & ダッシュボード表示
+    (delete-other-windows)
+    (if (fboundp 'dashboard-open)
+        (dashboard-open)
+      (switch-to-buffer (get-buffer-create "*scratch*"))
+      (erase-buffer)
+      (funcall initial-major-mode))
+    ))
+
 ;;===== TIPS / Rules of use-package ==================================
 ;; :ensure 組み込みパッケージにはnil, 外部パッケージにはtを指定
 ;; :vc GitHubやCodebergなどから直接インストールする場合に利用
@@ -205,7 +236,7 @@
   ;; NOTE: elpa/, eln-cache/, tree-sitter/ はあえて除外している
   (defconst my-cache (expand-file-name "~/.cache/emacs/"))
   (dolist (d '("" "backups" "auto-saves" "auto-save-list" "undo-fu-session" "transient"
-               "copilot" "copilot-chat"))
+               "copilot"))
     (make-directory (concat my-cache d "/") t))
   (setopt backup-directory-alist `(("." . ,(concat my-cache "backups/"))))
   (setopt auto-save-file-name-transforms `((".*" ,(concat my-cache "auto-saves/") t)))
@@ -220,9 +251,7 @@
   (setopt transient-levels-file (concat my-cache "transient/levels.el"))
   (setopt transient-values-file (concat my-cache "transient/values.el"))
   (setopt project-list-file (concat my-cache "projects"))
-  (setopt copilot-install-dir (concat my-cache "copilot/"))
-  (setopt copilot-chat-default-save-dir (concat my-cache "copilot-chat/"))
-  )
+  (setopt copilot-install-dir (concat my-cache "copilot/")))
 
 (use-package server
   :ensure nil
@@ -809,7 +838,6 @@
   :vc (:url "https://github.com/copilot-emacs/copilot.el" :rev :newest :branch "main")
   :hook
   (prog-mode . copilot-mode)
-  (copilot-chat-org-prompt-mode . copilot-mode) ; チャット内自体でも有効化
   :bind
   (:map copilot-completion-map
         ("C-<tab>" . copilot-accept-completion))
@@ -821,9 +849,6 @@
   (add-to-list 'copilot-indentation-alist '(org-mode  2))
   (add-to-list 'copilot-indentation-alist '(text-mode  2))
   (add-to-list 'copilot-indentation-alist '(emacs-lisp-mode  2)))
-
-(use-package copilot-chat
-  :ensure t)
 
 ;;====================================================================
 ;; Claude Code IDE
@@ -992,6 +1017,27 @@
   )
 
 ;;====================================================================
+;; Codex (agent-shell)
+;;====================================================================
+;; npm i -g @openai/codex
+;; https://github.com/cola-io/codex-acpのビルド(cargo)
+
+(use-package shell-maker
+  :vc (:url "https://github.com/xenodium/shell-maker"))
+
+(use-package acp
+  :vc (:url "https://github.com/xenodium/acp.el"))
+
+(use-package agent-shell
+  :vc (:url "https://github.com/xenodium/agent-shell")
+  :config
+  (setq agent-shell-openai-authentication
+        (agent-shell-openai-make-authentication
+         :api-key
+         (lambda ()
+           (my-read-1password "my-codex")))))
+
+;;====================================================================
 ;; Tree-sitter
 ;;====================================================================
 
@@ -1045,7 +1091,7 @@
             (progn
               (message "[treesit] Installing grammar for %s..." lang)
               (treesit-install-language-grammar lang)
-              (message "[treesit Installed: %s..." lang))
+              (message "[treesit] Installed: %s..." lang))
           (error
            (message "[treesit] FAILED %s → %s" lang (error-message-string err)))))))
 
@@ -1071,13 +1117,17 @@
   (interactive)
   ;; プロジェクトルートでのcljfmtの実行
   ;; バッファを消して再度挿入なのでsave-excursionは使えない
-  (when-let* ((cljfmt-path (executable-find "cljfmt"))
-              (project-root-path (project-root (project-current))))
-    (let ((p-current (point))
-          (default-directory project-root-path))
-      (call-process-region (point-min) (point-max) cljfmt-path t t nil "fix" "-" "--quiet")
-      (goto-char p-current)
-      (message "[cljfmt] Formatted."))))
+  (if-let* ((cljfmt-path (executable-find "cljfmt"))
+            (proj (project-current))
+            (project-root-path (project-root proj)))
+      (let ((p-current (point))
+            (default-directory project-root-path))
+        (call-process-region (point-min) (point-max)
+                             cljfmt-path t t nil "fix" "-" "--quiet")
+        (goto-char p-current)
+        (message "[cljfmt] Formatted."))
+    (message "[cljfmt] skipped (formatter or project not available).")
+    ))
 
 ;; === フォーマッタの適用方法をここにまとめる
 ;; 左: メジャーモード, 右: 優先順位をつけたフォーマット方法のリスト
@@ -1487,7 +1537,8 @@
   :custom
   (sql-postgres-login-params nil)
   (sql-connection-alist
-   '((eboshigara-dev
+   '(;; マイスキル
+     (eboshigara-dev
       (sql-product 'postgres)
       ;; NOTE: DB設定については適宜変更
       (sql-database (concat
@@ -1498,6 +1549,7 @@
                      ":54320"
                      "/eboshigara_dev"
                      )))
+     ;; SQLアンチパターン
      (sql-antipatterns
       (sql-product 'mysql)
       (sql-user "root")
@@ -1561,6 +1613,7 @@
     "q" '(:ignore t :wk "Quit")
     "q q" '(save-buffers-kill-terminal :wk "quit")
     "q r" '(restart-emacs :wk "restart")
+    "q b" '(my-reset-session :wk "reset session")
 
     ;; (f) ファイル操作
     "f" '(:ignore t :wk "Files")
@@ -1615,7 +1668,6 @@
 
     ;; (a) 生成AI系
     "a" '(:ignore t :wk "AI")
-    "a p" '(copilot-chat :wk "Copilot chat") ; 補完はM-/でサジェスト
     ;; Claude Code IDE (M-RET: 改行, C-ESC: エスケープ)
     "a m" '(claude-code-ide-menu :wk "Claude menu")
     "a a" '(my-claude-code-ide-with-scratch  :wk "Claude start")
@@ -1631,6 +1683,8 @@
     "a c" '(claude-code-ide-continue :wk "Claude continue")
     "a r" '(claude-code-ide-resume :wk "Claude resume")
     "a l" '(claude-code-ide-list-sessions :wk "Claude list sessions")
+    ;; Codex (agent-shell)
+    "a x" '(agent-shell-openai-start-codex :wk "Codex")
 
     ;; (l) LSP (eglot) 操作
     "l" '(:ignore t :wk "LSP")
@@ -1756,10 +1810,7 @@
   ;; === isearch(C-sまたは/)中に単語削除はM-eの後にC-DELを押すしかない
   ;; 基本はC-hで納得しよう
 
-  ;; === Copilot Chatでshift+enterで送信
-  (general-define-key
-   :keymaps 'copilot-chat-org-prompt-mode-map
-   "S-<return>" 'copilot-chat-prompt-send))
+  )
 
 ;;====================================================================
 ;; 設定・色の細かいカスタマイズ
@@ -1774,6 +1825,10 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(package-selected-packages nil)
+ '(package-vc-selected-packages
+   '((agent-shell :url "https://github.com/xenodium/agent-shell")
+     (acp :url "https://github.com/xenodium/acp.el")))
  '(safe-local-variable-directories '("/Users/shota.508/Studist/teachme_eboshigara/")))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
