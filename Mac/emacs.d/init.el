@@ -175,6 +175,17 @@
   (exec-path-from-shell-initialize))
 
 ;;====================================================================
+;; パスワード連携
+;;====================================================================
+;; brew install pass
+;; brew install gpg
+;; gpg設定やpass insertなど必要
+(use-package auth-source
+  :ensure nil
+  :config
+  (auth-source-pass-enable))
+
+;;====================================================================
 ;; Emacs標準機能の設定
 ;;====================================================================
 
@@ -1035,7 +1046,7 @@
         (agent-shell-openai-make-authentication
          :api-key
          (lambda ()
-           (my-read-1password "my-codex")))))
+           (auth-source-pass-get 'secret "openai-api-key")))))
 
 ;;====================================================================
 ;; Tree-sitter
@@ -1544,7 +1555,7 @@
       (sql-database (concat
                      "postgresql://"
                      "root"
-                     ":" (my-read-1password "eboshigara_dev_db")
+                     ":" (auth-source-pass-get 'secret "eboshigara_dev_db")
                      "@localhost"
                      ":54320"
                      "/eboshigara_dev"
