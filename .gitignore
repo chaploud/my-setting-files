@@ -10,3 +10,4 @@ lazy-lock.json
 .DS_Store
 ielm-history.eld
 bookmarks
+.claude/

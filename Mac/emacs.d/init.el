@@ -783,7 +783,18 @@
           (vterm-send-string (format "cd %s" current-project-root))
           (vterm-send-return)
           (with-current-buffer vterm-buffer
-            (setq-local default-directory current-project-root)))))))
+            (setq-local default-directory current-project-root))))))
+
+  (defun my-cd-on-vterm ()
+    "Change directory of vterm to the current buffer's parent directory."
+    (interactive)
+    (let ((dir (if buffer-file-name
+                   (file-name-directory buffer-file-name)
+                 default-directory)))
+      (with-current-buffer (get-buffer "*vterm*")
+        (vterm-send-string (format "cd %s" dir))
+        (vterm-send-return))))
+  )
 
 ;;====================================================================
 ;; Git操作 (magit・diff-hl・vc)
@@ -1619,6 +1630,10 @@
     "t l" '(toggle-truncate-lines :wk "truncate line")
     "t f" '(flymake-mode :wk "toggle flymake")
     "t c" '(copilot-mode :wk "toggle copilot")
+
+    ;; (c) change系
+    "c" '(:ignore t :wk "Change")
+    "c d" '(my-cd-on-vterm :wk "cd on vterm")
 
     ;; (q) 終了操作
     "q" '(:ignore t :wk "Quit")
