@@ -101,3 +101,6 @@ alias dcdv='docker compose down -v --remove-orphans'
 
 # codex-acp
 export PATH="$HOME/Install/codex-acp/target/release:$PATH"
+
+# homebrewのbin優先
+export PATH="/opt/homebrew/bin/:$PATH"

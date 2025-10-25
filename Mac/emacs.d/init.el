@@ -647,7 +647,16 @@
                            "--glob=!*.lock"
                            "--glob=!*.log")))
     (setq consult-ripgrep-args
-          (concat consult-ripgrep-args " " (string-join additional-args " ")))))
+          (concat consult-ripgrep-args " " (string-join additional-args " "))))
+  )
+
+(defun my-consult-ripgrep-current-dir ()
+  "Search in the current buffer's directory (or `default-directory') using consult-ripgrep."
+  (interactive)
+  (let ((dir (or (and (buffer-file-name)
+                      (file-name-directory (buffer-file-name)))
+                 default-directory)))
+    (consult-ripgrep dir)))
 
 ;; === 補完候補を垂直に表示するUI (vertico)
 (use-package vertico
@@ -805,6 +814,7 @@
   :ensure t
   :custom
   (magit-diff-refine-hunk 'all)
+  (magit-blame-echo-style 'headings)
   :config
   ;; NOTE 差分表示の色合いをカタムするために複雑なことをしているが、しなくてもいい
   ;; magit-diff-visit-fileは別ウィンドウで開く
@@ -825,7 +835,16 @@
             (call-interactively #'vc-diff)))
       (apply orig-fun args)))
 
-  (advice-add 'magit-diff-dwim :around #'my-magit-diff-dwim-with-vc-diff))
+  (advice-add 'magit-diff-dwim :around #'my-magit-diff-dwim-with-vc-diff)
+
+  ;; magit-blame-echoをトグルする
+  (defun my-magit-blame-echo-toggle ()
+    "Toggle `magit-blame-echo'."
+    (interactive)
+    (if (bound-and-true-p magit-blame-mode)
+        (magit-blame-quit)
+      (call-interactively 'magit-blame-echo)))
+  )
 
 ;; === フリンジに差分を強調表示 (diff-hl)
 (use-package diff-hl
@@ -858,7 +877,7 @@
 (use-package copilot
   :ensure t
   :vc (:url "https://github.com/copilot-emacs/copilot.el" :rev :newest :branch "main")
-  :hook
+  ;; :hook
   (prog-mode . copilot-mode)
   :bind
   (:map copilot-completion-map
@@ -1330,7 +1349,14 @@
   (cider-repl-buffer-size-limit 10000)
   (cider-font-lock-dynamically '(macro core function var deprecated))
   (cider-repl-pop-to-buffer-on-connect nil)
-  (cider-use-xref nil))
+  (cider-use-xref nil)
+
+  :config
+  (defun my-cider-send-reload ()
+    "Send (reload) to REPL"
+    (interactive)
+    (when (cider-connected-p)
+      (cider-interactive-eval "(user/reload)"))))
 
 ;; 構造的編集 (puni)
 (use-package puni
@@ -1664,6 +1690,7 @@
     "s" '(:ignore t :wk "Search")
     "s s" '(consult-line :wk "search in buffer")
     "s p" '(consult-ripgrep :wk "search in project")
+    "s d" '(my-consult-ripgrep-current-dir :wk "search in directory")
     "s f" '(consult-flymake :wk "search flymake")
 
     ;; (p) プロジェクト管理
@@ -1685,6 +1712,7 @@
     "g s" '(magit-status-quick :wk "git status")
     "g l" '(magit-log-current :wk "git log")
     "g d" '(vc-diff :wk "git diff")
+    "g b" '(my-magit-blame-echo-toggle :wk "git blame")
 
     ;; (d) 差分/デバッグ/Docker/DB
     "d" '(:ignore t :wk "Diff/Debug/Docker/DB")
@@ -1795,7 +1823,8 @@
     "n" '(:ignore t :wk "Namespace")
     "n r" '(cider-ns-refresh :wk "cider ns refresh")
     "n s" '(cider-repl-set-ns :wk "cider ns set")
-    "t" '(cider-switch-to-repl-buffer :wk "cider switch to repl"))
+    "t" '(cider-switch-to-repl-buffer :wk "cider switch to repl")
+    "R" '(my-cider-send-reload :wk "send (reload) to repl"))
 
   ;; === Emacs Lisp (,)
   (my-local-leader-def
