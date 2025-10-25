@@ -780,11 +780,10 @@
                           default-directory))))
       (if (and vterm-window (eq (selected-window) vterm-window))
           (quit-window)
-        (progn
-          (let ((default-directory current-project-root))
-            (vterm)
-            (with-current-buffer vterm-buffer)
-            (evil-insert-state)))
+        (let* ((default-directory current-project-root)
+               (vterm-buf (vterm)))
+          (with-current-buffer vterm-buf)
+          (evil-insert-state))
         ;; 現在バッファのプロジェクトが異なるなら、気を利かせてディレクトリ移動する
         (when (and vterm-dir
                    (not (string= (file-truename current-project-root)
