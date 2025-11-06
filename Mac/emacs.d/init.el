@@ -876,7 +876,7 @@
 (use-package copilot
   :ensure t
   :vc (:url "https://github.com/copilot-emacs/copilot.el" :rev :newest :branch "main")
-  ;; :hook
+  :hook
   (prog-mode . copilot-mode)
   :bind
   (:map copilot-completion-map
@@ -1437,7 +1437,8 @@
 
 (use-package json-ts-mode
   :ensure nil
-  :mode "\\.json\\'")
+  :mode (("\\.json\\'" . json-ts-mode)
+         ("\\.arb\\'" . json-ts-mode)))
 
 ;;====================================================================
 ;; JavaScript / JSX / TypeScript / TSX
@@ -1787,7 +1788,9 @@
     "w \"" '(my-wrap-symbol-with-quotes :wk "wrap \"\"")
     "d" '(:ignore t :wk "delete")
     "d w" '(puni-splice :wk "delete wrap")
-    "k" '(my-puni-kill-to-end :wk "kill to sexp end")
+    "k" '(:ignoret :wk "kill")
+    "k l" '(puni-kill-line :wk "kill line")
+    "k e" '(my-puni-kill-to-end :wk "kill to sexp end")
     "h" '(eldoc :wk "eldoc")
     )
 
@@ -1879,11 +1882,29 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages nil)
+ '(package-selected-packages
+   '(acp agent-shell cape catppuccin-theme cider claude-code-ide
+         clojure-ts-mode colorful-mode copilot copilot-chat corfu
+         dashboard ddskk diff-hl dired-subtree docker dockerfile-mode
+         doom-modeline eglot-tempel embark-consult evil-anzu
+         evil-collection evil-commentary evil-escape evil-goggles
+         evil-numbers evil-surround exec-path-from-shell general
+         groovy-mode helpful hl-todo jarchive magit marginalia
+         nerd-icons-corfu orderless perspective puni
+         rainbow-delimiters sql-indent terraform-mode ultra-scroll
+         undo-fu undo-fu-session vertico vterm web-mode wgrep zig-mode))
  '(package-vc-selected-packages
    '((agent-shell :url "https://github.com/xenodium/agent-shell")
      (acp :url "https://github.com/xenodium/acp.el")))
- '(safe-local-variable-directories '("/Users/shota.508/Studist/teachme_eboshigara/")))
+ '(safe-local-variable-directories
+   '("/Users/shota.508/Documents/MyProducts/pollaroid/"
+     "/Users/shota.508/Studist/teachme_eboshigara/"))
+ '(safe-local-variable-values
+   '((cider-path-translations
+      ("/usr/local/eboshigara" . "~/Studist/teachme_eboshigara")
+      ("/root/.m2" . "~/.m2"))
+     (cider-connect-default-cljs-params :host "localhost" :port 9631)
+     (cider-connect-default-params :host "localhost" :port 42004))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

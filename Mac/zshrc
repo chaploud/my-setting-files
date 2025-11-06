@@ -1,3 +1,5 @@
+# ========== 開発一般 ==========
+
 # ctrl+wを/まで削除の挙動に
 WORDCHARS=${WORDCHARS//\//}
 
@@ -8,9 +10,8 @@ alias sl="ls"
 alias s="ls"
 alias l="ls"
 
-# chpwd() {
-#	 ls -a
-# }
+# プロジェクトルートにcdする
+alias cdr='cd $(git rev-parse --show-toplevel 2>/dev/null) || pwd'
 
 # grep
 alias grep='grep --color=auto'
@@ -44,15 +45,35 @@ git_rmb() {
 }
 alias grmb='git_rmb'
 
-# === Starship
-eval "$(starship init zsh)"
+# gb: git checkout branch with fzf
+git_checkout_fzf() {
+  # remote 含め全ブランチ一覧を取得
+  local branches=$(git branch -a --color=never | sed 's/^..//' | sort | uniq)
+  local selected_branch=$(echo "$branches" | fzf \
+    --prompt="Select branch to checkout: " \
+    --preview="git log --oneline --graph --color=always {} | head -30" \
+    --header="Current branch: $(git branch --show-current)" \
+    --height=80%)
 
-# teachme_web_duvelのteachme_webコンテナ起動がうまく行かないときのためのDBリセット
-alias tmbresetdb='docker compose exec teachme_web bundle exec rails db:reset_with_initial_data'
-alias tmbup='gf && docker compose down && docker compose up'
+  if [ -n "$selected_branch" ]; then
+    # remote ブランチの場合の対応（例: remotes/origin/foo → foo）
+    local branch_name=$(echo "$selected_branch" | sed 's#remotes/[^/]*/##')
+    git checkout "$branch_name"
+  fi
+}
+alias gb='git_checkout_fzf'
 
-# teachme_eboshigara
-alias myskillup='gf && docker compose down && docker compose up'
+# 補完の設定
+autoload -Uz compinit
+typeset -gA _compdump
+_compdump[path]="${ZDOTDIR:-$HOME}/.zcompdump-${HOST}"
+
+if [[ -r "${_compdump[path]}.zwc" && "${_compdump[path]}.zwc" -nt "${_compdump[path]}" ]]; then
+  compinit -C -d "${_compdump[path]}"
+else
+  compinit -i -d "${_compdump[path]}"
+  command zcompile -R -- "${_compdump[path]}.zwc" "${_compdump[path]}" 2>/dev/null
+fi
 
 # emacsclient
 e() {
@@ -63,44 +84,43 @@ e() {
  fi
 }
 
-# === 補完候補の読み込み
-autoload -Uz compinit
-# キャッシュ戦略
-local now=$(date +%s)
-local threshold=$((60 * 60 * 24)) # 1日
+# ========== 開発ソフトウェア・ツール ==========
 
-if [ -f ~/.zcompdump ]; then
- local updated=$(date -r ~/.zcompdump +%s)
- if [ $((${now} - ${updated})) -gt ${threshold} ]; then
-   compinit
- else
-   compinit -C
- fi
-else
- compinit
-fi
-
-export PATH="$HOME/.claude/local:$PATH"
-
-# infra
-eval "$(direnv hook zsh)"
-
-# Terraform
-alias tf='terraform'
-
-# Ruby
-eval "$(rbenv init - zsh)"
-
-# MySQL
-export PATH="/opt/homebrew/opt/mysql@8.4/bin:$PATH"
+# homebrewのbin優先
+export PATH="/opt/homebrew/bin/:$PATH"
 
 # docker
 alias dcu='docker compose up'
 alias dcd='docker compose down'
 alias dcdv='docker compose down -v --remove-orphans'
 
+# direnv
+eval "$(direnv hook zsh)"
+
+# Terraform
+alias tf='terraform'
+
+# Claude Code
+export PATH="$HOME/.claude/local:$PATH"
+
 # codex-acp
 export PATH="$HOME/Install/codex-acp/target/release:$PATH"
 
-# homebrewのbin優先
-export PATH="/opt/homebrew/bin/:$PATH"
+# MySQL
+export PATH="/opt/homebrew/opt/mysql@8.4/bin:$PATH"
+
+# Ruby
+eval "$(rbenv init - zsh)"
+
+# Android Studio
+# adbなど
+export PATH="$HOME/Library/Android/sdk/platform-tools:$PATH"
+
+# ========== 会社 ==========
+
+# teachme_web_duvelのteachme_webコンテナ起動がうまく行かないときのためのDBリセット
+alias tmresetdb='docker compose exec teachme_web bundle exec rails db:reset_with_initial_data'
+alias tmup='gf && docker compose down && docker compose up'
+
+# teachme_eboshigara
+alias mup='gf && docker compose down && docker compose up'
