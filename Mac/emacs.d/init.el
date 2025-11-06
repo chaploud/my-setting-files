@@ -558,13 +558,6 @@
   (evil-goggles-enable-delete nil)
   (evil-goggles-enable-change nil))
 
-;; === 検索ヒット件数を表示
-(use-package evil-anzu
-  :ensure t
-  :after evil
-  :custom
-  (global-anzu-mode t))
-
 ;; === コメントアウト
 (use-package evil-commentary
   :ensure t
@@ -1060,37 +1053,39 @@
   :config
   ;; === tree-sitterの文法をインストールしたいリスト
   (setq my-treesit-language-list
-        '(clojure
+        '(
           bash
           c
+          clojure
           cpp
-          html
           css
+          dockerfile
+          groovy
+          hcl
+          html
+          java
           javascript
           jsdoc
-          typescript
-          tsx
           json
-          dockerfile
-          yaml
-          hcl
-          java
-          groovy
           python
           ruby
           rust
           toml
+          tsx
+          typescript
+          yaml
           ))
   ;; === tsの参照URLを指定(デフォルト以外)
   (setq treesit-language-source-alist
-        '((clojure "https://github.com/sogaiu/tree-sitter-clojure")
-          (typescript "https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src")
-          (tsx "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src")
+        '(
+          (clojure "https://github.com/sogaiu/tree-sitter-clojure")
           (dockerfile "https://github.com/camdencheek/tree-sitter-dockerfile")
-          (yaml "https://github.com/ikatyang/tree-sitter-yaml")
-          (hcl "https://github.com/tree-sitter-grammars/tree-sitter-hcl")
           (groovy "https://github.com/murtaza64/tree-sitter-groovy")
+          (hcl "https://github.com/tree-sitter-grammars/tree-sitter-hcl")
           (toml "https://github.com/ikatyang/tree-sitter-toml")
+          (tsx "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src")
+          (typescript "https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src")
+          (yaml "https://github.com/ikatyang/tree-sitter-yaml")
           ))
   ;; === 未導入だけ自動インストール
   (defun my-treesit-install-grammars ()
@@ -1147,8 +1142,7 @@
     (clojure-ts-mode . (:lsp my-format-clojure))
     (clojure-ts-clojurescript-mode . (:lsp my-format-clojure))
     (clojure-ts-clojurec-mode . (:lsp my-format-clojure))
-    (clojure-ts-clojuredart-mode . (:lsp my-format-clojure))
-    ))
+    (clojure-ts-clojuredart-mode . (:lsp my-format-clojure))))
 
 (defun my-format-try (formatter)
   "Try to format using FORMATTER."
@@ -1195,23 +1189,24 @@
 
   :hook
   ;; LSP自動起動したい場合はここに追加
-  (clojure-ts-mode . eglot-ensure)
   (bash-ts-mode . eglot-ensure)
   (c-ts-mode . eglot-ensure)
+  (clojure-ts-mode . eglot-ensure)
   (css-ts-mode . eglot-ensure)
-  (html-ts-mode . eglot-ensure)
-  (js-ts-mode . eglot-ensure)
-  (typescript-ts-mode . eglot-ensure)
-  (tsx-ts-mode . eglot-ensure)
   (dockerfile-ts-mode . eglot-ensure)
-  (yaml-ts-mode . eglot-ensure)
-  (terraform-mode . eglot-ensure)
+  (html-ts-mode . eglot-ensure)
   (java-ts-mode . eglot-ensure)
+  (js-ts-mode . eglot-ensure)
+  (json-ts-mode . eglot-ensure)
   (python-ts-mode . eglot-ensure)
-  ;; (ruby-ts-mode . eglot-ensure)
   (rust-ts-mode . eglot-ensure)
-  (zig-mode . eglot-ensure)
   (sql-mode . eglot-ensure)
+  (terraform-mode . eglot-ensure)
+  (tsx-ts-mode . eglot-ensure)
+  (typescript-ts-mode . eglot-ensure)
+  (yaml-ts-mode . eglot-ensure)
+  (zig-mode . eglot-ensure)
+  ;; (ruby-ts-mode . eglot-ensure)
 
   :config
   ;; === eglotによるLSP起動
@@ -1413,7 +1408,14 @@
 (use-package json-ts-mode
   :ensure nil
   :mode (("\\.json\\'" . json-ts-mode)
-         ("\\.arb\\'" . json-ts-mode)))
+         ("\\.arb\\'" . arb-mode))
+  :config
+  (define-derived-mode arb-mode json-ts-mode "ARB"
+    "Major mode for editing ARB files."
+    (setq-local tab-width 4)
+    (setq-local standard-indent 4)
+    (setq-local json-ts-mode-indent-offset 4)
+    ))
 
 ;;====================================================================
 ;; JavaScript / JSX / TypeScript / TSX
@@ -1740,11 +1742,6 @@
     "T" '(persp-prev :wk "prev workspace")
     )
 
-  (my-motion-leader-def
-    :keymaps '(dired-mode-map)
-    "r" '(dired-subtree-revert :wk "revert dired subtree")
-    )
-
   ;; === Lisp系の編集操作 (,)
   (my-local-leader-def
     :keymaps '(emacs-lisp-mode-map
@@ -1759,16 +1756,13 @@
     "B" '(puni-barf-backward :wk "barf backward")
     "r" '(puni-raise :wk "raise sexp")
     "p" '(puni-splice-killing-backward :wk "splice backward")
-    "w" '(:ignore t :wk "wrap")
-    "w (" '(puni-wrap-round :wk "wrap ()")
-    "w [" '(puni-wrap-square :wk "wrap []")
-    "w {" '(puni-wrap-curly :wk "wrap {}")
-    "w \"" '(my-wrap-symbol-with-quotes :wk "wrap \"\"")
+    "(" '(puni-wrap-round :wk "wrap ()")
+    "[" '(puni-wrap-square :wk "wrap []")
+    "{" '(puni-wrap-curly :wk "wrap {}")
+    "\"" '(my-wrap-symbol-with-quotes :wk "wrap \"\"")
     "d" '(:ignore t :wk "delete")
     "d w" '(puni-splice :wk "delete wrap")
-    "k" '(:ignoret :wk "kill")
-    "k l" '(puni-kill-line :wk "kill line")
-    "k e" '(my-puni-kill-to-end :wk "kill to sexp end")
+    "k" '(my-puni-kill-to-end :wk "kill to sexp end") ; noramlでC-kはkill-line
     "h" '(eldoc :wk "eldoc")
     )
 
