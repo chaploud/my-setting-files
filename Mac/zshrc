@@ -65,15 +65,10 @@ alias gb='git_checkout_fzf'
 
 # 補完の設定
 autoload -Uz compinit
-typeset -gA _compdump
-_compdump[path]="${ZDOTDIR:-$HOME}/.zcompdump-${HOST}"
+compinit -C # たまに素のcompinitをしましょう
 
-if [[ -r "${_compdump[path]}.zwc" && "${_compdump[path]}.zwc" -nt "${_compdump[path]}" ]]; then
-  compinit -C -d "${_compdump[path]}"
-else
-  compinit -i -d "${_compdump[path]}"
-  command zcompile -R -- "${_compdump[path]}.zwc" "${_compdump[path]}" 2>/dev/null
-fi
+# === Starship
+eval "$(starship init zsh)"
 
 # emacsclient
 e() {

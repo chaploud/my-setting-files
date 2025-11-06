@@ -99,6 +99,12 @@
   (interactive)
   (find-file user-init-file))
 
+(defun my-reload-user-init ()
+  "Reload the user's init file."
+  (interactive)
+  (load-file user-init-file)
+  (message "Reloaded %s" user-init-file))
+
 ;; === カーソル下のシンボルが組み込みのパッケージかどうかチェック
 (defun my-package-built-in-p (symbol)
   "Check if SYMBOL is a built-in package."
@@ -117,37 +123,6 @@
         (kill-new relpath)
         (message "Copied: %s" relpath))
     (user-error "Not visiting a file in a project.")))
-
-;; === バッファやプロセスを全て終了させるが、Emacs自体は終了させない
-(defun my-reset-session ()
-  "Close all buffers and kill all processes, but do not exit Emacs."
-  (interactive)
-  (let ((kill-buffer-query-functions nil))
-    ;; perspective.elで、mainだけ残す
-    (when (fboundp 'persp-switch)
-      (ignore-errors (persp-switch "main"))
-      (when (fboundp 'persp-names)
-        (dolist (name (persp-names))
-          (unless (string= name "main")
-            (ignore-errors (persp-kill name))))))
-    ;; プロセス全部kill
-    (dolist (p (process-list))
-      (ignore-errors (delete-process p)))
-
-    ;; バッファ全部kill
-    (dolist (b (buffer-list))
-      (when (buffer-live-p b)
-        (with-current-buffer b (set-buffer-modified-p nil))
-        (ignore-errors (kill-buffer b))))
-
-    ;; 1ウィンドウ化 & ダッシュボード表示
-    (delete-other-windows)
-    (if (fboundp 'dashboard-open)
-        (dashboard-open)
-      (switch-to-buffer (get-buffer-create "*scratch*"))
-      (erase-buffer)
-      (funcall initial-major-mode))
-    ))
 
 ;;===== TIPS / Rules of use-package ==================================
 ;; :ensure 組み込みパッケージにはnil, 外部パッケージにはtを指定
@@ -322,15 +297,7 @@
         `("\\*vterm\\*" ,@my-display-split
           (window-parameters . ((dedicated . t))))
         ;; ielm
-        `("\\*ielm\\*" ,@my-display-split)
-        ;; dired上でdiredを開く時は同じウィンドウで開く(RETでその場で、S-RETで別のウィンドウで開く)
-        `((lambda (buffer-name action)
-            (and (with-current-buffer buffer-name (derived-mode-p 'dired-mode))
-                 (with-current-buffer (window-buffer (selected-window))
-                   (derived-mode-p 'dired-mode))))
-          (display-buffer-same-window))
-        ;; diredを分割して開くようにする
-        `((derived-mode . dired-mode) ,@my-display-split))))
+        `("\\*ielm\\*" ,@my-display-split))))
   (setq display-buffer-alist (append rules display-buffer-alist)))
 
 ;;====================================================================
@@ -539,6 +506,8 @@
         ("C-k" . nil)
         ("C-y" . nil)
         ("C-S-h" . #'backward-kill-sexp))
+  (:map evil-normal-state-map
+        ("C-." . nil))
   (:map evil-motion-state-map
         ("," . nil))
   :config
@@ -611,17 +580,39 @@
         ("C-a" . evil-numbers/inc-at-pt)))
 
 ;;====================================================================
-;; ファイルツリー (dired-subtree)
+;; ファイルツリー (Treemacs)
 ;;====================================================================
-
-;; === dired上でTABでサブディレクトリを展開できる
-(use-package dired-subtree
+(use-package treemacs
   :ensure t
+  :defer t
   :custom
-  ;; diredのオプションだがここに書く
-  (dired-dwim-target t)
-  (insert-directory-program "gls")
-  (dired-listing-switches "-alhG --time-style=long-iso"))
+  (treemacs-follow-mode t)
+  (treemacs-project-follow-cleanup t))
+
+(use-package treemacs-evil
+  :ensure t
+  :after (treemacs evil evil-collection)
+  :hook
+  ;; evilの基本キーバインドに上書きされてしまうので、treemacs-stateにする
+  (treemacs-mode . (lambda ()
+                     (when (bound-and-true-p evil-local-mode)
+                       (evil-change-state 'treemacs))
+                     (evil-normalize-keymaps)))
+  :config
+  (evil-set-initial-state 'treemacs-mode 'treemacs)
+  )
+
+(use-package treemacs-nerd-icons
+  :ensure t
+  :after (treemacs nerd-icons)
+  :config
+  (treemacs-nerd-icons-config))
+
+(use-package treemacs-perspective
+  :ensure t
+  :after (treemacs perspective)
+  :config
+  (treemacs-set-scope-type 'Perspectives))
 
 ;;====================================================================
 ;; ミニバッファ内での検索・候補選択
@@ -692,8 +683,9 @@
 (use-package embark
   :ensure t
   :bind
-  (("C-." . embark-act)
-   ("C-," . embark-export)))
+  (:map minibuffer-local-map
+        ("C-." . embark-act)
+        ("C-," . embark-export)))
 
 ;; === embarkをconsultから使う (embark-consult)
 (use-package embark-consult
@@ -735,6 +727,7 @@
   (corfu-cycle t)
   (corfu-preselect 'prompt)
   (corfu-quit-no-match 'separator)
+  (corfu-on-exact-match nil)
   (tab-always-indent 'complete))
 
 ;; === 補完ポップアップ内のアイコン
@@ -812,30 +805,8 @@
 (use-package magit
   :ensure t
   :custom
-  (magit-diff-refine-hunk 'all)
   (magit-blame-echo-style 'headings)
   :config
-  ;; NOTE 差分表示の色合いをカタムするために複雑なことをしているが、しなくてもいい
-  ;; magit-diff-visit-fileは別ウィンドウで開く
-  (advice-add 'magit-diff-visit-file :around
-              (lambda (orig-fun &rest _args)
-                (funcall orig-fun t)))
-
-  ;; magit-diffのとき、vc-diffを使う。未追跡ファイルは単に開く
-  (defun my-magit-diff-dwim-with-vc-diff (orig-fun &rest args)
-    "Advice function to use `vc-diff` in `magit-status-mode`."
-    (if-let (file (and (derived-mode-p 'magit-status-mode)
-                       (magit-file-at-point)))
-        (if (null (vc-state file))
-            (progn
-              (message "%s is untracked file." file)
-              (view-file-other-window file))
-          (with-current-buffer (find-file-noselect file)
-            (call-interactively #'vc-diff)))
-      (apply orig-fun args)))
-
-  (advice-add 'magit-diff-dwim :around #'my-magit-diff-dwim-with-vc-diff)
-
   ;; magit-blame-echoをトグルする
   (defun my-magit-blame-echo-toggle ()
     "Toggle `magit-blame-echo'."
@@ -1217,6 +1188,10 @@
   (eglot-connect-timeout 360)
   (eglot-extend-to-xref nil)
   (eldoc-echo-area-use-multiline-p nil)
+
+  :bind
+  (:map eglot-mode-map
+        ("C-." . eglot-code-actions))
 
   :hook
   ;; LSP自動起動したい場合はここに追加
@@ -1657,9 +1632,8 @@
     "t f" '(flymake-mode :wk "toggle flymake")
     "t c" '(copilot-mode :wk "toggle copilot")
 
-    ;; (c) change系
-    "c" '(:ignore t :wk "Change")
-    "c d" '(my-cd-on-vterm :wk "cd on vterm")
+    ;; (c) cd on vterm
+    "c" '(my-cd-on-vterm :wk "cd on vterm")
 
     ;; (q) 終了操作
     "q" '(:ignore t :wk "Quit")
@@ -1670,12 +1644,16 @@
     ;; (f) ファイル操作
     "f" '(:ignore t :wk "Files")
     "f f" '(find-file :wk "file find")
-    "f r" '(recentf-open :wk "file recent")
+    "f r" '(consult-recent-file :wk "file recent")
     "f p" '(project-find-file :wk "find in project")
     "f s" '(save-buffer :wk "file save")
-    "f i" '(my-open-user-init :wk "init.el")
-    "f t" '(project-dired :wk "dired")
+    "f t" '(treemacs :wk "treemacs")
     "f y" '(my-copy-project-relative-path :wk "copy relative path")
+
+    ;; (i) init.el操作
+    "i" '(:ignore t :wk "init.el")
+    "i i" '(my-open-user-init :wk "open init.el")
+    "i r" '(my-reload-user-init :wk "reload init.el")
 
     ;; (b) バッファ操作/ブックマーク
     "b" '(:ignore t :wk "Buffers/Bookmark")
@@ -1691,12 +1669,11 @@
     "s s" '(consult-line :wk "search in buffer")
     "s p" '(consult-ripgrep :wk "search in project")
     "s d" '(my-consult-ripgrep-current-dir :wk "search in directory")
-    "s f" '(consult-flymake :wk "search flymake")
 
     ;; (p) プロジェクト管理
     "p" '(:ignore t :wk "Project/Package")
     "p p" '(project-switch-project :wk "project switch")
-    "p f" '(flymake-show-project-diagnostics :wk "project flymake")
+    "p f" '(consult-flymake :wk "project flymake")
 
     ;; (w) ワークスペース/ウィンドウ操作
     "w" '(:ignore t :wk "Workspace/Window")
@@ -1781,8 +1758,9 @@
     "b" '(puni-barf-forward :wk "barf forward")
     "B" '(puni-barf-backward :wk "barf backward")
     "r" '(puni-raise :wk "raise sexp")
+    "p" '(puni-splice-killing-backward :wk "splice backward")
     "w" '(:ignore t :wk "wrap")
-    "w 9" '(puni-wrap-round :wk "wrap ()")
+    "w (" '(puni-wrap-round :wk "wrap ()")
     "w [" '(puni-wrap-square :wk "wrap []")
     "w {" '(puni-wrap-curly :wk "wrap {}")
     "w \"" '(my-wrap-symbol-with-quotes :wk "wrap \"\"")
@@ -1838,7 +1816,7 @@
     "e f" '(eval-defun :wk "eval defun")
     "e b" '(eval-buffer :wk "eval buffer")
     "i" '(my-insert-time :wk "insert time")
-    "p" '(my-package-built-in-p :wk "check package built-in")
+    "P" '(my-package-built-in-p :wk "check package built-in")
     )
 
   ;; === Emacs Lispの便利ヘルプ
@@ -1882,23 +1860,12 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages
-   '(acp agent-shell cape catppuccin-theme cider claude-code-ide
-         clojure-ts-mode colorful-mode copilot copilot-chat corfu
-         dashboard ddskk diff-hl dired-subtree docker dockerfile-mode
-         doom-modeline eglot-tempel embark-consult evil-anzu
-         evil-collection evil-commentary evil-escape evil-goggles
-         evil-numbers evil-surround exec-path-from-shell general
-         groovy-mode helpful hl-todo jarchive magit marginalia
-         nerd-icons-corfu orderless perspective puni
-         rainbow-delimiters sql-indent terraform-mode ultra-scroll
-         undo-fu undo-fu-session vertico vterm web-mode wgrep zig-mode))
+ '(package-selected-packages nil)
  '(package-vc-selected-packages
-   '((agent-shell :url "https://github.com/xenodium/agent-shell")
-     (acp :url "https://github.com/xenodium/acp.el")))
- '(safe-local-variable-directories
-   '("/Users/shota.508/Documents/MyProducts/pollaroid/"
-     "/Users/shota.508/Studist/teachme_eboshigara/"))
+   '((claude-code-ide :url
+                      "https://github.com/manzaltu/claude-code-ide.el")
+     (copilot :url "https://github.com/copilot-emacs/copilot.el"
+              :branch "main")))
  '(safe-local-variable-values
    '((cider-path-translations
       ("/usr/local/eboshigara" . "~/Studist/teachme_eboshigara")
