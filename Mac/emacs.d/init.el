@@ -1893,7 +1893,9 @@
  '(match ((t (:background "#eed49f" :foreground "#1e2030"))))
  '(show-paren-match ((t (:background "#8aadf4" :foreground "#1e2030" :weight bold))))
  '(show-paren-mismatch ((t (:background "#ed8796" :foreground "#1e2030" :weight bold))))
- '(trailing-whitespace ((t (:background "#ed8796" :foreground "#ed8796")))))
+ '(trailing-whitespace ((t (:background "#ed8796" :foreground "#ed8796"))))
+ '(consult-file ((t)))
+ )
 
 ;; === ローディング終了メッセージ
 (message "[%s] %s" (my-display-time) "init.el loaded!")
