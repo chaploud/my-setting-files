@@ -548,6 +548,13 @@
   :custom
   (global-evil-surround-mode t))
 
+;; === 検索ヒット件数を表示
+(use-package evil-anzu
+  :ensure t
+  :after evil
+  :custom
+  (global-anzu-mode t))
+
 ;; === 編集操作をハイライト
 (use-package evil-goggles
   :ensure t
