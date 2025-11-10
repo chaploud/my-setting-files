@@ -189,7 +189,7 @@
   ;; === ミニバッファでのyes/noの聞かれ方をy/nにする
   (use-short-answers t)
   ;; === ファイル履歴の保存個数
-  (recentf-max-saved-items 100)
+  (recentf-max-saved-items 50)
   ;; === ファイル履歴の保存
   (recentf-mode t)
   ;; === コマンドの履歴を保存
@@ -1347,8 +1347,18 @@
   (defun my-puni-kill-to-end ()
     "Kill to the end of the current sexp."
     (interactive)
-    (let ((end (save-excursion (puni-end-of-sexp) (point))))
-      (kill-region (point) end)))
+    (let ((begin (point))
+          (end (save-excursion (puni-end-of-sexp) (point))))
+      (kill-region begin end)))
+
+  ;; === puniでカーソル以降をそのレベルで閉じる直前までコピー
+  (defun my-puni-yank-to-end ()
+    "Kill to the end of the current sexp."
+    (interactive)
+    (let ((begin (point))
+          (end (save-excursion (puni-end-of-sexp) (point))))
+      (evil-yank begin end)
+      (evil-goggles--show-blocking-hint begin end)))
 
   ;; === puniでシンボルを""で囲む
   (defun my-wrap-symbol-with-quotes ()
@@ -1648,7 +1658,6 @@
     "q" '(:ignore t :wk "Quit")
     "q q" '(save-buffers-kill-terminal :wk "quit")
     "q r" '(restart-emacs :wk "restart")
-    "q b" '(my-reset-session :wk "reset session")
 
     ;; (f) ファイル操作
     "f" '(:ignore t :wk "Files")
@@ -1770,6 +1779,7 @@
     "d" '(:ignore t :wk "delete")
     "d w" '(puni-splice :wk "delete wrap")
     "k" '(my-puni-kill-to-end :wk "kill to sexp end") ; noramlでC-kはkill-line
+    "y" '(my-puni-yank-to-end :wk "yank to sexp end")
     "h" '(eldoc :wk "eldoc")
     )
 
@@ -1868,7 +1878,9 @@
      (copilot :url "https://github.com/copilot-emacs/copilot.el"
               :branch "main")))
  '(safe-local-variable-values
-   '((cider-path-translations
+   '((cider-connect-default-cljs-params :host "localhost" :port 9501)
+     (cider-connect-default-params :host "localhost" :port 9500)
+     (cider-path-translations
       ("/usr/local/eboshigara" . "~/Studist/teachme_eboshigara")
       ("/root/.m2" . "~/.m2"))
      (cider-connect-default-cljs-params :host "localhost" :port 9631)
@@ -1878,6 +1890,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(consult-file ((t)))
  '(diff-added ((t (:background "#3e4b4c"))))
  '(diff-refine-added ((t (:background "#586e5e"))))
  '(diff-refine-removed ((t (:background "#744d5f"))))
@@ -1893,9 +1906,7 @@
  '(match ((t (:background "#eed49f" :foreground "#1e2030"))))
  '(show-paren-match ((t (:background "#8aadf4" :foreground "#1e2030" :weight bold))))
  '(show-paren-mismatch ((t (:background "#ed8796" :foreground "#1e2030" :weight bold))))
- '(trailing-whitespace ((t (:background "#ed8796" :foreground "#ed8796"))))
- '(consult-file ((t)))
- )
+ '(trailing-whitespace ((t (:background "#ed8796" :foreground "#ed8796")))))
 
 ;; === ローディング終了メッセージ
 (message "[%s] %s" (my-display-time) "init.el loaded!")
