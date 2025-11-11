@@ -493,6 +493,7 @@
   (evil-symbol-word-search t) ; ひとかたまりで検索
   (evil-shift-width 2)
   (evil-mode t)
+  (evil-kill-on-visual-paste nil)
   :bind
   ;; Emacsキーバインドも一部使う
   (:map evil-insert-state-map
