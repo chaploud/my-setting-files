@@ -433,7 +433,11 @@
   (doom-modeline-buffer-file-name-style 'file-name) ; ファイル名のみ
   (doom-modeline-percent-position nil) ; 位置の%表示不要
   (doom-modeline-buffer-encoding nil) ; LF/UTF-8などの表示不要
-  )
+  :config
+  (doom-modeline-def-modeline 'my-main
+    '(eldoc bar window-state workspace-name window-number modals follow buffer-info remote-host buffer-position word-count parrot selection-info matches)
+    '(compilation objed-state misc-info project-name persp-name battery grip irc mu4e gnus github debug repl lsp minor-modes input-method indent-info buffer-encoding major-mode process vcs check time))
+  (doom-modeline-set-modeline 'my-main t))
 
 ;; === ダッシュボード
 (use-package dashboard
@@ -490,7 +494,7 @@
   (evil-want-keybinding nil)
   (evil-want-C-u-scroll t)
   (evil-undo-system 'undo-fu)
-  (evil-symbol-word-search t) ; ひとかたまりで検索
+  (evil-symbol-word-search t) ; ひとかたまりで検索(t)
   (evil-shift-width 2)
   (evil-mode t)
   (evil-kill-on-visual-paste nil)
@@ -656,8 +660,16 @@
   :custom
   (vertico-mode t)
   (vertico-cycle t)
-  (vertico-count 15)
+  (vertico-count 12)
   (vertico-resize nil))
+
+(use-package vertico-posframe
+  :ensure t
+  :after vertico
+  :custom
+  (vertico-posframe-mode t)
+  (vertico-posframe-width '70)
+  (vertico-posframe-poshandler 'posframe-poshandler-frame-bottom-center))
 
 ;; === 柔軟な絞り込みスタイル (orderless)
 (use-package orderless
@@ -1872,7 +1884,6 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages nil)
  '(package-vc-selected-packages
    '((claude-code-ide :url
                       "https://github.com/manzaltu/claude-code-ide.el")
