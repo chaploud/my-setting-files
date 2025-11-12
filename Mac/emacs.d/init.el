@@ -660,23 +660,8 @@
   :custom
   (vertico-mode t)
   (vertico-cycle t)
-  (vertico-count 12)
+  (vertico-count 15)
   (vertico-resize nil))
-
-(use-package vertico-posframe
-  :ensure t
-  :after vertico
-  :custom
-  (vertico-posframe-mode t)
-  (vertico-posframe-width '80)
-  (vertico-posframe-parameters
-   '((left-fringe . 8)
-     (right-fringe . 8)
-     (internal-border-width . 8)))
-  (vertico-posframe-poshandler
-   (lambda (info)
-     (let ((pos (posframe-poshandler-frame-bottom-center info)))
-       (cons (car pos) (- (cdr pos) 8))))))
 
 ;; === 柔軟な絞り込みスタイル (orderless)
 (use-package orderless
