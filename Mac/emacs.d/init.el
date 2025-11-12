@@ -201,6 +201,8 @@
   ;; === *scratch*バッファのデフォルトをtext-modeに
   (initial-major-mode 'text-mode)
   (initial-scratch-message "*scratch* for temporal notes\n\n")
+  ;; === Emacs終了時にプロセスの確認をしない
+  (confirm-kill-processes nil)
 
   :config
   ;; === C-hをBackspaceに、C-;をC-hに割り当て
