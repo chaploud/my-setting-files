@@ -2,14 +2,19 @@
 
 ;;; Commentary:
 
+;; 最終更新: 2025-11-13
+
 ;; === 対象者
 ;; Clojure開発者を想定
 ;; Vimキーバインドを利用
 ;; 日本語入力はddskkを利用
 
 ;; === 前提
-;; macOS Sequoia 15.6
-;; emacs-plus@30 で利用 (https://github.com/d12frosted/homebrew-emacs-plus)
+;; macOS Tahoe 26.1
+;; gcc@15.2.0 インストール済み (https://formulae.brew.sh/formula/gcc)
+;; libgccjit@15.2.0 インストール済み (https://formulae.brew.sh/formula/libgccjit)
+;; emacs-plus@30.2 で利用 (https://github.com/d12frosted/homebrew-emacs-plus)
+;; emacs 30.2
 
 ;; === 依存関係
 ;; [gcc@15] brew install gcc@15

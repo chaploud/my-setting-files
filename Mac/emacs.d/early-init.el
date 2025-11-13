@@ -2,19 +2,24 @@
 
 ;;; Commentary:
 
+;; 最終更新: 2025-11-13
+
 ;; === 前提
-;; macOS Sequoia 15.6
-;; gcc@15 インストール済み (https://formulae.brew.sh/formula/gcc)
-;; libgccjit@15 インストール済み (https://formulae.brew.sh/formula/libgccjit)
-;; emacs-plus@30 で利用 (https://github.com/d12frosted/homebrew-emacs-plus)
+;; macOS Tahoe 26.1
+;; gcc@15.2.0 インストール済み (https://formulae.brew.sh/formula/gcc)
+;; libgccjit@15.2.0 インストール済み (https://formulae.brew.sh/formula/libgccjit)
+;; emacs-plus@30.2 で利用 (https://github.com/d12frosted/homebrew-emacs-plus)
+;; emacs 30.2
 
 ;;====================================================================
 ;; 最初期のGUI設定
 ;;===================================================================
 
-;; === 真っ白画面をはさまないようにする
+;; === 起動直後とinit.el読み込み完了までの見た目の摩擦を減らす
 (add-to-list 'default-frame-alist '(background-color . "#24273a"))
 (add-to-list 'default-frame-alist '(foreground-color . "#cad3f5"))
+(custom-set-faces
+ '(mode-line ((t (:background "#1e2030")))))
 
 ;; === フレームタイトル
 (setq frame-title-format "Emacs")
@@ -29,29 +34,29 @@
 ;; ネイティブコンパイル・GC設定
 ;;===================================================================
 
-;; === ネイティブコンパイルをMacで動作させるためパスを通す
+;; === ネイティブコンパイルをMacで動作させるためパスを通す(環境に合わせ変更)
 (setenv "LIBRARY_PATH"
-				(string-join
-				 '("/opt/homebrew/opt/gcc/lib/gcc/15"
-					 "/opt/homebrew/opt/libgccjit/lib/gcc/15"
-					 "/opt/homebrew/opt/gcc/lib/gcc/current/gcc/aarch64-apple-darwin24/15")
-				 ":"))
+        (string-join
+         '("/opt/homebrew/opt/gcc/lib/gcc/15"
+           "/opt/homebrew/opt/libgccjit/lib/gcc/15"
+           "/opt/homebrew/opt/gcc/lib/gcc/current/gcc/aarch64-apple-darwin24/15")
+         ":"))
 
 ;; === GCを抑制し、起動を高速化する
 (setq gc-cons-threshold most-positive-fixnum
-			gc-cons-percentage 0.6)
+      gc-cons-percentage 0.6)
 
 ;; === 起動後に適切なGC設定に戻す
 (add-hook 'emacs-startup-hook
-					(lambda ()
-						(setq gc-cons-percentage 0.3
-									gc-cons-threshold (* 256 1024 1024)     ; 256MB
-									read-process-output-max (* 4 1024 1024) ; 4MB
-									)
-						(add-hook 'focus-out-hook #'garbage-collect)
-						(run-with-idle-timer 30 t #'garbage-collect)
-						;; 読み込み後、常に画面を最大化する
-						(toggle-frame-maximized)))
+          (lambda ()
+            (setq gc-cons-percentage 0.3
+                  gc-cons-threshold (* 256 1024 1024)     ; 256MB
+                  read-process-output-max (* 4 1024 1024) ; 4MB
+                  )
+            (add-hook 'focus-out-hook #'garbage-collect)
+            (run-with-idle-timer 30 t #'garbage-collect)
+            ;; 読み込み後、常に画面を最大化する
+            (toggle-frame-maximized)))
 
 ;; === ネイティブコンパイルの警告を抑制する
 (setq native-comp-async-report-warnings-errors 'silent)
@@ -63,18 +68,17 @@
 ;; === packageの設定
 (require 'package)
 (setq package-archives '(("gnu" . "https://elpa.gnu.org/packages/")
-												 ("nongnu" . "https://elpa.nongnu.org/nongnu/")
-												 ("melpa" . "https://melpa.org/packages/")))
+                         ("nongnu" . "https://elpa.nongnu.org/nongnu/")
+                         ("melpa" . "https://melpa.org/packages/")))
 (setq package-archive-priorities '(("melpa" . 3)
-																	 ("nongnu" . 2)
-																	 ("gnu" . 1)))
+                                   ("nongnu" . 2)
+                                   ("gnu" . 1)))
 (setq package-check-signature nil) ; 本来はnon-nilが望ましい
 (package-initialize)
-;; NOTE: 安定してきたら、package-quickstartを検討する
 
 ;; === use-packageの設定
 (unless (package-installed-p 'use-package)
-	(package-install 'use-package))
+  (package-install 'use-package))
 (require 'use-package)
 
 ;;; early-init.el ends here
