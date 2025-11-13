@@ -10,6 +10,10 @@ alias sl="ls"
 alias s="ls"
 alias l="ls"
 
+chpwd () {
+  ls
+}
+
 # grep
 alias grep='grep --color=auto'
 

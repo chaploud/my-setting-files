@@ -847,6 +847,75 @@
   (persp-modestring-short t))
 
 ;;====================================================================
+;; HTTPクライアント (plz.el)
+;;====================================================================
+;; curlをインストールしておくこと
+(use-package plz
+  :ensure t
+  :config
+  ;; -------------------------------------------------------
+  ;; 1. 結果表示用のヘルパー関数
+  ;; -------------------------------------------------------
+  (defvar my/plz-response-buffer "*Plz Response*"
+    "APIレスポンスを表示するバッファ名")
+
+  (defun my/plz-handle-response (content)
+    "レスポンス(文字列)をバッファに挿入し、Emacs標準機能で整形する"
+    (let ((buf (get-buffer-create my/plz-response-buffer)))
+      (with-current-buffer buf
+        (read-only-mode -1) ;; 書き込み許可
+        (erase-buffer)
+
+        ;; コンテンツの挿入
+        (if (stringp content)
+            (insert content)
+          (insert (format "%S" content)))
+
+        ;; JSON整形 (Emacs標準機能: json.el)
+        ;; JSONじゃなかった場合にエラーで止まらないよう保護
+        (condition-case nil
+            (json-pretty-print-buffer)
+          (json-error nil))
+
+        ;; 見やすくするためにモード適用 (色付けなど)
+        (if (fboundp 'json-mode)
+            (json-mode)       ;; json-modeが入っていれば使う
+          (js-mode))          ;; なければjs-modeで代用
+
+        ;; 読み取り専用にしてポップアップ
+        (special-mode))
+      (pop-to-buffer buf)))
+
+  (defun my/plz-handle-error (err)
+    "エラー時の処理"
+    (message "Plz Error: %S" err))
+
+  ;; -------------------------------------------------------
+  ;; 2. インタラクティブコマンド (GET / POST)
+  ;; -------------------------------------------------------
+  (defun my/plz-get (url)
+    "URLを入力してGETし、標準機能でJSON整形して表示"
+    (interactive "sURL to GET: ")
+    (message "Requesting (GET) %s ..." url)
+    (plz 'get url
+      :as 'string
+      :then 'my/plz-handle-response
+      :else 'my/plz-handle-error))
+
+  (defun my/plz-post-region (url start end)
+    "選択範囲(Region)をBodyとしてPOSTし、標準機能でJSON整形して表示"
+    (interactive "sURL to POST: \nr")
+    (let ((body (buffer-substring-no-properties start end)))
+      (message "Requesting (POST) %s ..." url)
+      (plz 'post url
+        :headers '(("Content-Type" . "application/json"))
+        :body body
+        :as 'string
+        :then 'my/plz-handle-response
+        :else 'my/plz-handle-error)))
+  )
+
+;;====================================================================
 ;; GitHub Copilot連携
 ;;====================================================================
 
@@ -1878,6 +1947,18 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   '(agent-shell cape catppuccin-theme cider claude-code-ide
+                 clojure-ts-mode colorful-mode copilot corfu dashboard
+                 ddskk diff-hl docker doom-modeline eglot-tempel
+                 embark-consult evil-anzu evil-collection
+                 evil-commentary evil-escape evil-goggles evil-numbers
+                 evil-surround exec-path-from-shell general
+                 groovy-mode helpful hl-todo jarchive magit marginalia
+                 markdown-mode nerd-icons-corfu orderless plz puni
+                 rainbow-delimiters terraform-mode treemacs-evil
+                 treemacs-nerd-icons treemacs-perspective ultra-scroll
+                 undo-fu undo-fu-session vertico vterm wgrep zig-mode))
  '(package-vc-selected-packages
    '((claude-code-ide :url
                       "https://github.com/manzaltu/claude-code-ide.el")
