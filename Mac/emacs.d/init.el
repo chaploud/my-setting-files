@@ -32,14 +32,13 @@
 ;; [Bash] npm i -g bash-language-server
 ;; [C/C++] brew install llvm
 ;; [HTML/CSS/JSON] npm i -g vscode-langservers-extracted
-;; [Vue] brew install vue-language-server
 ;; [JavaScript/JSX/TypeScript/TSX] npm i -g typescript typescript-language-server
 ;; [Dockerfile] npm i -g dockerfile-language-server-nodejs
 ;; [YAML] npm i -g yaml-language-server
 ;; [Terraform] brew install terraform-ls
 ;; [Java] brew install jdtls
 ;; [Python] pipx install 'python-lsp-server[all]'
-;; [Ruby] gem install ruby-lsp ruby-lsp-rails ruby-lsp-rspec rubocop rubocop-rails syntax_tree
+;; [Ruby] brew install solargraph
 ;; [Rust] rustupのインストール
 ;; [Zig] brew install zls
 ;; [SQL] go install github.com/sqls-server/sqls@latest
@@ -140,6 +139,9 @@
 ;; :config 通常通りの処理をまとめる意味 (グローバルスコープになる)
 ;; :mode ファイル名からモード決定
 ;; :interpreter shebangからモード決定
+;; :bind キーバインド設定
+;; :bind* キーバインド設定 (優先度高)
+;; :defer tで遅延ロード
 ;;====================================================================
 
 ;; === ローディング開始メッセージ
@@ -441,7 +443,7 @@
   (doom-modeline-percent-position nil) ; 位置の%表示不要
   (doom-modeline-buffer-encoding nil) ; LF/UTF-8などの表示不要
   :config
-  (doom-modeline-def-modeline 'my-main
+  (doom-modeline-def-modeline 'my-main ; anzuのカウントを左グループの右端に表示
     '(eldoc bar window-state workspace-name window-number modals follow buffer-info remote-host buffer-position word-count parrot selection-info matches)
     '(compilation objed-state misc-info project-name persp-name battery grip irc mu4e gnus github debug repl lsp minor-modes input-method indent-info buffer-encoding major-mode process vcs check time))
   (doom-modeline-set-modeline 'my-main t))
@@ -472,7 +474,7 @@
 ;; === なめらかなホイールスクロール
 (use-package ultra-scroll
   :ensure t
-  :vc (:url "https://github.com/jdtsmith/ultra-scroll") ; if desired (emacs>=v30)
+  :vc (:url "https://github.com/jdtsmith/ultra-scroll")
   :init
   (setq scroll-conservatively 3
         scroll-margin 0)
@@ -484,6 +486,7 @@
 ;; EvilによるVimキーバインド
 ;;====================================================================
 
+;; === ファイルを閉じてもundo履歴を保持
 (use-package undo-fu
   :ensure t)
 (use-package undo-fu-session
@@ -601,6 +604,7 @@
   (treemacs-follow-mode t)
   (treemacs-project-follow-cleanup t))
 
+;; === treemacs上でevilキーバインドを利用
 (use-package treemacs-evil
   :ensure t
   :after (treemacs evil evil-collection)
@@ -611,15 +615,16 @@
                        (evil-change-state 'treemacs))
                      (evil-normalize-keymaps)))
   :config
-  (evil-set-initial-state 'treemacs-mode 'treemacs)
-  )
+  (evil-set-initial-state 'treemacs-mode 'treemacs))
 
+;; === 統一感のためnerd-iconsをtreemacsでも利用
 (use-package treemacs-nerd-icons
   :ensure t
   :after (treemacs nerd-icons)
   :config
   (treemacs-nerd-icons-config))
 
+;; === ワークスペース別にtreemacs切り替え
 (use-package treemacs-perspective
   :ensure t
   :after (treemacs perspective)
@@ -651,15 +656,17 @@
                            "--glob=!*.log")))
     (setq consult-ripgrep-args
           (concat consult-ripgrep-args " " (string-join additional-args " "))))
-  )
 
-(defun my-consult-ripgrep-current-dir ()
-  "Search in the current buffer's directory (or `default-directory') using consult-ripgrep."
-  (interactive)
-  (let ((dir (or (and (buffer-file-name)
-                      (file-name-directory (buffer-file-name)))
-                 default-directory)))
-    (consult-ripgrep dir)))
+
+  ;; 現在バッファのディレクトリ以下でripgrep検索する関数
+  (defun my-consult-ripgrep-current-dir ()
+    "Search in the current buffer's directory (or `default-directory') using consult-ripgrep."
+    (interactive)
+    (let ((dir (or (and (buffer-file-name)
+                        (file-name-directory (buffer-file-name)))
+                   default-directory)))
+      (consult-ripgrep dir))))
+
 
 ;; === 補完候補を垂直に表示するUI (vertico)
 (use-package vertico
@@ -713,7 +720,7 @@
   (wgrep-auto-save-buffer t)
   (wgrep-change-readonly-file t))
 
-;;===== Workflow of Replace =========================================
+;;===== 一括置換操作 ====================================================
 ;; 1. `SPC s s' (consult-line)や `SPC s p' (consult-ripgrep)で候補表示
 ;; 2. `C-,' (embark-export)でembark-collect-modeに
 ;; 3. OccurやWgrepの違いはあるが, `i'で編集モードに入る
@@ -806,8 +813,7 @@
                  default-directory)))
       (with-current-buffer (get-buffer "*vterm*")
         (vterm-send-string (format "cd %s" dir))
-        (vterm-send-return))))
-  )
+        (vterm-send-return)))))
 
 ;;====================================================================
 ;; Git操作 (magit・diff-hl・vc)
@@ -825,8 +831,7 @@
     (interactive)
     (if (bound-and-true-p magit-blame-mode)
         (magit-blame-quit)
-      (call-interactively 'magit-blame-echo)))
-  )
+      (call-interactively 'magit-blame-echo))))
 
 ;; === フリンジに差分を強調表示 (diff-hl)
 (use-package diff-hl
@@ -908,7 +913,7 @@
       :else 'my/plz-handle-error))
 
   (defun my/plz-post-region (url start end)
-    "選択範囲(Region)をBodyとしてPOSTし、標準機能でJSON整形して表示"
+    "選択範囲(Region)のJSONをBodyとしてPOSTし、標準機能でJSON整形して表示"
     (interactive "sURL to POST: \nr")
     (let ((body (buffer-substring-no-properties start end)))
       (message "Requesting (POST) %s ..." url)
@@ -917,8 +922,7 @@
         :body body
         :as 'string
         :then 'my/plz-handle-response
-        :else 'my/plz-handle-error)))
-  )
+        :else 'my/plz-handle-error))))
 
 ;;====================================================================
 ;; GitHub Copilot連携
@@ -945,6 +949,8 @@
 ;;====================================================================
 ;; Claude Code IDE
 ;;====================================================================
+
+;; Claude CodeのインストールとAPIキー設定が必要
 (use-package claude-code-ide
   :ensure t
   :vc (:url "https://github.com/manzaltu/claude-code-ide.el" :rev :newest)
@@ -1294,7 +1300,7 @@
   (typescript-ts-mode . eglot-ensure)
   (yaml-ts-mode . eglot-ensure)
   (zig-mode . eglot-ensure)
-  ;; (ruby-ts-mode . eglot-ensure)
+  (ruby-ts-mode . eglot-ensure)
 
   :config
   ;; === eglotによるLSP起動
@@ -1305,8 +1311,7 @@
 
   ;; デフォルトと変えたいものは指定
   (setq my-eglot-server-list
-        '((sql-mode . ("sqls"))
-          (ruby-ts-mode . ("ruby-lsp"))))
+        '((sql-mode . ("sqls"))))
 
   (with-eval-after-load 'eglot
     (dolist (pair my-eglot-server-list)
@@ -1660,19 +1665,7 @@
   :custom
   (sql-postgres-login-params nil)
   (sql-connection-alist
-   '(;; マイスキル
-     (eboshigara-dev
-      (sql-product 'postgres)
-      ;; NOTE: DB設定については適宜変更
-      (sql-database (concat
-                     "postgresql://"
-                     "root"
-                     ":" (auth-source-pass-get 'secret "eboshigara_dev_db")
-                     "@localhost"
-                     ":54320"
-                     "/eboshigara_dev"
-                     )))
-     ;; SQLアンチパターン
+   '(;; SQLアンチパターン
      (sql-antipatterns
       (sql-product 'mysql)
       (sql-user "root")
@@ -1680,13 +1673,7 @@
       (sql-server "localhost")
       (sql-port 3306)
       (sql-database "anti_patterns"))))
-  :hook (sql-mode . (lambda () (sql-indent-enable)))
-  :config
-  (defun my-read-1password (name)
-    "1Passwordからパスワードを取得する"
-    (let ((password (shell-command-to-string
-                     (format "op read op://Private/%s/password" name))))
-      (string-trim password))))
+  :hook (sql-mode . (lambda () (sql-indent-enable))))
 
 ;;====================================================================
 ;; キーバインド (general.el)
@@ -1952,31 +1939,11 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages
-   '(agent-shell cape catppuccin-theme cider claude-code-ide
-                 clojure-ts-mode colorful-mode copilot corfu dashboard
-                 ddskk diff-hl docker doom-modeline eglot-tempel
-                 embark-consult evil-anzu evil-collection
-                 evil-commentary evil-escape evil-goggles evil-numbers
-                 evil-surround exec-path-from-shell general
-                 groovy-mode helpful hl-todo jarchive magit marginalia
-                 markdown-mode nerd-icons-corfu orderless plz puni
-                 rainbow-delimiters terraform-mode treemacs-evil
-                 treemacs-nerd-icons treemacs-perspective ultra-scroll
-                 undo-fu undo-fu-session vertico vterm wgrep zig-mode))
  '(package-vc-selected-packages
    '((claude-code-ide :url
                       "https://github.com/manzaltu/claude-code-ide.el")
      (copilot :url "https://github.com/copilot-emacs/copilot.el"
-              :branch "main")))
- '(safe-local-variable-values
-   '((cider-connect-default-cljs-params :host "localhost" :port 9501)
-     (cider-connect-default-params :host "localhost" :port 9500)
-     (cider-path-translations
-      ("/usr/local/eboshigara" . "~/Studist/teachme_eboshigara")
-      ("/root/.m2" . "~/.m2"))
-     (cider-connect-default-cljs-params :host "localhost" :port 9631)
-     (cider-connect-default-params :host "localhost" :port 42004))))
+              :branch "main"))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
