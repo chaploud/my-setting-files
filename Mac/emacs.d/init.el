@@ -617,6 +617,19 @@
         ("C-a" . evil-numbers/inc-at-pt)))
 
 ;;====================================================================
+;; ワークスペース (perspective.el)
+;;====================================================================
+
+(use-package perspective
+  :ensure t
+  :init
+  (setq persp-suppress-no-prefix-key-warning t)
+  (persp-mode)
+  :custom
+  (persp-sort 'created)
+  (persp-modestring-short t))
+
+;;====================================================================
 ;; ファイルツリー (Treemacs)
 ;;====================================================================
 (use-package treemacs
@@ -865,19 +878,6 @@
   :hook
   (magit-pre-refresh-hook  . diff-hl-magit-pre-refresh)
   (magit-post-refresh-hook . diff-hl-magit-post-refresh))
-
-;;====================================================================
-;; ワークスペース (perspective.el)
-;;====================================================================
-
-(use-package perspective
-  :ensure t
-  :init
-  (setq persp-suppress-no-prefix-key-warning t)
-  (persp-mode)
-  :custom
-  (persp-sort 'created)
-  (persp-modestring-short t))
 
 ;;====================================================================
 ;; HTTPクライアント (plz.el)
@@ -1144,7 +1144,6 @@
 
 (use-package treesit
   :ensure nil
-  :defer t
   :custom
   ;; === tree-sitterによる色付けmax
   (treesit-font-lock-level 4)
@@ -1478,7 +1477,6 @@
 
 (use-package sh-script
   :ensure nil
-  :defer t
   :mode (("\\.\\(sh\\|bash\\)\\'" . bash-ts-mode) ; sh/bash
          ("\\.?\\(bashrc\\|bash_profile\\)\\'" . bash-ts-mode) ; bash
          ("\\.?zsh\\(rc\\|env\\|profile\\)?\\'" . bash-ts-mode)) ; zsh
@@ -1496,7 +1494,6 @@
 ;; brew install llvm
 (use-package c-ts-mode
   :ensure nil
-  :defer t
   :mode (("\\.c\\'" . c-ts-mode)
          ("\\.h\\'" . c-ts-mode)))
 
@@ -1508,12 +1505,10 @@
 
 (use-package html-ts-mode
   :ensure nil
-  :defer t
   :mode "\\.x?html\\'")
 
 (use-package css-ts-mode
   :ensure nil
-  :defer t
   :mode "\\.css\\'")
 
 (use-package json-ts-mode
@@ -1536,7 +1531,6 @@
 
 (use-package js-ts-mode
   :ensure nil
-  :defer t
   :mode (("\\.js\\'" . js-ts-mode)
          ("\\.cjs\\'" . js-ts-mode)
          ("\\.mjs\\'" . js-ts-mode)
@@ -1546,12 +1540,10 @@
 
 (use-package typescript-ts-mode
   :ensure nil
-  :defer t
   :mode "\\.ts\\'")
 
 (use-package tsx-ts-mode
   :ensure nil
-  :defer t
   :mode "\\.tsx\\'")
 
 ;;====================================================================
@@ -1561,13 +1553,11 @@
 ;; npm i -g dockerfile-language-server-nodejs
 (use-package dockerfile-ts-mode
   :ensure nil
-  :defer t
   :mode (("Dockerfile\\'" . dockerfile-ts-mode)
          ("\\.dockerfile\\'" . dockerfile-ts-mode)))
 
 (use-package docker
   :ensure t
-  :defer t
   :custom
   (docker-container-columns
    '((:name "Names" :width 30 :template "{{ json .Names }}" :sort nil :format nil)
@@ -1588,7 +1578,6 @@
 
 (use-package yaml-ts-mode
   :ensure nil
-  :defer t
   :mode ("\\.ya?ml\\'" . yaml-ts-mode))
 
 ;;====================================================================
@@ -1599,7 +1588,6 @@
 
 (use-package terraform-mode
   :ensure t
-  :defer t
   :mode "\\.tf\\'")
 
 ;;====================================================================
@@ -1610,7 +1598,6 @@
 
 (use-package java-ts-mode
   :ensure nil
-  :defer t
   :mode "\\.java\\'")
 
 ;;====================================================================
@@ -1618,7 +1605,6 @@
 ;;====================================================================
 (use-package groovy-mode
   :ensure t
-  :defer t
   :mode "\\.gradle\\'")
 
 ;;====================================================================
@@ -1628,7 +1614,6 @@
 ;; pipx install 'python-lsp-server[all]'
 (use-package python-ts-mode
   :ensure nil
-  :defer t
   :mode "\\.py\\'"
   :interpreter ("python" . python-ts-mode))
 
@@ -1639,7 +1624,6 @@
 ;; gem install ruby-lsp ruby-lsp-rails ruby-lsp-rspec rubocop rubocop-rails syntax_tree
 (use-package ruby-ts-mode
   :ensure nil
-  :defer t
   :mode (("\\.rb\\'" . ruby-ts-mode)
          ("\\.rake\\'" . ruby-ts-mode)
          ("Rakefile\\'" . ruby-ts-mode)
@@ -1652,7 +1636,6 @@
 ;; rustupのインストール
 (use-package rust-ts-mode
   :ensure nil
-  :defer t
   :mode "\\.rs\\'")
 
 ;;====================================================================
@@ -1660,7 +1643,6 @@
 ;;====================================================================
 (use-package toml-ts-mode
   :ensure nil
-  :defer t
   :mode "\\.toml\\'")
 
 ;;====================================================================
@@ -1672,7 +1654,6 @@
 
 (use-package zig-mode
   :ensure t
-  :defer t
   :mode (("\\.zig\\'" . zig-mode)
          ("\\.zon\\'" . zig-mode)))
 
@@ -1684,7 +1665,6 @@
 
 (use-package sql
   :ensure nil
-  :defer t
   :custom
   (sql-postgres-login-params nil)
   (sql-connection-alist
