@@ -61,24 +61,4 @@
 ;; === ネイティブコンパイルの警告を抑制する
 (setq native-comp-async-report-warnings-errors 'silent)
 
-;;====================================================================
-;; パッケージ管理のセットアップ
-;;===================================================================
-
-;; === packageの設定
-(require 'package)
-(setq package-archives '(("gnu" . "https://elpa.gnu.org/packages/")
-                         ("nongnu" . "https://elpa.nongnu.org/nongnu/")
-                         ("melpa" . "https://melpa.org/packages/")))
-(setq package-archive-priorities '(("melpa" . 3)
-                                   ("nongnu" . 2)
-                                   ("gnu" . 1)))
-(setq package-check-signature nil) ; 本来はnon-nilが望ましい
-(package-initialize)
-
-;; === use-packageの設定
-(unless (package-installed-p 'use-package)
-  (package-install 'use-package))
-(require 'use-package)
-
 ;;; early-init.el ends here

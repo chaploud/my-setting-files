@@ -79,6 +79,26 @@
 ;;; Code:
 
 ;;====================================================================
+;; パッケージ管理のセットアップ
+;;===================================================================
+
+;; === packageの設定
+(require 'package)
+(setq package-archives '(("gnu" . "https://elpa.gnu.org/packages/")
+                         ("nongnu" . "https://elpa.nongnu.org/nongnu/")
+                         ("melpa" . "https://melpa.org/packages/")))
+(setq package-archive-priorities '(("melpa" . 3)
+                                   ("nongnu" . 2)
+                                   ("gnu" . 1)))
+(setq package-check-signature nil) ; 本来はnon-nilが望ましい
+(package-initialize)
+
+;; === use-packageの設定
+(unless (package-installed-p 'use-package)
+  (package-install 'use-package))
+(require 'use-package)
+
+;;====================================================================
 ;; ユーティリティ関数
 ;;===================================================================
 ;; === 時間計測
@@ -128,6 +148,19 @@
         (message "Copied: %s" relpath))
     (user-error "Not visiting a file in a project.")))
 
+;; === 起動高速化のために、idle時に初回実行
+(defun my-run-after-startup-idle (fn &optional delay)
+  "Run FN after Emacs startup when idle for DELAY seconds."
+  (let ((delay (or delay 1)))
+    (add-hook
+     'emacs-startup-hook
+     (lambda ()
+       (run-with-idle-timer
+        delay nil
+        (lambda ()
+          (when (functionp fn)
+            (funcall fn))))))))
+
 ;;===== TIPS / Rules of use-package ==================================
 ;; :ensure 組み込みパッケージにはnil, 外部パッケージにはtを指定
 ;; :vc GitHubやCodebergなどから直接インストールする場合に利用
@@ -141,7 +174,8 @@
 ;; :interpreter shebangからモード決定
 ;; :bind キーバインド設定
 ;; :bind* キーバインド設定 (優先度高)
-;; :defer tで遅延ロード
+;; :defer tでパッケージの遅延ロード
+;; :if 条件付きでブロック評価
 ;;====================================================================
 
 ;; === ローディング開始メッセージ
@@ -153,8 +187,12 @@
 
 (use-package exec-path-from-shell
   :ensure t
-  :config
-  (exec-path-from-shell-initialize))
+  :if (display-graphic-p)
+  :init
+  (my-run-after-startup-idle
+   (lambda ()
+     (require 'exec-path-from-shell)
+     (exec-path-from-shell-initialize))))
 
 ;;====================================================================
 ;; パスワード連携
@@ -248,6 +286,7 @@
   (setopt project-list-file (concat my-cache "projects"))
   (setopt copilot-install-dir (concat my-cache "copilot/")))
 
+;; === emacsclient用のサーバー設定
 (use-package server
   :ensure nil
   :custom
@@ -931,6 +970,7 @@
 ;; 初回起動後にM-x copilot-install-serverが必要
 (use-package copilot
   :ensure t
+  :defer t
   :vc (:url "https://github.com/copilot-emacs/copilot.el" :rev :newest :branch "main")
   :hook
   (prog-mode . copilot-mode)
@@ -953,6 +993,7 @@
 ;; Claude CodeのインストールとAPIキー設定が必要
 (use-package claude-code-ide
   :ensure t
+  :defer t
   :vc (:url "https://github.com/manzaltu/claude-code-ide.el" :rev :newest)
   :custom
   (claude-code-ide-window-width 0.4)
@@ -1121,13 +1162,16 @@
 ;; https://github.com/cola-io/codex-acpのビルド(cargo)
 
 (use-package shell-maker
-  :vc (:url "https://github.com/xenodium/shell-maker"))
+  :vc (:url "https://github.com/xenodium/shell-maker")
+  :defer t)
 
 (use-package acp
-  :vc (:url "https://github.com/xenodium/acp.el"))
+  :vc (:url "https://github.com/xenodium/acp.el")
+  :defer t)
 
 (use-package agent-shell
   :vc (:url "https://github.com/xenodium/agent-shell")
+  :defer t
   :config
   (setq agent-shell-openai-authentication
         (agent-shell-openai-make-authentication
@@ -1141,6 +1185,7 @@
 
 (use-package treesit
   :ensure nil
+  :defer t
   :custom
   ;; === tree-sitterによる色付けmax
   (treesit-font-lock-level 4)
@@ -1474,6 +1519,7 @@
 
 (use-package sh-script
   :ensure nil
+  :defer t
   :mode (("\\.\\(sh\\|bash\\)\\'" . bash-ts-mode) ; sh/bash
          ("\\.?\\(bashrc\\|bash_profile\\)\\'" . bash-ts-mode) ; bash
          ("\\.?zsh\\(rc\\|env\\|profile\\)?\\'" . bash-ts-mode)) ; zsh
@@ -1491,6 +1537,7 @@
 ;; brew install llvm
 (use-package c-ts-mode
   :ensure nil
+  :defer t
   :mode (("\\.c\\'" . c-ts-mode)
          ("\\.h\\'" . c-ts-mode)))
 
@@ -1502,10 +1549,12 @@
 
 (use-package html-ts-mode
   :ensure nil
+  :defer t
   :mode "\\.x?html\\'")
 
 (use-package css-ts-mode
   :ensure nil
+  :defer t
   :mode "\\.css\\'")
 
 (use-package json-ts-mode
@@ -1528,6 +1577,7 @@
 
 (use-package js-ts-mode
   :ensure nil
+  :defer t
   :mode (("\\.js\\'" . js-ts-mode)
          ("\\.cjs\\'" . js-ts-mode)
          ("\\.mjs\\'" . js-ts-mode)
@@ -1537,10 +1587,12 @@
 
 (use-package typescript-ts-mode
   :ensure nil
+  :defer t
   :mode "\\.ts\\'")
 
 (use-package tsx-ts-mode
   :ensure nil
+  :defer t
   :mode "\\.tsx\\'")
 
 ;;====================================================================
@@ -1550,11 +1602,13 @@
 ;; npm i -g dockerfile-language-server-nodejs
 (use-package dockerfile-ts-mode
   :ensure nil
+  :defer t
   :mode (("Dockerfile\\'" . dockerfile-ts-mode)
          ("\\.dockerfile\\'" . dockerfile-ts-mode)))
 
 (use-package docker
   :ensure t
+  :defer t
   :custom
   (docker-container-columns
    '((:name "Names" :width 30 :template "{{ json .Names }}" :sort nil :format nil)
@@ -1575,6 +1629,7 @@
 
 (use-package yaml-ts-mode
   :ensure nil
+  :defer t
   :mode ("\\.ya?ml\\'" . yaml-ts-mode))
 
 ;;====================================================================
@@ -1585,6 +1640,7 @@
 
 (use-package terraform-mode
   :ensure t
+  :defer t
   :mode "\\.tf\\'")
 
 ;;====================================================================
@@ -1595,6 +1651,7 @@
 
 (use-package java-ts-mode
   :ensure nil
+  :defer t
   :mode "\\.java\\'")
 
 ;;====================================================================
@@ -1602,6 +1659,7 @@
 ;;====================================================================
 (use-package groovy-mode
   :ensure t
+  :defer t
   :mode "\\.gradle\\'")
 
 ;;====================================================================
@@ -1611,6 +1669,7 @@
 ;; pipx install 'python-lsp-server[all]'
 (use-package python-ts-mode
   :ensure nil
+  :defer t
   :mode "\\.py\\'"
   :interpreter ("python" . python-ts-mode))
 
@@ -1621,6 +1680,7 @@
 ;; gem install ruby-lsp ruby-lsp-rails ruby-lsp-rspec rubocop rubocop-rails syntax_tree
 (use-package ruby-ts-mode
   :ensure nil
+  :defer t
   :mode (("\\.rb\\'" . ruby-ts-mode)
          ("\\.rake\\'" . ruby-ts-mode)
          ("Rakefile\\'" . ruby-ts-mode)
@@ -1633,6 +1693,7 @@
 ;; rustupのインストール
 (use-package rust-ts-mode
   :ensure nil
+  :defer t
   :mode "\\.rs\\'")
 
 ;;====================================================================
@@ -1640,6 +1701,7 @@
 ;;====================================================================
 (use-package toml-ts-mode
   :ensure nil
+  :defer t
   :mode "\\.toml\\'")
 
 ;;====================================================================
@@ -1651,6 +1713,7 @@
 
 (use-package zig-mode
   :ensure t
+  :defer t
   :mode (("\\.zig\\'" . zig-mode)
          ("\\.zon\\'" . zig-mode)))
 
@@ -1662,6 +1725,7 @@
 
 (use-package sql
   :ensure nil
+  :defer t
   :custom
   (sql-postgres-login-params nil)
   (sql-connection-alist
