@@ -1400,7 +1400,10 @@
   :mode ("\\.md\\'" . gfm-mode)
   :init
   (setq markdown-command '("pandoc" "--from=markdown" "--to=html5"))
-
+  :bind
+  (:map markdown-mode-map
+        ("<backtab>" . markdown-promote)
+        ("<normal-state> S-<tab>" . markdown-promote))
   :custom
   (markdown-fontify-code-blocks-natively t)
   (markdown-indent-on-enter 'indent-and-new-item)
