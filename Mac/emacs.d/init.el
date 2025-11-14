@@ -921,12 +921,12 @@
   ;; -------------------------------------------------------
   ;; 1. 結果表示用のヘルパー関数
   ;; -------------------------------------------------------
-  (defvar my/plz-response-buffer "*Plz Response*"
+  (defvar my-plz-response-buffer "*Plz Response*"
     "APIレスポンスを表示するバッファ名")
 
-  (defun my/plz-handle-response (content)
+  (defun my-plz-handle-response (content)
     "レスポンス(文字列)をバッファに挿入し、Emacs標準機能で整形する"
-    (let ((buf (get-buffer-create my/plz-response-buffer)))
+    (let ((buf (get-buffer-create my-plz-response-buffer)))
       (with-current-buffer buf
         (read-only-mode -1) ;; 書き込み許可
         (erase-buffer)
@@ -951,23 +951,23 @@
         (special-mode))
       (pop-to-buffer buf)))
 
-  (defun my/plz-handle-error (err)
+  (defun my-plz-handle-error (err)
     "エラー時の処理"
     (message "Plz Error: %S" err))
 
   ;; -------------------------------------------------------
   ;; 2. インタラクティブコマンド (GET / POST)
   ;; -------------------------------------------------------
-  (defun my/plz-get (url)
+  (defun my-plz-get (url)
     "URLを入力してGETし、標準機能でJSON整形して表示"
     (interactive "sURL to GET: ")
     (message "Requesting (GET) %s ..." url)
     (plz 'get url
       :as 'string
-      :then 'my/plz-handle-response
-      :else 'my/plz-handle-error))
+      :then 'my-plz-handle-response
+      :else 'my-plz-handle-error))
 
-  (defun my/plz-post-region (url start end)
+  (defun my-plz-post-region (url start end)
     "選択範囲(Region)のJSONをBodyとしてPOSTし、標準機能でJSON整形して表示"
     (interactive "sURL to POST: \nr")
     (let ((body (buffer-substring-no-properties start end)))
@@ -976,8 +976,8 @@
         :headers '(("Content-Type" . "application/json"))
         :body body
         :as 'string
-        :then 'my/plz-handle-response
-        :else 'my/plz-handle-error))))
+        :then 'my-plz-handle-response
+        :else 'my-plz-handle-error))))
 
 ;;====================================================================
 ;; GitHub Copilot連携
@@ -1499,6 +1499,7 @@
 ;; Javaライブラリのジャンプ時などに
 (use-package jarchive
   :ensure t
+  :after eglot
   :config
   (jarchive-setup))
 
@@ -1756,9 +1757,6 @@
     "t f" '(flymake-mode :wk "toggle flymake")
     "t c" '(copilot-mode :wk "toggle copilot")
 
-    ;; (c) cd on vterm
-    "c" '(my-cd-on-vterm :wk "cd on vterm")
-
     ;; (q) 終了操作
     "q" '(:ignore t :wk "Quit")
     "q q" '(save-buffers-kill-terminal :wk "quit")
@@ -1820,6 +1818,18 @@
     "d c" '(docker-containers :wk "docker containers")
     "d b" '(sql-connect :wk "db connect")
 
+    ;; (l) LSP (eglot) 操作
+    "l" '(:ignore t :wk "LSP")
+    "l s" '(my-eglot-start :wk "lsp start")
+
+    ;; (c) cd on vterm
+    "c" '(my-cd-on-vterm :wk "cd on vterm")
+
+    ;; (h) http
+    "h" '(:ignore t :wk "HTTP")
+    "h g" '(my-plz-get :wk "GET")
+    "h p" '(my-plz-post-region :wk "POST region")
+
     ;; (a) 生成AI系
     "a" '(:ignore t :wk "AI")
     ;; Claude Code IDE (M-RET: 改行, C-ESC: エスケープ)
@@ -1837,12 +1847,6 @@
     "a c" '(claude-code-ide-continue :wk "Claude continue")
     "a r" '(claude-code-ide-resume :wk "Claude resume")
     "a l" '(claude-code-ide-list-sessions :wk "Claude list sessions")
-    ;; Codex (agent-shell)
-    "a x" '(agent-shell-openai-start-codex :wk "Codex")
-
-    ;; (l) LSP (eglot) 操作
-    "l" '(:ignore t :wk "LSP")
-    "l s" '(my-eglot-start :wk "lsp start")
     )
 
   ;; LSP (eglot) 操作 (SPC l)
@@ -1976,14 +1980,16 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages nil)
+ '(package-selected-packages '(claude-code-ide copilot ultra-scroll))
  '(package-vc-selected-packages
    '((claude-code-ide :url
                       "https://github.com/manzaltu/claude-code-ide.el")
      (copilot :url "https://github.com/copilot-emacs/copilot.el"
               :branch "main")))
  '(safe-local-variable-values
-   '((cider-path-translations
+   '((cider-connect-default-cljs-params :host "localhost" :port 9501)
+     (cider-connect-default-params :host "localhost" :port 9500)
+     (cider-path-translations
       ("/usr/local/eboshigara" . "~/Studist/teachme_eboshigara")
       ("/root/.m2" . "~/.m2"))
      (cider-connect-default-cljs-params :host "localhost" :port 9631)

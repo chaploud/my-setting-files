@@ -12,17 +12,6 @@
 ;; emacs 30.2
 
 ;;====================================================================
-;; 起動時間最適化
-;;===================================================================
-;; file-name-handlerを一時的に無効化して起動時間を短縮
-(defvar my--file-name-handler-alist file-name-handler-alist)
-(setq file-name-handler-alist nil)
-(add-hook 'emacs-startup-hook
-          (lambda ()
-            (setq file-name-handler-alist my--file-name-handler-alist)
-            (makunbound 'my--file-name-handler-alist)))
-
-;;====================================================================
 ;; 最初期のGUI設定
 ;;===================================================================
 
