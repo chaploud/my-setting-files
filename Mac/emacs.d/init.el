@@ -148,6 +148,38 @@
         (message "Copied: %s" relpath))
     (user-error "Not visiting a file in a project.")))
 
+(defun my-reset-emacs ()
+  "Kill all perspectives except the current one, and kill all buffers except Eglot buffers."
+  (interactive)
+  ;; dashboard開く
+  (dashboard-open)
+
+  ;; 他のperspectiveを削除
+  (let ((self (persp-current-name))) ; persp-kill-othersから拝借
+    (cl-loop for p in (persp-names)
+             when (not (string-equal p self)) do
+             (persp-kill p))
+
+    ;; 今のperspective名がmainでなければmainにリネーム
+    (when (not (string-equal self "main"))
+      (persp-rename "main")))
+
+  ;; 他のバッファを全て削除
+  (cl-loop for buf in (persp-current-buffers) ; persp-kill-other-buffersから拝借
+           unless (or (eq buf (current-buffer))
+                      (eq buf (get-buffer (persp-scratch-buffer))))
+           do (kill-buffer buf))
+
+  ;; *EGLOT プロセスバッファを削除
+  (dolist (buf (buffer-list))
+    (when (string-match-p "^\\*EGLOT" (buffer-name buf))
+      (kill-buffer buf)))
+
+  ;; ウィンドウ分割してない状態に
+  (delete-other-windows)
+
+  (message "(my-rest-emacs) done."))
+
 ;;===== TIPS / Rules of use-package ==================================
 ;; :ensure 組み込みパッケージにはnil, 外部パッケージにはtを指定
 ;; :vc GitHubやCodebergなどから直接インストールする場合に利用
@@ -1464,7 +1496,6 @@
 ;; Javaライブラリのジャンプ時などに
 (use-package jarchive
   :ensure t
-  :after eglot
   :config
   (jarchive-setup))
 
@@ -1728,7 +1759,7 @@
     ;; (q) 終了操作
     "q" '(:ignore t :wk "Quit")
     "q q" '(save-buffers-kill-terminal :wk "quit")
-    "q r" '(restart-emacs :wk "restart")
+    "q r" '(my-reset-emacs :wk "reset emacs")
 
     ;; (f) ファイル操作
     "f" '(:ignore t :wk "Files")
