@@ -174,12 +174,8 @@
 
 (use-package exec-path-from-shell
   :ensure t
-  :if (display-graphic-p)
-  :init
-  (my-run-after-startup-idle
-   (lambda ()
-     (require 'exec-path-from-shell)
-     (exec-path-from-shell-initialize))))
+  :config
+  (exec-path-from-shell-initialize))
 
 ;;====================================================================
 ;; パスワード連携
@@ -742,7 +738,6 @@
 ;; === embark-exportしたバッファを直接編集して一括置換などを実現する (wgrep)
 (use-package wgrep
   :ensure t
-  :defer t
   :commands (wgrep-change-to-wgrep-mode)
   :custom
   (wgrep-auto-save-buffer t)
@@ -959,7 +954,6 @@
 ;; 初回起動後にM-x copilot-install-serverが必要
 (use-package copilot
   :ensure t
-  :defer t
   :vc (:url "https://github.com/copilot-emacs/copilot.el" :rev :newest :branch "main")
   :hook
   (prog-mode . copilot-mode)
@@ -982,7 +976,7 @@
 ;; Claude CodeのインストールとAPIキー設定が必要
 (use-package claude-code-ide
   :ensure t
-  :defer t
+  :commands (my-claude-code-ide-with-scratch)
   :vc (:url "https://github.com/manzaltu/claude-code-ide.el" :rev :newest)
   :custom
   (claude-code-ide-window-width 0.4)
@@ -1143,30 +1137,6 @@
         (claude-code-ide--terminal-send-return))
       (message "Claude Codeに送信しました: %s" (substring text 0 (min 50 (length text))))))
   )
-
-;;====================================================================
-;; Codex (agent-shell)
-;;====================================================================
-;; npm i -g @openai/codex
-;; https://github.com/cola-io/codex-acpのビルド(cargo)
-
-(use-package shell-maker
-  :vc (:url "https://github.com/xenodium/shell-maker")
-  :defer t)
-
-(use-package acp
-  :vc (:url "https://github.com/xenodium/acp.el")
-  :defer t)
-
-(use-package agent-shell
-  :vc (:url "https://github.com/xenodium/agent-shell")
-  :defer t
-  :config
-  (setq agent-shell-openai-authentication
-        (agent-shell-openai-make-authentication
-         :api-key
-         (lambda ()
-           (auth-source-pass-get 'secret "openai-api-key")))))
 
 ;;====================================================================
 ;; Tree-sitter
@@ -1992,11 +1962,18 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(package-selected-packages nil)
  '(package-vc-selected-packages
    '((claude-code-ide :url
                       "https://github.com/manzaltu/claude-code-ide.el")
      (copilot :url "https://github.com/copilot-emacs/copilot.el"
-              :branch "main"))))
+              :branch "main")))
+ '(safe-local-variable-values
+   '((cider-path-translations
+      ("/usr/local/eboshigara" . "~/Studist/teachme_eboshigara")
+      ("/root/.m2" . "~/.m2"))
+     (cider-connect-default-cljs-params :host "localhost" :port 9631)
+     (cider-connect-default-params :host "localhost" :port 42004))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -2016,6 +1993,7 @@
  '(font-lock-comment-delimiter-face ((t (:foreground "#5ab5b0"))))
  '(font-lock-comment-face ((t (:foreground "#5ab5b0"))))
  '(match ((t (:background "#eed49f" :foreground "#1e2030"))))
+ '(mode-line ((t (:background "#1e2030"))))
  '(show-paren-match ((t (:background "#8aadf4" :foreground "#1e2030" :weight bold))))
  '(show-paren-mismatch ((t (:background "#ed8796" :foreground "#1e2030" :weight bold))))
  '(trailing-whitespace ((t (:background "#ed8796" :foreground "#ed8796")))))
