@@ -148,19 +148,6 @@
         (message "Copied: %s" relpath))
     (user-error "Not visiting a file in a project.")))
 
-;; === 起動高速化のために、idle時に初回実行
-(defun my-run-after-startup-idle (fn &optional delay)
-  "Run FN after Emacs startup when idle for DELAY seconds."
-  (let ((delay (or delay 1)))
-    (add-hook
-     'emacs-startup-hook
-     (lambda ()
-       (run-with-idle-timer
-        delay nil
-        (lambda ()
-          (when (functionp fn)
-            (funcall fn))))))))
-
 ;;===== TIPS / Rules of use-package ==================================
 ;; :ensure 組み込みパッケージにはnil, 外部パッケージにはtを指定
 ;; :vc GitHubやCodebergなどから直接インストールする場合に利用
