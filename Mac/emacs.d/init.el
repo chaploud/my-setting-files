@@ -755,6 +755,8 @@
 ;; === embark-exportしたバッファを直接編集して一括置換などを実現する (wgrep)
 (use-package wgrep
   :ensure t
+  :defer t
+  :commands (wgrep-change-to-wgrep-mode)
   :custom
   (wgrep-auto-save-buffer t)
   (wgrep-change-readonly-file t))
