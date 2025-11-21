@@ -336,9 +336,8 @@
     (let* ((line (line-number-at-pos))
            (buf (or (file-name-nondirectory (or (buffer-file-name) ""))
                     (buffer-name)))
-           (name (format "%s:L%d" (if (string-empty-p buf) (buffer-name) buf) line))
-           (record (bookmark-make-record)))
-      (bookmark-store name record t))))
+           (name (format "%s:L%d" (if (string-empty-p buf) (buffer-name) buf) line)))
+      (bookmark-set-internal nil name 'overwrite))))
 
 ;;====================================================================
 ;; バッファの表示方法についての設定 (display-buffer-alist)
