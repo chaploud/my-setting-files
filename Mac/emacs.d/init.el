@@ -496,8 +496,8 @@
 ;; Claude Codeの処理中の*マークのアニメーションでガタガタするのを防ぐ
 (dolist (char '(#x00B7 #x2722 #x2733 #x2736 #x273B #x273D))
   (set-fontset-font t char (font-spec :family "JuliaMono")))
-(set-fontset-font t 'han (font-spec :family "Source Han Code JP") nil 'prepend)
-(set-face-attribute 'default nil :font "Source Han Code JP" :height 130)
+(set-fontset-font t 'han (font-spec :family "Relaxed Typing Mono JP") nil 'prepend)
+(set-face-attribute 'default nil :font "Relaxed Typing Mono JP" :height 160)
 
 ;; === nerd iconsを利用
 ;; 初回にM-x nerd-icons-install-fontsの実行が必要(既にインストールされていれば不要)
