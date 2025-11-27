@@ -128,3 +128,7 @@ alias tmup='gf && docker compose down && docker compose up'
 
 # teachme_eboshigara
 alias mup='gf && docker compose down && docker compose up'
+
+export WASMTIME_HOME="$HOME/.wasmtime"
+
+export PATH="$WASMTIME_HOME/bin:$PATH"

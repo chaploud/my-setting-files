@@ -180,6 +180,41 @@
 
   (message "(my-rest-emacs) done."))
 
+(defvar my-notes-root (expand-file-name "~/Documents/MyNote/"))
+(defvar my-inbox-dir (expand-file-name "00_inbox/" my-notes-root))
+(defun my-get-next-inbox-number ()
+  (let* ((files (directory-files my-inbox-dir nil "\\`[0-9]\\{3\\}_.*\\.md\\'"))
+         (numbers (mapcar (lambda (f)
+                            (string-to-number (substring f 0 3)))
+                          files))
+         (max-number (if numbers (apply 'max numbers) 0)))
+    (format "%03d" (1+ max-number))))
+
+(defun my-new-note (title)
+  "Create a new inbox note with an incremented number."
+  (interactive "sNote title: ")
+  (let* ((next-number (my-get-next-inbox-number))
+         (safe-title (replace-regexp-in-string "[^[:alnum:]-_]" "_" title))
+         (filename (concat next-number "_" safe-title ".md"))
+         (filepath (expand-file-name filename my-inbox-dir)))
+    (find-file filepath)
+    (unless (file-exists-p filepath)
+      (insert (format "# %s\n\n" title))
+      (save-buffer))
+    (message "Created note: %s" filepath)))
+
+(defun my-find-note ()
+  "Search notes in my-notes-root using ripgrep and open the selected one."
+  (interactive)
+  (let ((default-directory my-notes-root))
+    (call-interactively 'project-find-file)))
+
+(defun my-grep-note ()
+  "Grep notes in my-notes-root using ripgrep and open the selected one."
+  (interactive)
+  (let ((default-directory my-notes-root))
+    (call-interactively 'consult-ripgrep)))
+
 ;;===== TIPS / Rules of use-package ==================================
 ;; :ensure 組み込みパッケージにはnil, 外部パッケージにはtを指定
 ;; :vc GitHubやCodebergなどから直接インストールする場合に利用
@@ -375,6 +410,12 @@
    ("C-h k" . helpful-key)
    ("C-h x" . helpful-command)
    ("C-h ." . helpful-at-point)))
+
+;;====================================================================
+;; リネームなどで便利 (bufferfile.el)
+;;====================================================================
+(use-package bufferfile
+  :ensure t)
 
 ;;====================================================================
 ;; 日本語入力
@@ -1770,6 +1811,12 @@
     "f t" '(treemacs :wk "treemacs")
     "f y" '(my-copy-project-relative-path :wk "copy relative path")
 
+    ;; (n) ノート操作
+    "n" '(:ignore t :wk "Notes")
+    "n n" '(my-new-note :wk "new note")
+    "n f" '(my-find-note :wk "find note")
+    "n s" '(my-grep-note :wk "search note")
+
     ;; (i) init.el操作
     "i" '(:ignore t :wk "init.el")
     "i i" '(my-open-user-init :wk "open init.el")
@@ -1779,6 +1826,7 @@
     "b" '(:ignore t :wk "Buffers/Bookmark")
     "b b" '(consult-buffer :wk "buffer switch")
     "b d" '(kill-current-buffer :wk "buffer kill")
+    "b r" '(bufferfile-rename :wk "rename buffer file")
     "b h" '(dashboard-open :wk "dashboard home")
     "b l" '(consult-bookmark :wk "bookmark list")
     "b s" '(my-bookmark-set :wk "bookmark set")
@@ -1944,6 +1992,12 @@
    :states '(normal)
    "K" 'helpful-at-point)
 
+  ;; === Clojureのキーバインド強制上書き
+  (general-define-key
+   :keymaps '(cider-mode-map)
+   :states '(normal)
+   "K" 'eldoc)
+
   ;; === Markdown
   (my-local-leader-def
     :keymaps '(gfm-mode-map)
@@ -1979,7 +2033,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages '(claude-code-ide copilot ultra-scroll))
+ '(package-selected-packages '(bufferfile claude-code-ide copilot ultra-scroll))
  '(package-vc-selected-packages
    '((claude-code-ide :url
                       "https://github.com/manzaltu/claude-code-ide.el")
