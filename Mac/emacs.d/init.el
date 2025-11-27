@@ -44,7 +44,7 @@
 ;; [SQL] go install github.com/sqls-server/sqls@latest
 
 ;; === 必要フォント
-;; Source Han Code JP (https://github.com/adobe-fonts/source-han-code-jp)
+;; relaxed-typing-mono-jp (https://github.com/mshioda/relaxed-typing-mono-jp)
 ;; UDEV Gothic 35NF (https://github.com/yuru7/udev-gothic)
 ;; JuliaMono (https://github.com/cormullion/juliamono/releases)
 
