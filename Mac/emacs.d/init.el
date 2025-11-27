@@ -196,10 +196,12 @@
   (let* ((next-number (my-get-next-inbox-number))
          (safe-title (replace-regexp-in-string "[^[:alnum:]-_]" "_" title))
          (filename (concat next-number "_" safe-title ".md"))
-         (filepath (expand-file-name filename my-inbox-dir)))
+         (filepath (expand-file-name filename my-inbox-dir))
+         (timestamp (format-time-string "%Y-%m-%d %H:%M")))
     (find-file filepath)
     (unless (file-exists-p filepath)
       (insert (format "# %s\n\n" title))
+      (insert (format "最終更新: %s \n\n" timestamp))
       (save-buffer))
     (message "Created note: %s" filepath)))
 
