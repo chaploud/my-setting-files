@@ -536,7 +536,6 @@
   (doom-modeline-major-mode-icon nil) ; アイコン不要
   (doom-modeline-modal nil) ; evilのモード表示不要
   (doom-modeline-buffer-file-name-style 'file-name) ; ファイル名のみ
-  (doom-modeline-percent-position nil) ; 位置の%表示不要
   (doom-modeline-buffer-encoding nil) ; LF/UTF-8などの表示不要
   :config
   (doom-modeline-def-modeline 'my-main ; anzuのカウントを左グループの右端に表示
