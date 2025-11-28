@@ -496,8 +496,8 @@
 ;; Claude Codeの処理中の*マークのアニメーションでガタガタするのを防ぐ
 (dolist (char '(#x00B7 #x2722 #x2733 #x2736 #x273B #x273D))
   (set-fontset-font t char (font-spec :family "JuliaMono")))
-(set-fontset-font t 'han (font-spec :family "Relaxed Typing Mono JP") nil 'prepend)
-(set-face-attribute 'default nil :font "Relaxed Typing Mono JP" :height 160)
+(set-fontset-font t 'han (font-spec :family "Source Han Code JP") nil 'prepend)
+(set-face-attribute 'default nil :font "Source Han Code JP" :height 130)
 
 ;; === nerd iconsを利用
 ;; 初回にM-x nerd-icons-install-fontsの実行が必要(既にインストールされていれば不要)
@@ -1731,7 +1731,13 @@
 (use-package zig-mode
   :ensure t
   :mode (("\\.zig\\'" . zig-mode)
-         ("\\.zon\\'" . zig-mode)))
+         ("\\.zon\\'" . zig-mode))
+  :hook
+  (eglot-managed-mode-hook
+   .
+   (lambda ()
+     (when (eq major-mode 'zig-mode)
+       (eglot-inlay-hints-mode -1)))))
 
 ;;====================================================================
 ;; DB接続
@@ -2034,20 +2040,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages '(bufferfile claude-code-ide copilot ultra-scroll))
- '(package-vc-selected-packages
-   '((claude-code-ide :url
-                      "https://github.com/manzaltu/claude-code-ide.el")
-     (copilot :url "https://github.com/copilot-emacs/copilot.el"
-              :branch "main")))
- '(safe-local-variable-values
-   '((cider-connect-default-cljs-params :host "localhost" :port 9501)
-     (cider-connect-default-params :host "localhost" :port 9500)
-     (cider-path-translations
-      ("/usr/local/eboshigara" . "~/Studist/teachme_eboshigara")
-      ("/root/.m2" . "~/.m2"))
-     (cider-connect-default-cljs-params :host "localhost" :port 9631)
-     (cider-connect-default-params :host "localhost" :port 42004))))
+ )
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
