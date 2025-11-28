@@ -2040,7 +2040,20 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(package-selected-packages nil)
+ '(package-vc-selected-packages
+   '((claude-code-ide :url
+                      "https://github.com/manzaltu/claude-code-ide.el")
+     (copilot :url "https://github.com/copilot-emacs/copilot.el"
+              :branch "main")))
+ '(safe-local-variable-values
+   '((cider-connect-default-cljs-params :host "localhost" :port 9501)
+     (cider-connect-default-params :host "localhost" :port 9500)
+     (cider-path-translations
+      ("/usr/local/eboshigara" . "~/Studist/teachme_eboshigara")
+      ("/root/.m2" . "~/.m2"))
+     (cider-connect-default-cljs-params :host "localhost" :port 9631)
+     (cider-connect-default-params :host "localhost" :port 42004))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
