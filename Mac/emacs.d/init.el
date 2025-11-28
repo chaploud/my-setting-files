@@ -1737,7 +1737,42 @@
    .
    (lambda ()
      (when (eq major-mode 'zig-mode)
-       (eglot-inlay-hints-mode -1)))))
+       (eglot-inlay-hints-mode -1))))
+  :config
+  (setq compilation-auto-jump-to-first-error t)
+
+  (defun my-zig-build-project ()
+    (interactive)
+    (let* ((proj (project-current))
+           (project-root (if proj (project-root proj) default-directory))
+           (default-directory project-root))
+      (compile "make -k build")))
+
+  (defun my-zig-run-project ()
+    (interactive)
+    (let* ((proj (project-current))
+           (project-root (if proj (project-root proj) default-directory))
+           (default-directory project-root))
+      (compile "make -k run")))
+
+  (defun my-zig-test-project ()
+    (interactive)
+    (let* ((proj (project-current))
+           (project-root (if proj (project-root proj) default-directory))
+           (default-directory project-root))
+      (compile "make -k test"))))
+
+;;====================================================================
+;; Makefile
+;;====================================================================
+;; [依存関係]
+;; brew install checkmake
+(add-to-list 'auto-mode-alist '("\\(?:[Mm]akefile\\|\\.mk\\)\\'" . makefile-mode))
+(add-hook 'makefile-mode-hook
+          (lambda ()
+            (setq-local indent-tabs-mode t)
+            (setq-local tab-width 4)))
+(add-hook 'compilation-filter-hook 'ansi-color-compilation-filter)
 
 ;;====================================================================
 ;; DB接続
@@ -2004,6 +2039,14 @@
    :keymaps '(cider-mode-map)
    :states '(normal)
    "K" 'eldoc)
+
+  ;; === Zig (,)
+  (my-local-leader-def
+    :keymaps '(zig-mode-map)
+    "b" '(my-zig-build-project :wk "build")
+    "r" '(my-zig-run-project :wk "run")
+    "t" '(my-zig-test-project :wk "test")
+    "f" '(zig-format-buffer :wk "format"))
 
   ;; === Markdown
   (my-local-leader-def
