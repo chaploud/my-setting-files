@@ -1340,6 +1340,12 @@
 (add-hook 'before-save-hook #'whitespace-cleanup) ;; trailing spacesの削除
 
 ;;====================================================================
+;; eldoc-box
+;;====================================================================
+(use-package eldoc-box
+  :ensure t)
+
+;;====================================================================
 ;; LSP (eglot)
 ;;====================================================================
 
@@ -1838,6 +1844,8 @@
     "t l" '(toggle-truncate-lines :wk "truncate line")
     "t f" '(flymake-mode :wk "toggle flymake")
     "t c" '(copilot-mode :wk "toggle copilot")
+    "t h" '(eldoc-box-hover-at-point-mode :wk "toggle eldoc-box 1")
+    "t H" '(eldoc-box-hover-mode :wk "toggle eldoc-box 2")
 
     ;; (q) 終了操作
     "q" '(:ignore t :wk "Quit")
@@ -1928,9 +1936,9 @@
     "a i" '(claude-code-ide-insert-at-mentioned :wk "Claude insert at mentioned")
     "a s" '(my-claude-code-ide-send-region-or-prompt :wk "Claude send prompt")
     "a n" '(claude-code-ide-insert-newline :wk "Claude insert newline")
-    "a 1" '(my-claude-code-ide-send-number-1 :wk "Claude send '1'")
-    "a 2" '(my-claude-code-ide-send-number-2 :wk "Claude send '2'")
-    "a 3" '(my-claude-code-ide-send-number-3 :wk "Claude send '3'")
+    "1" '(my-claude-code-ide-send-number-1 :wk "Claude send '1'")
+    "2" '(my-claude-code-ide-send-number-2 :wk "Claude send '2'")
+    "3" '(my-claude-code-ide-send-number-3 :wk "Claude send '3'")
     "a e" '(claude-code-ide-send-escape :wk "Claude send escape")
     "a q" '(claude-code-ide-stop :wk "Claude stop")
     "a c" '(claude-code-ide-continue :wk "Claude continue")
@@ -2083,7 +2091,19 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages nil)
+ '(package-selected-packages
+   '(bufferfile cape catppuccin-theme cider claude-code-ide
+                clojure-ts-mode colorful-mode copilot corfu dashboard
+                ddskk diff-hl docker doom-modeline doom-themes
+                eglot-tempel eldoc-box embark-consult evil-anzu
+                evil-collection evil-commentary evil-escape
+                evil-goggles evil-numbers evil-surround
+                exec-path-from-shell general groovy-mode helpful
+                hl-todo jarchive magit marginalia markdown-mode
+                nerd-icons-corfu orderless plz puni rainbow-delimiters
+                spacemacs-theme terraform-mode treemacs-evil
+                treemacs-nerd-icons treemacs-perspective ultra-scroll
+                undo-fu undo-fu-session vertico vterm wgrep zig-mode))
  '(package-vc-selected-packages
    '((claude-code-ide :url
                       "https://github.com/manzaltu/claude-code-ide.el")
