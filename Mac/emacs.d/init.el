@@ -1802,6 +1802,33 @@
   :hook (sql-mode . (lambda () (sql-indent-enable))))
 
 ;;====================================================================
+;; elfeed
+;;====================================================================
+(defun my-elfeed-search-print-entry (entry)
+  "My Print ENTRY to the buffer."
+  (let* ((date (elfeed-search-format-date (elfeed-entry-date entry)))
+         (title (or (elfeed-meta entry :title) (elfeed-entry-title entry) ""))
+         (title-faces (elfeed-search--faces (elfeed-entry-tags entry)))
+         (title-width (- (window-width) 10 elfeed-search-trailing-width))
+         (title-column (elfeed-format-column
+                        title (elfeed-clamp
+                               elfeed-search-title-min-width
+                               title-width
+                               elfeed-search-title-max-width)
+                        :left)))
+    (insert (propertize date 'face 'elfeed-search-date-face) " ")
+    (insert (propertize title-column 'face title-faces 'kbd-help title) " ")))
+
+(use-package elfeed
+  :ensure t
+  :custom
+  (elfeed-search-title-min-width 40)
+  (elfeed-search-title-max-width 120)
+  (elfeed-search-filter "@1-week-ago +unread")
+  (elfeed-search-print-entry-function 'my-elfeed-search-print-entry)
+  (shr-use-fonts nil))
+
+;;====================================================================
 ;; キーバインド (general.el)
 ;;====================================================================
 
@@ -1851,6 +1878,11 @@
     "q" '(:ignore t :wk "Quit")
     "q q" '(save-buffers-kill-terminal :wk "quit")
     "q r" '(my-reset-emacs :wk "reset emacs")
+
+    ;; (e) elfeed
+    "e" '(:ignore t :wk "elfeed")
+    "e f" '(elfeed :wk "elfeed")
+    "e r" '(elfeed-update :wk "elfeed update")
 
     ;; (f) ファイル操作
     "f" '(:ignore t :wk "Files")
@@ -2091,11 +2123,30 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(elfeed-feeds
+   '("https://www.reddit.com/r/emacs/.rss"
+     "https://qiita.com/tags/Emacs/feed.atom"
+     "https://planet.emacslife.com/atom.xml"
+     "https://developertoarchitect.com/lessons/index.xml"
+     "https://qiita.com/tags/webassembly/feed"
+     "https://qiita.com/tags/TypeScript/feed"
+     "https://qiita.com/tags/Vim/feed.atom"
+     "https://qiita.com/popular-items/feed"
+     "https://rss.itmedia.co.jp/rss/2.0/techtarget.xml"
+     "https://news.google.com/news/rss/search?q=%22Zig%20Language%22%20OR%20%22ziglang%22&hl=en"
+     "https://zenn.dev/feed"
+     "https://codezine.jp/rss/new/20/index.xml"
+     "https://news.google.com/news/rss/search?q=%22wasm%22%20OR%20%22WASM%22%20OR%20%22WebAssembly%22%20OR&hl=ja-JP&gl=JP&ceid=JP:ja"
+     "https://planet.clojure.in/atom.xml"
+     "https://speakerdeck.com/c/programming.atom"
+     "https://speakerdeck.com/c/technology.atom"
+     "https://realtime.jser.info/feed.xml"
+     "https://www.publickey1.jp/atom.xml"))
  '(package-selected-packages
    '(bufferfile cape catppuccin-theme cider claude-code-ide
                 clojure-ts-mode colorful-mode copilot corfu dashboard
                 ddskk diff-hl docker doom-modeline doom-themes
-                eglot-tempel eldoc-box embark-consult evil-anzu
+                eglot-tempel eldoc-box elfeed embark-consult evil-anzu
                 evil-collection evil-commentary evil-escape
                 evil-goggles evil-numbers evil-surround
                 exec-path-from-shell general groovy-mode helpful
