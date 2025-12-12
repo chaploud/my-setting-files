@@ -875,6 +875,18 @@
   (add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter))
 
 ;;====================================================================
+;; GitHub連携 (forge)
+;;====================================================================
+
+(use-package forge
+  :after magit
+  :ensure t
+  :config
+  ;; GitHubのアクセストークンを取得しておくこと
+  ;; ~/.authinfo.gpgにGitHubのアクセストークンを設定しておくこと
+  (setq forge-owned-accounts '("chaploud")))
+
+;;====================================================================
 ;; ターミナル (vterm)
 ;;====================================================================
 
@@ -960,6 +972,9 @@
   :hook
   (magit-pre-refresh-hook  . diff-hl-magit-pre-refresh)
   (magit-post-refresh-hook . diff-hl-magit-post-refresh))
+
+(setq ediff-window-setup-function 'ediff-setup-windows-plain)
+(setq ediff-split-window-function 'split-window-horizontally)
 
 ;;====================================================================
 ;; HTTPクライアント (plz.el)
@@ -2191,19 +2206,6 @@
      "https://speakerdeck.com/c/technology.atom"
      "https://realtime.jser.info/feed.xml"
      "https://www.publickey1.jp/atom.xml"))
- '(package-selected-packages
-   '(bufferfile cape catppuccin-theme cider claude-code-ide
-                clojure-ts-mode colorful-mode copilot corfu dashboard
-                ddskk diff-hl docker doom-modeline doom-themes
-                eglot-tempel eldoc-box elfeed embark-consult evil-anzu
-                evil-collection evil-commentary evil-escape
-                evil-goggles evil-numbers evil-surround
-                exec-path-from-shell general groovy-mode helpful
-                hl-todo jarchive magit marginalia markdown-mode
-                nerd-icons-corfu orderless plz puni rainbow-delimiters
-                spacemacs-theme terraform-mode treemacs-evil
-                treemacs-nerd-icons treemacs-perspective ultra-scroll
-                undo-fu undo-fu-session vertico vterm wgrep zig-mode))
  '(package-vc-selected-packages
    '((claude-code-ide :url
                       "https://github.com/manzaltu/claude-code-ide.el")
