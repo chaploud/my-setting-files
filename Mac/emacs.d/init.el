@@ -148,6 +148,15 @@
         (message "Copied: %s" relpath))
     (user-error "Not visiting a file in a project.")))
 
+(defun my-copy-absolute-path ()
+  "Copy the current file's absolute path."
+  (interactive)
+  (if-let ((file (buffer-file-name)))
+      (progn
+        (kill-new file)
+        (message "Copied absolute path: %s" file))
+    (user-error "Not visiting a file.")))
+
 (defun my-reset-emacs ()
   "Kill all perspectives except the current one, and kill all buffers except Eglot buffers."
   (interactive)
@@ -999,11 +1008,36 @@
   ;; -------------------------------------------------------
   ;; 2. インタラクティブコマンド (GET / POST)
   ;; -------------------------------------------------------
+  (defvar my-plz-bearer-token nil
+    "Bearerトークン (必要に応じて設定")
+
+  (defun my-plz-set-bearer-token ()
+    "選択中の文字列をBearerトークンとして設定"
+    (interactive)
+    (setq my-plz-bearer-token
+          (string-trim
+           (buffer-substring-no-properties
+            (region-beginning)
+            (region-end))))
+    (message "Bearer token set"))
+
+  (defun my-plz-clear-bearer-token ()
+    "Bearerトークンをクリア"
+    (interactive)
+    (setq my-plz-bearer-token nil)
+    (message "Bearer token cleared"))
+
+  (defun my-plz-auth-headers ()
+    "Bearerトークンが設定されていればAuthorizationヘッダーを返す"
+    (when my-plz-bearer-token
+      `(("Authorization" . ,(format "Bearer %s" my-plz-bearer-token)))))
+
   (defun my-plz-get (url)
     "URLを入力してGETし、標準機能でJSON整形して表示"
     (interactive "sURL to GET: ")
     (message "Requesting (GET) %s ..." url)
     (plz 'get url
+      :headers (my-plz-auth-headers)
       :as 'string
       :then 'my-plz-handle-response
       :else 'my-plz-handle-error))
@@ -1014,7 +1048,9 @@
     (let ((body (buffer-substring-no-properties start end)))
       (message "Requesting (POST) %s ..." url)
       (plz 'post url
-        :headers '(("Content-Type" . "application/json"))
+        :headers (append
+                  '(("Content-Type" . "application/json"))
+                  (my-plz-auth-headers))
         :body body
         :as 'string
         :then 'my-plz-handle-response
@@ -1274,6 +1310,16 @@
   (add-hook 'emacs-startup-hook
             (lambda () (run-with-idle-timer 1 nil #'my-treesit-install-grammars)))
   )
+
+;;====================================================================
+;; WebAssembly (wat/wast)
+;;====================================================================
+;; https://github.com/nverno/wat-ts-mode.git => ~/.emacs.d/lisp/wat-ts-mode
+;; https://github.com/wasm-lsp/tree-sitter-wasm.git
+(add-to-list 'load-path "~/.emacs.d/lisp/wat-ts-mode")
+(require 'wat-ts-mode)
+(add-to-list 'auto-mode-alist '("\\.wat\\'" . wat-ts-mode))
+(add-to-list 'auto-mode-alist '("\\.wast\\'" . wat-ts-mode))
 
 ;;====================================================================
 ;; Format On Save設定の集約
@@ -1825,7 +1871,7 @@
   (elfeed-search-title-min-width 40)
   (elfeed-search-title-max-width 120)
   (elfeed-search-filter "@1-week-ago +unread")
-  (elfeed-search-print-entry-function 'my-elfeed-search-print-entry)
+  (elfeed-search-print-entry-function #'my-elfeed-search-print-entry)
   (shr-use-fonts nil))
 
 ;;====================================================================
@@ -1892,6 +1938,7 @@
     "f s" '(save-buffer :wk "file save")
     "f t" '(treemacs :wk "treemacs")
     "f y" '(my-copy-project-relative-path :wk "copy relative path")
+    "f Y" '(my-copy-absolute-path :wk "copy absolute path")
 
     ;; (n) ノート操作
     "n" '(:ignore t :wk "Notes")
@@ -1958,6 +2005,8 @@
     "h" '(:ignore t :wk "HTTP")
     "h g" '(my-plz-get :wk "GET")
     "h p" '(my-plz-post-region :wk "POST region")
+    "h s" '(my-plz-set-bearer-token :wk "set bearer token")
+    "h c" '(my-plz-clear-bearer-token :wk "clear bearer token")
 
     ;; (a) 生成AI系
     "a" '(:ignore t :wk "AI")
