@@ -1951,6 +1951,7 @@
     "f r" '(consult-recent-file :wk "file recent")
     "f p" '(project-find-file :wk "find in project")
     "f s" '(save-buffer :wk "file save")
+    "f d" '(bufferfile-delete :wk "delete file")
     "f t" '(treemacs :wk "treemacs")
     "f y" '(my-copy-project-relative-path :wk "copy relative path")
     "f Y" '(my-copy-absolute-path :wk "copy absolute path")
