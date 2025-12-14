@@ -977,6 +977,16 @@
 (setq ediff-split-window-function 'split-window-horizontally)
 
 ;;====================================================================
+;; RESTクライアント (restclient.el)
+;;====================================================================
+(use-package restclient
+  :ensure t
+  :mode (("\\.http\\'"  . restclient-mode)
+         ("\\.rest\\'"  . restclient-mode))
+  :config
+  (setq restclient-same-buffer-response t))
+
+;;====================================================================
 ;; HTTPクライアント (plz.el)
 ;;====================================================================
 ;; curlをインストールしておくこと
@@ -2207,6 +2217,20 @@
      "https://speakerdeck.com/c/technology.atom"
      "https://realtime.jser.info/feed.xml"
      "https://www.publickey1.jp/atom.xml"))
+ '(package-selected-packages
+   '(bufferfile cape catppuccin-theme cider claude-code-ide
+                clojure-ts-mode colorful-mode consult-gh copilot corfu
+                dashboard ddskk diff-hl docker doom-modeline
+                doom-themes eglot-tempel eldoc-box elfeed
+                embark-consult evil-anzu evil-collection
+                evil-commentary evil-escape evil-goggles evil-numbers
+                evil-surround exec-path-from-shell forge general
+                groovy-mode helpful hl-todo jarchive marginalia
+                nerd-icons-corfu orderless plz puni rainbow-delimiters
+                restclient spacemacs-theme terraform-mode
+                treemacs-evil treemacs-nerd-icons treemacs-perspective
+                ultra-scroll undo-fu undo-fu-session vertico vterm
+                wgrep zig-mode))
  '(package-vc-selected-packages
    '((claude-code-ide :url
                       "https://github.com/manzaltu/claude-code-ide.el")
