@@ -226,6 +226,21 @@
   (let ((default-directory my-notes-root))
     (call-interactively 'consult-ripgrep)))
 
+(defun my-minibuffer-up-to-project-root ()
+  "When minibuffer contains a file path, replace it with the project root path."
+  (interactive)
+  (let* ((input (minibuffer-contents-no-properties))
+         (proj (project-current))
+         (root (and proj (project-root proj))))
+    (if (not root)
+        (user-error "No project root found")
+      (cond
+       ((> (length input) 0)
+        (delete-minibuffer-contents)
+        (insert root))
+       (t
+        (user-error "No path in minibuffer"))))))
+
 ;;===== TIPS / Rules of use-package ==================================
 ;; :ensure 組み込みパッケージにはnil, 外部パッケージにはtを指定
 ;; :vc GitHubやCodebergなどから直接インストールする場合に利用
@@ -1102,6 +1117,13 @@
   (add-to-list 'copilot-indentation-alist '(org-mode  2))
   (add-to-list 'copilot-indentation-alist '(text-mode  2))
   (add-to-list 'copilot-indentation-alist '(emacs-lisp-mode  2)))
+
+;;====================================================================
+;; Agetnt Shell
+;;====================================================================
+(use-package agent-shell
+  :ensure t
+  )
 
 ;;====================================================================
 ;; Claude Code IDE
@@ -2178,7 +2200,8 @@
   (general-define-key
    :states '(insert)
    :keymaps '(minibuffer-mode-map)
-   "C-w" 'backward-kill-sexp)
+   "C-w" 'backward-kill-sexp
+   "C-S-w" 'my-minibuffer-up-to-project-root)
 
   ;; === isearch(C-sまたは/)中に単語削除はM-eの後にC-DELを押すしかない
   ;; 基本はC-hで納得しよう
@@ -2218,19 +2241,19 @@
      "https://realtime.jser.info/feed.xml"
      "https://www.publickey1.jp/atom.xml"))
  '(package-selected-packages
-   '(bufferfile cape catppuccin-theme cider claude-code-ide
-                clojure-ts-mode colorful-mode consult-gh copilot corfu
-                dashboard ddskk diff-hl docker doom-modeline
-                doom-themes eglot-tempel eldoc-box elfeed
-                embark-consult evil-anzu evil-collection
-                evil-commentary evil-escape evil-goggles evil-numbers
-                evil-surround exec-path-from-shell forge general
-                groovy-mode helpful hl-todo jarchive marginalia
-                nerd-icons-corfu orderless plz puni rainbow-delimiters
-                restclient spacemacs-theme terraform-mode
-                treemacs-evil treemacs-nerd-icons treemacs-perspective
-                ultra-scroll undo-fu undo-fu-session vertico vterm
-                wgrep zig-mode))
+   '(agent-shell bufferfile cape catppuccin-theme cider claude-code-ide
+                 clojure-ts-mode colorful-mode consult-gh copilot
+                 corfu dashboard ddskk diff-hl docker doom-modeline
+                 doom-themes eglot-tempel eldoc-box elfeed
+                 embark-consult evil-anzu evil-collection
+                 evil-commentary evil-escape evil-goggles evil-numbers
+                 evil-surround exec-path-from-shell forge general
+                 groovy-mode helpful hl-todo jarchive marginalia
+                 nerd-icons-corfu orderless plz puni
+                 rainbow-delimiters restclient spacemacs-theme
+                 terraform-mode treemacs-evil treemacs-nerd-icons
+                 treemacs-perspective ultra-scroll undo-fu
+                 undo-fu-session vertico vterm wgrep zig-mode))
  '(package-vc-selected-packages
    '((claude-code-ide :url
                       "https://github.com/manzaltu/claude-code-ide.el")
