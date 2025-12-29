@@ -33,6 +33,9 @@
   (savehist-mode t)                ; ミニバッファ履歴保存
   (winner-mode t)                  ; ウィンドウ構成の復元
   (initial-major-mode 'text-mode)  ; scratchバッファをtext-modeで開く
+  (undo-limit (* 128 1024 1024))
+  (undo-strong-limit (* 192 1024 1024))
+  (undo-outer-limit (* 384 1024 1024))
   :config
   (define-key key-translation-map (kbd "C-h") (kbd "DEL")) ; C-h -> BS
   (define-key key-translation-map (kbd "C-;") (kbd "C-h")) ; C-; -> ヘルプ

@@ -47,9 +47,9 @@
 (require '00-basic)
 (require '01-japanese)
 (require '02-ui)
+(require '03-evil)
 
 (require '02-completion)
-(require '03-evil)
 (require '05-git)
 (require '06-lsp)
 (require '07-langs)
