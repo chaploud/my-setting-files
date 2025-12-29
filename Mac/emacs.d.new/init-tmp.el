@@ -4,21 +4,8 @@
 
 ;; 最終更新: 2025-11-13
 
-;; === 対象者
-;; Clojure開発者を想定
-;; Vimキーバインドを利用
-;; 日本語入力はddskkを利用
-
-;; === 前提
-;; macOS Tahoe 26.1
-;; gcc@15.2.0 インストール済み (https://formulae.brew.sh/formula/gcc)
-;; libgccjit@15.2.0 インストール済み (https://formulae.brew.sh/formula/libgccjit)
-;; emacs-plus@30.2 で利用 (https://github.com/d12frosted/homebrew-emacs-plus)
-;; emacs 30.2
 
 ;; === 依存関係
-;; [gcc@15] brew install gcc@15
-;; [libgccjit@15] brew istall libgccjit@15
 ;; [gls] brew install coreutils (diredでのファイル一覧表示に利用)
 ;; [ripgrep] brew install ripgrep (全文検索系で利用)
 ;; [Tree-sitterをコンパイルできるもの]: xcode-select --install
@@ -44,343 +31,12 @@
 ;; [SQL] go install github.com/sqls-server/sqls@latest
 
 ;; === 必要フォント
-;; relaxed-typing-mono-jp (https://github.com/mshioda/relaxed-typing-mono-jp)
 ;; UDEV Gothic 35NF (https://github.com/yuru7/udev-gothic)
 ;; JuliaMono (https://github.com/cormullion/juliamono/releases)
-
-;; === SKK
-;; SKKを使いこなすと日本語入力が楽しくなります
-;; 以下をEmacs以前に動作するようにセットアップしておいてください(結構面倒です)
-;; * macSKK
-;;   * https://github.com/mtgto/macSKK
-;;   * Emacs以外でもSKKを利用したい
-;; * yaskkserv2
-;;   * https://github.com/wachikun/yaskkserv2
-;;   * SKK言語サーバー(自動でGoogle日本語入力連携)
-;;   * Rustのcargoが必要
-;; * macism
-;;   * https://github.com/laishulu/macism
-;;   * Emacs以外とのIME切り替えの摩擦を減らすために必要
-
-;; === ~/.zshrc にあらかじめ以下を追記しておく
-;; # eコマンドでサっとEmacsでファイルを開く
-;; e() {
-;;   if emacsclient --eval "t" > /dev/null 2>&1; then
-;;     emacsclient -n "$@"
-;;   else
-;;     emacs "$@" &
-;;   fi
-;; }
 
 ;; === 初回のEmacs起動後に必要なコマンド
 ;; M-x nerd-icons-install-fonts (nerd-iconsのフォントをインストール)
 ;; M-x copilot-install-server (GitHub Copilotのサーバー)
-
-;;; Code:
-
-;;====================================================================
-;; パッケージ管理のセットアップ
-;;===================================================================
-
-;; === packageの設定
-(require 'package)
-(setq package-archives '(("gnu" . "https://elpa.gnu.org/packages/")
-                         ("nongnu" . "https://elpa.nongnu.org/nongnu/")
-                         ("melpa" . "https://melpa.org/packages/")))
-(setq package-archive-priorities '(("melpa" . 3)
-                                   ("nongnu" . 2)
-                                   ("gnu" . 1)))
-(setq package-check-signature nil) ; 本来はnon-nilが望ましい
-(package-initialize)
-
-;; === use-packageの設定
-(unless (package-installed-p 'use-package)
-  (package-install 'use-package))
-(require 'use-package)
-
-;;====================================================================
-;; ユーティリティ関数
-;;===================================================================
-;; === 時間計測
-(defvar my-time-tmp (current-time))
-
-(defun my-display-time ()
-  "Displays the current time and the elapsed time since the last call."
-  (let* ((now (current-time))
-         (diff (float-time (time-subtract now my-time-tmp))))
-    (setq my-time-tmp now)
-    (format "%s dt=%.6f"
-            (format-time-string "%Y-%m-%d %H:%M:%S.%6N" now) diff)))
-
-(defun my-insert-time ()
-  "Insert measurement template at point."
-  (interactive)
-  (insert "(message \"[%s] %s\" (my-display-time) \"\")"))
-
-;; === init.elを開く
-(defun my-open-user-init ()
-  "Open the user's init file."
-  (interactive)
-  (find-file user-init-file))
-
-(defun my-reload-user-init ()
-  "Reload the user's init file."
-  (interactive)
-  (load-file user-init-file)
-  (message "Reloaded %s" user-init-file))
-
-;; === カーソル下のシンボルが組み込みのパッケージかどうかチェック
-(defun my-package-built-in-p (symbol)
-  "Check if SYMBOL is a built-in package."
-  (interactive (list (or (symbol-at-point)
-                         (intern (read-string "Package: ")))))
-  (message "[%s] built-in: %s" symbol (when (package-built-in-p symbol) t)))
-
-;; === 現在のファイルのプロジェクトルートからのパスをコピー
-(defun my-copy-project-relative-path ()
-  "Copy the current file's path relative to the project root."
-  (interactive)
-  (if-let* ((proj (project-current))
-            (root (project-root proj))
-            (file (buffer-file-name)))
-      (let ((relpath (file-relative-name file root)))
-        (kill-new relpath)
-        (message "Copied: %s" relpath))
-    (user-error "Not visiting a file in a project.")))
-
-(defun my-copy-absolute-path ()
-  "Copy the current file's absolute path."
-  (interactive)
-  (if-let ((file (buffer-file-name)))
-      (progn
-        (kill-new file)
-        (message "Copied absolute path: %s" file))
-    (user-error "Not visiting a file.")))
-
-(defun my-reset-emacs ()
-  "Kill all perspectives except the current one, and kill all buffers except Eglot buffers."
-  (interactive)
-  ;; dashboard開く
-  (dashboard-open)
-
-  ;; 他のperspectiveを削除
-  (let ((self (persp-current-name))) ; persp-kill-othersから拝借
-    (cl-loop for p in (persp-names)
-             when (not (string-equal p self)) do
-             (persp-kill p))
-
-    ;; 今のperspective名がmainでなければmainにリネーム
-    (when (not (string-equal self "main"))
-      (persp-rename "main")))
-
-  ;; 他のバッファを全て削除
-  (cl-loop for buf in (persp-current-buffers) ; persp-kill-other-buffersから拝借
-           unless (or (eq buf (current-buffer))
-                      (eq buf (get-buffer (persp-scratch-buffer))))
-           do (kill-buffer buf))
-
-  ;; *EGLOT プロセスバッファを削除
-  (dolist (buf (buffer-list))
-    (when (string-match-p "^\\*EGLOT" (buffer-name buf))
-      (kill-buffer buf)))
-
-  ;; ウィンドウ分割してない状態に
-  (delete-other-windows)
-
-  (message "(my-rest-emacs) done."))
-
-(defvar my-notes-root (expand-file-name "~/Documents/MyNote/"))
-(defvar my-inbox-dir (expand-file-name "00_inbox/" my-notes-root))
-(defun my-get-next-inbox-number ()
-  (let* ((files (directory-files my-inbox-dir nil "\\`[0-9]\\{3\\}_.*\\.md\\'"))
-         (numbers (mapcar (lambda (f)
-                            (string-to-number (substring f 0 3)))
-                          files))
-         (max-number (if numbers (apply 'max numbers) 0)))
-    (format "%03d" (1+ max-number))))
-
-(defun my-new-note (title)
-  "Create a new inbox note with an incremented number."
-  (interactive "sNote title: ")
-  (let* ((next-number (my-get-next-inbox-number))
-         (safe-title (replace-regexp-in-string "[^[:alnum:]-_]" "_" title))
-         (filename (concat next-number "_" safe-title ".md"))
-         (filepath (expand-file-name filename my-inbox-dir))
-         (timestamp (format-time-string "%Y-%m-%d %H:%M")))
-    (find-file filepath)
-    (unless (file-exists-p filepath)
-      (insert (format "# %s\n\n" title))
-      (insert (format "最終更新: %s \n\n" timestamp))
-      (save-buffer))
-    (message "Created note: %s" filepath)))
-
-(defun my-find-note ()
-  "Search notes in my-notes-root using ripgrep and open the selected one."
-  (interactive)
-  (let ((default-directory my-notes-root))
-    (call-interactively 'project-find-file)))
-
-(defun my-grep-note ()
-  "Grep notes in my-notes-root using ripgrep and open the selected one."
-  (interactive)
-  (let ((default-directory my-notes-root))
-    (call-interactively 'consult-ripgrep)))
-
-(defun my-minibuffer-up-to-project-root ()
-  "When minibuffer contains a file path, replace it with the project root path."
-  (interactive)
-  (let* ((input (minibuffer-contents-no-properties))
-         (proj (project-current))
-         (root (and proj (project-root proj))))
-    (if (not root)
-        (user-error "No project root found")
-      (cond
-       ((> (length input) 0)
-        (delete-minibuffer-contents)
-        (insert root))
-       (t
-        (user-error "No path in minibuffer"))))))
-
-;;===== TIPS / Rules of use-package ==================================
-;; :ensure 組み込みパッケージにはnil, 外部パッケージにはtを指定
-;; :vc GitHubやCodebergなどから直接インストールする場合に利用
-;; :after 依存関係 (指定したパッケージのロード後に実行)
-;; :init パッケージのロード前に実行
-;; :custom defcustom変数はこちらで設定 (key value)の形式
-;; :hook パッケージに関連するフックをコンスセル形式で設定 (hook . function)
-;;   * 末尾が-hookならそのまま、そうでなければ-hookを付けたものが使われる。関数側は#'をつけない
-;; :config 通常通りの処理をまとめる意味 (グローバルスコープになる)
-;; :mode ファイル名からモード決定
-;; :interpreter shebangからモード決定
-;; :bind キーバインド設定
-;; :bind* キーバインド設定 (優先度高)
-;; :defer tでパッケージの遅延ロード
-;; :if 条件付きでブロック評価
-;;====================================================================
-
-;; === ローディング開始メッセージ
-(message "[%s] %s" (my-display-time) "init.el loading...")
-
-;;====================================================================
-;; シェル環境変数をDockからの起動でも利用する
-;;====================================================================
-
-(use-package exec-path-from-shell
-  :ensure t
-  :config
-  (exec-path-from-shell-initialize))
-
-;;====================================================================
-;; パスワード連携
-;;====================================================================
-;; brew install pass
-;; brew install gpg
-;; gpg設定やpass insertなど必要
-(use-package auth-source
-  :ensure nil
-  :config
-  (auth-source-pass-enable))
-
-;;====================================================================
-;; Emacs標準機能の設定
-;;====================================================================
-
-(use-package emacs
-  :ensure nil
-  :custom
-  ;; === インデントは空白で
-  (indent-tabs-mode nil)
-  ;; === インデントは2スペース
-  (tab-width 2)
-  (standard-indent 2)
-  ;; === MacのCommandをMetaキーに
-  (mac-command-modifier 'meta)
-  ;; === ダイアログでのファイルオープンは使わない
-  (use-file-dialog nil)
-  ;; === 他プロセスの編集をバッファに反映
-  (global-auto-revert-mode t)
-  ;; === 長い行を含むファイルの最適化
-  (global-so-long-mode t)
-  ;; === 削除したファイルをゴミ箱に移動
-  (delete-by-moving-to-trash t)
-  ;; === シンボリックリンクを常に質問なしで開く
-  (vc-follow-symlinks t)
-  ;; === 文字列を折り返さないのをデフォルトに
-  (truncate-lines t)
-  ;; === ミニバッファでのyes/noの聞かれ方をy/nにする
-  (use-short-answers t)
-  ;; === ファイル履歴の保存個数
-  (recentf-max-saved-items 50)
-  ;; === ファイル履歴の保存
-  (recentf-mode t)
-  ;; === コマンドの履歴を保存
-  (savehist-mode t)
-  ;; === ウィンドウの状態を保持
-  (winner-mode t)
-  ;; === 対応括弧を補完
-  (electric-pair-mode t)
-  ;; === *scratch*バッファのデフォルトをtext-modeに
-  (initial-major-mode 'text-mode)
-  (initial-scratch-message "*scratch* for temporal notes\n\n")
-  ;; === Emacs終了時にプロセスの確認をしない
-  (confirm-kill-processes nil)
-
-  :config
-  ;; === C-hをBackspaceに、C-;をC-hに割り当て
-  (define-key key-translation-map (kbd "C-h") (kbd "DEL"))
-  (define-key key-translation-map (kbd "C-;") (kbd "C-h"))
-
-  ;; === 自分で配置したEmacsのソースコードへの参照を追加
-  ;; 利用しているEmacsバージョンによって適宜ソースコードはダウンロード必要
-  (setq find-function-C-source-directory
-        (concat "~/Documents/OSS/emacs/emacs-" emacs-version "/src"))
-
-  ;; === prog-modeとtext-modeのみ末尾の空白を表示
-  (add-hook 'prog-mode-hook
-            (lambda () (setq show-trailing-whitespace t)))
-  (add-hook 'text-mode-hook
-            (lambda () (setq show-trailing-whitespace t)))
-
-  ;; ===== Git管理外のファイルは、~/.cache/emacs/以下に保存する =====
-  ;; NOTE: elpa/, eln-cache/, tree-sitter/ はあえて除外している
-  (defconst my-cache (expand-file-name "~/.cache/emacs/"))
-  (dolist (d '("" "backups" "auto-saves" "auto-save-list" "undo-fu-session" "transient"
-               "copilot"))
-    (make-directory (concat my-cache d "/") t))
-  (setopt backup-directory-alist `(("." . ,(concat my-cache "backups/"))))
-  (setopt auto-save-file-name-transforms `((".*" ,(concat my-cache "auto-saves/") t)))
-  (setopt auto-save-list-file-prefix (concat my-cache "auto-save-list/.saves-"))
-  (setopt recentf-save-file (concat my-cache "recentf"))
-  (setopt savehist-file (concat my-cache "savehist"))
-  (setopt bookmark-default-file (concat my-cache "bookmarks"))
-  (setopt tramp-persistency-file-name (concat my-cache "tramp"))
-  (setopt undo-fu-session-directory (concat my-cache "undo-fu-session/"))
-  (setopt persp-state-default-file (concat my-cache "workspace-default"))
-  (setopt transient-history-file (concat my-cache "transient/history.el"))
-  (setopt transient-levels-file (concat my-cache "transient/levels.el"))
-  (setopt transient-values-file (concat my-cache "transient/values.el"))
-  (setopt project-list-file (concat my-cache "projects"))
-  (setopt copilot-install-dir (concat my-cache "copilot/")))
-
-;; === emacsclient用のサーバー設定
-(use-package server
-  :ensure nil
-  :custom
-  ;; === eコマンドで開いたときに別ウィンドウで開く
-  (server-window 'pop-to-buffer)
-  :config
-  ;; === デーモン起動 (シェルの`e'コマンドから使う)
-  (unless (server-running-p)
-    (server-start)))
-
-;; === which-keyのディレイ
-(use-package which-key
-  :ensure nil
-  :custom
-  (which-key-mode t)
-  (which-key-idle-delay 0.3)
-  (which-key-idle-secondary-delay 0)
-  (which-key-sort-order nil))
 
 ;;====================================================================
 ;; bookmark
@@ -426,182 +82,15 @@
 (setq flymake-show-diagnostics-at-end-of-line t)
 
 ;;====================================================================
-;; Emacs Lisp用の便利なHelp
-;;====================================================================
-
-;; === helpful
-(use-package helpful
-  :ensure t
-  :bind
-  (("C-h f" . helpful-callable)
-   ("C-h v" . helpful-variable)
-   ("C-h k" . helpful-key)
-   ("C-h x" . helpful-command)
-   ("C-h ." . helpful-at-point)))
-
-;;====================================================================
 ;; リネームなどで便利 (bufferfile.el)
 ;;====================================================================
 (use-package bufferfile
   :ensure t)
 
-;;====================================================================
-;; 日本語入力
-;;====================================================================
-
-;; === ddskk
-;; macism (https://github.com/laishulu/macism) のインストールが必要
-(defun my-switch-ime (input-source)
-  "Switch to INPUT-SOURCE when Emacs is focused (requires macism command)."
-  (call-process "macism" nil 0 nil input-source))
-
-(add-function :after after-focus-change-function
-              (lambda ()
-                (when (frame-focus-state)
-                  (my-switch-ime "net.mtgto.inputmethod.macSKK.ascii"))))
-
-(use-package ccc
-  :ensure t)
-
-(use-package ddskk
-  :ensure t
-  :after evil
-  :custom
-  (skk-server-host "127.0.0.1")
-  (skk-server-portnum 1178)
-  (skk-dcomp-activate t)
-  (skk-egg-like-newline t)
-  (skk-delete-implies-kakutei nil)
-  (skk-show-candidates-nth-henkan-char 3)
-  (skk-isearch-mode-enable 'always)
-  (skk-isearch-mode-string-alist '((hiragana . "")
-                                   (katakana . "")
-                                   (jisx0208-latin . "")
-                                   (latin . "")
-                                   (abbrev . "")
-                                   (nil . "")))
-  (skk-use-color-cursor t)
-  (skk-cursor-default-color "#cad3f5")
-  (skk-cursor-latin-color "#cad3f5")
-  (skk-cursor-hiragana-color "#f5bde6")
-  (skk-cursor-katakana-color "#a6da95")
-  (skk-cursor-abbrev-color "#c6a0f6")
-  :hook
-  (isearch-mode-hook . skk-isearch-mode-setup)
-  (isearch-mode-hook . skk-latin-mode-on)
-  (isearch-mode-end-hook . skk-isearch-mode-cleanup)
-  (evil-normal-state-entry . skk-latin-mode-on)
-  (text-mode-hook . my-turn-on-skk)
-  (prog-mode-hook . my-turn-on-skk)
-  :bind
-  ("C-x j" . skk-mode)
-  ("C-j" . skk-kakutei)
-  :config
-  (defun my-turn-on-skk ()
-    "skk-modeを有効にして、英字モードにする"
-    (interactive)
-    (skk-mode t)
-    (skk-latin-mode-on)))
-
-;;====================================================================
-;; UIと外観 (フォントとテーマ)
-;;====================================================================
-
-;; === 現在行を強調表示
-(global-hl-line-mode t)
-
-;; === 行番号を表示
-(add-hook 'prog-mode-hook #'display-line-numbers-mode)
-(add-hook 'text-mode-hook #'display-line-numbers-mode)
-
-;; === カーソル位置の列番号をモードラインに表示
-(column-number-mode t)
-
 ;; === フォント設定
-(setq use-default-font-for-symbols nil)
-;; Claude Codeの処理中の*マークのアニメーションでガタガタするのを防ぐ
-(dolist (char '(#x00B7 #x2722 #x2733 #x2736 #x273B #x273D))
-  (set-fontset-font t char (font-spec :family "JuliaMono")))
-(set-fontset-font t 'han (font-spec :family "Source Han Code JP") nil 'prepend)
-(set-face-attribute 'default nil :font "Source Han Code JP" :height 130)
 
-;; === nerd iconsを利用
-;; 初回にM-x nerd-icons-install-fontsの実行が必要(既にインストールされていれば不要)
-(use-package nerd-icons
-  :ensure t)
 
-;; === カラーテーマ
-(use-package catppuccin-theme
-  :ensure t
-  :custom
-  (catppuccin-flavor 'macchiato)
-  :config
-  (load-theme 'catppuccin t))
 
-;; === カーソルの色をオーバーライド
-(set-cursor-color "#cad3f5")
-
-;; === 対応カッコを色付け表示
-(use-package rainbow-delimiters
-  :ensure t
-  :hook
-  (prog-mode . rainbow-delimiters-mode))
-
-;; === カラーコードを色付け
-(use-package colorful-mode
-  :ensure t
-  :custom
-  (colorful-use-prefix t)
-  (global-colorful-mode t))
-
-;; === doom-modeline
-(use-package doom-modeline
-  :ensure t
-  :custom
-  (doom-modeline-mode t)
-  (doom-modeline-major-mode-icon nil) ; アイコン不要
-  (doom-modeline-modal nil) ; evilのモード表示不要
-  (doom-modeline-buffer-file-name-style 'file-name) ; ファイル名のみ
-  (doom-modeline-buffer-encoding nil) ; LF/UTF-8などの表示不要
-  :config
-  (doom-modeline-def-modeline 'my-main ; anzuのカウントを左グループの右端に表示
-    '(eldoc bar window-state workspace-name window-number modals follow buffer-info remote-host buffer-position word-count parrot selection-info matches)
-    '(compilation objed-state misc-info project-name persp-name battery grip irc mu4e gnus github debug repl lsp minor-modes input-method indent-info buffer-encoding major-mode process vcs check time))
-  (doom-modeline-set-modeline 'my-main t))
-
-;; === ダッシュボード
-(use-package dashboard
-  :ensure t
-  :custom
-  (dashboard-startup-banner 'logo)
-  (dashboard-center-content t)
-  (dashboard-vertically-center-content t)
-  (dashboard-items '((recents . 10)
-                     (bookmarks . 10)
-                     (projects . 7)))
-  :config
-  (dashboard-setup-startup-hook))
-
-;; === TODOハイライト
-(use-package hl-todo
-  :ensure t
-  :custom
-  (hl-todo-keyword-faces
-   `(("TODO" warning bold)
-     ("NOTE" ansi-color-cyan bold)
-     ("XXX" error bold)))
-  (global-hl-todo-mode t))
-
-;; === なめらかなホイールスクロール
-(use-package ultra-scroll
-  :ensure t
-  :vc (:url "https://github.com/jdtsmith/ultra-scroll")
-  :init
-  (setq scroll-conservatively 3
-        scroll-margin 0)
-  :config
-  ;; :customでは適用されない
-  (ultra-scroll-mode t))
 
 ;;====================================================================
 ;; EvilによるVimキーバインド
@@ -1003,100 +492,6 @@
   :config
   (setq restclient-same-buffer-response t))
 
-;;====================================================================
-;; HTTPクライアント (plz.el)
-;;====================================================================
-;; curlをインストールしておくこと
-(use-package plz
-  :ensure t
-  :config
-  ;; -------------------------------------------------------
-  ;; 1. 結果表示用のヘルパー関数
-  ;; -------------------------------------------------------
-  (defvar my-plz-response-buffer "*Plz Response*"
-    "APIレスポンスを表示するバッファ名")
-
-  (defun my-plz-handle-response (content)
-    "レスポンス(文字列)をバッファに挿入し、Emacs標準機能で整形する"
-    (let ((buf (get-buffer-create my-plz-response-buffer)))
-      (with-current-buffer buf
-        (read-only-mode -1) ;; 書き込み許可
-        (erase-buffer)
-
-        ;; コンテンツの挿入
-        (if (stringp content)
-            (insert content)
-          (insert (format "%S" content)))
-
-        ;; JSON整形 (Emacs標準機能: json.el)
-        ;; JSONじゃなかった場合にエラーで止まらないよう保護
-        (condition-case nil
-            (json-pretty-print-buffer)
-          (json-error nil))
-
-        ;; 見やすくするためにモード適用 (色付けなど)
-        (if (fboundp 'json-mode)
-            (json-mode)       ;; json-modeが入っていれば使う
-          (js-mode))          ;; なければjs-modeで代用
-
-        ;; 読み取り専用にしてポップアップ
-        (special-mode))
-      (pop-to-buffer buf)))
-
-  (defun my-plz-handle-error (err)
-    "エラー時の処理"
-    (message "Plz Error: %S" err))
-
-  ;; -------------------------------------------------------
-  ;; 2. インタラクティブコマンド (GET / POST)
-  ;; -------------------------------------------------------
-  (defvar my-plz-bearer-token nil
-    "Bearerトークン (必要に応じて設定")
-
-  (defun my-plz-set-bearer-token ()
-    "選択中の文字列をBearerトークンとして設定"
-    (interactive)
-    (setq my-plz-bearer-token
-          (string-trim
-           (buffer-substring-no-properties
-            (region-beginning)
-            (region-end))))
-    (message "Bearer token set"))
-
-  (defun my-plz-clear-bearer-token ()
-    "Bearerトークンをクリア"
-    (interactive)
-    (setq my-plz-bearer-token nil)
-    (message "Bearer token cleared"))
-
-  (defun my-plz-auth-headers ()
-    "Bearerトークンが設定されていればAuthorizationヘッダーを返す"
-    (when my-plz-bearer-token
-      `(("Authorization" . ,(format "Bearer %s" my-plz-bearer-token)))))
-
-  (defun my-plz-get (url)
-    "URLを入力してGETし、標準機能でJSON整形して表示"
-    (interactive "sURL to GET: ")
-    (message "Requesting (GET) %s ..." url)
-    (plz 'get url
-      :headers (my-plz-auth-headers)
-      :as 'string
-      :then 'my-plz-handle-response
-      :else 'my-plz-handle-error))
-
-  (defun my-plz-post-region (url start end)
-    "選択範囲(Region)のJSONをBodyとしてPOSTし、標準機能でJSON整形して表示"
-    (interactive "sURL to POST: \nr")
-    (let ((body (buffer-substring-no-properties start end)))
-      (message "Requesting (POST) %s ..." url)
-      (plz 'post url
-        :headers (append
-                  '(("Content-Type" . "application/json"))
-                  (my-plz-auth-headers))
-        :body body
-        :as 'string
-        :then 'my-plz-handle-response
-        :else 'my-plz-handle-error))))
 
 ;;====================================================================
 ;; GitHub Copilot連携
@@ -1119,13 +514,6 @@
   (add-to-list 'copilot-indentation-alist '(org-mode  2))
   (add-to-list 'copilot-indentation-alist '(text-mode  2))
   (add-to-list 'copilot-indentation-alist '(emacs-lisp-mode  2)))
-
-;;====================================================================
-;; Agetnt Shell
-;;====================================================================
-(use-package agent-shell
-  :ensure t
-  )
 
 ;;====================================================================
 ;; Claude Code IDE
@@ -2163,7 +1551,6 @@
     "e e" '(eval-last-sexp :wk "eval last sexp")
     "e f" '(eval-defun :wk "eval defun")
     "e b" '(eval-buffer :wk "eval buffer")
-    "i" '(my-insert-time :wk "insert time")
     "P" '(my-package-built-in-p :wk "check package built-in")
     )
 
@@ -2249,13 +1636,13 @@
                  doom-themes eglot-tempel eldoc-box elfeed
                  embark-consult evil-anzu evil-collection
                  evil-commentary evil-escape evil-goggles evil-numbers
-                 evil-surround exec-path-from-shell flymake-posframe
-                 forge general groovy-mode helpful hl-todo jarchive
-                 marginalia nerd-icons-corfu orderless plz puni
-                 rainbow-delimiters restclient sideline
-                 spacemacs-theme terraform-mode treemacs-evil
-                 treemacs-nerd-icons treemacs-perspective ultra-scroll
-                 undo-fu undo-fu-session vertico vterm wgrep zig-mode))
+                 evil-surround exec-path-from-shell forge general
+                 groovy-mode helpful hl-todo jarchive marginalia
+                 nerd-icons-corfu orderless plz puni
+                 rainbow-delimiters restclient spacemacs-theme
+                 terraform-mode treemacs-evil treemacs-nerd-icons
+                 treemacs-perspective ultra-scroll undo-fu
+                 undo-fu-session vertico vterm wgrep zig-mode))
  '(package-vc-selected-packages
    '((claude-code-ide :url
                       "https://github.com/manzaltu/claude-code-ide.el")
@@ -2269,31 +1656,6 @@
       ("/root/.m2" . "~/.m2"))
      (cider-connect-default-cljs-params :host "localhost" :port 9631)
      (cider-connect-default-params :host "localhost" :port 42004))))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(consult-file ((t)))
- '(diff-added ((t (:background "#3e4b4c"))))
- '(diff-refine-added ((t (:background "#586e5e"))))
- '(diff-refine-removed ((t (:background "#744d5f"))))
- '(diff-removed ((t (:background "#4c3a4c"))))
- '(ediff-current-diff-A ((t (:extend t :background "#4c3a4c"))))
- '(ediff-current-diff-B ((t (:extend t :background "#3e4b4c"))))
- '(ediff-current-diff-C ((t (:extend t :background "#4c4540"))))
- '(ediff-fine-diff-A ((t (:background "#744d5f"))))
- '(ediff-fine-diff-B ((t (:background "#586e5e"))))
- '(ediff-fine-diff-C ((t (:background "#746355"))))
- '(font-lock-comment-delimiter-face ((t (:foreground "#5ab5b0"))))
- '(font-lock-comment-face ((t (:foreground "#5ab5b0"))))
- '(match ((t (:background "#eed49f" :foreground "#1e2030"))))
- '(mode-line ((t (:background "#1e2030"))))
- '(show-paren-match ((t (:background "#8aadf4" :foreground "#1e2030" :weight bold))))
- '(show-paren-mismatch ((t (:background "#ed8796" :foreground "#1e2030" :weight bold))))
- '(trailing-whitespace ((t (:background "#ed8796" :foreground "#ed8796")))))
 
-;; === ローディング終了メッセージ
-(message "[%s] %s" (my-display-time) "init.el loaded!")
 
 ;;; init.el ends here

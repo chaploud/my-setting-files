@@ -5,24 +5,6 @@
 
 ;;; Code:
 
-;; GC抑制（起動高速化）
-(setq gc-cons-threshold most-positive-fixnum
-      gc-cons-percentage 0.6)
-
-;; file-name-handler-alist一時無効化
-(defvar my--file-name-handler-alist file-name-handler-alist)
-(setq file-name-handler-alist nil)
-
-;; 起動完了後に復元
-(add-hook 'emacs-startup-hook
-          (lambda ()
-            (setq gc-cons-threshold (* 64 1024 1024)
-                  gc-cons-percentage 0.2
-                  read-process-output-max (* 4 1024 1024))
-            (setq file-name-handler-alist my--file-name-handler-alist)
-            (add-hook 'focus-out-hook #'garbage-collect)
-            (toggle-frame-maximized)))
-
 ;; ネイティブコンパイル (Homebrew Apple Silicon)
 (setenv "LIBRARY_PATH"
         (string-join
@@ -32,17 +14,35 @@
          ":"))
 (setq native-comp-async-report-warnings-errors 'silent)
 
-;; GUI初期設定（ちらつき防止）
-(push '(menu-bar-lines . 0) default-frame-alist)
-(push '(tool-bar-lines . 0) default-frame-alist)
-(push '(vertical-scroll-bars) default-frame-alist)
-(push '(background-color . "#24273a") default-frame-alist)
-(push '(foreground-color . "#cad3f5") default-frame-alist)
+;; GC抑制（起動高速化）
+(setq gc-cons-threshold most-positive-fixnum
+      gc-cons-percentage 0.6)
+
+;; 起動完了後に復元
+(add-hook 'emacs-startup-hook
+          (lambda ()
+            (setq gc-cons-percentage 0.3
+                  gc-cons-threshold (* 256 1024 1024)     ; 256MB
+                  read-process-output-max (* 4 1024 1024) ; 4MB
+                  )
+            (add-hook 'focus-out-hook #'garbage-collect)
+            (run-with-idle-timer 30 t #'garbage-collect)
+            (toggle-frame-maximized) ; 起動後に最大化
+            ))
+
+;; 読み込み完了までの見た目の摩擦を減らす
+(add-to-list 'default-frame-alist '(background-color . "#24273a"))
+(add-to-list 'default-frame-alist '(foreground-color . "#cad3f5"))
+(custom-set-faces
+ '(mode-line ((t (:background "#1e2030")))))
+
+;; フレームタイトル
 (setq frame-title-format "Emacs")
 (setq ns-use-proxy-icon nil)
-(setq frame-inhibit-implied-resize t)
 
-;; パッケージ初期化をinit.elで行う
-(setq package-enable-at-startup nil)
+;; GUIをスッキリさせる
+(menu-bar-mode -1)
+(tool-bar-mode -1)
+(scroll-bar-mode -1)
 
 ;;; early-init.el ends here
