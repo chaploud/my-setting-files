@@ -78,6 +78,6 @@
   :config
   (auth-source-pass-enable))
 
-(provide '00-core)
+(provide '00-basic)
 
 ;;; 00-basic.el ends here

@@ -6,13 +6,10 @@
 
 
 ;; === 依存関係
-;; [gls] brew install coreutils (diredでのファイル一覧表示に利用)
 ;; [ripgrep] brew install ripgrep (全文検索系で利用)
 ;; [Tree-sitterをコンパイルできるもの]: xcode-select --install
 ;; [JDK] brew install --cask temurin21
 ;; [Clojure CLI] brew install clojure/tools/clojure
-;; [docker/orbstack] (コンテナを使うなら適宜インストール)
-;; [1Password CLI] ([任意] SQLモードの項目でDB接続時のパスワード参照として使っています)
 
 ;; === LSP用に必要なインストール
 ;; [Clojure] brew install clojure-lsp/brew/clojure-lsp-native
@@ -29,10 +26,6 @@
 ;; [Rust] rustupのインストール
 ;; [Zig] brew install zls
 ;; [SQL] go install github.com/sqls-server/sqls@latest
-
-;; === 必要フォント
-;; UDEV Gothic 35NF (https://github.com/yuru7/udev-gothic)
-;; JuliaMono (https://github.com/cormullion/juliamono/releases)
 
 ;; === 初回のEmacs起動後に必要なコマンド
 ;; M-x nerd-icons-install-fonts (nerd-iconsのフォントをインストール)
@@ -142,127 +135,10 @@
 ;; ミニバッファ内での検索・候補選択
 ;;====================================================================
 
-;; === 便利な統合コマンドの提供 (consult)
-(use-package consult
-  :ensure t
-  :custom
-  (consult-async-min-input 2)
-  (consult-narrow-key "<") ; consultのミニバッファで< fなどで絞り込める
-  :init
-  (setq xref-show-xrefs-function #'consult-xref)
-  (setq xref-show-definitions-function #'consult-xref)
-  :hook
-  (completion-list-mode . consult-preview-at-point-mode)
-  :config
-  ;; もとのconsult-ripgre-pargsの値に追記したほうがいい
-  (let ((additional-args '("--hidden"
-                           "--glob=!.git/**"
-                           "--glob=!node_modules/**"
-                           "--glob=!target/**"
-                           "--glob=!*.lock"
-                           "--glob=!*.log")))
-    (setq consult-ripgrep-args
-          (concat consult-ripgrep-args " " (string-join additional-args " "))))
-
-
-  ;; 現在バッファのディレクトリ以下でripgrep検索する関数
-  (defun my-consult-ripgrep-current-dir ()
-    "Search in the current buffer's directory (or `default-directory') using consult-ripgrep."
-    (interactive)
-    (let ((dir (or (and (buffer-file-name)
-                        (file-name-directory (buffer-file-name)))
-                   default-directory)))
-      (consult-ripgrep dir))))
-
-
-;; === 補完候補を垂直に表示するUI (vertico)
-(use-package vertico
-  :ensure t
-  :custom
-  (vertico-mode t)
-  (vertico-cycle t)
-  (vertico-count 15)
-  (vertico-resize nil))
-
-;; === 柔軟な絞り込みスタイル (orderless)
-(use-package orderless
-  :ensure t
-  :custom
-  (completion-styles '(basic partial-completion orderless))
-  (completion-category-defaults nil)
-  (completion-category-overrides '((file (styles basic))
-                                   (corfu (styles basic partial-completion orderless))))
-  ;; 正規表現とあいまい検索もデフォルトで有効に
-  ;; 完全一致(literal)を優先させたいときは先頭に`='をつける
-  (orderless-matching-styles '(orderless-literal
-                               orderless-flex
-                               orderless-regexp)))
-
-;; === 補完候補に注釈を追加 (marginalia)
-(use-package marginalia
-  :ensure t
-  :after vertico
-  :custom
-  (marginalia-mode t))
-
-;; === 候補に対するアクション (embark)
-(use-package embark
-  :ensure t
-  :bind
-  (:map minibuffer-local-map
-        ("C-." . embark-act)
-        ("C-," . embark-export)))
-
-;; === embarkをconsultから使う (embark-consult)
-(use-package embark-consult
-  :ensure t
-  :after (embark consult)
-  :hook
-  (embark-collect-mode . consult-preview-at-point-mode))
 
 ;; === embark-exportしたバッファを直接編集して一括置換などを実現する (wgrep)
-(use-package wgrep
-  :ensure t
-  :commands (wgrep-change-to-wgrep-mode)
-  :custom
-  (wgrep-auto-save-buffer t)
-  (wgrep-change-readonly-file t))
 
-;;===== 一括置換操作 ====================================================
-;; 1. `SPC s s' (consult-line)や `SPC s p' (consult-ripgrep)で候補表示
-;; 2. `C-,' (embark-export)でembark-collect-modeに
-;; 3. OccurやWgrepの違いはあるが, `i'で編集モードに入る
-;; 4. `:%s;xxx;yyy;g' などで一括置換 (普通に編集してもいい)
-;; 5. `ESC'で編集モードを抜ける (この際に変更を保存するか聞かれることもある)
-;;====================================================================
 
-;;====================================================================
-;; バッファ内のインライン/ポップアップ補完
-;;====================================================================
-
-;; === バッファ内補完のUIフロントエンド (corfu)
-(use-package corfu
-  :ensure t
-  :custom
-  (global-corfu-mode t)
-  (corfu-popupinfo-mode t)
-  (corfu-history-mode t)
-  (corfu-auto t)
-  (corfu-auto-delay 0)
-  (corfu-popupinfo-delay 0)
-  (corfu-auto-prefix 1)
-  (corfu-cycle t)
-  (corfu-preselect 'prompt)
-  (corfu-quit-no-match 'separator)
-  (corfu-on-exact-match nil)
-  (tab-always-indent 'complete))
-
-;; === 補完ポップアップ内のアイコン
-(use-package nerd-icons-corfu
-  :ensure t
-  :after (corfu nerd-icons)
-  :config
-  (add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter))
 
 ;;====================================================================
 ;; GitHub連携 (forge)

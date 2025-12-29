@@ -111,6 +111,6 @@
  '(show-paren-mismatch ((t (:background "#ed8796" :foreground "#1e2030" :weight bold))))
  '(trailing-whitespace ((t (:background "#ed8796" :foreground "#ed8796")))))
 
-(provide '01-ui)
+(provide '02-ui)
 
 ;;; 02-ui.el ends here
