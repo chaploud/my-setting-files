@@ -17,13 +17,13 @@
       (call-interactively 'magit-blame-echo))))
 
 ;; GitHub連携
+;; GitHubのアクセストークンを取得しておくこと
+;; ~/.authinfo.gpgにGitHubのアクセストークンを設定しておくこと
 (use-package forge
   :ensure t
   :after magit
-  :config
-  ;; GitHubのアクセストークンを取得しておくこと
-  ;; ~/.authinfo.gpgにGitHubのアクセストークンを設定しておくこと
-  (setq forge-owned-accounts '("chaploud")))
+  :custom
+  (forge-owned-accounts '("chaploud")))
 
 ;; フリンジに差分表示
 (use-package diff-hl
@@ -36,8 +36,11 @@
   (magit-post-refresh-hook . diff-hl-magit-post-refresh))
 
 ;; ediff設定
-(setq ediff-window-setup-function 'ediff-setup-windows-plain)
-(setq ediff-split-window-function 'split-window-horizontally)
+(use-package ediff
+  :ensure nil
+  :custom
+  (ediff-window-setup-function 'ediff-setup-windows-plain)
+  (ediff-split-window-function 'split-window-horizontally))
 
 (provide '04-git)
 ;;; 04-git.el ends here

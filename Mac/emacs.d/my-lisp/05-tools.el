@@ -29,12 +29,11 @@
 ;; ワークスペース
 (use-package perspective
   :ensure t
-  :init
-  (setq persp-suppress-no-prefix-key-warning t)
-  (persp-mode)
   :custom
+  (persp-suppress-no-prefix-key-warning t)
   (persp-sort 'created)
-  (persp-modestring-short t))
+  (persp-modestring-short t)
+  (persp-mode t))
 
 ;; ファイルツリー
 (use-package treemacs

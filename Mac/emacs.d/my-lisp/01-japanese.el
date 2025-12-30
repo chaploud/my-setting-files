@@ -14,10 +14,6 @@
    (when (frame-focus-state)
      (my-switch-ime "net.mtgto.inputmethod.macSKK.ascii"))))
 
-;; カーソル色制御
-(use-package ccc
-  :ensure t)
-
 ;; DDSKK(日本語入力)
 (use-package ddskk
   :ensure t
