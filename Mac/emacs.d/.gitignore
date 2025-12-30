@@ -9,3 +9,5 @@ tree-sitter/
 undo-fu-session/
 transient/
 auto-save-list/
+tramp
+claude-code-ide.el/

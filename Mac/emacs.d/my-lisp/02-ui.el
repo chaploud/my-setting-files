@@ -11,6 +11,15 @@
 ;; フォント
 (defvar my-font "Source Han Code JP")
 (set-face-attribute 'default nil :family my-font :height 130)
+;; 日本語の漢字に明示的にフォント指定（Han Unification対策: 中国風字形を防ぐ）
+(set-fontset-font nil 'japanese-jisx0208 my-font)
+(set-fontset-font nil 'japanese-jisx0213-1 my-font)
+(set-fontset-font nil 'japanese-jisx0213-2 my-font)
+
+;; Claude Code等のアニメーション文字用フォント（幅のがたつき防止）
+(setq use-default-font-for-symbols nil)
+(dolist (char '(#x00B7 #x2722 #x2733 #x2736 #x273B #x273D))
+  (set-fontset-font t char (font-spec :family "JuliaMono")))
 
 ;; カラーテーマ
 (use-package catppuccin-theme
