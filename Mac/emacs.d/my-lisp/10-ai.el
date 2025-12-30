@@ -33,6 +33,9 @@
   :custom
   (claude-code-ide-window-width 0.4)
   (claude-code-ide-use-ide-diff nil)    ; ediff機能を無効化
+  :bind
+  (:map vterm-mode-map
+        ("C-c C-e" . claude-code-ide-send-escape))
   :config
   (claude-code-ide-emacs-tools-setup)
 
