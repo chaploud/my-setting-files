@@ -3,6 +3,8 @@
 ;;; Commentary:
 ;;; Code:
 
+(setq package-check-signature nil)
+
 ;; シェル環境変数をGUIでも利用
 (use-package exec-path-from-shell
   :ensure t

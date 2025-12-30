@@ -38,18 +38,30 @@
           wat
           yaml
           ))
-  ;; === tsの参照URLを指定(デフォルト以外)
+  ;; === tsの参照URLを指定
   (setq treesit-language-source-alist
         '(
+          (bash "https://github.com/tree-sitter/tree-sitter-bash")
+          (c "https://github.com/tree-sitter/tree-sitter-c")
           (clojure "https://github.com/sogaiu/tree-sitter-clojure")
+          (cpp "https://github.com/tree-sitter/tree-sitter-cpp")
+          (css "https://github.com/tree-sitter/tree-sitter-css")
           (dockerfile "https://github.com/camdencheek/tree-sitter-dockerfile")
           (groovy "https://github.com/murtaza64/tree-sitter-groovy")
           (hcl "https://github.com/tree-sitter-grammars/tree-sitter-hcl")
+          (html "https://github.com/tree-sitter/tree-sitter-html")
+          (java "https://github.com/tree-sitter/tree-sitter-java")
+          (javascript "https://github.com/tree-sitter/tree-sitter-javascript")
+          (jsdoc "https://github.com/tree-sitter/tree-sitter-jsdoc")
+          (json "https://github.com/tree-sitter/tree-sitter-json")
+          (python "https://github.com/tree-sitter/tree-sitter-python")
+          (ruby "https://github.com/tree-sitter/tree-sitter-ruby")
+          (rust "https://github.com/tree-sitter/tree-sitter-rust")
           (toml "https://github.com/ikatyang/tree-sitter-toml")
           (tsx "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src")
           (typescript "https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src")
-          (wast "https://github.com/wasm-lsp/tree-sitter-wasm.git"  "main" "wast/src")
-          (wat "https://github.com/wasm-lsp/tree-sitter-wasm.git"  "main" "wat/src")
+          (wast "https://github.com/wasm-lsp/tree-sitter-wasm.git" "main" "wast/src")
+          (wat "https://github.com/wasm-lsp/tree-sitter-wasm.git" "main" "wat/src")
           (yaml "https://github.com/ikatyang/tree-sitter-yaml")
           ))
   ;; === 未導入だけ自動インストール

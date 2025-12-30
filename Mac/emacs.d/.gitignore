@@ -1,0 +1,9 @@
+.cache/
+eln-cache/
+elpa/
+forge-database.sqlite
+history
+projects
+recentf
+tree-sitter/
+undo-fu-session/

@@ -128,4 +128,5 @@
        (t
         (user-error "No path in minibuffer"))))))
 
+(provide '98-utilities)
 ;;; 98-utilities.el ends here
