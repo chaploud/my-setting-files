@@ -5,9 +5,6 @@
 
 ;;; Code:
 
-;; グローバルキーバインド
-(global-set-key (kbd "C-'") #'my-toggle-vterm)
-
 (use-package general
   :ensure t
   :after (evil evil-collection)

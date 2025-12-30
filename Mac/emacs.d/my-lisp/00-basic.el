@@ -91,8 +91,8 @@
        (list
         ;; flymake-show-project-diagnostics
         `("\\*Flymake diagnostics" ,@my-display-split)
-        ;; vterm
-        `("\\*vterm\\*" ,@my-display-split
+        ;; vterm (multi-vterm: *vterminal<N>*)
+        `("\\*vterminal" ,@my-display-split
           (window-parameters . ((dedicated . t))))
         ;; ielm
         `("\\*ielm\\*" ,@my-display-split))))
