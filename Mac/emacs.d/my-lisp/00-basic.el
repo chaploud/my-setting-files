@@ -56,7 +56,7 @@
 (use-package which-key
   :ensure nil
   :custom
-  (whith-key-mode t)
+  (which-key-mode t)
   (which-key-idle-delay 0.3)
   (which-key-idle-secondary-delay 0)
   (which-key-sort-order nil) ; 設定順で表示
