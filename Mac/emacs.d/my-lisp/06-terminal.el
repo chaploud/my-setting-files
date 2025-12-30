@@ -1,8 +1,6 @@
 ;;; 06-terminal.el --- ターミナルエミュレータ -*- lexical-binding: t; -*-
 
 ;;; Commentary:
-;; 外部依存:
-;; - brew install --cask font-sf-mono
 
 ;;; Code:
 
@@ -18,7 +16,6 @@
   :hook
   (vterm-mode . (lambda ()
                   (setq-local nobreak-char-display nil)
-                  (face-remap-add-relative 'default :family "SF Mono" :height 130)
                   (evil-insert-state)))
   :bind
   (:map vterm-mode-map

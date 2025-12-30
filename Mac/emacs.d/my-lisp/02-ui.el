@@ -6,8 +6,7 @@
 ;;
 ;; 使用フォント:
 ;; - Source Han Code JP (メイン)
-;; - JuliaMono (アニメーション文字用)
-;; - UDEV Gothic 35NF (vterm用, 06-terminal.elで設定)
+;; - JuliaMono (アニメーション文字のみ)
 
 ;;; Code:
 
@@ -19,15 +18,15 @@
 ;; フォント
 (defvar my-font "Source Han Code JP")
 (set-face-attribute 'default nil :family my-font :height 130)
-;; 日本語の漢字に明示的にフォント指定（Han Unification対策: 中国風字形を防ぐ）
-(set-fontset-font nil 'japanese-jisx0208 my-font)
-(set-fontset-font nil 'japanese-jisx0213-1 my-font)
-(set-fontset-font nil 'japanese-jisx0213-2 my-font)
+(set-fontset-font nil 'japanese-jisx0208 my-font)   ; 中国語風漢字対策
+(set-fontset-font nil 'japanese-jisx0213-1 my-font) ; 〃
+(set-fontset-font nil 'japanese-jisx0213-2 my-font) ; 〃
 
-;; Claude Code等のアニメーション文字用フォント（幅のがたつき防止）
-;; (setq use-default-font-for-symbols nil)
-;; (dolist (char '(#x00B7 #x2722 #x2733 #x2736 #x273B #x273D))
-;;   (set-fontset-font t char (font-spec :family "JuliaMono")))
+;; vterm等のアニメーション文字用 (幅のがたつき防止)
+(setq use-default-font-for-symbols nil)
+(dolist (char '(#x00B7 #x2722 #x2733 #x2736 #x273B #x273D))
+  (set-fontset-font nil char (font-spec :family "JuliaMono") nil 'prepend)
+  (set-fontset-font t char (font-spec :family "JuliaMono") nil 'prepend))
 
 ;; カラーテーマ
 (use-package catppuccin-theme
