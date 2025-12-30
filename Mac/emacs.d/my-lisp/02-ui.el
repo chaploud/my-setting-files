@@ -11,7 +11,6 @@
 ;; フォント
 (defvar my-font "Source Han Code JP")
 (set-face-attribute 'default nil :family my-font :height 130)
-;; TODO: 漢字やターミナルの挙動を確認
 
 ;; カラーテーマ
 (use-package catppuccin-theme
@@ -87,28 +86,6 @@
   :custom
   (colorful-use-prefix t)
   (global-colorful-mode t))
-
-;; 色の微調整 (catppuccin-macchiatoベース)
-(set-cursor-color "#cad3f5")
-(custom-set-faces
- '(consult-file ((t))) ; consultのデフォルト文字色が見にくいのでリセット
- '(diff-added ((t (:background "#3e4b4c"))))
- '(diff-refine-added ((t (:background "#586e5e"))))
- '(diff-refine-removed ((t (:background "#744d5f"))))
- '(diff-removed ((t (:background "#4c3a4c"))))
- '(ediff-current-diff-A ((t (:extend t :background "#4c3a4c"))))
- '(ediff-current-diff-B ((t (:extend t :background "#3e4b4c"))))
- '(ediff-current-diff-C ((t (:extend t :background "#4c4540"))))
- '(ediff-fine-diff-A ((t (:background "#744d5f"))))
- '(ediff-fine-diff-B ((t (:background "#586e5e"))))
- '(ediff-fine-diff-C ((t (:background "#746355"))))
- '(font-lock-comment-delimiter-face ((t (:foreground "#5ab5b0"))))
- '(font-lock-comment-face ((t (:foreground "#5ab5b0"))))
- '(match ((t (:background "#eed49f" :foreground "#1e2030"))))
- '(mode-line ((t (:background "#1e2030"))))
- '(show-paren-match ((t (:background "#8aadf4" :foreground "#1e2030" :weight bold))))
- '(show-paren-mismatch ((t (:background "#ed8796" :foreground "#1e2030" :weight bold))))
- '(trailing-whitespace ((t (:background "#ed8796" :foreground "#ed8796")))))
 
 (provide '02-ui)
 ;;; 02-ui.el ends here

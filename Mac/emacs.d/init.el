@@ -59,7 +59,7 @@
 (require '12-languages)
 (require '98-utilities)
 (require '99-keybindings)
-;;; init.el ends here
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -79,6 +79,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(consult-file ((t)))
+ '(cursor ((t (:background "#cad3f5"))))
  '(diff-added ((t (:background "#3e4b4c"))))
  '(diff-refine-added ((t (:background "#586e5e"))))
  '(diff-refine-removed ((t (:background "#744d5f"))))
@@ -96,3 +97,5 @@
  '(show-paren-match ((t (:background "#8aadf4" :foreground "#1e2030" :weight bold))))
  '(show-paren-mismatch ((t (:background "#ed8796" :foreground "#1e2030" :weight bold))))
  '(trailing-whitespace ((t (:background "#ed8796" :foreground "#ed8796")))))
+
+;;; init.el ends here
