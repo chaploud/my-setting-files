@@ -41,31 +41,24 @@
 (use-package cape
   :ensure t
   :hook
-  (prog-mode . my-prog-capf)
-  (text-mode . my-text-capf)
+  (prog-mode . my-cape-prog-setup)
+  (text-mode . my-cape-text-setup)
   :config
-  (defun my-prog-capf ()
-    (unless (local-variable-p 'my-prog-capf-configured)
-      (if (bound-and-true-p eglot--managed-mode)
-          (setq-local completion-at-point-functions
-                      (cons (cape-capf-super #'eglot-completion-at-point
-                                             #'tempel-expand
-                                             #'cape-file)
-                            completion-at-point-functions))
-        (setq-local completion-at-point-functions
-                    (cons (cape-capf-super #'tempel-complete
-                                           #'cape-file)
-                          completion-at-point-functions))))
-    (setq-local my-prog-capf-configured t))
+  (defun my-cape-setup (capfs)
+    "Add CAPFS to completion-at-point-functions."
+    (setq-local completion-at-point-functions
+                (cons (apply #'cape-capf-super capfs)
+                      completion-at-point-functions)))
 
-  (defun my-text-capf ()
-    (unless (local-variable-p 'my-text-capf-configured)
-      (setq-local completion-at-point-functions
-                  (cons (cape-capf-super #'tempel-complete
-                                         #'cape-dabbrev
-                                         #'cape-file)
-                        completion-at-point-functions)))
-    (setq-local my-text-capf-configured t)))
+  (defun my-cape-prog-setup ()
+    "Setup cape for prog-mode."
+    (my-cape-setup (if (bound-and-true-p eglot-managed-mode)
+                       '(eglot-completion-at-point tempel-expand cape-file)
+                     '(tempel-complete cape-file))))
+
+  (defun my-cape-text-setup ()
+    "Setup cape for text-mode."
+    (my-cape-setup '(tempel-complete cape-dabbrev cape-file))))
 
 (provide '09-completion)
 ;;; 09-completion.el ends here

@@ -3,9 +3,6 @@
 ;;; Commentary:
 ;;; Code:
 
-;; 再帰的ミニバッファを許可
-(setq enable-recursive-minibuffers t)
-
 ;; 垂直補完UI
 (use-package vertico
   :ensure t
@@ -16,18 +13,22 @@
   (vertico-resize nil))
 
 ;; 柔軟なマッチング
+;; デフォルトは literal と regexp のみ (flex は緩すぎるので無効)
+;; flex を使いたい場合は検索パターンの末尾に ~ をつける (例: oo~)
 (use-package orderless
   :ensure t
   :custom
-  (completion-styles '(basic partial-completion orderless))
+  (completion-styles '(orderless basic))
   (completion-category-defaults nil)
-  (completion-category-overrides '((file (styles basic))
-                                   (corfu (styles basic partial-completion orderless))))
-  ;; 正規表現とあいまい検索もデフォルトで有効に
-  ;; 完全一致(literal)を優先させたいときは先頭に`='をつける
-  (orderless-matching-styles '(orderless-literal
-                               orderless-flex
-                               orderless-regexp)))
+  (completion-category-overrides '((file (styles basic partial-completion))))
+  (orderless-matching-styles '(orderless-literal orderless-regexp))
+  :config
+  ;; ~ で終わるパターンのみ flex を有効化
+  (defun my-orderless-flex-dispatcher (pattern _index _total)
+    "Enable flex matching when PATTERN ends with ~."
+    (when (string-suffix-p "~" pattern)
+      `(orderless-flex . ,(substring pattern 0 -1))))
+  (setq orderless-style-dispatchers '(my-orderless-flex-dispatcher)))
 
 ;; 補完候補に注釈
 (use-package marginalia

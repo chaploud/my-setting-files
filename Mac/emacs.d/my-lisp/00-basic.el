@@ -13,6 +13,7 @@
 (use-package emacs
   :ensure nil
   :custom
+  (enable-recursive-minibuffers t)      ; 再帰的ミニバッファを許可
   (mac-command-modifier 'meta)          ; CommandキーをMetaに (Mac)
   (indent-tabs-mode nil)                ; タブは空白
   (tab-width 2)                         ; タブ幅2
