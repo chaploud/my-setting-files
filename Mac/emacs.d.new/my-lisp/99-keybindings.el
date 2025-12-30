@@ -6,7 +6,7 @@
 ;;; Code:
 
 ;; グローバルキーバインド
-(global-set-key (kbd "C-'") #'my-vterm-toggle)
+(global-set-key (kbd "C-'") #'my-toggle-vterm)
 
 (use-package general
   :ensure t

@@ -50,7 +50,7 @@
 (require '03-evil)
 (require '04-git)
 (require '05-tools)
-(require '06-termianl)
+(require '06-terminal)
 (require '07-lsp)
 (require '08-fuzzy-finder)
 (require '09-completion)
