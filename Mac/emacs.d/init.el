@@ -38,6 +38,7 @@
 (setq package-archives '(("gnu" . "https://elpa.gnu.org/packages/")
                          ("nongnu" . "https://elpa.nongnu.org/nongnu/")
                          ("melpa" . "https://melpa.org/packages/")))
+(setq package-check-signature nil) ;; TODO: 本当は署名検証させたい
 (package-initialize)
 
 (require 'use-package)

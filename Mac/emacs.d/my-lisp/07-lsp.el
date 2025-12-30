@@ -3,7 +3,11 @@
 ;;; Commentary:
 ;;; Code:
 
-(setq flymake-show-diagnostics-at-end-of-line t)
+;; 診断表示
+(use-package flymake
+  :ensure nil
+  :custom
+  (flymake-show-diagnostics-at-end-of-line t))
 
 ;; Tree-sitter設定
 (use-package treesit
@@ -13,31 +17,30 @@
   (treesit-font-lock-level 4)
   :config
   ;; === tree-sitterの文法をインストールしたいリスト
-  (setq my-treesit-language-list
-        '(
-          bash
-          c
-          clojure
-          cpp
-          css
-          dockerfile
-          groovy
-          hcl
-          html
-          java
-          javascript
-          jsdoc
-          json
-          python
-          ruby
-          rust
-          toml
-          tsx
-          typescript
-          wast
-          wat
-          yaml
-          ))
+  (defvar my-treesit-language-list
+    '(bash
+      c
+      clojure
+      cpp
+      css
+      dockerfile
+      groovy
+      hcl
+      html
+      java
+      javascript
+      jsdoc
+      json
+      python
+      ruby
+      rust
+      toml
+      tsx
+      typescript
+      wast
+      wat
+      yaml)
+    "List of tree-sitter languages to install.")
   ;; === tsの参照URLを指定
   (setq treesit-language-source-alist
         '(
@@ -124,36 +127,36 @@
   (terraform-mode . eglot-ensure)
   (yaml-ts-mode . eglot-ensure)
   (zig-mode . eglot-ensure)
+  ;; 保存時にフォーマット (バッファローカル)
+  (eglot-managed-mode . (lambda ()
+                          (add-hook 'before-save-hook #'eglot-format-buffer nil t)))
 
   :config
-  ;; === eglotによるLSP起動
   (defun my-eglot-start ()
     "Start eglot for the current buffer if not already started."
     (interactive)
     (eglot-ensure))
 
   ;; デフォルトと変えたいものは指定
-  (setq my-eglot-server-list
-        '((sql-mode . ("sqls"))))
+  (defvar my-eglot-server-list
+    '((sql-mode . ("sqls")))
+    "Custom eglot server programs.")
 
-  (with-eval-after-load 'eglot
-    (dolist (pair my-eglot-server-list)
-      (add-to-list 'eglot-server-programs pair)))
+  (dolist (pair my-eglot-server-list)
+    (add-to-list 'eglot-server-programs pair)))
 
-  (add-hook 'before-save-hook
-            (lambda ()
-              (when (and (bound-and-true-p eglot-mode)
-                         (eglot-managed-p))
-                (eglot-format-buffer)))))
-
-;; 自動フォーマット
+;; 自動フォーマット (eglot非対応言語用)
 (use-package format-all
   :ensure t
-  :hook ((prog-mode . format-all-mode))
+  :hook (prog-mode . format-all-mode)
   :config
+  (defun my-format-all-buffer-if-no-eglot ()
+    "Run format-all-buffer only if eglot is not active."
+    (unless (bound-and-true-p eglot-managed-mode)
+      (format-all-buffer)))
   (add-hook 'format-all-mode-hook
             (lambda ()
-              (add-hook 'before-save-hook #'format-all-buffer nil t))))
+              (add-hook 'before-save-hook #'my-format-all-buffer-if-no-eglot nil t))))
 
 (provide '07-lsp)
 ;;; 07-lsp.el ends here
