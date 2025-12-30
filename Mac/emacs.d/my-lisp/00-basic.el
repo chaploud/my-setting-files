@@ -1,6 +1,18 @@
 ;;; 00-basic.el --- 基本設定 -*- lexical-binding: t; -*-
 
 ;;; Commentary:
+;; 外部依存:
+;; - brew install pass gpg (auth-source用)
+;;
+;; ~/.zshrc に以下を追加するとemacsclientで素早く開ける:
+;; e() {
+;;   if emacsclient --eval "t" > /dev/null 2>&1; then
+;;     emacsclient -n "$@"
+;;   else
+;;     emacs "$@" &
+;;   fi
+;; }
+
 ;;; Code:
 
 ;; シェル環境変数をGUIでも利用

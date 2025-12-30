@@ -62,7 +62,6 @@
     "f r" '(consult-recent-file :wk "file recent")
     "f p" '(project-find-file :wk "find in project")
     "f s" '(save-buffer :wk "file save")
-    "f d" '(bufferfile-delete :wk "delete file")
     "f t" '(treemacs :wk "treemacs")
     "f y" '(my-copy-project-relative-path :wk "copy relative path")
     "f Y" '(my-copy-absolute-path :wk "copy absolute path")
@@ -82,11 +81,12 @@
     "b" '(:ignore t :wk "Buffers/Bookmark")
     "b b" '(consult-buffer :wk "buffer switch")
     "b d" '(kill-current-buffer :wk "buffer kill")
-    "b r" '(bufferfile-rename :wk "rename buffer file")
+    "b k" '(bufferfile-delete :wk "file delete")
+    "b r" '(bufferfile-rename :wk "file rename")
     "b h" '(dashboard-open :wk "dashboard home")
     "b l" '(consult-bookmark :wk "bookmark list")
     "b s" '(my-bookmark-set :wk "bookmark set")
-    "b k" '(bookmark-delete :wk "bookmark delete")
+    "b x" '(bookmark-delete :wk "bookmark delete")
 
     ;; (s) 検索
     "s" '(:ignore t :wk "Search")
@@ -127,13 +127,6 @@
 
     ;; (c) cd on vterm
     "c" '(my-cd-on-vterm :wk "cd on vterm")
-
-    ;; (h) http
-    "h" '(:ignore t :wk "HTTP")
-    "h g" '(my-plz-get :wk "GET")
-    "h p" '(my-plz-post-region :wk "POST region")
-    "h s" '(my-plz-set-bearer-token :wk "set bearer token")
-    "h c" '(my-plz-clear-bearer-token :wk "clear bearer token")
 
     ;; (a) Claude Code IDE
     "a" '(:ignore t :wk "AI/Claude")
@@ -189,7 +182,7 @@
     "\"" '(my-wrap-symbol-with-quotes :wk "wrap \"\"")
     "d" '(:ignore t :wk "delete")
     "d w" '(puni-splice :wk "delete wrap")
-    "k" '(my-puni-kill-to-end :wk "kill to sexp end") ; noramlでC-kはkill-line
+    "k" '(my-puni-kill-to-end :wk "kill to sexp end") ; normalでC-kはkill-line
     "y" '(my-puni-yank-to-end :wk "yank to sexp end")
     "h" '(eldoc :wk "eldoc")
     )
@@ -252,14 +245,6 @@
    :states '(normal)
    "K" 'eldoc)
 
-  ;; === Zig (,)
-  (my-local-leader-def
-    :keymaps '(zig-mode-map)
-    "b" '(my-zig-build-project :wk "build")
-    "r" '(my-zig-run-project :wk "run")
-    "t" '(my-zig-test-project :wk "test")
-    "f" '(zig-format-buffer :wk "format"))
-
   ;; === Markdown
   (my-local-leader-def
     :keymaps '(gfm-mode-map)
@@ -282,7 +267,6 @@
   ;; 基本はC-hで納得しよう
 
   )
-
 
 (provide '99-keybindings)
 ;;; 99-keybindings.el ends here

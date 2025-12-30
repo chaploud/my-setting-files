@@ -1,6 +1,11 @@
 ;;; 01-japanese.el --- 日本語入力 -*- lexical-binding: t; -*-
 
 ;;; Commentary:
+;; 外部依存:
+;; - macSKK (https://github.com/mtgto/macSKK)
+;; - yaskkserv2 (https://github.com/wachikun/yaskkserv2)
+;; - macism (https://github.com/laishulu/macism)
+
 ;;; Code:
 
 (defun my-switch-ime (input-source)

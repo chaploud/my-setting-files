@@ -49,7 +49,7 @@
   :hook
   (completion-list-mode . consult-preview-at-point-mode)
   :config
-  ;; もとのconsult-ripgre-pargsの値に追記したほうがいい
+  ;; もとのconsult-ripgrep-argsの値に追記
   (let ((additional-args '("--hidden"
                            "--glob=!.git/**"
                            "--glob=!node_modules/**"
@@ -57,17 +57,16 @@
                            "--glob=!*.lock"
                            "--glob=!*.log")))
     (setq consult-ripgrep-args
-          (concat consult-ripgrep-args " " (string-join additional-args " "))))
+          (concat consult-ripgrep-args " " (string-join additional-args " ")))))
 
-
-  ;; 現在バッファのディレクトリ以下でripgrep検索する関数
-  (defun my-consult-ripgrep-current-dir ()
-    "Search in the current buffer's directory (or `default-directory') using consult-ripgrep."
-    (interactive)
-    (let ((dir (or (and (buffer-file-name)
-                        (file-name-directory (buffer-file-name)))
-                   default-directory)))
-      (consult-ripgrep dir))))
+;; 現在バッファのディレクトリ以下でripgrep検索
+(defun my-consult-ripgrep-current-dir ()
+  "Search in the current buffer's directory using consult-ripgrep."
+  (interactive)
+  (let ((dir (or (and (buffer-file-name)
+                      (file-name-directory (buffer-file-name)))
+                 default-directory)))
+    (consult-ripgrep dir)))
 
 ;; 補完候補へのアクション
 (use-package embark

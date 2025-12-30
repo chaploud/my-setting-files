@@ -2,34 +2,10 @@
 
 ;;; Commentary:
 ;; パッケージ管理の初期化と各設定ファイルの読み込み
-
-;; 最終更新: 2025-12-28
-
-;; 依存関係
-
-;; === 全般 ===
-;; emacs-plus@30.2 (https://github.com/d12frosted/homebrew-emacs-plus)
-;; gcc@15.2.0 (https://formulae.brew.sh/formula/gcc)
-;; libgccjit@15.2.0 (https://formulae.brew.sh/formula/libgccjit)
-
-;; === 00-basic.el ===
-;; `~/.zsrhc'
-;; # eコマンドでサっとEmacsでファイルを開く
-;; e() {
-;;   if emacsclient --eval "t" > /dev/null 2>&1; then
-;;     emacsclient -n "$@"
-;;   else
-;;     emacs "$@" &
-;;   fi
-;; }
 ;;
-;; brew install pass
-;; brew install gpg
-
-;; === 01-japanese.el ===
-;; macSKK (https://github.com/mtgto/macSKK)
-;; yaskkserv2 (https://github.com/wachikun/yaskkserv2)
-;; macism (https://github.com/laishulu/macism)
+;; 外部依存:
+;; - emacs-plus@30 (https://github.com/d12frosted/homebrew-emacs-plus)
+;; - gcc, libgccjit (native-comp用)
 
 ;;; Code:
 

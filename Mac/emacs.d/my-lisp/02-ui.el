@@ -1,6 +1,14 @@
 ;;; 02-ui.el --- UI設定 -*- lexical-binding: t; -*-
 
 ;;; Commentary:
+;; 初回セットアップ:
+;; - M-x nerd-icons-install-fonts
+;;
+;; 使用フォント:
+;; - Source Han Code JP (メイン)
+;; - JuliaMono (アニメーション文字用)
+;; - UDEV Gothic 35NF (vterm用, 06-terminal.elで設定)
+
 ;;; Code:
 
 (global-hl-line-mode t) ; カーソル行ハイライト
@@ -17,9 +25,9 @@
 (set-fontset-font nil 'japanese-jisx0213-2 my-font)
 
 ;; Claude Code等のアニメーション文字用フォント（幅のがたつき防止）
-(setq use-default-font-for-symbols nil)
-(dolist (char '(#x00B7 #x2722 #x2733 #x2736 #x273B #x273D))
-  (set-fontset-font t char (font-spec :family "JuliaMono")))
+;; (setq use-default-font-for-symbols nil)
+;; (dolist (char '(#x00B7 #x2722 #x2733 #x2736 #x273B #x273D))
+;;   (set-fontset-font t char (font-spec :family "JuliaMono")))
 
 ;; カラーテーマ
 (use-package catppuccin-theme
@@ -30,7 +38,6 @@
   (load-theme 'catppuccin t))
 
 ;; アイコンフォント
-;; M-x nerd-icons-install-fonts
 (use-package nerd-icons
   :ensure t)
 

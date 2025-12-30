@@ -1,6 +1,14 @@
 ;;; 12-languages.el --- 言語別設定 -*- lexical-binding: t; -*-
 
 ;;; Commentary:
+;; 各言語のメジャーモード設定
+;; LSPサーバーの依存関係は 07-lsp.el を参照
+;;
+;; 追加の外部依存 (フォーマッタ/リンター):
+;; - brew install shfmt (Shell)
+;; - brew install zig (Zig)
+;; - brew install checkmake (Makefile)
+
 ;;; Code:
 
 ;; Markdown
@@ -18,8 +26,6 @@
   (markdown-gfm-use-electric-backquote nil))
 
 ;; Shell Script (sh/bash/zsh)
-;; npm i -g bash-language-server
-;; brew install shfmt
 (use-package sh-script
   :ensure nil
   :mode (("\\.\\(sh\\|bash\\)\\'" . bash-ts-mode) ; sh/bash
@@ -33,7 +39,6 @@
   (sh-indentation  2))
 
 ;; HTML/CSS/JSON
-;; npm i -g vscode-langservers-extracted
 (use-package html-ts-mode
   :ensure nil
   :mode "\\.x?html\\'")
@@ -54,7 +59,6 @@
     (setq-local json-ts-mode-indent-offset 4)))
 
 ;; JavaScript / JSX / TypeScript / TSX
-;; npm i -g typescript typescript-language-server
 (use-package js-ts-mode
   :ensure nil
   :mode (("\\.js\\'" . js-ts-mode)
@@ -73,20 +77,17 @@
   :mode "\\.tsx\\'")
 
 ;; Docker
-;; npm i -g dockerfile-language-server-nodejs
 (use-package dockerfile-ts-mode
   :ensure nil
   :mode (("Dockerfile\\'" . dockerfile-ts-mode)
          ("\\.dockerfile\\'" . dockerfile-ts-mode)))
 
 ;; YAML
-;; npm i -g yaml-language-server
 (use-package yaml-ts-mode
   :ensure nil
   :mode ("\\.ya?ml\\'" . yaml-ts-mode))
 
 ;; Terraform (.tf)
-;; brew install terraform-ls
 (use-package terraform-mode
   :ensure t
   :mode "\\.tf\\'")
@@ -97,7 +98,6 @@
   :mode "\\.gradle\\'")
 
 ;; Python
-;; pipx install 'python-lsp-server[all]'
 (use-package python-ts-mode
   :ensure nil
   :mode "\\.py\\'"
@@ -122,21 +122,17 @@
   :mode "\\.toml\\'")
 
 ;; Java
-;; brew install jdtls
 (use-package java-ts-mode
   :ensure nil
   :mode "\\.java\\'")
 
 ;; C言語
-;; brew install llvm
 (use-package c-ts-mode
   :ensure nil
   :mode (("\\.c\\'" . c-ts-mode)
          ("\\.h\\'" . c-ts-mode)))
 
 ;; Zig
-;; brew install zig
-;; brew install zls
 (use-package zig-mode
   :ensure t
   :mode (("\\.zig\\'" . zig-mode)
@@ -151,7 +147,6 @@
   (setq compilation-auto-jump-to-first-error t))
 
 ;; Makefile
-;; brew install checkmake
 (use-package make-mode
   :ensure nil
   :mode ("\\(?:[Mm]akefile\\|\\.mk\\)\\'" . makefile-mode)
@@ -169,7 +164,6 @@
          ("\\.wast\\'" . wat-ts-mode)))
 
 ;; DB接続
-;; go install github.com/sqls-server/sqls@latest
 (use-package sql
   :ensure nil
   :custom

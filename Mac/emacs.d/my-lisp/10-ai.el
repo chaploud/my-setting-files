@@ -1,12 +1,13 @@
 ;;; 10-ai.el --- AI連携 -*- lexical-binding: t; -*-
 
 ;;; Commentary:
-;; - copilot: コード補完
-;; - claude-code-ide: Claude Code CLI 連携
+;; 初回セットアップ:
+;; - M-x copilot-install-server (GitHub Copilot)
+;; - Claude Code CLIのインストールとAPIキー設定
 
 ;;; Code:
 
-;; copilot (初回: M-x copilot-install-server)
+;; GitHub Copilot
 (use-package copilot
   :ensure t
   :vc (:url "https://github.com/copilot-emacs/copilot.el" :rev :newest :branch "main")
