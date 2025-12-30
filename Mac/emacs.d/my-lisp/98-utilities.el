@@ -74,7 +74,7 @@
   ;; ウィンドウ分割してない状態に
   (delete-other-windows)
 
-  (message "(my-rest-emacs) done."))
+  (message "(my-reset-emacs) done."))
 
 (defvar my-notes-root (expand-file-name "~/Documents/MyNote/"))
 (defvar my-inbox-dir (expand-file-name "00_inbox/" my-notes-root))

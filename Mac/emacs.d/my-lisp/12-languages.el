@@ -7,13 +7,12 @@
 (use-package markdown-mode
   :ensure t
   :mode ("\\.md\\'" . gfm-mode)
-  :init
-  (setq markdown-command '("pandoc" "--from=markdown" "--to=html5"))
   :bind
   (:map markdown-mode-map
         ("<backtab>" . markdown-promote)
         ("<normal-state> S-<tab>" . markdown-promote))
   :custom
+  (markdown-command '("pandoc" "--from=markdown" "--to=html5"))
   (markdown-fontify-code-blocks-natively t)
   (markdown-indent-on-enter 'indent-and-new-item)
   (markdown-gfm-use-electric-backquote nil))
@@ -62,7 +61,7 @@
          ("\\.cjs\\'" . js-ts-mode)
          ("\\.mjs\\'" . js-ts-mode)
          ("\\.jsx\\'" . js-ts-mode))
-  :config
+  :custom
   (js-indent-level 2))
 
 (use-package typescript-ts-mode
@@ -79,7 +78,6 @@
   :ensure nil
   :mode (("Dockerfile\\'" . dockerfile-ts-mode)
          ("\\.dockerfile\\'" . dockerfile-ts-mode)))
-
 
 ;; YAML
 ;; npm i -g yaml-language-server
@@ -154,12 +152,14 @@
 
 ;; Makefile
 ;; brew install checkmake
-(add-to-list 'auto-mode-alist '("\\(?:[Mm]akefile\\|\\.mk\\)\\'" . makefile-mode))
-(add-hook 'makefile-mode-hook
-          (lambda ()
-            (setq-local indent-tabs-mode t)
-            (setq-local tab-width 4)))
-(add-hook 'compilation-filter-hook 'ansi-color-compilation-filter)
+(use-package make-mode
+  :ensure nil
+  :mode ("\\(?:[Mm]akefile\\|\\.mk\\)\\'" . makefile-mode)
+  :hook
+  (makefile-mode . (lambda ()
+                     (setq-local indent-tabs-mode t)
+                     (setq-local tab-width 4)))
+  (compilation-filter . ansi-color-compilation-filter))
 
 ;; WebAssembly (wat/wast)
 (use-package wat-ts-mode

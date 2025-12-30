@@ -15,6 +15,7 @@
   :hook
   (vterm-mode . (lambda ()
                   (setq-local nobreak-char-display nil)
+                  (buffer-face-set :family "UDEV Gothic 35NF" :height 130)
                   (evil-insert-state)))
   :bind
   (:map vterm-mode-map
@@ -23,7 +24,6 @@
 ;; 複数vtermインスタンス管理
 (use-package multi-vterm
   :ensure t
-  :after vterm
   :bind
   ("C-'" . multi-vterm-project)
   :config

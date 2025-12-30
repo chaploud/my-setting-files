@@ -1,4 +1,4 @@
-;;; 11-clojure.el --- AI連携 -*- lexical-binding: t; -*-
+;;; 11-clojure.el --- Clojure開発環境 -*- lexical-binding: t; -*-
 
 ;;; Commentary:
 ;;; Code:
@@ -21,8 +21,7 @@
         (message "[%s] Deleted clojure-lsp cache at %s" (my-display-time) lsp-cache))
       (when (file-directory-p kondo-cache)
         (delete-directory kondo-cache t)
-        (message "[%s] Deleted clj-kondo cache at %s" (my-display-time) kondo-cache))
-      )
+        (message "[%s] Deleted clj-kondo cache at %s" (my-display-time) kondo-cache)))
     (eglot-ensure)))
 
 ;; REPL連携

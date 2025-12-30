@@ -145,6 +145,7 @@
     "a q" '(claude-code-ide-stop :wk "Claude stop")
     "a c" '(claude-code-ide-continue :wk "Claude continue")
     "a r" '(claude-code-ide-resume :wk "Claude resume")
+    "a b" '(my-claude-scratch :wk "Claude scratch")
     "1" '(my-claude-send-1 :wk "Claude '1'")
     "2" '(my-claude-send-2 :wk "Claude '2'")
     "3" '(my-claude-send-3 :wk "Claude '3'")
