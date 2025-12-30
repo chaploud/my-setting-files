@@ -48,15 +48,15 @@
 (require '01-japanese)
 (require '02-ui)
 (require '03-evil)
-(require '04-fuzzy-finder)
-(require '05-git)
-
-
-(require '06-lsp)
-(require '07-langs)
-(require '08-tools)
-(require '09-ai)
+(require '04-git)
+(require '05-tools)
+(require '06-termianl)
+(require '07-lsp)
+(require '08-fuzzy-finder)
+(require '09-completion)
+(require '10-ai)
+(require '11-clojure)
+(require '12-languages)
 (require '98-utilities)
 (require '99-keybindings)
-
 ;;; init.el ends here

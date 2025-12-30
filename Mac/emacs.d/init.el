@@ -2255,10 +2255,12 @@
                  rainbow-delimiters restclient sideline
                  spacemacs-theme terraform-mode treemacs-evil
                  treemacs-nerd-icons treemacs-perspective ultra-scroll
-                 undo-fu undo-fu-session vertico vterm vundo wgrep
-                 zig-mode))
+                 undo-fu undo-fu-session vertico vterm vundo
+                 wat-ts-mode wgrep zig-mode))
  '(package-vc-selected-packages
-   '((claude-code-ide :url
+   '((wat-ts-mode :url "https://github.com/nverno/wat-ts-mode" :branch
+                  "master")
+     (claude-code-ide :url
                       "https://github.com/manzaltu/claude-code-ide.el")
      (copilot :url "https://github.com/copilot-emacs/copilot.el"
               :branch "main")))

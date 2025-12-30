@@ -1,8 +1,6 @@
-;;; 04-fuzzy-finder.el --- 補完・検索システム -*- lexical-binding: t; -*-
+;;; 08-fuzzy-finder.el --- 検索システム -*- lexical-binding: t; -*-
 
 ;;; Commentary:
-;; ミニバッファ補完 (vertico) とバッファ内補完 (corfu)
-
 ;;; Code:
 
 ;; 再帰的ミニバッファを許可
@@ -99,30 +97,5 @@
   (wgrep-auto-save-buffer t)
   (wgrep-change-readonly-file t))
 
-;; バッファ内補完UI
-(use-package corfu
-  :ensure t
-  :custom
-  (global-corfu-mode t)
-  (corfu-popupinfo-mode t)
-  (corfu-history-mode t)
-  (corfu-auto t)
-  (corfu-auto-delay 0)
-  (corfu-popupinfo-delay 0)
-  (corfu-auto-prefix 1)
-  (corfu-cycle t)
-  (corfu-preselect 'prompt)
-  (corfu-quit-no-match 'separator)
-  (corfu-on-exact-match nil)
-  (tab-always-indent 'complete))
-
-;; 補完ポップアップのアイコン
-(use-package nerd-icons-corfu
-  :ensure t
-  :after (corfu nerd-icons)
-  :config
-  (add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter))
-
-(provide '04-fuzzy-finder)
-
-;;; 04-fuzzy-finder.el ends here
+(provide '08-fuzzy-finder)
+;;; 08-fuzzy-finder.el ends here

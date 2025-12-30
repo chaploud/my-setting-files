@@ -1,8 +1,6 @@
 ;;; 01-japanese.el --- 日本語入力 -*- lexical-binding: t; -*-
 
 ;;; Commentary:
-;; ddskk + yaskkserv2 + macSKK連携
-
 ;;; Code:
 
 (defun my-switch-ime (input-source)
@@ -20,7 +18,7 @@
 (use-package ccc
   :ensure t)
 
-;; ddskk - 日本語入力
+;; DDSKK(日本語入力)
 (use-package ddskk
   :ensure t
   :custom
@@ -61,5 +59,4 @@
     (skk-latin-mode-on)))
 
 (provide '01-japanese)
-
 ;;; 01-japanese.el ends here

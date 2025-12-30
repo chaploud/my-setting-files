@@ -1,8 +1,6 @@
-;;; 02-ui.el --- UI/外観設定 -*- lexical-binding: t; -*-
+;;; 02-ui.el --- UI設定 -*- lexical-binding: t; -*-
 
 ;;; Commentary:
-;; テーマ、フォント、モードライン、表示設定
-
 ;;; Code:
 
 (global-hl-line-mode t) ; カーソル行ハイライト
@@ -13,6 +11,7 @@
 ;; フォント
 (defvar my-font "Source Han Code JP")
 (set-face-attribute 'default nil :family my-font :height 130)
+;; TODO: 漢字やターミナルの挙動を確認
 
 ;; カラーテーマ
 (use-package catppuccin-theme
@@ -92,7 +91,7 @@
 ;; 色の微調整 (catppuccin-macchiatoベース)
 (set-cursor-color "#cad3f5")
 (custom-set-faces
- '(consult-file ((t)))
+ '(consult-file ((t))) ; consultのデフォルト文字色が見にくいのでリセット
  '(diff-added ((t (:background "#3e4b4c"))))
  '(diff-refine-added ((t (:background "#586e5e"))))
  '(diff-refine-removed ((t (:background "#744d5f"))))
@@ -112,5 +111,4 @@
  '(trailing-whitespace ((t (:background "#ed8796" :foreground "#ed8796")))))
 
 (provide '02-ui)
-
 ;;; 02-ui.el ends here

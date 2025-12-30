@@ -1,15 +1,13 @@
 ;;; 03-evil.el --- Vimエミュレーション -*- lexical-binding: t; -*-
 
 ;;; Commentary:
-;; evilと関連パッケージ
-
 ;;; Code:
 
 ;; Undoシステム
 (use-package undo-fu
   :ensure t)
 
-;; セッションまたぎ
+;; セッションまたぎのUndo
 (use-package undo-fu-session
   :ensure t
   :after undo-fu
@@ -18,8 +16,8 @@
 
 ;; Undoツリー
 (use-package vundo
-  :after undo-fu
-  :ensure t)
+  :ensure t
+  :after undo-fu)
 
 ;; evil本体
 (use-package evil
@@ -113,5 +111,4 @@
   (evil-commentary-mode t))
 
 (provide '03-evil)
-
 ;;; 03-evil.el ends here
