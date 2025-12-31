@@ -153,20 +153,19 @@
   '((clojure-ts-mode    lsp all)
     (json-ts-mode       lsp all)
     (zig-mode           lsp all)
-    (python-ts-mode     lsp all)
-    (rust-ts-mode       lsp all)
     (emacs-lisp-mode    all))
   "Format configuration per mode. lsp = eglot, all = format-all.")
 
 (defun my-format-buffer ()
   "Format buffer based on `my-format-config'."
+  (interactive)
   (when-let ((config (alist-get major-mode my-format-config)))
     (let ((use-lsp (and (memq 'lsp config)
                         (bound-and-true-p eglot-managed-mode)))
           (use-all (memq 'all config)))
       (cond
-       (use-lsp (eglot-format-buffer))
-       (use-all (format-all-buffer))))))
+       (use-lsp (call-interactively #'eglot-format))
+       (use-all (call-interactively #'format-all-buffer))))))
 
 (add-hook 'before-save-hook #'my-format-buffer)
 
