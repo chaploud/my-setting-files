@@ -21,6 +21,7 @@
 ;; ~/.authinfo.gpgにGitHubのアクセストークンを設定しておくこと
 (use-package forge
   :ensure t
+  :defer t
   :after magit
   :custom
   (forge-owned-accounts '("chaploud")))

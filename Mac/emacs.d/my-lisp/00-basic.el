@@ -21,6 +21,14 @@
   :config
   (exec-path-from-shell-initialize))
 
+;; 保存時に自動バイトコンパイル → ネイティブコンパイル
+(use-package auto-compile
+  :ensure t
+  :custom
+  (auto-compile-on-save-mode t)      ; 保存時に自動コンパイル
+  (auto-compile-on-load-mode t)      ; ロード時に古い .elc を再コンパイル
+  (auto-compile-display-buffer nil)) ; コンパイルバッファを表示しない
+
 ;; Emacs基本設定
 (use-package emacs
   :ensure nil

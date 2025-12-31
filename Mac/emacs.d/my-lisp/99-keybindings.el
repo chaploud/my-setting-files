@@ -250,6 +250,12 @@
     :keymaps '(gfm-mode-map)
     "," '(markdown-toggle-gfm-checkbox :wk "toggle checkbox"))
 
+  ;; Markdown promote (normal state での S-<tab>)
+  (general-define-key
+   :keymaps '(markdown-mode-map gfm-mode-map)
+   :states '(normal)
+   "S-<tab>" 'markdown-promote)
+
   ;; === Flymakeのエラージャンプ
   (general-define-key
    :states '(normal)

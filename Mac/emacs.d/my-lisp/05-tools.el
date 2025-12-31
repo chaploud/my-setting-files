@@ -77,6 +77,7 @@
 ;; Dockerコンテナ管理
 (use-package docker
   :ensure t
+  :defer t
   :custom
   (docker-container-columns
    '((:name "Names" :width 30 :template "{{ json .Names }}" :sort nil :format nil)
@@ -87,6 +88,7 @@
 ;; RSSリーダー
 (use-package elfeed
   :ensure t
+  :defer t
   :custom
   (elfeed-search-title-min-width 40)
   (elfeed-search-title-max-width 120)
@@ -94,24 +96,62 @@
   (elfeed-search-print-entry-function #'my-elfeed-search-print-entry)
   (shr-use-fonts nil)
   (elfeed-feeds
-   '("https://www.reddit.com/r/emacs/.rss"
-     "https://qiita.com/tags/Emacs/feed.atom"
-     "https://planet.emacslife.com/atom.xml"
-     "https://developertoarchitect.com/lessons/index.xml"
-     "https://qiita.com/tags/webassembly/feed"
-     "https://qiita.com/tags/TypeScript/feed"
-     "https://qiita.com/tags/Vim/feed.atom"
-     "https://qiita.com/popular-items/feed"
-     "https://rss.itmedia.co.jp/rss/2.0/techtarget.xml"
-     "https://news.google.com/news/rss/search?q=%22Zig%20Language%22%20OR%20%22ziglang%22&hl=en"
-     "https://zenn.dev/feed"
-     "https://codezine.jp/rss/new/20/index.xml"
-     "https://news.google.com/news/rss/search?q=%22wasm%22%20OR%20%22WASM%22%20OR%20%22WebAssembly%22%20OR&hl=ja-JP&gl=JP&ceid=JP:ja"
-     "https://planet.clojure.in/atom.xml"
-     "https://speakerdeck.com/c/programming.atom"
-     "https://speakerdeck.com/c/technology.atom"
-     "https://realtime.jser.info/feed.xml"
-     "https://www.publickey1.jp/atom.xml"))
+ '(
+   ;; ===== Financial / Algo Trading / ML =====
+   "https://www.quantstart.com/feed/"
+   "https://blog.quantinsti.com/rss"
+   "https://quantpedia.com/blog/feed/"
+   "https://feeds.feedburner.com/Quantocracy"
+
+   ;; ===== Editors (Emacs / NeoVim / VSCode) =====
+   "https://planet.emacsen.org/atom.xml"
+   "https://emacsredux.com/feed/"
+   "https://emacsweekly.com/feed.xml"
+   "https://protesilaos.com/codelog/?feed=rss2"
+   "https://www.reddit.com/r/emacs/.rss"
+
+   "https://github.com/neovim/neovim/releases.atom"
+   "https://www.reddit.com/r/neovim/.rss"
+
+   "https://code.visualstudio.com/updates/rss"
+   "https://github.com/microsoft/vscode/releases.atom"
+
+   ;; ===== Programming Languages / Language Implementation =====
+   "https://langdev.org/rss.xml"
+   "https://llvm.org/blog/rss.xml"
+   "https://feeds.feedburner.com/plweekly"
+
+   ;; ===== Clojure Ecosystem =====
+   "https://clojure.org/news/deref.rss"
+   "https://planet.clojure.in/atom.xml"
+   "https://www.lambda.is/blog/rss"
+   "https://purelyfunctional.tv/blog/rss"
+   "https://blog.juxt.pro/rss.xml"
+
+   ;; ===== WebAssembly Core =====
+   "https://webassembly.org/feed.xml"
+   "https://www.w3.org/blog/webassembly/feed/"
+   "https://github.com/WebAssembly/spec/releases.atom"
+
+   ;; ===== Wasmtime / Wasmer / Bytecode Alliance =====
+   "https://github.com/bytecodealliance/wasmtime/releases.atom"
+   "https://bytecodealliance.org/articles/index.xml"
+   "https://github.com/wasmerio/wasmer/releases.atom"
+   "https://wasmer.io/feed.xml"
+
+   ;; ===== WASM Tooling / Runtime / Ecosystem =====
+   "https://github.com/WebAssembly/wasi/releases.atom"
+   "https://github.com/WebAssembly/component-model/releases.atom"
+   "https://github.com/fermyon/spin/releases.atom"
+
+   ;; ===== General Tech / Japanese Sources =====
+   "https://zenn.dev/feed"
+   "https://qiita.com/tags/WebAssembly/feed"
+   "https://qiita.com/tags/Clojure/feed.atom"
+   "https://qiita.com/tags/Emacs/feed.atom"
+   "https://realtime.jser.info/feed.xml"
+   "https://www.publickey1.jp/atom.xml"
+   ))
 
   :config
   (defun my-elfeed-search-print-entry (entry)

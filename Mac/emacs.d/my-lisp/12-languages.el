@@ -17,8 +17,7 @@
   :mode ("\\.md\\'" . gfm-mode)
   :bind
   (:map markdown-mode-map
-        ("<backtab>" . markdown-promote)
-        ("<normal-state> S-<tab>" . markdown-promote))
+        ("<backtab>" . markdown-promote))
   :custom
   (markdown-command '("pandoc" "--from=markdown" "--to=html5"))
   (markdown-fontify-code-blocks-natively t)

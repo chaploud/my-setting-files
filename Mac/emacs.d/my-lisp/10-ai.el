@@ -33,11 +33,12 @@
   :custom
   (claude-code-ide-window-width 0.4)
   (claude-code-ide-use-ide-diff nil)    ; ediff機能を無効化
-  :bind
-  (:map vterm-mode-map
-        ("C-c C-e" . claude-code-ide-send-escape))
   :config
   (claude-code-ide-emacs-tools-setup)
+
+  ;; vterm-mode-map へのバインディングは vterm がロード後に設定
+  (with-eval-after-load 'vterm
+    (define-key vterm-mode-map (kbd "C-c C-e") #'claude-code-ide-send-escape))
 
   ;; テキストを Claude Code に送信（バッファを特定して送る）
   (defun my-claude-send-text (text)
