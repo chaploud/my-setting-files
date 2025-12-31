@@ -19,7 +19,7 @@
   (:map markdown-mode-map
         ("<backtab>" . markdown-promote))
   :custom
-  (markdown-command '("pandoc" "--from=markdown" "--to=html5"))
+  (markdown-command '("pandoc" "--from=markdown" "--to=html5" "--mathjax"))
   (markdown-fontify-code-blocks-natively t)
   (markdown-indent-on-enter 'indent-and-new-item)
   (markdown-gfm-use-electric-backquote nil))

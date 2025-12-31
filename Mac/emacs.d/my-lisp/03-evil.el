@@ -64,7 +64,7 @@
   :custom
   (evil-collection-setup-minibuffer t)
   (evil-collection-setup-debugger-keys t)
-  (evil-collection-key-blacklist '("C-j" "C-k" "SPC"))
+  (evil-collection-key-blacklist '("C-j" "C-k" "C-y" "SPC"))
   (evil-collection-magit-want-horizontal-movement t)
   :config
   (evil-collection-init))
