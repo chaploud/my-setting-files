@@ -36,6 +36,13 @@
   :config
   (claude-code-ide-emacs-tools-setup)
 
+  ;; 崩れないように*claude-code[...]*バッファのフォントを変更
+  (defun my-set-font-for-claude-buffer ()
+    "Set a specific font for Claude Code IDE buffers."
+    (when (string-match-p "^\\*claude-code" (buffer-name))
+      (buffer-face-set :family "UDEV Gothic 35NF" :height 130)))
+  (add-hook 'buffer-list-update-hook #'my-set-font-for-claude-buffer)
+
   ;; vterm-mode-map へのバインディングは vterm がロード後に設定
   (with-eval-after-load 'vterm
     (define-key vterm-mode-map (kbd "C-c C-e") #'claude-code-ide-send-escape))
@@ -75,36 +82,36 @@
   (defun my-claude-send-3 () "Send 3." (interactive) (my-claude-send-number 3))
   )
 
-  ;; スクラッチバッファ
-  (defun my-claude-scratch ()
-    "Toggle Claude Code scratch buffer for current project."
-    (interactive)
-    (let* ((project-dir (claude-code-ide--get-working-directory))
-           (project-name (file-name-nondirectory (directory-file-name project-dir)))
-           (buffer-name (format "*claude-scratch[%s]*" project-name))
-           (buffer (get-buffer buffer-name))
-           (window (and buffer (get-buffer-window buffer))))
-      (cond
-       ;; 表示中なら閉じる
-       (window (delete-window window))
-       ;; バッファがあれば表示
-       (buffer (my-claude-scratch-show buffer))
-       ;; なければ作成して表示
-       (t
-        (let ((new-buffer (get-buffer-create buffer-name)))
-          (with-current-buffer new-buffer
-            (insert (format "Claude Code scratch [%s]\n\n" project-name))
-            (setq-local truncate-lines nil))
-          (my-claude-scratch-show new-buffer))))))
+;; スクラッチバッファ
+(defun my-claude-scratch ()
+  "Toggle Claude Code scratch buffer for current project."
+  (interactive)
+  (let* ((project-dir (claude-code-ide--get-working-directory))
+         (project-name (file-name-nondirectory (directory-file-name project-dir)))
+         (buffer-name (format "*claude-scratch[%s]*" project-name))
+         (buffer (get-buffer buffer-name))
+         (window (and buffer (get-buffer-window buffer))))
+    (cond
+     ;; 表示中なら閉じる
+     (window (delete-window window))
+     ;; バッファがあれば表示
+     (buffer (my-claude-scratch-show buffer))
+     ;; なければ作成して表示
+     (t
+      (let ((new-buffer (get-buffer-create buffer-name)))
+        (with-current-buffer new-buffer
+          (insert (format "Claude Code scratch [%s]\n\n" project-name))
+          (setq-local truncate-lines nil))
+        (my-claude-scratch-show new-buffer))))))
 
-  (defun my-claude-scratch-show (buffer)
-    "Show scratch BUFFER below the leftmost window."
-    (let* ((base (frame-first-window))
-           (win (split-window base -15 'below)))
-      (set-window-buffer win buffer)
-      (set-window-dedicated-p win t)
-      (select-window win)
-      (goto-char (point-max))))
+(defun my-claude-scratch-show (buffer)
+  "Show scratch BUFFER below the leftmost window."
+  (let* ((base (frame-first-window))
+         (win (split-window base -15 'below)))
+    (set-window-buffer win buffer)
+    (set-window-dedicated-p win t)
+    (select-window win)
+    (goto-char (point-max))))
 
 (defun my-claude-code-ide ()
   "Toggle Claude Code IDE and scratch buffer together."

@@ -7,7 +7,7 @@
 ;; 使用フォント:
 ;; - Source Han Code JP (メイン)
 ;; - JuliaMono (アニメーション文字のみ)
-;; - UDEV Gothic 35NF (vterm用、06-terminal.el参照)
+;; - UDEV Gothic 35NF (Claude Code IDE用 10-ai.el参照)
 
 ;;; Code:
 
@@ -17,11 +17,12 @@
 (add-hook 'text-mode-hook #'display-line-numbers-mode) ; 行番号 (テキストファイル)
 
 ;; フォント
-(defvar my-font "Source Han Code JP")
-(set-face-attribute 'default nil :family my-font :height 130)
-(set-fontset-font nil 'japanese-jisx0208 my-font)   ; 中国語風漢字対策
-(set-fontset-font nil 'japanese-jisx0213-1 my-font) ; 〃
-(set-fontset-font nil 'japanese-jisx0213-2 my-font) ; 〃
+(setq use-default-font-for-symbols nil)
+;; Claude Codeの処理中の*マークのアニメーションでガタガタするのを防ぐ
+(dolist (char '(#x00B7 #x2722 #x2733 #x2736 #x273B #x273D))
+  (set-fontset-font t char (font-spec :family "JuliaMono")))
+(set-fontset-font t 'han (font-spec :family "Source Han Code JP") nil 'prepend)
+(set-face-attribute 'default nil :font "Source Han Code JP" :height 130)
 
 ;; vterm等のアニメーション文字用 (幅のがたつき防止)
 (setq use-default-font-for-symbols nil)

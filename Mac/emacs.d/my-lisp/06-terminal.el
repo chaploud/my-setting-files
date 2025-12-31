@@ -16,8 +16,6 @@
   :hook
   (vterm-mode . (lambda ()
                   (setq-local nobreak-char-display nil)
-                  (setq buffer-face-mode-face '(:family "UDEV Gothic 35NF" :height 130))
-                  (buffer-face-mode t)
                   (evil-insert-state)))
   :bind
   (:map vterm-mode-map

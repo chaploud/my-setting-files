@@ -47,6 +47,8 @@
   (undo-limit (* 128 1024 1024))        ; Undo履歴 Limit
   (undo-strong-limit (* 192 1024 1024)) ; これを超えると古い履歴から削除
   (undo-outer-limit (* 384 1024 1024))  ; これを超えると履歴全削除
+  (backup-directory-alist '(("." . "~/.emacs.d/backups/"))) ; バックアップファイル~保存場所
+  (auto-save-file-name-transforms '((".*" "~/.emacs.d/auto-saves/" t))) ; 自動保存ファイル保存場所
   :config
   (define-key key-translation-map (kbd "C-h") (kbd "DEL")) ; C-h -> BS
   (define-key key-translation-map (kbd "C-;") (kbd "C-h")) ; C-; -> ヘルプ
