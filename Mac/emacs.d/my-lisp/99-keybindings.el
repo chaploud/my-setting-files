@@ -130,14 +130,14 @@
 
     ;; (a) Claude Code IDE
     "a" '(:ignore t :wk "AI/Claude")
-    "a a" '(claude-code-ide :wk "Claude toggle")
+    "a a" '(my-claude-code-ide :wk "Claude toggle")
     "a m" '(claude-code-ide-menu :wk "Claude menu")
     "a s" '(my-claude-send-region :wk "Claude send region")
     "a p" '(claude-code-ide-send-prompt :wk "Claude prompt")
     "a e" '(claude-code-ide-send-escape :wk "Claude ESC")
     "a q" '(claude-code-ide-stop :wk "Claude stop")
     "a c" '(claude-code-ide-continue :wk "Claude continue")
-    "a r" '(claude-code-ide-resume :wk "Claude resume")
+    "a r" '(my-claude-code-ide-resume :wk "Claude resume")
     "a b" '(my-claude-scratch :wk "Claude scratch")
     "1" '(my-claude-send-1 :wk "Claude '1'")
     "2" '(my-claude-send-2 :wk "Claude '2'")

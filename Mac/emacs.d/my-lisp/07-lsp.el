@@ -127,9 +127,6 @@
   (terraform-mode . eglot-ensure)
   (yaml-ts-mode . eglot-ensure)
   (zig-mode . eglot-ensure)
-  ;; 保存時にフォーマット (バッファローカル)
-  (eglot-managed-mode . (lambda ()
-                          (add-hook 'before-save-hook #'eglot-format-buffer nil t)))
 
   :config
   (defun my-eglot-start ()
@@ -145,18 +142,33 @@
   (dolist (pair my-eglot-server-list)
     (add-to-list 'eglot-server-programs pair)))
 
-;; 自動フォーマット (eglot非対応言語用)
+;; 自動フォーマット
 (use-package format-all
-  :ensure t
-  :hook (prog-mode . format-all-mode)
-  :config
-  (defun my-format-all-buffer-if-no-eglot ()
-    "Run format-all-buffer only if eglot is not active."
-    (unless (bound-and-true-p eglot-managed-mode)
-      (format-all-buffer)))
-  (add-hook 'format-all-mode-hook
-            (lambda ()
-              (add-hook 'before-save-hook #'my-format-all-buffer-if-no-eglot nil t))))
+  :ensure t)
+
+;; 言語別フォーマット設定
+;; lsp: eglot-format-buffer を優先
+;; all: format-all-buffer を使用
+(defvar my-format-config
+  '((clojure-ts-mode    lsp all)
+    (json-ts-mode       lsp all)
+    (zig-mode           lsp all)
+    (python-ts-mode     lsp all)
+    (rust-ts-mode       lsp all)
+    (emacs-lisp-mode    all))
+  "Format configuration per mode. lsp = eglot, all = format-all.")
+
+(defun my-format-buffer ()
+  "Format buffer based on `my-format-config'."
+  (when-let ((config (alist-get major-mode my-format-config)))
+    (let ((use-lsp (and (memq 'lsp config)
+                        (bound-and-true-p eglot-managed-mode)))
+          (use-all (memq 'all config)))
+      (cond
+       (use-lsp (eglot-format-buffer))
+       (use-all (format-all-buffer))))))
+
+(add-hook 'before-save-hook #'my-format-buffer)
 
 (provide '07-lsp)
 ;;; 07-lsp.el ends here

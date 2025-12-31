@@ -49,7 +49,8 @@
      (claude-code-ide :url
                       "https://github.com/manzaltu/claude-code-ide.el")
      (copilot :url "https://github.com/copilot-emacs/copilot.el"
-              :branch "main"))))
+              :branch "main")))
+ '(safe-local-variable-directories '("/Users/shota.508/myskill/")))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

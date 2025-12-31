@@ -80,6 +80,7 @@
 (use-package embark-consult
   :ensure t
   :after (embark consult)
+  :demand t  ; 警告抑止
   :hook
   (embark-collect-mode . consult-preview-at-point-mode))
 

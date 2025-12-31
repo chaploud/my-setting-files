@@ -73,8 +73,9 @@
   (defun my-claude-send-1 () "Send 1." (interactive) (my-claude-send-number 1))
   (defun my-claude-send-2 () "Send 2." (interactive) (my-claude-send-number 2))
   (defun my-claude-send-3 () "Send 3." (interactive) (my-claude-send-number 3))
+  )
 
-  ;; プロジェクト専用のスクラッチバッファ
+  ;; スクラッチバッファ
   (defun my-claude-scratch ()
     "Toggle Claude Code scratch buffer for current project."
     (interactive)
@@ -90,8 +91,6 @@
        (buffer (my-claude-scratch-show buffer))
        ;; なければ作成して表示
        (t
-        (unless (get-buffer (claude-code-ide--get-buffer-name project-dir))
-          (user-error "Claude Code IDEが起動していません"))
         (let ((new-buffer (get-buffer-create buffer-name)))
           (with-current-buffer new-buffer
             (insert (format "Claude Code scratch [%s]\n\n" project-name))
@@ -105,7 +104,19 @@
       (set-window-buffer win buffer)
       (set-window-dedicated-p win t)
       (select-window win)
-      (goto-char (point-max)))))
+      (goto-char (point-max))))
+
+(defun my-claude-code-ide ()
+  "Toggle Claude Code IDE and scratch buffer together."
+  (interactive)
+  (call-interactively #'claude-code-ide)
+  (call-interactively #'my-claude-scratch))
+
+(defun my-claude-code-ide-resume ()
+  "Resume Claude Code IDE with scratch buffer."
+  (interactive)
+  (call-interactively #'claude-code-ide-resume)
+  (call-interactively #'my-claude-scratch))
 
 (provide '10-ai)
 ;;; 10-ai.el ends here
