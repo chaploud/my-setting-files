@@ -113,20 +113,51 @@
   (let ((default-directory my-notes-root))
     (call-interactively 'consult-ripgrep)))
 
+(defmacro my-without-kill-ring-update (&rest body)
+  "Execute BODY without modifying kill-ring."
+  (declare (indent 0))
+  `(let ((kill-ring kill-ring)
+         (kill-ring-yank-pointer kill-ring-yank-pointer))
+     ,@body))
+
+(defun my-minibuffer-backward-delete-path-segment ()
+  "Delete one path segment backward without updating kill-ring.
+/foo/bar/baz| → /foo/bar/
+/foo/bar/    → /foo/"
+  (interactive)
+  (my-without-kill-ring-update
+    (let ((end (point))
+          (start (minibuffer-prompt-end)))
+      (if (<= end start)
+          (user-error "Nothing to delete")
+        (let (segment-start)
+          (if (eq (char-before) ?/)
+              (setq segment-start (save-excursion
+                                    (backward-char)
+                                    (if (search-backward "/" start t)
+                                        (1+ (point))
+                                      start)))
+            (setq segment-start (save-excursion
+                                  (if (search-backward "/" start t)
+                                      (1+ (point))
+                                    start))))
+          (delete-region segment-start end))))))
+
 (defun my-minibuffer-up-to-project-root ()
   "When minibuffer contains a file path, replace it with the project root path."
   (interactive)
-  (let* ((input (minibuffer-contents-no-properties))
-         (proj (project-current))
-         (root (and proj (project-root proj))))
-    (if (not root)
-        (user-error "No project root found")
-      (cond
-       ((> (length input) 0)
-        (delete-minibuffer-contents)
-        (insert root))
-       (t
-        (user-error "No path in minibuffer"))))))
+  (my-without-kill-ring-update
+    (let* ((input (minibuffer-contents-no-properties))
+           (proj (project-current))
+           (root (and proj (project-root proj))))
+      (if (not root)
+          (user-error "No project root found")
+        (cond
+         ((> (length input) 0)
+          (delete-minibuffer-contents)
+          (insert root))
+         (t
+          (user-error "No path in minibuffer")))))))
 
 (provide '98-utilities)
 ;;; 98-utilities.el ends here

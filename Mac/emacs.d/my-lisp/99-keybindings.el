@@ -260,7 +260,7 @@
   (general-define-key
    :states '(insert)
    :keymaps '(minibuffer-mode-map)
-   "C-w" 'backward-kill-sexp
+   "C-w" 'my-minibuffer-backward-delete-path-segment
    "C-S-w" 'my-minibuffer-up-to-project-root)
 
   ;; === isearch(C-sまたは/)中に単語削除はM-eの後にC-DELを押すしかない

@@ -7,6 +7,7 @@
 ;; 使用フォント:
 ;; - Source Han Code JP (メイン)
 ;; - JuliaMono (アニメーション文字のみ)
+;; - UDEV Gothic 35NF (vterm用、06-terminal.el参照)
 
 ;;; Code:
 
