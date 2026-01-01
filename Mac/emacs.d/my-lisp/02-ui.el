@@ -31,12 +31,12 @@
   (set-fontset-font t char (font-spec :family "JuliaMono") nil 'prepend))
 
 ;; カラーテーマ
-(use-package catppuccin-theme
-  :ensure t
+(use-package github-theme
+  :vc (:url "https://github.com/chaploud/github-theme-emacs" :rev :newest)
   :custom
-  (catppuccin-flavor 'macchiato)
+  (github-theme-flavor 'dark)
   :config
-  (load-theme 'catppuccin t))
+  (load-theme 'github t))
 
 ;; アイコンフォント
 (use-package nerd-icons

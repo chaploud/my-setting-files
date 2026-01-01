@@ -30,6 +30,7 @@
 (use-package perspective
   :ensure t
   :custom
+  (persp-state-default-file "~/.emacs.d/workspaces/default")
   (persp-suppress-no-prefix-key-warning t)
   (persp-sort 'created)
   (persp-modestring-short t)
@@ -96,62 +97,62 @@
   (elfeed-search-print-entry-function #'my-elfeed-search-print-entry)
   (shr-use-fonts nil)
   (elfeed-feeds
- '(
-   ;; ===== Financial / Algo Trading / ML =====
-   "https://www.quantstart.com/feed/"
-   "https://blog.quantinsti.com/rss"
-   "https://quantpedia.com/blog/feed/"
-   "https://feeds.feedburner.com/Quantocracy"
+   '(
+     ;; ===== Financial / Algo Trading / ML =====
+     "https://www.quantstart.com/feed/"
+     "https://blog.quantinsti.com/rss"
+     "https://quantpedia.com/blog/feed/"
+     "https://feeds.feedburner.com/Quantocracy"
 
-   ;; ===== Editors (Emacs / NeoVim / VSCode) =====
-   "https://planet.emacsen.org/atom.xml"
-   "https://emacsredux.com/feed/"
-   "https://emacsweekly.com/feed.xml"
-   "https://protesilaos.com/codelog/?feed=rss2"
-   "https://www.reddit.com/r/emacs/.rss"
+     ;; ===== Editors (Emacs / NeoVim / VSCode) =====
+     "https://planet.emacsen.org/atom.xml"
+     "https://emacsredux.com/feed/"
+     "https://emacsweekly.com/feed.xml"
+     "https://protesilaos.com/codelog/?feed=rss2"
+     "https://www.reddit.com/r/emacs/.rss"
 
-   "https://github.com/neovim/neovim/releases.atom"
-   "https://www.reddit.com/r/neovim/.rss"
+     "https://github.com/neovim/neovim/releases.atom"
+     "https://www.reddit.com/r/neovim/.rss"
 
-   "https://code.visualstudio.com/updates/rss"
-   "https://github.com/microsoft/vscode/releases.atom"
+     "https://code.visualstudio.com/updates/rss"
+     "https://github.com/microsoft/vscode/releases.atom"
 
-   ;; ===== Programming Languages / Language Implementation =====
-   "https://langdev.org/rss.xml"
-   "https://llvm.org/blog/rss.xml"
-   "https://feeds.feedburner.com/plweekly"
+     ;; ===== Programming Languages / Language Implementation =====
+     "https://langdev.org/rss.xml"
+     "https://llvm.org/blog/rss.xml"
+     "https://feeds.feedburner.com/plweekly"
 
-   ;; ===== Clojure Ecosystem =====
-   "https://clojure.org/news/deref.rss"
-   "https://planet.clojure.in/atom.xml"
-   "https://www.lambda.is/blog/rss"
-   "https://purelyfunctional.tv/blog/rss"
-   "https://blog.juxt.pro/rss.xml"
+     ;; ===== Clojure Ecosystem =====
+     "https://clojure.org/news/deref.rss"
+     "https://planet.clojure.in/atom.xml"
+     "https://www.lambda.is/blog/rss"
+     "https://purelyfunctional.tv/blog/rss"
+     "https://blog.juxt.pro/rss.xml"
 
-   ;; ===== WebAssembly Core =====
-   "https://webassembly.org/feed.xml"
-   "https://www.w3.org/blog/webassembly/feed/"
-   "https://github.com/WebAssembly/spec/releases.atom"
+     ;; ===== WebAssembly Core =====
+     "https://webassembly.org/feed.xml"
+     "https://www.w3.org/blog/webassembly/feed/"
+     "https://github.com/WebAssembly/spec/releases.atom"
 
-   ;; ===== Wasmtime / Wasmer / Bytecode Alliance =====
-   "https://github.com/bytecodealliance/wasmtime/releases.atom"
-   "https://bytecodealliance.org/articles/index.xml"
-   "https://github.com/wasmerio/wasmer/releases.atom"
-   "https://wasmer.io/feed.xml"
+     ;; ===== Wasmtime / Wasmer / Bytecode Alliance =====
+     "https://github.com/bytecodealliance/wasmtime/releases.atom"
+     "https://bytecodealliance.org/articles/index.xml"
+     "https://github.com/wasmerio/wasmer/releases.atom"
+     "https://wasmer.io/feed.xml"
 
-   ;; ===== WASM Tooling / Runtime / Ecosystem =====
-   "https://github.com/WebAssembly/wasi/releases.atom"
-   "https://github.com/WebAssembly/component-model/releases.atom"
-   "https://github.com/fermyon/spin/releases.atom"
+     ;; ===== WASM Tooling / Runtime / Ecosystem =====
+     "https://github.com/WebAssembly/wasi/releases.atom"
+     "https://github.com/WebAssembly/component-model/releases.atom"
+     "https://github.com/fermyon/spin/releases.atom"
 
-   ;; ===== General Tech / Japanese Sources =====
-   "https://zenn.dev/feed"
-   "https://qiita.com/tags/WebAssembly/feed"
-   "https://qiita.com/tags/Clojure/feed.atom"
-   "https://qiita.com/tags/Emacs/feed.atom"
-   "https://realtime.jser.info/feed.xml"
-   "https://www.publickey1.jp/atom.xml"
-   ))
+     ;; ===== General Tech / Japanese Sources =====
+     "https://zenn.dev/feed"
+     "https://qiita.com/tags/WebAssembly/feed"
+     "https://qiita.com/tags/Clojure/feed.atom"
+     "https://qiita.com/tags/Emacs/feed.atom"
+     "https://realtime.jser.info/feed.xml"
+     "https://www.publickey1.jp/atom.xml"
+     ))
 
   :config
   (defun my-elfeed-search-print-entry (entry)

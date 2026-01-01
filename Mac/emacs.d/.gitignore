@@ -12,3 +12,5 @@ auto-save-list/
 tramp
 claude-code-ide.el/
 backups/
+workspaces/
+auto-saves/
