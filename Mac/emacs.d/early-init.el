@@ -31,10 +31,10 @@
             ))
 
 ;; 読み込み完了までの見た目の摩擦を減らす
-(add-to-list 'default-frame-alist '(background-color . "#24273a"))
-(add-to-list 'default-frame-alist '(foreground-color . "#cad3f5"))
+(add-to-list 'default-frame-alist '(background-color . "#1e1e2e"))
+(add-to-list 'default-frame-alist '(foreground-color . "#cdd6f4"))
 (custom-set-faces
- '(mode-line ((t (:background "#1e2030")))))
+ '(mode-line ((t (:background "#181825")))))
 
 ;; フレームタイトル
 (setq frame-title-format "Emacs")

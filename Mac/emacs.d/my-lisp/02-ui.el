@@ -34,7 +34,7 @@
 (use-package catppuccin-theme
   :ensure t
   :custom
-  (catppuccin-flavor 'macchiato)
+  (catppuccin-flavor 'mocha)
   :config
   (load-theme 'catppuccin t))
 

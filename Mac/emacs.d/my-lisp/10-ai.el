@@ -80,6 +80,19 @@
   (defun my-claude-send-1 () "Send 1." (interactive) (my-claude-send-number 1))
   (defun my-claude-send-2 () "Send 2." (interactive) (my-claude-send-number 2))
   (defun my-claude-send-3 () "Send 3." (interactive) (my-claude-send-number 3))
+
+  ;; Enterキー送信
+  (defun my-claude-send-return ()
+    "Send Enter key to Claude Code."
+    (interactive)
+    (let* ((project-dir (claude-code-ide--get-working-directory))
+           (claude-buffer-name (claude-code-ide--get-buffer-name project-dir))
+           (claude-buffer (get-buffer claude-buffer-name)))
+      (unless claude-buffer
+        (user-error "Claude Code IDEが起動していません"))
+      (with-current-buffer claude-buffer
+        (claude-code-ide--terminal-send-return))
+      (message "Claude に Enter を送信しました")))
   )
 
 ;; スクラッチバッファ
