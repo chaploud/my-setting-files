@@ -47,19 +47,25 @@
   (with-eval-after-load 'vterm
     (define-key vterm-mode-map (kbd "C-c C-e") #'claude-code-ide-send-escape))
 
-  ;; テキストを Claude Code に送信（バッファを特定して送る）
+  ;; Claude Code バッファで処理を実行するマクロ
+  (defmacro my-claude-with-buffer (&rest body)
+    "Execute BODY in Claude Code buffer."
+    `(let* ((project-dir (claude-code-ide--get-working-directory))
+            (claude-buffer-name (claude-code-ide--get-buffer-name project-dir))
+            (claude-buffer (get-buffer claude-buffer-name)))
+       (unless claude-buffer
+         (user-error "Claude Code IDEが起動していません"))
+       (with-current-buffer claude-buffer
+         ,@body)))
+
+  ;; テキストを Claude Code に送信
   (defun my-claude-send-text (text)
     "Send TEXT to Claude Code."
-    (let* ((project-dir (claude-code-ide--get-working-directory))
-           (claude-buffer-name (claude-code-ide--get-buffer-name project-dir))
-           (claude-buffer (get-buffer claude-buffer-name)))
-      (unless claude-buffer
-        (user-error "Claude Code IDEが起動していません"))
-      (with-current-buffer claude-buffer
-        (claude-code-ide--terminal-send-string text)
-        (sit-for 0.1)
-        (claude-code-ide--terminal-send-return))
-      (message "Claude に送信: %s..." (substring text 0 (min 50 (length text))))))
+    (my-claude-with-buffer
+     (claude-code-ide--terminal-send-string text)
+     (sit-for 0.1)
+     (claude-code-ide--terminal-send-return))
+    (message "Claude に送信: %s..." (substring text 0 (min 50 (length text)))))
 
   ;; 選択範囲を送信
   (defun my-claude-send-region ()
@@ -72,27 +78,43 @@
           (my-claude-send-text text))
       (user-error "リージョンが選択されていません")))
 
-  ;; 数字送信
-  (defun my-claude-send-number (n)
-    "Send number N to Claude Code."
-    (my-claude-send-text (number-to-string n)))
+  ;; 数字送信（マクロで生成）
+  (defmacro my-claude-define-send-number (n)
+    "Define a function to send number N to Claude Code."
+    `(defun ,(intern (format "my-claude-send-%d" n)) ()
+       ,(format "Send %d to Claude Code." n)
+       (interactive)
+       (my-claude-send-text ,(number-to-string n))))
 
-  (defun my-claude-send-1 () "Send 1." (interactive) (my-claude-send-number 1))
-  (defun my-claude-send-2 () "Send 2." (interactive) (my-claude-send-number 2))
-  (defun my-claude-send-3 () "Send 3." (interactive) (my-claude-send-number 3))
+  (my-claude-define-send-number 1)
+  (my-claude-define-send-number 2)
+  (my-claude-define-send-number 3)
 
   ;; Enterキー送信
   (defun my-claude-send-return ()
     "Send Enter key to Claude Code."
     (interactive)
-    (let* ((project-dir (claude-code-ide--get-working-directory))
-           (claude-buffer-name (claude-code-ide--get-buffer-name project-dir))
-           (claude-buffer (get-buffer claude-buffer-name)))
-      (unless claude-buffer
-        (user-error "Claude Code IDEが起動していません"))
-      (with-current-buffer claude-buffer
-        (claude-code-ide--terminal-send-return))
-      (message "Claude に Enter を送信しました")))
+    (my-claude-with-buffer
+     (claude-code-ide--terminal-send-return))
+    (message "Claude に Enter を送信しました"))
+
+  ;; Shift+Tab送信
+  (defun my-claude-send-shift-tab ()
+    "Send Shift+Tab to Claude Code."
+    (interactive)
+    (my-claude-with-buffer
+     (vterm-send-key "<tab>" t))  ; 第2引数 t = Shift
+    (message "Claude に Shift+Tab を送信しました"))
+
+  ;; Rewind（ESC 2回送信）
+  (defun my-claude-send-rewind ()
+    "Send Rewind (ESC twice) to Claude Code."
+    (interactive)
+    (my-claude-with-buffer
+     (claude-code-ide--terminal-send-escape)
+     (sit-for 0.1)
+     (claude-code-ide--terminal-send-escape))
+    (message "Claude に Rewind (ESC×2) を送信しました"))
   )
 
 ;; スクラッチバッファ
