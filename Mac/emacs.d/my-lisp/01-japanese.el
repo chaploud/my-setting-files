@@ -59,5 +59,10 @@
     (skk-mode t)
     (skk-latin-mode-on)))
 
+(use-package osx-dictionary
+  :ensure t
+  :bind
+  ("C-c d" . osx-dictionary-search-word-at-point))
+
 (provide '01-japanese)
 ;;; 01-japanese.el ends here

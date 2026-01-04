@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<opml version="1.0">
+<head>
+<title>Elfeed Feeds</title>
+</head>
+<body>
+<outline text="Financial / Algo Trading / ML" title="Financial / Algo Trading / ML">
+<outline text="QuantStart" title="QuantStart" type="rss" xmlUrl="https://www.quantstart.com/feed/"/>
+<outline text="QuantInsti Blog" title="QuantInsti Blog" type="rss" xmlUrl="https://blog.quantinsti.com/rss"/>
+<outline text="Quantpedia" title="Quantpedia" type="rss" xmlUrl="https://quantpedia.com/blog/feed/"/>
+<outline text="Quantocracy" title="Quantocracy" type="rss" xmlUrl="https://feeds.feedburner.com/Quantocracy"/>
+</outline>
+<outline text="Programming Languages / Language Implementation" title="Programming Languages / Language Implementation">
+<outline text="LangDev" title="LangDev" type="rss" xmlUrl="https://langdev.org/rss.xml"/>
+<outline text="LLVM Blog" title="LLVM Blog" type="rss" xmlUrl="https://llvm.org/blog/rss.xml"/>
+<outline text="PL Weekly" title="PL Weekly" type="rss" xmlUrl="https://feeds.feedburner.com/plweekly"/>
+</outline>
+<outline text="Software Architecture" title="Software Architecture">
+<outline text="Software Architecture Monday" title="Software Architecture Monday" type="rss" xmlUrl="https://developertoarchitect.com/lessons/index.xml"/>
+</outline>
+<outline text="Clojure Ecosystem" title="Clojure Ecosystem">
+<outline text="Clojure Deref" title="Clojure Deref" type="rss" xmlUrl="https://clojure.org/news/deref.rss"/>
+<outline text="Planet Clojure" title="Planet Clojure" type="rss" xmlUrl="https://planet.clojure.in/atom.xml"/>
+<outline text="Lambda Island" title="Lambda Island" type="rss" xmlUrl="https://www.lambda.is/blog/rss"/>
+<outline text="PurelyFunctional.tv" title="PurelyFunctional.tv" type="rss" xmlUrl="https://purelyfunctional.tv/blog/rss"/>
+<outline text="JUXT Blog" title="JUXT Blog" type="rss" xmlUrl="https://blog.juxt.pro/rss.xml"/>
+</outline>
+<outline text="Emacs / Vim" title="Emacs / Vim">
+<outline text="Planet Emacsen" title="Planet Emacsen" type="rss" xmlUrl="https://planet.emacslife.com/atom.xml"/>
+</outline>
+<outline text="WebAssembly Core" title="WebAssembly Core">
+<outline text="WebAssembly.org" title="WebAssembly.org" type="rss" xmlUrl="https://webassembly.org/feed.xml"/>
+<outline text="W3C WebAssembly" title="W3C WebAssembly" type="rss" xmlUrl="https://www.w3.org/blog/webassembly/feed/"/>
+<outline text="WebAssembly Spec Releases" title="WebAssembly Spec Releases" type="rss" xmlUrl="https://github.com/WebAssembly/spec/releases.atom"/>
+</outline>
+<outline text="Wasmtime / Wasmer / Bytecode Alliance" title="Wasmtime / Wasmer / Bytecode Alliance">
+<outline text="Wasmtime Releases" title="Wasmtime Releases" type="rss" xmlUrl="https://github.com/bytecodealliance/wasmtime/releases.atom"/>
+<outline text="Bytecode Alliance" title="Bytecode Alliance" type="rss" xmlUrl="https://bytecodealliance.org/articles/index.xml"/>
+<outline text="Wasmer Releases" title="Wasmer Releases" type="rss" xmlUrl="https://github.com/wasmerio/wasmer/releases.atom"/>
+<outline text="Wasmer Blog" title="Wasmer Blog" type="rss" xmlUrl="https://wasmer.io/feed.xml"/>
+</outline>
+<outline text="WASM Tooling / Runtime / Ecosystem" title="WASM Tooling / Runtime / Ecosystem">
+<outline text="WASI Releases" title="WASI Releases" type="rss" xmlUrl="https://github.com/WebAssembly/wasi/releases.atom"/>
+<outline text="Component Model Releases" title="Component Model Releases" type="rss" xmlUrl="https://github.com/WebAssembly/component-model/releases.atom"/>
+<outline text="Fermyon Spin Releases" title="Fermyon Spin Releases" type="rss" xmlUrl="https://github.com/fermyon/spin/releases.atom"/>
+</outline>
+<outline text="General Tech / Global" title="General Tech / Global">
+<outline text="The Practical Dev" title="The Practical Dev" type="rss" xmlUrl="https://dev.to/feed/"/>
+<outline text="Speaker Deck - Programming" title="Speaker Deck - Programming" type="rss" xmlUrl="https://speakerdeck.com/c/programming.atom"/>
+<outline text="Speaker Deck - Technology" title="Speaker Deck - Technology" type="rss" xmlUrl="https://speakerdeck.com/c/technology.atom"/>
+</outline>
+<outline text="General Tech / Japanese Sources" title="General Tech / Japanese Sources">
+<outline text="Zenn" title="Zenn" type="rss" xmlUrl="https://zenn.dev/feed"/>
+<outline text="Qiita - 人気の投稿" title="Qiita - 人気の投稿" type="rss" xmlUrl="https://qiita.com/popular-items/feed"/>
+<outline text="Qiita - WebAssembly" title="Qiita - WebAssembly" type="rss" xmlUrl="https://qiita.com/tags/webassembly/feed"/>
+<outline text="Qiita - TypeScript" title="Qiita - TypeScript" type="rss" xmlUrl="https://qiita.com/tags/TypeScript/feed"/>
+<outline text="Qiita - Clojure" title="Qiita - Clojure" type="rss" xmlUrl="https://qiita.com/tags/Clojure/feed.atom"/>
+<outline text="Qiita - Emacs" title="Qiita - Emacs" type="rss" xmlUrl="https://qiita.com/tags/Emacs/feed.atom"/>
+<outline text="Qiita - Vim" title="Qiita - Vim" type="rss" xmlUrl="https://qiita.com/tags/Vim/feed.atom"/>
+<outline text="TechTarget Japan" title="TechTarget Japan" type="rss" xmlUrl="https://rss.itmedia.co.jp/rss/2.0/techtarget.xml"/>
+<outline text="CodeZine" title="CodeZine" type="rss" xmlUrl="https://codezine.jp/rss/new/20/index.xml"/>
+<outline text="Realtime JSer.info" title="Realtime JSer.info" type="rss" xmlUrl="https://realtime.jser.info/feed.xml"/>
+<outline text="Publickey" title="Publickey" type="rss" xmlUrl="https://www.publickey1.jp/atom.xml"/>
+</outline>
+</body>
+</opml>

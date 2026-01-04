@@ -104,23 +104,13 @@
      "https://quantpedia.com/blog/feed/"
      "https://feeds.feedburner.com/Quantocracy"
 
-     ;; ===== Editors (Emacs / NeoVim / VSCode) =====
-     "https://planet.emacsen.org/atom.xml"
-     "https://emacsredux.com/feed/"
-     "https://emacsweekly.com/feed.xml"
-     "https://protesilaos.com/codelog/?feed=rss2"
-     "https://www.reddit.com/r/emacs/.rss"
-
-     "https://github.com/neovim/neovim/releases.atom"
-     "https://www.reddit.com/r/neovim/.rss"
-
-     "https://code.visualstudio.com/updates/rss"
-     "https://github.com/microsoft/vscode/releases.atom"
-
      ;; ===== Programming Languages / Language Implementation =====
      "https://langdev.org/rss.xml"
      "https://llvm.org/blog/rss.xml"
      "https://feeds.feedburner.com/plweekly"
+
+     ;; ===== Software Architecture =====
+     "https://developertoarchitect.com/lessons/index.xml"
 
      ;; ===== Clojure Ecosystem =====
      "https://clojure.org/news/deref.rss"
@@ -128,6 +118,9 @@
      "https://www.lambda.is/blog/rss"
      "https://purelyfunctional.tv/blog/rss"
      "https://blog.juxt.pro/rss.xml"
+
+     ;; ===== Emacs / Vim =====
+     "https://planet.emacslife.com/atom.xml"
 
      ;; ===== WebAssembly Core =====
      "https://webassembly.org/feed.xml"
@@ -145,11 +138,21 @@
      "https://github.com/WebAssembly/component-model/releases.atom"
      "https://github.com/fermyon/spin/releases.atom"
 
+     ;; ===== General Tech / Global =====
+     "https://dev.to/feed/"
+     "https://speakerdeck.com/c/programming.atom"
+     "https://speakerdeck.com/c/technology.atom"
+
      ;; ===== General Tech / Japanese Sources =====
      "https://zenn.dev/feed"
-     "https://qiita.com/tags/WebAssembly/feed"
+     "https://qiita.com/popular-items/feed"
+     "https://qiita.com/tags/webassembly/feed"
+     "https://qiita.com/tags/TypeScript/feed"
      "https://qiita.com/tags/Clojure/feed.atom"
      "https://qiita.com/tags/Emacs/feed.atom"
+     "https://qiita.com/tags/Vim/feed.atom"
+     "https://rss.itmedia.co.jp/rss/2.0/techtarget.xml"
+     "https://codezine.jp/rss/new/20/index.xml"
      "https://realtime.jser.info/feed.xml"
      "https://www.publickey1.jp/atom.xml"
      ))
