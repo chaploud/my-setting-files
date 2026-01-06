@@ -1,0 +1,82 @@
+---
+# ============================================
+# ユーザー設定（必ず変更してください）
+# ============================================
+user_name: "Your Name"
+user_email: "your@email.com"
+github_user: "your-github-username"
+
+# ============================================
+# 言語バージョン
+# ============================================
+python_version: "3.12.0"
+nodejs_version: "lts"  # または "22" など
+go_version: "1.23.0"
+java_version: "21"     # Temurin JDK
+
+# ============================================
+# Clojure ツール
+# ============================================
+install_clojure: true
+install_babashka: true
+install_bbin: true
+install_clojure_lsp: true
+install_clj_kondo: true
+install_cljfmt: true
+install_shadow_cljs: true
+
+# ============================================
+# データベース
+# ============================================
+install_postgresql: true
+install_sqlite: true
+postgresql_version: "17"
+
+# ============================================
+# エディタ
+# ============================================
+install_neovim: true
+install_emacs: true
+neovim_version: "stable"  # "stable" or "nightly"
+
+# ============================================
+# ターミナルツール
+# ============================================
+install_starship: true
+install_fzf: true
+install_ripgrep: true
+install_fd: true
+install_bat: true
+install_delta: true
+
+# ============================================
+# 日本語入力
+# ============================================
+install_japanese_input: true
+install_yaskkserv2: true
+install_ibus_skk: true
+
+# ============================================
+# ユーティリティ
+# ============================================
+install_ulauncher: true
+install_zeal: true
+
+# ============================================
+# dotfiles設定
+# ============================================
+setup_dotfiles: false
+dotfiles_repo: ""  # "https://github.com/your-username/dotfiles.git"
+dotfiles_dest: "{{ ansible_env.HOME }}/dotfiles"
+
+# ============================================
+# GNOME設定
+# ============================================
+configure_gnome: true
+gnome_settings:
+  # Alt+Tabをウィンドウ単位に
+  - key: "/org/gnome/desktop/wm/keybindings/switch-windows"
+    value: "['<Alt>Tab']"
+  # 現在のワークスペースのみ
+  - key: "/org/gnome/shell/window-switcher/current-workspace-only"
+    value: "true"

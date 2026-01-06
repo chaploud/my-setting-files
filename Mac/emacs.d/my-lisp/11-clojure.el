@@ -18,10 +18,10 @@
            (kondo-cache (file-name-concat root-dir ".clj-kondo/.cache")))
       (when (file-directory-p lsp-cache)
         (delete-directory lsp-cache t)
-        (message "[%s] Deleted clojure-lsp cache at %s" (my-display-time) lsp-cache))
+        (message "Deleted clojure-lsp cache at %s"  lsp-cache))
       (when (file-directory-p kondo-cache)
         (delete-directory kondo-cache t)
-        (message "[%s] Deleted clj-kondo cache at %s" (my-display-time) kondo-cache)))
+        (message "Deleted clj-kondo cache at %s"  kondo-cache)))
     (eglot-ensure)))
 
 ;; REPL連携

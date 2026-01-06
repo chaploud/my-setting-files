@@ -1,0 +1,672 @@
+---
+# ============================================
+# Ubuntu 24.04 開発環境セットアップ Playbook
+# ============================================
+- name: Ubuntu 24.04 Development Environment Setup
+  hosts: localhost
+  gather_facts: true
+
+  vars:
+    home_dir: "{{ ansible_env.HOME }}"
+    local_bin: "{{ home_dir }}/.local/bin"
+
+  pre_tasks:
+    - name: Ensure ~/.local/bin exists
+      ansible.builtin.file:
+        path: "{{ local_bin }}"
+        state: directory
+        mode: '0755'
+
+    - name: Add ~/.local/bin to PATH in .bashrc
+      ansible.builtin.lineinfile:
+        path: "{{ home_dir }}/.bashrc"
+        line: 'export PATH="$HOME/.local/bin:$PATH"'
+        create: yes
+
+  tasks:
+    # ==========================================
+    # BASE: 基本パッケージ
+    # ==========================================
+    - name: Install base packages
+      tags: [base, always]
+      become: true
+      ansible.builtin.apt:
+        name:
+          - build-essential
+          - curl
+          - wget
+          - git
+          - unzip
+          - zip
+          - tree
+          - htop
+          - make
+          - libssl-dev
+          - zlib1g-dev
+          - libbz2-dev
+          - libreadline-dev
+          - libsqlite3-dev
+          - llvm
+          - libncurses5-dev
+          - libncursesw5-dev
+          - xz-utils
+          - tk-dev
+          - libffi-dev
+          - liblzma-dev
+          - software-properties-common
+          - apt-transport-https
+          - ca-certificates
+          - gnupg
+          - lsb-release
+        state: present
+        update_cache: yes
+        cache_valid_time: 3600
+
+    # ==========================================
+    # GIT: Git & GitHub CLI
+    # ==========================================
+    - name: Configure Git
+      tags: [git]
+      block:
+        - name: Set Git user name
+          community.general.git_config:
+            name: user.name
+            value: "{{ user_name }}"
+            scope: global
+
+        - name: Set Git user email
+          community.general.git_config:
+            name: user.email
+            value: "{{ user_email }}"
+            scope: global
+
+        - name: Set Git default editor
+          community.general.git_config:
+            name: core.editor
+            value: nvim
+            scope: global
+
+        - name: Set Git default branch
+          community.general.git_config:
+            name: init.defaultBranch
+            value: main
+            scope: global
+
+    - name: Install GitHub CLI
+      tags: [git]
+      become: true
+      block:
+        - name: Add GitHub CLI GPG key
+          ansible.builtin.apt_key:
+            url: https://cli.github.com/packages/githubcli-archive-keyring.gpg
+            keyring: /usr/share/keyrings/githubcli-archive-keyring.gpg
+            state: present
+
+        - name: Add GitHub CLI repository
+          ansible.builtin.apt_repository:
+            repo: "deb [arch={{ ansible_architecture | replace('x86_64', 'amd64') }} signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main"
+            state: present
+            filename: github-cli
+
+        - name: Install gh
+          ansible.builtin.apt:
+            name: gh
+            state: present
+            update_cache: yes
+
+    # ==========================================
+    # TERMINAL: ターミナルツール
+    # ==========================================
+    - name: Install terminal tools from apt
+      tags: [terminal]
+      become: true
+      ansible.builtin.apt:
+        name:
+          - fzf
+          - ripgrep
+          - fd-find
+          - bat
+        state: present
+
+    - name: Create fd symlink
+      tags: [terminal]
+      ansible.builtin.file:
+        src: /usr/bin/fdfind
+        dest: "{{ local_bin }}/fd"
+        state: link
+
+    - name: Create bat symlink
+      tags: [terminal]
+      ansible.builtin.file:
+        src: /usr/bin/batcat
+        dest: "{{ local_bin }}/bat"
+        state: link
+
+    - name: Install delta via snap
+      tags: [terminal]
+      become: true
+      community.general.snap:
+        name: git-delta-snap
+        state: present
+
+    - name: Configure delta in git
+      tags: [terminal]
+      block:
+        - name: Set git pager to delta
+          community.general.git_config:
+            name: core.pager
+            value: git-delta-snap.delta
+            scope: global
+
+        - name: Set delta interactive filter
+          community.general.git_config:
+            name: interactive.diffFilter
+            value: "git-delta-snap.delta --color-only"
+            scope: global
+
+        - name: Enable delta line numbers
+          community.general.git_config:
+            name: delta.line-numbers
+            value: "true"
+            scope: global
+
+    - name: Install Starship
+      tags: [terminal]
+      when: install_starship
+      block:
+        - name: Download Starship installer
+          ansible.builtin.get_url:
+            url: https://starship.rs/install.sh
+            dest: /tmp/starship-install.sh
+            mode: '0755'
+
+        - name: Install Starship
+          ansible.builtin.shell: /tmp/starship-install.sh -y
+          args:
+            creates: /usr/local/bin/starship
+
+        - name: Add Starship to bashrc
+          ansible.builtin.lineinfile:
+            path: "{{ home_dir }}/.bashrc"
+            line: 'eval "$(starship init bash)"'
+
+    # ==========================================
+    # EDITORS: Neovim & Emacs
+    # ==========================================
+    - name: Install Neovim
+      tags: [editors]
+      when: install_neovim
+      become: true
+      block:
+        - name: Add Neovim PPA
+          ansible.builtin.apt_repository:
+            repo: ppa:neovim-ppa/unstable
+            state: present
+
+        - name: Install Neovim
+          ansible.builtin.apt:
+            name: neovim
+            state: present
+            update_cache: yes
+
+    - name: Install Emacs
+      tags: [editors]
+      when: install_emacs
+      become: true
+      block:
+        - name: Add Emacs PPA
+          ansible.builtin.apt_repository:
+            repo: ppa:ubuntuhandbook1/emacs
+            state: present
+
+        - name: Install Emacs
+          ansible.builtin.apt:
+            name: emacs
+            state: present
+            update_cache: yes
+
+    # ==========================================
+    # PYTHON: pyenv
+    # ==========================================
+    - name: Install pyenv
+      tags: [python]
+      block:
+        - name: Clone pyenv
+          ansible.builtin.git:
+            repo: https://github.com/pyenv/pyenv.git
+            dest: "{{ home_dir }}/.pyenv"
+            depth: 1
+            update: no
+
+        - name: Add pyenv to bashrc
+          ansible.builtin.blockinfile:
+            path: "{{ home_dir }}/.bashrc"
+            marker: "# {mark} ANSIBLE MANAGED BLOCK - pyenv"
+            block: |
+              export PYENV_ROOT="$HOME/.pyenv"
+              [[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
+              eval "$(pyenv init -)"
+
+        - name: Check if Python version is installed
+          ansible.builtin.stat:
+            path: "{{ home_dir }}/.pyenv/versions/{{ python_version }}"
+          register: python_installed
+
+        - name: Install Python via pyenv
+          ansible.builtin.shell: |
+            export PYENV_ROOT="{{ home_dir }}/.pyenv"
+            export PATH="$PYENV_ROOT/bin:$PATH"
+            eval "$(pyenv init -)"
+            pyenv install {{ python_version }}
+            pyenv global {{ python_version }}
+          when: not python_installed.stat.exists
+
+    # ==========================================
+    # NODEJS: Volta
+    # ==========================================
+    - name: Install Volta and Node.js
+      tags: [nodejs]
+      block:
+        - name: Check if Volta is installed
+          ansible.builtin.stat:
+            path: "{{ home_dir }}/.volta"
+          register: volta_installed
+
+        - name: Install Volta
+          ansible.builtin.shell: curl https://get.volta.sh | bash -s -- --skip-setup
+          when: not volta_installed.stat.exists
+
+        - name: Add Volta to bashrc
+          ansible.builtin.blockinfile:
+            path: "{{ home_dir }}/.bashrc"
+            marker: "# {mark} ANSIBLE MANAGED BLOCK - volta"
+            block: |
+              export VOLTA_HOME="$HOME/.volta"
+              export PATH="$VOLTA_HOME/bin:$PATH"
+
+        - name: Install Node.js via Volta
+          ansible.builtin.shell: |
+            export VOLTA_HOME="{{ home_dir }}/.volta"
+            export PATH="$VOLTA_HOME/bin:$PATH"
+            volta install node@{{ nodejs_version }}
+          args:
+            creates: "{{ home_dir }}/.volta/bin/node"
+
+    # ==========================================
+    # GO: Go言語
+    # ==========================================
+    - name: Install Go
+      tags: [go]
+      become: true
+      block:
+        - name: Download Go
+          ansible.builtin.get_url:
+            url: "https://go.dev/dl/go{{ go_version }}.linux-amd64.tar.gz"
+            dest: /tmp/go.tar.gz
+
+        - name: Remove existing Go installation
+          ansible.builtin.file:
+            path: /usr/local/go
+            state: absent
+
+        - name: Extract Go
+          ansible.builtin.unarchive:
+            src: /tmp/go.tar.gz
+            dest: /usr/local
+            remote_src: yes
+
+    - name: Add Go to bashrc
+      tags: [go]
+      ansible.builtin.blockinfile:
+        path: "{{ home_dir }}/.bashrc"
+        marker: "# {mark} ANSIBLE MANAGED BLOCK - go"
+        block: |
+          export PATH=$PATH:/usr/local/go/bin
+          export PATH=$PATH:$HOME/go/bin
+
+    # ==========================================
+    # JAVA: Temurin OpenJDK
+    # ==========================================
+    - name: Install Temurin JDK
+      tags: [java]
+      become: true
+      block:
+        - name: Add Adoptium GPG key
+          ansible.builtin.apt_key:
+            url: https://packages.adoptium.net/artifactory/api/gpg/key/public
+            keyring: /usr/share/keyrings/adoptium.gpg
+            state: present
+
+        - name: Add Adoptium repository
+          ansible.builtin.apt_repository:
+            repo: "deb [signed-by=/usr/share/keyrings/adoptium.gpg] https://packages.adoptium.net/artifactory/deb {{ ansible_distribution_release }} main"
+            state: present
+            filename: adoptium
+
+        - name: Install Temurin JDK
+          ansible.builtin.apt:
+            name: "temurin-{{ java_version }}-jdk"
+            state: present
+            update_cache: yes
+
+    # ==========================================
+    # CLOJURE: Clojure エコシステム
+    # ==========================================
+    - name: Install Clojure dependencies
+      tags: [clojure]
+      become: true
+      ansible.builtin.apt:
+        name: rlwrap
+        state: present
+
+    - name: Install Clojure CLI
+      tags: [clojure]
+      when: install_clojure
+      block:
+        - name: Download Clojure installer
+          ansible.builtin.get_url:
+            url: https://github.com/clojure/brew-install/releases/latest/download/linux-install.sh
+            dest: /tmp/clojure-install.sh
+            mode: '0755'
+
+        - name: Install Clojure
+          become: true
+          ansible.builtin.shell: /tmp/clojure-install.sh
+          args:
+            creates: /usr/local/bin/clj
+
+    - name: Install Babashka
+      tags: [clojure]
+      when: install_babashka
+      ansible.builtin.shell: |
+        curl -sLO https://raw.githubusercontent.com/babashka/babashka/master/install
+        chmod +x install
+        sudo ./install
+        rm install
+      args:
+        creates: /usr/local/bin/bb
+
+    - name: Install bbin
+      tags: [clojure]
+      when: install_bbin
+      ansible.builtin.shell: |
+        curl -o- -L https://raw.githubusercontent.com/babashka/bbin/main/install | bash
+      args:
+        creates: "{{ home_dir }}/.local/bin/bbin"
+
+    - name: Install clojure-lsp
+      tags: [clojure]
+      when: install_clojure_lsp
+      become: true
+      block:
+        - name: Download clojure-lsp
+          ansible.builtin.get_url:
+            url: https://github.com/clojure-lsp/clojure-lsp/releases/latest/download/clojure-lsp-native-linux-amd64.zip
+            dest: /tmp/clojure-lsp.zip
+
+        - name: Extract clojure-lsp
+          ansible.builtin.unarchive:
+            src: /tmp/clojure-lsp.zip
+            dest: /usr/local/bin
+            remote_src: yes
+
+    - name: Install clj-kondo
+      tags: [clojure]
+      when: install_clj_kondo
+      ansible.builtin.shell: |
+        curl -sLO https://raw.githubusercontent.com/clj-kondo/clj-kondo/master/script/install-clj-kondo
+        chmod +x install-clj-kondo
+        sudo ./install-clj-kondo
+        rm install-clj-kondo
+      args:
+        creates: /usr/local/bin/clj-kondo
+
+    - name: Install cljfmt via bbin
+      tags: [clojure]
+      when: install_cljfmt and install_bbin
+      ansible.builtin.shell: |
+        export PATH="{{ home_dir }}/.local/bin:$PATH"
+        bbin install io.github.weavejester/cljfmt
+      args:
+        creates: "{{ home_dir }}/.local/bin/cljfmt"
+
+    - name: Install shadow-cljs
+      tags: [clojure]
+      when: install_shadow_cljs
+      ansible.builtin.shell: |
+        export VOLTA_HOME="{{ home_dir }}/.volta"
+        export PATH="$VOLTA_HOME/bin:$PATH"
+        npm install -g shadow-cljs
+      args:
+        creates: "{{ home_dir }}/.volta/bin/shadow-cljs"
+
+    # ==========================================
+    # DATABASE: PostgreSQL & SQLite
+    # ==========================================
+    - name: Install PostgreSQL
+      tags: [database]
+      when: install_postgresql
+      become: true
+      block:
+        - name: Install PostgreSQL packages
+          ansible.builtin.apt:
+            name:
+              - postgresql
+              - postgresql-contrib
+            state: present
+
+        - name: Start PostgreSQL service
+          ansible.builtin.systemd:
+            name: postgresql
+            state: started
+            enabled: yes
+
+    - name: Install SQLite
+      tags: [database]
+      when: install_sqlite
+      become: true
+      ansible.builtin.apt:
+        name:
+          - sqlite3
+          - libsqlite3-dev
+        state: present
+
+    # ==========================================
+    # DOCKER: Docker Engine
+    # ==========================================
+    - name: Install Docker
+      tags: [docker]
+      become: true
+      block:
+        - name: Remove old Docker packages
+          ansible.builtin.apt:
+            name:
+              - docker
+              - docker-engine
+              - docker.io
+              - containerd
+              - runc
+            state: absent
+          ignore_errors: yes
+
+        - name: Add Docker GPG key
+          ansible.builtin.apt_key:
+            url: https://download.docker.com/linux/ubuntu/gpg
+            keyring: /etc/apt/keyrings/docker.gpg
+            state: present
+
+        - name: Add Docker repository
+          ansible.builtin.apt_repository:
+            repo: "deb [arch={{ ansible_architecture | replace('x86_64', 'amd64') }} signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable"
+            state: present
+            filename: docker
+
+        - name: Install Docker packages
+          ansible.builtin.apt:
+            name:
+              - docker-ce
+              - docker-ce-cli
+              - containerd.io
+              - docker-buildx-plugin
+              - docker-compose-plugin
+            state: present
+            update_cache: yes
+
+        - name: Add user to docker group
+          ansible.builtin.user:
+            name: "{{ ansible_user_id }}"
+            groups: docker
+            append: yes
+
+    # ==========================================
+    # JAPANESE: 日本語入力
+    # ==========================================
+    - name: Install Rust (for yaskkserv2)
+      tags: [japanese]
+      when: install_yaskkserv2
+      block:
+        - name: Check if Rust is installed
+          ansible.builtin.stat:
+            path: "{{ home_dir }}/.cargo/bin/rustc"
+          register: rust_installed
+
+        - name: Install Rust
+          ansible.builtin.shell: curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+          when: not rust_installed.stat.exists
+
+    - name: Install yaskkserv2
+      tags: [japanese]
+      when: install_yaskkserv2
+      block:
+        - name: Install yaskkserv2 via cargo
+          ansible.builtin.shell: |
+            source {{ home_dir }}/.cargo/env
+            cargo install yaskkserv2
+          args:
+            creates: "{{ home_dir }}/.cargo/bin/yaskkserv2"
+
+        - name: Create SKK directory
+          ansible.builtin.file:
+            path: "{{ home_dir }}/.skk"
+            state: directory
+
+        - name: Download SKK dictionary
+          ansible.builtin.get_url:
+            url: https://skk-dev.github.io/dict/SKK-JISYO.L.gz
+            dest: "{{ home_dir }}/.skk/SKK-JISYO.L.gz"
+
+        - name: Extract SKK dictionary
+          ansible.builtin.shell: gunzip -k {{ home_dir }}/.skk/SKK-JISYO.L.gz
+          args:
+            creates: "{{ home_dir }}/.skk/SKK-JISYO.L"
+
+        - name: Build yaskkserv2 dictionary
+          ansible.builtin.shell: |
+            source {{ home_dir }}/.cargo/env
+            yaskkserv2_make_dictionary --utf8 --dictionary-filename {{ home_dir }}/.skk/dictionary.yaskkserv2 {{ home_dir }}/.skk/SKK-JISYO.L
+          args:
+            creates: "{{ home_dir }}/.skk/dictionary.yaskkserv2"
+
+        - name: Create yaskkserv2 systemd service directory
+          ansible.builtin.file:
+            path: "{{ home_dir }}/.config/systemd/user"
+            state: directory
+            recurse: yes
+
+        - name: Create yaskkserv2 systemd service
+          ansible.builtin.copy:
+            dest: "{{ home_dir }}/.config/systemd/user/yaskkserv2.service"
+            content: |
+              [Unit]
+              Description=yaskkserv2 SKK server
+
+              [Service]
+              ExecStart=%h/.cargo/bin/yaskkserv2 --no-daemonize --listen-address 127.0.0.1:1178 %h/.skk/dictionary.yaskkserv2
+              Restart=always
+
+              [Install]
+              WantedBy=default.target
+
+        - name: Enable yaskkserv2 service
+          ansible.builtin.systemd:
+            name: yaskkserv2
+            scope: user
+            enabled: yes
+            daemon_reload: yes
+
+    - name: Install ibus-skk
+      tags: [japanese]
+      when: install_ibus_skk
+      become: true
+      ansible.builtin.apt:
+        name: ibus-skk
+        state: present
+
+    # ==========================================
+    # UTILITIES: Ulauncher, Zeal, GNOME設定
+    # ==========================================
+    - name: Install Ulauncher
+      tags: [utilities]
+      when: install_ulauncher
+      become: true
+      block:
+        - name: Add Ulauncher PPA
+          ansible.builtin.apt_repository:
+            repo: ppa:agornostal/ulauncher
+            state: present
+
+        - name: Install Ulauncher
+          ansible.builtin.apt:
+            name: ulauncher
+            state: present
+            update_cache: yes
+
+    - name: Install Zeal
+      tags: [utilities]
+      when: install_zeal
+      become: true
+      ansible.builtin.apt:
+        name: zeal
+        state: present
+
+    - name: Configure GNOME settings
+      tags: [utilities]
+      when: configure_gnome
+      block:
+        - name: Set Alt+Tab to switch windows
+          community.general.dconf:
+            key: "/org/gnome/desktop/wm/keybindings/switch-windows"
+            value: "['<Alt>Tab']"
+            state: present
+
+        - name: Set window switcher to current workspace only
+          community.general.dconf:
+            key: "/org/gnome/shell/window-switcher/current-workspace-only"
+            value: "true"
+            state: present
+
+    # ==========================================
+    # DOTFILES: 設定ファイル
+    # ==========================================
+    - name: Setup dotfiles
+      tags: [dotfiles]
+      when: setup_dotfiles and dotfiles_repo != ""
+      block:
+        - name: Clone dotfiles repository
+          ansible.builtin.git:
+            repo: "{{ dotfiles_repo }}"
+            dest: "{{ dotfiles_dest }}"
+            update: no
+
+  post_tasks:
+    - name: Display completion message
+      ansible.builtin.debug:
+        msg: |
+          ============================================
+          セットアップ完了!
+          ============================================
+          次のステップ:
+          1. ターミナルを再起動（または source ~/.bashrc）
+          2. gh auth login でGitHub認証
+          3. systemctl --user start yaskkserv2 でSKKサーバー起動
+          ============================================

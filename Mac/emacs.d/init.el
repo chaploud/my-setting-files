@@ -70,7 +70,6 @@
  '(ediff-fine-diff-A ((t (:background "#744d5f"))))
  '(ediff-fine-diff-B ((t (:background "#586e5e"))))
  '(ediff-fine-diff-C ((t (:background "#746355"))))
- '(flymake-end-of-line-diagnostics-face ((t (:box nil :height 0.85))))
  '(font-lock-comment-delimiter-face ((t (:foreground "#5ab5b0"))))
  '(font-lock-comment-face ((t (:foreground "#5ab5b0"))))
  '(match ((t (:background "#eed49f" :foreground "#1e2030"))))

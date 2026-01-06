@@ -5,9 +5,10 @@
 
 ;; 診断表示
 (use-package flymake
-  :ensure nil
-  :custom
-  (flymake-show-diagnostics-at-end-of-line t))
+  :ensure nil)
+
+(use-package flyover
+  :ensure t)
 
 ;; Tree-sitter設定
 (use-package treesit
@@ -144,7 +145,11 @@
 
 ;; 自動フォーマット
 (use-package format-all
-  :ensure t)
+  :ensure t
+  :config
+  (setq-default format-all-formatters
+                '(("Clojure" (cljfmt))))
+  )
 
 ;; 言語別フォーマット設定
 ;; lsp: eglot-format-buffer を優先
