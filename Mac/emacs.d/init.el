@@ -42,21 +42,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages
-   '(bufferfile cape catppuccin-theme cider claude-code-ide
-                clojure-ts-mode colorful-mode copilot corfu dashboard
-                ddskk diff-hl docker doom-modeline eglot-tempel
-                eldoc-box elfeed embark-consult evil-anzu
-                evil-collection evil-commentary evil-escape
-                evil-goggles evil-surround exec-path-from-shell forge
-                format-all general github-dark-vscode-theme
-                github-theme groovy-mode helpful hl-todo jarchive
-                marginalia multi-vterm nerd-icons-corfu orderless
-                osx-dictionary puni rainbow-delimiters restclient
-                terraform-mode treemacs-evil treemacs-nerd-icons
-                treemacs-perspective ultra-scroll undo-fu
-                undo-fu-session vertico vundo wat-ts-mode wgrep
-                zig-mode))
+ '(package-selected-packages nil)
  '(package-vc-selected-packages
    '((wat-ts-mode :url "https://github.com/nverno/wat-ts-mode" :branch
                   "master")

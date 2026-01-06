@@ -1079,10 +1079,10 @@
     (interactive "sURL to GET: ")
     (message "Requesting (GET) %s ..." url)
     (plz 'get url
-      :headers (my-plz-auth-headers)
-      :as 'string
-      :then 'my-plz-handle-response
-      :else 'my-plz-handle-error))
+         :headers (my-plz-auth-headers)
+         :as 'string
+         :then 'my-plz-handle-response
+         :else 'my-plz-handle-error))
 
   (defun my-plz-post-region (url start end)
     "選択範囲(Region)のJSONをBodyとしてPOSTし、標準機能でJSON整形して表示"
@@ -1090,13 +1090,13 @@
     (let ((body (buffer-substring-no-properties start end)))
       (message "Requesting (POST) %s ..." url)
       (plz 'post url
-        :headers (append
-                  '(("Content-Type" . "application/json"))
-                  (my-plz-auth-headers))
-        :body body
-        :as 'string
-        :then 'my-plz-handle-response
-        :else 'my-plz-handle-error))))
+           :headers (append
+                     '(("Content-Type" . "application/json"))
+                     (my-plz-auth-headers))
+           :body body
+           :as 'string
+           :then 'my-plz-handle-response
+           :else 'my-plz-handle-error))))
 
 ;;====================================================================
 ;; GitHub Copilot連携
