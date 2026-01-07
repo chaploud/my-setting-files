@@ -86,11 +86,11 @@
  `(ediff-fine-diff-B ((t (:background ,my-success-dim-1))))
  `(ediff-fine-diff-C ((t (:background ,my-warning-dim-1))))
  `(flymake-error-echo-at-eol
-   ((t (:background ,my-error-dim-1 :foreground ,my-base-fg :box (:line-width (4 . -1) :color ,my-error-dim-1) :height 0.85))))
+   ((t (:background ,my-error-dim-1 :foreground ,my-base-fg :box (:line-width (6 . -1) :color ,my-error-dim-1) :height 0.85))))
  `(flymake-note-echo-at-eol
-   ((t (:background ,my-success-dim-1 :foreground ,my-base-fg :box (:line-width (4 . -1) :color ,my-success-dim-1) :height 0.85))))
+   ((t (:background ,my-success-dim-1 :foreground ,my-base-fg :box (:line-width (6 . -1) :color ,my-success-dim-1) :height 0.85))))
  `(flymake-warning-echo-at-eol
-   ((t (:background ,my-warning-dim-1 :foreground ,my-base-fg :box (:line-width (4 . -1) :color ,my-warning-dim-1) :height 0.85))))
+   ((t (:background ,my-warning-dim-1 :foreground ,my-base-fg :box (:line-width (6 . -1) :color ,my-warning-dim-1) :height 0.85))))
  `(font-lock-comment-delimiter-face ((t (:foreground ,my-comment))))
  `(font-lock-comment-face ((t (:foreground ,my-comment))))
  `(match ((t (:background ,my-warning :foreground ,my-black))))

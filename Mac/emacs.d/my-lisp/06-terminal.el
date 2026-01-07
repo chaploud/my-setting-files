@@ -42,7 +42,24 @@
             (vterm-send-string (format "cd %s" (shell-quote-argument dir)))
             (vterm-send-return)
             (message "vterm: cd %s" dir))
-        (user-error "vterm バッファが見つかりません")))))
+        (user-error "vterm バッファが見つかりません"))))
+
+  (defun my-multi-vterm-project-cd-advice (orig-fun &rest args)
+    "Advice to cd to the current buffer's directory after multi-vterm-project."
+    (let ((target-dir (if buffer-file-name
+                          (file-name-directory buffer-file-name)
+                        default-directory))
+          (was-vterm-buffer (derived-mode-p 'vterm-mode)))
+      (apply orig-fun args)
+      ;; vtermバッファにいる or すでに同じディレクトリにいる場合はcdしない
+      (unless was-vterm-buffer
+        (when (and (derived-mode-p 'vterm-mode)
+                   (not (file-equal-p default-directory target-dir)))
+          (setq default-directory target-dir)
+          (vterm-send-string (format "cd %s" (shell-quote-argument target-dir)))
+          (vterm-send-return)))))
+
+  (advice-add 'multi-vterm-project :around #'my-multi-vterm-project-cd-advice))
 
 (provide '06-terminal)
 ;;; 06-terminal.el ends here
