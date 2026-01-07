@@ -5,10 +5,10 @@
 
 ;; 診断表示
 (use-package flymake
-  :ensure nil)
-
-(use-package flyover
-  :ensure t)
+  :ensure nil
+  :custom
+  (flymake-show-diagnostics-at-end-of-line t)
+  )
 
 ;; Tree-sitter設定
 (use-package treesit

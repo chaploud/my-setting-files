@@ -53,29 +53,50 @@
  '(safe-local-variable-directories
    '("/Users/shota.508/Documents/OSS/melpa/" "/Users/shota.508/myskill/")))
 
+(defvar my-base-bg "#24273a")
+(defvar my-base-fg "#cad3f5")
+(defvar my-black "#1e2030")
+(defvar my-blue "#8aadf4")
+(defvar my-error "#ed8796")
+(defvar my-success "#a6da95")
+(defvar my-warning "#eed49f")
+(defvar my-comment "#5ab5b0")
+(defvar my-error-dim-1 "#744d5f")
+(defvar my-error-dim-2 "#4c3a4c")
+(defvar my-success-dim-1 "#586e5e")
+(defvar my-success-dim-2 "#3e4b4c")
+(defvar my-warning-dim-1 "#746355")
+(defvar my-warning-dim-2 "#4c4540")
+
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(consult-file ((t)))
- '(cursor ((t (:background "#cad3f5"))))
- '(diff-added ((t (:background "#3e4b4c"))))
- '(diff-refine-added ((t (:background "#586e5e"))))
- '(diff-refine-removed ((t (:background "#744d5f"))))
- '(diff-removed ((t (:background "#4c3a4c"))))
- '(ediff-current-diff-A ((t (:extend t :background "#4c3a4c"))))
- '(ediff-current-diff-B ((t (:extend t :background "#3e4b4c"))))
- '(ediff-current-diff-C ((t (:extend t :background "#4c4540"))))
- '(ediff-fine-diff-A ((t (:background "#744d5f"))))
- '(ediff-fine-diff-B ((t (:background "#586e5e"))))
- '(ediff-fine-diff-C ((t (:background "#746355"))))
- '(font-lock-comment-delimiter-face ((t (:foreground "#5ab5b0"))))
- '(font-lock-comment-face ((t (:foreground "#5ab5b0"))))
- '(match ((t (:background "#eed49f" :foreground "#1e2030"))))
- '(mode-line ((t (:background "#1e2030"))))
- '(show-paren-match ((t (:background "#8aadf4" :foreground "#1e2030" :weight bold))))
- '(show-paren-mismatch ((t (:background "#ed8796" :foreground "#1e2030" :weight bold))))
- '(trailing-whitespace ((t (:background "#ed8796" :foreground "#ed8796")))))
+ `(cursor ((t (:background ,my-base-fg))))
+ `(diff-added ((t (:background ,my-success-dim-2))))
+ `(diff-refine-added ((t (:background ,my-success-dim-1))))
+ `(diff-refine-removed ((t (:background  ,my-error-dim-1))))
+ `(diff-removed ((t (:background ,my-error-dim-2))))
+ `(ediff-current-diff-A ((t (:extend t :background ,my-error-dim-2))))
+ `(ediff-current-diff-B ((t (:extend t :background ,my-success-dim-2))))
+ `(ediff-current-diff-C ((t (:extend t :background ,my-warning-dim-2))))
+ `(ediff-fine-diff-A ((t (:background ,my-error-dim-1))))
+ `(ediff-fine-diff-B ((t (:background ,my-success-dim-1))))
+ `(ediff-fine-diff-C ((t (:background ,my-warning-dim-1))))
+ `(flymake-error-echo-at-eol
+   ((t (:background ,my-error-dim-1 :foreground ,my-base-fg :box (:line-width (4 . -1) :color ,my-error-dim-1) :height 0.85))))
+ `(flymake-note-echo-at-eol
+   ((t (:background ,my-success-dim-1 :foreground ,my-base-fg :box (:line-width (4 . -1) :color ,my-success-dim-1) :height 0.85))))
+ `(flymake-warning-echo-at-eol
+   ((t (:background ,my-warning-dim-1 :foreground ,my-base-fg :box (:line-width (4 . -1) :color ,my-warning-dim-1) :height 0.85))))
+ `(font-lock-comment-delimiter-face ((t (:foreground ,my-comment))))
+ `(font-lock-comment-face ((t (:foreground ,my-comment))))
+ `(match ((t (:background ,my-warning :foreground ,my-black))))
+ `(mode-line ((t (:background ,my-black))))
+ `(show-paren-match ((t (:background ,my-blue :foreground ,my-black :weight bold))))
+ `(show-paren-mismatch ((t (:background ,my-error :foreground ,my-black :weight bold))))
+ `(trailing-whitespace ((t (:background ,my-error :foreground ,my-error)))))
 
 ;;; init.el ends here
