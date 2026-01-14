@@ -78,7 +78,6 @@
 ;; Dockerコンテナ管理
 (use-package docker
   :ensure t
-  :defer t
   :custom
   (docker-container-columns
    '((:name "Names" :width 30 :template "{{ json .Names }}" :sort nil :format nil)
