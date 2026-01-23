@@ -145,6 +145,7 @@
     "1" '(my-claude-send-1 :wk "Claude '1'")
     "2" '(my-claude-send-2 :wk "Claude '2'")
     "3" '(my-claude-send-3 :wk "Claude '3'")
+    "4" '(my-claude-send-4 :wk "Claude '4'")
     )
 
   ;; LSP (eglot) 操作 (SPC l)

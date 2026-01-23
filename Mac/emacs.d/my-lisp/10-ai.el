@@ -89,6 +89,7 @@
   (my-claude-define-send-number 1)
   (my-claude-define-send-number 2)
   (my-claude-define-send-number 3)
+  (my-claude-define-send-number 4)
 
   ;; Enterキー送信
   (defun my-claude-send-return ()
