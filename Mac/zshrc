@@ -84,6 +84,9 @@ e() {
  fi
 }
 
+# NeoVim
+alias v=nvim
+
 # ========== 開発ソフトウェア・ツール ==========
 
 # homebrewのbin優先
