@@ -31,7 +31,7 @@
   :vc (:url "https://github.com/manzaltu/claude-code-ide.el" :rev :newest)
   :commands (claude-code-ide claude-code-ide-menu)
   :custom
-  (claude-code-ide-window-width 0.4)
+  (claude-code-ide-window-width 0.5)
   (claude-code-ide-use-ide-diff nil)    ; ediff機能を無効化
   :config
   (claude-code-ide-emacs-tools-setup)

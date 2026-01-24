@@ -34,7 +34,10 @@
   (diff-hl-flydiff-mode t)
   :hook
   (magit-pre-refresh-hook  . diff-hl-magit-pre-refresh)
-  (magit-post-refresh-hook . diff-hl-magit-post-refresh))
+  (magit-post-refresh-hook . diff-hl-magit-post-refresh)
+  (after-save-hook        . diff-hl-update)
+  (after-revert-hook      . diff-hl-update)
+  (vc-checkin-hook        . diff-hl-update))
 
 ;; ediff設定
 (use-package ediff
