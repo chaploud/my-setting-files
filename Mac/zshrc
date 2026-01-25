@@ -76,13 +76,15 @@ compinit -C # たまに素のcompinitをしましょう
 eval "$(starship init zsh)"
 
 # emacsclient
-e() {
- if emacsclient --eval "t" > /dev/null 2>&1; then
-   emacsclient -n "$@"
- else
-   emacs "$@" &
- fi
-}
+# e() {
+#  if emacsclient --eval "t" > /dev/null 2>&1; then
+#    emacsclient -n "$@"
+#  else
+#    nvim "$@"
+#  fi
+# }
+# gitから使えるように、Emacsが起動していない場合はnvimを使う
+# そして、~/.local/bin/eとして#!/bin/bashとした
 
 # NeoVim
 alias v=nvim

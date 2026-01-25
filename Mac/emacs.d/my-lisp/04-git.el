@@ -50,7 +50,8 @@
           (magit-refresh))))
     ))
 
-(run-with-timer 0 10 #'my/git-status-check) ; パフォーマンスに注意
+(add-hook 'focus-out-hook #'my/git-status-check)
+(run-with-idle-timer 10 t #'my/git-status-check)
 
 ;; ediff設定
 (use-package ediff
