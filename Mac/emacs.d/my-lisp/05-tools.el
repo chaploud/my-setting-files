@@ -1,5 +1,6 @@
 ;;; 05-tools.el --- ツール群 -*- lexical-binding: t; -*-
 
+;;
 ;;; Commentary:
 ;;; Code:
 
