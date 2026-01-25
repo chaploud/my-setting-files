@@ -378,7 +378,7 @@
   :ensure nil
   :custom
   (which-key-mode t)
-  (which-key-idle-delay 0.3)
+  (which-key-idle-delay 0.6)
   (which-key-idle-secondary-delay 0)
   (which-key-sort-order nil))
 
