@@ -5,26 +5,26 @@
 
 ;;; Code:
 
-(defun my-open-user-init ()
+(defun my/open-user-init ()
   "Open the user's init file."
   (interactive)
   (find-file user-init-file))
 
-(defun my-reload-user-init ()
+(defun my/reload-user-init ()
   "Reload the user's init file."
   (interactive)
   (load-file user-init-file)
   (message "Reloaded %s" user-init-file))
 
 ;; === カーソル下のシンボルが組み込みのパッケージかどうかチェック
-(defun my-package-built-in-p (symbol)
+(defun my/package-built-in-p (symbol)
   "Check if SYMBOL is a built-in package."
   (interactive (list (or (symbol-at-point)
                          (intern (read-string "Package: ")))))
   (message "[%s] built-in: %s" symbol (when (package-built-in-p symbol) t)))
 
 ;; === 現在のファイルのプロジェクトルートからのパスをコピー
-(defun my-copy-project-relative-path ()
+(defun my/copy-project-relative-path ()
   "Copy the current file's path relative to the project root."
   (interactive)
   (if-let* ((proj (project-current))
@@ -35,7 +35,7 @@
         (message "Copied: %s" relpath))
     (user-error "Not visiting a file in a project.")))
 
-(defun my-copy-absolute-path ()
+(defun my/copy-absolute-path ()
   "Copy the current file's absolute path."
   (interactive)
   (if-let ((file (buffer-file-name)))
@@ -44,7 +44,7 @@
         (message "Copied absolute path: %s" file))
     (user-error "Not visiting a file.")))
 
-(defun my-reset-emacs ()
+(defun my/reset-emacs ()
   "Kill all perspectives except the current one, and kill all buffers except Eglot buffers."
   (interactive)
   ;; dashboard開く
@@ -74,25 +74,25 @@
   ;; ウィンドウ分割してない状態に
   (delete-other-windows)
 
-  (message "(my-reset-emacs) done."))
+  (message "(my/reset-emacs) done."))
 
-(defvar my-notes-root (expand-file-name "~/Documents/MyNote/"))
-(defvar my-inbox-dir (expand-file-name "00_inbox/" my-notes-root))
-(defun my-get-next-inbox-number ()
-  (let* ((files (directory-files my-inbox-dir nil "\\`[0-9]\\{3\\}_.*\\.md\\'"))
+(defvar my/notes-root (expand-file-name "~/Documents/MyNote/"))
+(defvar my/inbox-dir (expand-file-name "00_inbox/" my/notes-root))
+(defun my/get-next-inbox-number ()
+  (let* ((files (directory-files my/inbox-dir nil "\\`[0-9]\\{3\\}_.*\\.md\\'"))
          (numbers (mapcar (lambda (f)
                             (string-to-number (substring f 0 3)))
                           files))
          (max-number (if numbers (apply 'max numbers) 0)))
     (format "%03d" (1+ max-number))))
 
-(defun my-new-note (title)
+(defun my/new-note (title)
   "Create a new inbox note with an incremented number."
   (interactive "sNote title: ")
-  (let* ((next-number (my-get-next-inbox-number))
+  (let* ((next-number (my/get-next-inbox-number))
          (safe-title (replace-regexp-in-string "[^[:alnum:]-_]" "_" title))
          (filename (concat next-number "_" safe-title ".md"))
-         (filepath (expand-file-name filename my-inbox-dir))
+         (filepath (expand-file-name filename my/inbox-dir))
          (timestamp (format-time-string "%Y-%m-%d %H:%M")))
     (find-file filepath)
     (unless (file-exists-p filepath)
@@ -101,31 +101,31 @@
       (save-buffer))
     (message "Created note: %s" filepath)))
 
-(defun my-find-note ()
-  "Search notes in my-notes-root using ripgrep and open the selected one."
+(defun my/find-note ()
+  "Search notes in my/notes-root using ripgrep and open the selected one."
   (interactive)
-  (let ((default-directory my-notes-root))
+  (let ((default-directory my/notes-root))
     (call-interactively 'project-find-file)))
 
-(defun my-grep-note ()
-  "Grep notes in my-notes-root using ripgrep and open the selected one."
+(defun my/grep-note ()
+  "Grep notes in my/notes-root using ripgrep and open the selected one."
   (interactive)
-  (let ((default-directory my-notes-root))
+  (let ((default-directory my/notes-root))
     (call-interactively 'consult-ripgrep)))
 
-(defmacro my-without-kill-ring-update (&rest body)
+(defmacro my/without-kill-ring-update (&rest body)
   "Execute BODY without modifying kill-ring."
   (declare (indent 0))
   `(let ((kill-ring kill-ring)
          (kill-ring-yank-pointer kill-ring-yank-pointer))
      ,@body))
 
-(defun my-minibuffer-backward-delete-path-segment ()
+(defun my/minibuffer-backward-delete-path-segment ()
   "Delete one path segment backward without updating kill-ring.
 /foo/bar/baz| → /foo/bar/
 /foo/bar/    → /foo/"
   (interactive)
-  (my-without-kill-ring-update
+  (my/without-kill-ring-update
     (let ((end (point))
           (start (minibuffer-prompt-end)))
       (if (<= end start)
@@ -143,10 +143,10 @@
                                     start))))
           (delete-region segment-start end))))))
 
-(defun my-minibuffer-up-to-project-root ()
+(defun my/minibuffer-up-to-project-root ()
   "When minibuffer contains a file path, replace it with the project root path."
   (interactive)
-  (my-without-kill-ring-update
+  (my/without-kill-ring-update
     (let* ((input (minibuffer-contents-no-properties))
            (proj (project-current))
            (root (and proj (project-root proj))))

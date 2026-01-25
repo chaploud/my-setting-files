@@ -8,7 +8,7 @@
 
 ;;; Code:
 
-(defun my-switch-ime (input-source)
+(defun my/switch-ime (input-source)
   "Switch to INPUT-SOURCE (requires macism)."
   (call-process "macism" nil 0 nil input-source))
 
@@ -17,7 +17,7 @@
  :after after-focus-change-function
  (lambda ()
    (when (frame-focus-state)
-     (my-switch-ime "net.mtgto.inputmethod.macSKK.ascii"))))
+     (my/switch-ime "net.mtgto.inputmethod.macSKK.ascii"))))
 
 ;; DDSKK(日本語入力)
 (use-package ddskk
@@ -48,13 +48,13 @@
   (isearch-mode . skk-latin-mode-on)
   (isearch-mode-end . skk-isearch-mode-cleanup)
   (evil-normal-state-entry . skk-latin-mode-on)
-  (text-mode . my-skk-latin)
-  (prog-mode . my-skk-latin)
+  (text-mode . my/skk-latin)
+  (prog-mode . my/skk-latin)
   :bind
   ("C-x j" . skk-mode)
   ("C-j" . skk-kakutei)
   :config
-  (defun my-skk-latin ()
+  (defun my/skk-latin ()
     "skk-modeを有効にして英字モードに"
     (skk-mode t)
     (skk-latin-mode-on)))

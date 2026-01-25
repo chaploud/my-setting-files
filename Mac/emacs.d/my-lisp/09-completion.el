@@ -41,24 +41,24 @@
 (use-package cape
   :ensure t
   :hook
-  (prog-mode . my-cape-prog-setup)
-  (text-mode . my-cape-text-setup)
+  (prog-mode . my/cape-prog-setup)
+  (text-mode . my/cape-text-setup)
   :config
-  (defun my-cape-setup (capfs)
+  (defun my/cape-setup (capfs)
     "Add CAPFS to completion-at-point-functions."
     (setq-local completion-at-point-functions
                 (cons (apply #'cape-capf-super capfs)
                       completion-at-point-functions)))
 
-  (defun my-cape-prog-setup ()
+  (defun my/cape-prog-setup ()
     "Setup cape for prog-mode."
-    (my-cape-setup (if (bound-and-true-p eglot-managed-mode)
+    (my/cape-setup (if (bound-and-true-p eglot-managed-mode)
                        '(eglot-completion-at-point tempel-expand cape-file)
                      '(tempel-complete cape-file))))
 
-  (defun my-cape-text-setup ()
+  (defun my/cape-text-setup ()
     "Setup cape for text-mode."
-    (my-cape-setup '(tempel-complete cape-dabbrev cape-file))))
+    (my/cape-setup '(tempel-complete cape-dabbrev cape-file))))
 
 (provide '09-completion)
 ;;; 09-completion.el ends here

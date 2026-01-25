@@ -9,7 +9,7 @@
   (clojure-ts-toplevel-inside-comment-form t)
   :config
   ;; === clojure-lsp用キャッシュの削除 & 再起動
-  (defun my-clojure-lsp-clear-cache-and-restart ()
+  (defun my/clojure-lsp-clear-cache-and-restart ()
     "Clear clojure-lsp cache and restart the server."
     (interactive)
     (call-interactively #'eglot-shutdown)
@@ -35,7 +35,7 @@
   (cider-use-xref nil)
 
   :config
-  (defun my-cider-send-reload ()
+  (defun my/cider-send-reload ()
     "Send (reload) to REPL"
     (interactive)
     (when (cider-connected-p)
@@ -51,7 +51,7 @@
    (clojure-ts-mode . puni-mode))
   :config
   ;; === puniでカーソル以降をそのレベルで閉じるまで削除
-  (defun my-puni-kill-to-end ()
+  (defun my/puni-kill-to-end ()
     "Kill to the end of the current sexp."
     (interactive)
     (let ((begin (point))
@@ -59,7 +59,7 @@
       (kill-region begin end)))
 
   ;; === puniでカーソル以降をそのレベルで閉じる直前までコピー
-  (defun my-puni-yank-to-end ()
+  (defun my/puni-yank-to-end ()
     "Kill to the end of the current sexp."
     (interactive)
     (let ((begin (point))
@@ -68,7 +68,7 @@
       (evil-goggles--show-blocking-hint begin end)))
 
   ;; === puniでシンボルを""で囲む
-  (defun my-wrap-symbol-with-quotes ()
+  (defun my/wrap-symbol-with-quotes ()
     "Surround the current symbol with double quotes."
     (interactive)
     (let ((bounds (bounds-of-thing-at-point 'symbol)))

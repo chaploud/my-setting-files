@@ -24,11 +24,11 @@
   (orderless-matching-styles '(orderless-literal orderless-regexp))
   :config
   ;; ~ で終わるパターンのみ flex を有効化
-  (defun my-orderless-flex-dispatcher (pattern _index _total)
+  (defun my/orderless-flex-dispatcher (pattern _index _total)
     "Enable flex matching when PATTERN ends with ~."
     (when (string-suffix-p "~" pattern)
       `(orderless-flex . ,(substring pattern 0 -1))))
-  (setq orderless-style-dispatchers '(my-orderless-flex-dispatcher)))
+  (setq orderless-style-dispatchers '(my/orderless-flex-dispatcher)))
 
 ;; 補完候補に注釈
 (use-package marginalia
@@ -60,7 +60,7 @@
           (concat consult-ripgrep-args " " (string-join additional-args " ")))))
 
 ;; 現在バッファのディレクトリ以下でripgrep検索
-(defun my-consult-ripgrep-current-dir ()
+(defun my/consult-ripgrep-current-dir ()
   "Search in the current buffer's directory using consult-ripgrep."
   (interactive)
   (let ((dir (or (and (buffer-file-name)

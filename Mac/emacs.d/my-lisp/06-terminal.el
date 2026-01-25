@@ -27,7 +27,7 @@
   :bind
   ("C-'" . multi-vterm-project)
   :config
-  (defun my-cd-on-vterm ()
+  (defun my/cd-on-vterm ()
     "Change directory of current vterm to the buffer's directory."
     (interactive)
     (let ((dir (if buffer-file-name
@@ -44,7 +44,7 @@
             (message "vterm: cd %s" dir))
         (user-error "vterm バッファが見つかりません"))))
 
-  (defun my-multi-vterm-project-cd-advice (orig-fun &rest args)
+  (defun my/multi-vterm-project-cd-advice (orig-fun &rest args)
     "Advice to cd to the current buffer's directory after multi-vterm-project."
     (let ((target-dir (if buffer-file-name
                           (file-name-directory buffer-file-name)
@@ -59,7 +59,7 @@
           (vterm-send-string (format "cd %s" (shell-quote-argument target-dir)))
           (vterm-send-return)))))
 
-  (advice-add 'multi-vterm-project :around #'my-multi-vterm-project-cd-advice))
+  (advice-add 'multi-vterm-project :around #'my/multi-vterm-project-cd-advice))
 
 (provide '06-terminal)
 ;;; 06-terminal.el ends here

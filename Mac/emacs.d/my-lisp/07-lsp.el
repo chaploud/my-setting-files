@@ -18,7 +18,7 @@
   (treesit-font-lock-level 4)
   :config
   ;; === tree-sitterの文法をインストールしたいリスト
-  (defvar my-treesit-language-list
+  (defvar my/treesit-language-list
     '(bash
       c
       clojure
@@ -69,10 +69,10 @@
           (yaml "https://github.com/ikatyang/tree-sitter-yaml")
           ))
   ;; === 未導入だけ自動インストール
-  (defun my-treesit-install-grammars ()
-    "my-treesit-language-listのうち未導入のgrammarを自動インストールする"
+  (defun my/treesit-install-grammars ()
+    "my/treesit-language-listのうち未導入のgrammarを自動インストールする"
     (interactive)
-    (dolist (lang my-treesit-language-list)
+    (dolist (lang my/treesit-language-list)
       (unless (treesit-language-available-p lang)
         (condition-case err
             (progn
@@ -83,7 +83,7 @@
            (message "[treesit] FAILED %s → %s" lang (error-message-string err)))))))
 
   (add-hook 'emacs-startup-hook
-            (lambda () (run-with-idle-timer 1 nil #'my-treesit-install-grammars)))
+            (lambda () (run-with-idle-timer 1 nil #'my/treesit-install-grammars)))
   )
 
 
@@ -130,17 +130,17 @@
   (zig-mode . eglot-ensure)
 
   :config
-  (defun my-eglot-start ()
+  (defun my/eglot-start ()
     "Start eglot for the current buffer if not already started."
     (interactive)
     (eglot-ensure))
 
   ;; デフォルトと変えたいものは指定
-  (defvar my-eglot-server-list
+  (defvar my/eglot-server-list
     '((sql-mode . ("sqls")))
     "Custom eglot server programs.")
 
-  (dolist (pair my-eglot-server-list)
+  (dolist (pair my/eglot-server-list)
     (add-to-list 'eglot-server-programs pair)))
 
 ;; 自動フォーマット
@@ -154,17 +154,17 @@
 ;; 言語別フォーマット設定
 ;; lsp: eglot-format-buffer を優先
 ;; all: format-all-buffer を使用
-(defvar my-format-config
+(defvar my/format-config
   '((clojure-ts-mode    lsp all)
     (json-ts-mode       lsp all)
     (zig-mode           lsp all)
     (emacs-lisp-mode    all))
   "Format configuration per mode. lsp = eglot, all = format-all.")
 
-(defun my-format-buffer ()
-  "Format buffer based on `my-format-config'."
+(defun my/format-buffer ()
+  "Format buffer based on `my/format-config'."
   (interactive)
-  (when-let ((config (alist-get major-mode my-format-config)))
+  (when-let ((config (alist-get major-mode my/format-config)))
     (let ((use-lsp (and (memq 'lsp config)
                         (bound-and-true-p eglot-managed-mode)))
           (use-all (memq 'all config)))
@@ -172,7 +172,7 @@
        (use-lsp (call-interactively #'eglot-format))
        (use-all (call-interactively #'format-all-buffer))))))
 
-(add-hook 'before-save-hook #'my-format-buffer)
+(add-hook 'before-save-hook #'my/format-buffer)
 
 (provide '07-lsp)
 ;;; 07-lsp.el ends here

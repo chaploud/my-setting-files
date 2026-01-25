@@ -9,7 +9,7 @@
   :custom
   (bookmark-save-flag 1) ; tではなく1で毎回保存
   :config
-  (defun my-bookmark-set ()
+  (defun my/bookmark-set ()
     "Set a bookmark without prompting"
     (interactive)
     (let* ((line (line-number-at-pos))
@@ -93,7 +93,7 @@
   (elfeed-search-title-min-width 40)
   (elfeed-search-title-max-width 120)
   (elfeed-search-filter "@1-week-ago +unread")
-  (elfeed-search-print-entry-function #'my-elfeed-search-print-entry)
+  (elfeed-search-print-entry-function #'my/elfeed-search-print-entry)
   (shr-use-fonts nil)
   (elfeed-feeds
    '(
@@ -157,7 +157,7 @@
      ))
 
   :config
-  (defun my-elfeed-search-print-entry (entry)
+  (defun my/elfeed-search-print-entry (entry)
     "My Print ENTRY to the buffer."
     (let* ((date (elfeed-search-format-date (elfeed-entry-date entry)))
            (title (or (elfeed-meta entry :title) (elfeed-entry-title entry) ""))

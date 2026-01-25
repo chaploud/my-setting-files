@@ -9,7 +9,7 @@
   :custom
   (magit-blame-echo-style 'headings)
   :config
-  (defun my-magit-blame-echo-toggle ()
+  (defun my/magit-blame-echo-toggle ()
     "Toggle `magit-blame-echo'."
     (interactive)
     (if (bound-and-true-p magit-blame-mode)
@@ -36,21 +36,21 @@
   (magit-pre-refresh-hook  . diff-hl-magit-pre-refresh)
   (magit-post-refresh-hook . diff-hl-magit-post-refresh))
 
-(defvar my-git-status-last nil)
+(defvar my/git-status-last nil)
 
 ;; 外部からのgit status変更を同期
-(defun my-git-status-check ()
+(defun my/git-status-check ()
   (when-let ((root (vc-root-dir)))
     (let* ((default-directory root)
            (current (string-trim (shell-command-to-string "git rev-parse HEAD"))))
-      (unless (equal current my-git-status-last)
+      (unless (equal current my/git-status-last)
         (setq my/git-status-last current)
         (diff-hl-update)
         (when (bound-and-true-p magit-status-mode)
           (magit-refresh))))
     ))
 
-(run-with-timer 0 10 #'my-git-status-check) ; パフォーマンスに注意
+(run-with-timer 0 10 #'my/git-status-check) ; パフォーマンスに注意
 
 ;; ediff設定
 (use-package ediff

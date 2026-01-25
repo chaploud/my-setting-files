@@ -53,10 +53,10 @@
   (doom-modeline-buffer-file-name-style 'file-name) ; ファイル名のみ
   :config
   ;; anzuのカウントを左グループの右端に表示
-  (doom-modeline-def-modeline 'my-main
+  (doom-modeline-def-modeline 'my/main
     '(eldoc bar window-state workspace-name window-number modals follow buffer-info remote-host buffer-position word-count parrot selection-info matches)
     '(compilation objed-state misc-info project-name persp-name battery grip irc mu4e gnus github debug repl lsp minor-modes input-method indent-info buffer-encoding major-mode process vcs check time))
-  (doom-modeline-set-modeline 'my-main t))
+  (doom-modeline-set-modeline 'my/main t))
 
 ;; ダッシュボード
 (use-package dashboard

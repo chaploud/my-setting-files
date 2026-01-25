@@ -93,7 +93,7 @@
 
 ;; バッファの表示方法についての設定 (display-buffer-alist)
 ;; 良く使う分割方法
-(defconst my-display-split
+(defconst my/display-split
   '((display-buffer-pop-up-window
      display-buffer-use-some-window)
     (side . right)
@@ -103,12 +103,12 @@
 (let ((rules
        (list
         ;; flymake-show-project-diagnostics
-        `("\\*Flymake diagnostics" ,@my-display-split)
+        `("\\*Flymake diagnostics" ,@my/display-split)
         ;; vterm (multi-vterm: *vterminal<N>*)
-        `("\\*vterminal" ,@my-display-split
+        `("\\*vterminal" ,@my/display-split
           (window-parameters . ((dedicated . t))))
         ;; ielm
-        `("\\*ielm\\*" ,@my-display-split))))
+        `("\\*ielm\\*" ,@my/display-split))))
   (setq display-buffer-alist (append rules display-buffer-alist)))
 
 (provide '00-basic)
