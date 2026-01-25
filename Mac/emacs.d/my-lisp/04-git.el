@@ -34,10 +34,29 @@
   (diff-hl-flydiff-mode t)
   :hook
   (magit-pre-refresh-hook  . diff-hl-magit-pre-refresh)
-  (magit-post-refresh-hook . diff-hl-magit-post-refresh)
-  (after-save-hook        . diff-hl-update)
-  (after-revert-hook      . diff-hl-update)
-  (vc-checkin-hook        . diff-hl-update))
+  (magit-post-refresh-hook . diff-hl-magit-post-refresh))
+
+(defvar my-git-status-last nil)
+
+(defun my-git-status-check ()
+  (when-let ((root (vc-root-dir)))
+    (let* ((default-directory root)
+           ;; HEAD commit
+           (current (string-trim (shell-command-to-string "git rev-parse HEAD"))))
+      (unless (equal current my-git-status-last)
+        (setq my/git-status-last current)
+        (diff-hl-update)
+        (when (bound-and-true-p magit-status-mode)
+          (magit-refresh))))
+    ))
+
+(run-with-timer 0 15 #'my-git-status-check)
+
+;; また File::Notify と組み合わせる場合：
+(file-notify-add-watch
+ (vc-root-dir)
+ '(change)
+ #'(lambda (_event) (diff-hl-update)))
 
 ;; ediff設定
 (use-package ediff
