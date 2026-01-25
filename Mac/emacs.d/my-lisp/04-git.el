@@ -42,9 +42,9 @@
     (ignore-errors (diff-hl-update))))
 
 ;; バッファ/ウィンドウ切り替え時
-(add-hook 'window-selection-change-functions (lambda (_) (my/diff-hl-sync)))
+(add-hook 'window-buffer-change-functions (lambda (_) (my/diff-hl-sync)))
 ;; Emacsにフォーカスが戻った時
-(add-hook 'focus-in-hook #'my/diff-hl-sync)
+;; (add-hook 'focus-in-hook #'my/diff-hl-sync)
 
 ;; ediff設定
 (use-package ediff
