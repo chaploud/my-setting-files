@@ -36,22 +36,15 @@
   (magit-pre-refresh-hook  . diff-hl-magit-pre-refresh)
   (magit-post-refresh-hook . diff-hl-magit-post-refresh))
 
-(defvar my/git-status-last nil)
+(defun my/diff-hl-sync ()
+  "外部git変更時にdiff-hlを更新"
+  (when buffer-file-name
+    (ignore-errors (diff-hl-update))))
 
-;; 外部からのgit status変更を同期
-(defun my/git-status-check ()
-  (when-let ((root (vc-root-dir)))
-    (let* ((default-directory root)
-           (current (string-trim (shell-command-to-string "git rev-parse HEAD"))))
-      (unless (equal current my/git-status-last)
-        (setq my/git-status-last current)
-        (diff-hl-update)
-        (when (bound-and-true-p magit-status-mode)
-          (magit-refresh))))
-    ))
-
-(add-hook 'focus-out-hook #'my/git-status-check)
-(run-with-idle-timer 10 t #'my/git-status-check)
+;; バッファ/ウィンドウ切り替え時
+(add-hook 'window-selection-change-functions (lambda (_) (my/diff-hl-sync)))
+;; Emacsにフォーカスが戻った時
+(add-hook 'focus-in-hook #'my/diff-hl-sync)
 
 ;; ediff設定
 (use-package ediff
