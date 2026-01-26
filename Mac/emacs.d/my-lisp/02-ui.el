@@ -5,9 +5,8 @@
 ;; - M-x nerd-icons-install-fonts
 ;;
 ;; 使用フォント:
-;; - Source Han Code JP (メイン)
-;; - JuliaMono (アニメーション文字のみ)
-;; - UDEV Gothic 35NF (Claude Code IDE用 10-ai.el参照)
+;; HackGen Console NF (コード用)
+;; - JuliaMono (Unicodeで崩れたらこれを使う)
 
 ;;; Code:
 
@@ -19,10 +18,13 @@
 ;; フォント
 (setq use-default-font-for-symbols nil)
 ;; Claude Codeの処理中の*マークのアニメーションでガタガタするのを防ぐ
-(dolist (char '(#x00B7 #x2722 #x2733 #x2736 #x273B #x273D))
+(dolist (char '(
+                #x00B7 #x2722 #x2733 #x2736 #x273B #x273D
+                #x2588 #x258C #x2590 #x2598 #x259B #x259C #x259D
+                ))
   (set-fontset-font t char (font-spec :family "JuliaMono")))
-(set-fontset-font t 'han (font-spec :family "Source Han Code JP") nil 'prepend)
-(set-face-attribute 'default nil :font "Source Han Code JP" :height 130)
+(set-fontset-font t 'han (font-spec :family "HackGen Console NF") nil 'prepend)
+(set-face-attribute 'default nil :font "HackGen Console NF" :height 140)
 
 ;; vterm等のアニメーション文字用 (幅のがたつき防止)
 (setq use-default-font-for-symbols nil)

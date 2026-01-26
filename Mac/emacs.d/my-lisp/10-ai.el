@@ -40,7 +40,7 @@
   (defun my/set-font-for-claude-buffer ()
     "Set a specific font for Claude Code IDE buffers."
     (when (string-match-p "^\\*claude-code" (buffer-name))
-      (buffer-face-set :family "UDEV Gothic 35NF" :height 130)))
+      (buffer-face-set :family "HackGen Console NF" :height 140)))
   (add-hook 'buffer-list-update-hook #'my/set-font-for-claude-buffer)
 
   ;; vterm-mode-map へのバインディングは vterm がロード後に設定
