@@ -237,6 +237,11 @@
     "P" '(my/package-built-in-p :wk "check package built-in")
     )
 
+  ;; === ウィンドウ移動
+  (general-define-key
+   :states '(normal)
+   "C-w p" 'my/focus-claude-code-window)
+
   ;; === Emacs Lispの便利ヘルプ
   (general-define-key
    :keymaps 'emacs-lisp-mode-map

@@ -40,7 +40,7 @@
   (defun my/set-font-for-claude-buffer ()
     "Set a specific font for Claude Code IDE buffers."
     (when (string-match-p "^\\*claude-code" (buffer-name))
-      (buffer-face-set :family "HackGen Console NF" :height 150)))
+      (buffer-face-set :family "HackGen Console NF" :height 140)))
   (add-hook 'buffer-list-update-hook #'my/set-font-for-claude-buffer)
 
   ;; vterm-mode-map へのバインディングは vterm がロード後に設定
@@ -136,7 +136,6 @@
      (t
       (let ((new-buffer (get-buffer-create buffer-name)))
         (with-current-buffer new-buffer
-          (insert (format "Claude Code scratch [%s]\n\n" project-name))
           (setq-local truncate-lines nil))
         (my/claude-scratch-show new-buffer))))))
 
@@ -147,7 +146,7 @@
           buffer
           '((side . bottom)
             (slot . 0)
-            (window-height . 0.2)))))   ;; ← 行数固定（割合なら 0.25 とかも可
+            (window-height . 8)))))   ;; ← 行数固定（割合なら 0.25 とかも可
     ;; サイズ固定（念押し）
     (set-window-parameter window 'window-size-fixed 'height)
     ;; 専用化（他のバッファに使われない）
@@ -166,6 +165,17 @@
   (interactive)
   (call-interactively #'claude-code-ide-resume)
   (call-interactively #'my/claude-scratch))
+
+(defun my/focus-claude-code-window ()
+  "Focus the window showing *claude-code[...] buffer."
+  (interactive)
+  (catch 'found
+    (dolist (w (window-list nil 'no-minibuffer))
+      (let ((bn (buffer-name (window-buffer w))))
+        (when (and bn (string-prefix-p "*claude-code[" bn))
+          (select-window w)
+          (throw 'found t))))
+    (message "Claude Code window not found")))
 
 (provide '10-ai)
 ;;; 10-ai.el ends here
