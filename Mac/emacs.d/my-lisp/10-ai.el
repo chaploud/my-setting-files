@@ -31,7 +31,7 @@
   :vc (:url "https://github.com/manzaltu/claude-code-ide.el" :rev :newest)
   :commands (claude-code-ide claude-code-ide-menu)
   :custom
-  (claude-code-ide-window-width 0.4)
+  (claude-code-ide-window-width 0.5)
   (claude-code-ide-use-ide-diff nil)    ; ediff機能を無効化
   :config
   (claude-code-ide-emacs-tools-setup)
@@ -118,7 +118,68 @@
     (message "Claude に Rewind (ESC×2) を送信しました"))
   )
 
-;; スクラッチバッファ
+;;; ──────────────────────────────────────────────────────────
+;;; advice ベース Claude Code IDE レイアウト
+;;;  - Claude Code: 右 side-window (dedicated + 幅固定)
+;;;  - Scratch: 通常ウィンドウ split (side-window と高さ競合しない)
+;;; ──────────────────────────────────────────────────────────
+
+;; --- advice: display-buffer-in-side-window を override ---
+(defun my/claude-side-window--display-override (buffer)
+  "BUFFER を右 side-window に表示し、dedicated + サイズ固定にする."
+  (let* ((width claude-code-ide-window-width)
+         (display-buffer-alist
+          `((,(regexp-quote (buffer-name buffer))
+             (display-buffer-in-side-window)
+             (side . right)
+             (slot . 0)
+             (window-width . ,width)
+             (window-parameters . ((no-delete-other-windows . t)))))))
+    (let ((win (display-buffer buffer)))
+      (when win
+        (set-window-dedicated-p win t)
+        (set-window-parameter win 'window-size-fixed 'width)
+        (window-preserve-size win t t)
+        (setq claude-code-ide--last-accessed-buffer buffer)
+        (when claude-code-ide-focus-on-open
+          (select-window win))))))
+
+(advice-add 'claude-code-ide--display-buffer-in-side-window
+            :override #'my/claude-side-window--display-override)
+
+;; --- advice: toggle-existing-window を override ---
+(defun my/claude-side-window--toggle-override (existing-buffer working-dir)
+  "side-window の表示/非表示をトグルする."
+  (let ((win (get-buffer-window existing-buffer t)))
+    (if win
+        (delete-window win)
+      (my/claude-side-window--display-override existing-buffer)
+      (setq claude-code-ide--last-accessed-buffer existing-buffer))))
+
+(advice-add 'claude-code-ide--toggle-existing-window
+            :override #'my/claude-side-window--toggle-override)
+
+;; --- my/claude-code-ide / my/claude-code-ide-resume ---
+(defun my/claude-code-ide ()
+  "Start or toggle Claude Code IDE."
+  (interactive)
+  (call-interactively #'claude-code-ide))
+
+(defun my/claude-code-ide-resume ()
+  "Resume Claude Code IDE."
+  (interactive)
+  (call-interactively #'claude-code-ide-resume))
+
+;; --- スクラッチバッファ (通常ウィンドウ split, magit side-window と競合しない) ---
+(defun my/claude--find-code-window ()
+  "コード編集用ウィンドウを返す (Claude Code / scratch / minibuffer 以外)."
+  (seq-find
+   (lambda (w)
+     (let ((bn (buffer-name (window-buffer w))))
+       (not (or (string-prefix-p "*claude-code[" bn)
+                (string-prefix-p "*claude-scratch[" bn)))))
+   (window-list nil 'no-minibuffer)))
+
 (defun my/claude-scratch ()
   "Toggle Claude Code scratch buffer for current project."
   (interactive)
@@ -131,41 +192,30 @@
      ;; 表示中なら閉じる
      (window (delete-window window))
      ;; バッファがあれば表示
-     (buffer (my/claude-scratch-show buffer))
+     (buffer (my/claude-scratch--show buffer))
      ;; なければ作成して表示
      (t
       (let ((new-buffer (get-buffer-create buffer-name)))
         (with-current-buffer new-buffer
           (setq-local truncate-lines nil))
-        (my/claude-scratch-show new-buffer))))))
+        (my/claude-scratch--show new-buffer))))))
 
-(defun my/claude-scratch-show (buffer)
-  "Show scratch BUFFER as fixed bottom side window."
-  (let ((window
-         (display-buffer-in-side-window
-          buffer
-          '((side . bottom)
-            (slot . 0)
-            (window-height . 8)))))   ;; ← 行数固定（割合なら 0.25 とかも可
-    ;; サイズ固定（念押し）
-    (set-window-parameter window 'window-size-fixed 'height)
-    ;; 専用化（他のバッファに使われない）
-    (set-window-dedicated-p window t)
-    (select-window window)
-    (goto-char (point-max))))
+(defun my/claude-scratch--show (buffer)
+  "Show scratch BUFFER at the bottom of the code area with fixed height.
+通常ウィンドウとして split するので side-window (magit等) と高さ競合しない."
+  (let* ((code-win (my/claude--find-code-window))
+         (scratch-win (when code-win
+                        (split-window code-win -8 'below))))
+    (when scratch-win
+      (set-window-buffer scratch-win buffer)
+      (set-window-dedicated-p scratch-win t)
+      (set-window-parameter scratch-win 'window-size-fixed 'height)
+      (window-preserve-size scratch-win nil t)
+      (select-window scratch-win)
+      (with-current-buffer buffer
+        (goto-char (point-max))))))
 
-(defun my/claude-code-ide ()
-  "Toggle Claude Code IDE and scratch buffer together."
-  (interactive)
-  (call-interactively #'claude-code-ide)
-  (call-interactively #'my/claude-scratch))
-
-(defun my/claude-code-ide-resume ()
-  "Resume Claude Code IDE with scratch buffer."
-  (interactive)
-  (call-interactively #'claude-code-ide-resume)
-  (call-interactively #'my/claude-scratch))
-
+;; --- フォーカス管理 ---
 (defun my/focus-claude-code-window ()
   "Focus the window showing *claude-code[...] buffer."
   (interactive)
