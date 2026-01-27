@@ -111,5 +111,9 @@
         `("\\*ielm\\*" ,@my/display-split))))
   (setq display-buffer-alist (append rules display-buffer-alist)))
 
+;; posframe
+(use-package posframe
+  :ensure t)
+
 (provide '00-basic)
 ;;; 00-basic.el ends here

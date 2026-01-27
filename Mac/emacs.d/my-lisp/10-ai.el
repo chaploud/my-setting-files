@@ -40,7 +40,7 @@
   (defun my/set-font-for-claude-buffer ()
     "Set a specific font for Claude Code IDE buffers."
     (when (string-match-p "^\\*claude-code" (buffer-name))
-      (buffer-face-set :family "HackGen Console NF" :height 140)))
+      (buffer-face-set :family "HackGen Console NF" :height 150)))
   (add-hook 'buffer-list-update-hook #'my/set-font-for-claude-buffer)
 
   ;; vterm-mode-map へのバインディングは vterm がロード後に設定
@@ -141,12 +141,18 @@
         (my/claude-scratch-show new-buffer))))))
 
 (defun my/claude-scratch-show (buffer)
-  "Show scratch BUFFER below the leftmost window."
-  (let* ((base (frame-first-window))
-         (win (split-window base -15 'below)))
-    (set-window-buffer win buffer)
-    (set-window-dedicated-p win t)
-    (select-window win)
+  "Show scratch BUFFER as fixed bottom side window."
+  (let ((window
+         (display-buffer-in-side-window
+          buffer
+          '((side . bottom)
+            (slot . 0)
+            (window-height . 0.2)))))   ;; ← 行数固定（割合なら 0.25 とかも可
+    ;; サイズ固定（念押し）
+    (set-window-parameter window 'window-size-fixed 'height)
+    ;; 専用化（他のバッファに使われない）
+    (set-window-dedicated-p window t)
+    (select-window window)
     (goto-char (point-max))))
 
 (defun my/claude-code-ide ()
