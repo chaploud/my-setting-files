@@ -70,7 +70,7 @@
   :ensure nil
   :custom
   (which-key-mode t)
-  (which-key-idle-delay 0.3)
+  (which-key-idle-delay 0.7)
   (which-key-idle-secondary-delay 0)
   (which-key-sort-order nil) ; 設定順で表示
   )
