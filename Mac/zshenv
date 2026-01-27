@@ -21,3 +21,6 @@ export PROMPT_EOL_MARK=""
 
 # Go
 export PATH="$HOME/go/bin:$PATH"
+
+# Claude Code
+export ENABLE_LSP_TOOL=1

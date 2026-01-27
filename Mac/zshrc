@@ -134,3 +134,6 @@ alias tmup='gf && docker compose down && docker compose up'
 
 # teachme_eboshigara
 alias mup='gf && docker compose down && docker compose up'
+
+# Claude Code
+export ENABLE_LSP_TOOL=1
