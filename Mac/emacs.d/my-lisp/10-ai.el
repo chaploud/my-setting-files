@@ -161,9 +161,10 @@
 
 ;; --- my/claude-code-ide / my/claude-code-ide-resume ---
 (defun my/claude-code-ide ()
-  "Start or toggle Claude Code IDE."
+  "Start or toggle Claude Code IDE with scratch buffer."
   (interactive)
-  (call-interactively #'claude-code-ide))
+  (call-interactively #'claude-code-ide)
+  (run-at-time 0.3 nil #'my/claude-scratch))
 
 (defun my/claude-code-ide-resume ()
   "Resume Claude Code IDE."
@@ -205,7 +206,7 @@
 通常ウィンドウとして split するので side-window (magit等) と高さ競合しない."
   (let* ((code-win (my/claude--find-code-window))
          (scratch-win (when code-win
-                        (split-window code-win -8 'below))))
+                        (split-window code-win -10 'below))))
     (when scratch-win
       (set-window-buffer scratch-win buffer)
       (set-window-dedicated-p scratch-win t)
