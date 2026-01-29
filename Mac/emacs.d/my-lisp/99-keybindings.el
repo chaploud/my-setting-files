@@ -45,6 +45,7 @@
     "t c" '(copilot-mode :wk "toggle copilot")
     "t h" '(eldoc-box-hover-at-point-mode :wk "toggle eldoc-box 1")
     "t H" '(eldoc-box-hover-mode :wk "toggle eldoc-box 2")
+    "t p" '(presentation-mode :wk "toggle presentation")
 
     ;; (q) 終了操作
     "q" '(:ignore t :wk "Quit")

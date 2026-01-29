@@ -172,5 +172,10 @@
       (insert (propertize date 'face 'elfeed-search-date-face) " ")
       (insert (propertize title-column 'face title-faces 'kbd-help title) " "))))
 
+;; プレゼンテーション(全バッファのテキスト拡大)
+(use-package presentation
+  :ensure t
+  :commands presentation-mode)
+
 (provide '05-tools)
 ;;; 05-tools.el ends here
